@@ -1,7 +1,4 @@
-name: "645"
-title: "My Website"
-description: |
-  My Website
+title: "EDUC 645"
 output_dir: "docs"
 navbar:
   right:
