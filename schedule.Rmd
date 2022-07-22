@@ -11,17 +11,131 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-### Week 1
+## Unit 1: Introduction to Nested Data (Week 1-2)
 
-Topic: 
+**Learning Objectives:** 
 
-Readings: TBD
+- Introduce the nested data structure (two-level, e.g., repeated measures within individuals, students within schools)
+  - Students will be able to understand and explain what nesting/clustering means
 
-Lecture:
+- Demonstrate varying intercepts and slopes across clusters. Using a dataset, students/instructors can fit the same regression model independently for each cluster and create a table of intercepts and slopes across clusters
+  - Students will understand what it means for intercepts and slopes to vary across clusters
 
- * Lecture slides: [html file](./slides/EDUC645_1_intro.html)
+- Develop/discuss the notion that regression coefficients may vary across different clusters
 
-Assignment:
+- Develop the concept of **fixed-effects** as the aggregation of the different intercepts and slopes by taking an average of varying intercept and slopes across clusters
 
-R Tutorial slides/activity assignment: [html file](./slides/tutorial3.html)
+- Develop the concept of **random effects** as the difference between cluster-specific intercept and slope and their averages across clusters
+
+- Develop the concept of the covariance matrix of **random-effects**
+
+- Discuss the implications of ignoring the variance of random-effects in terms of the inference for fixed-effects and statistical power
+
+- Introduce the random intercept-only model, its estimation through the R lmer package, interpret the model parameters and align them with the earlier discussion of fixed-effects
+and random-effects.
+
+- Introduce the intra-class correlation as a measure of within-cluster dependency, and how to use it to decide whether one needs to use multilevel modeling
+
+- Finish by emphasizing that this is a very brief introduction of nested data and refer students to the multilevel modeling sequence for a comprehensive treatment of the
+subject
+
+- If time permits, there may be a discussion that not all nested data needs multilevel modeling and there are alternative approaches to adjust the standard errors for fixed effects if they are the sole interest
+
+- Introduce our HLM and SEM courses!
+
+**Readings**: 
+
+**Lecture**:
+
+ * Lecture slides: 
+
+**Assignment 1**:
+
+## Unit 2: Logistic Regression (Week 3-4-5)
+
+**Learning Objectives:** 
+
+- Introduce the linear probability model and discuss the limitations
+
+- Introduce the concept of probability, odds, and logit
+
+- Introduce the logistic function
+
+- Introduce the logistic regression model with continuous predictors and how to interpret the model parameters and inference for model parameters
+
+- Introduce the glm function in R to fit the logistic regression model
+
+- Introduce the logistic regression model with categorical predictors and how to interpret the model parameters and inference for model parameters
+
+- Introduce the logistic regression model with an interaction between a continuous and categorical predictor, how to interpret the model parameters, and inference for model parameters
+
+- Discuss the predictive power, model fit, and diagnostics for a logistic regression model
+
+**Readings**: 
+
+**Lecture**:
+
+ * Lecture slides: 
+
+**Assignment 2**:
+
+## Unit 3: Poison Regression (Week 6-7)
+
+**Learning Objectives:** 
+
+**Readings**: 
+
+**Lecture**:
+
+ * Lecture slides: 
+
+**Assignment 3**:
+
+## Unit 4: Data Cleaning and Handling Missing Data (Week 8-9)
+
+**Learning Objectives:** 
+
+- Students should be ready to talk about the concept of model-based imputation as earlier lectures in the sequence covered linear regression and logistic regression
+
+- Introduce the missing data mechanisms (MCAR, MAR, MNAR)
+
+- Introduce the concepts of the listwise deletion and pairwise deletion and their potential limitations
+
+- Introduce the single-imputation methods (mean, regression, and stochastic regression imputation)
+
+- Introduce the "missing-value-dummy" method (Cohen) and some issues with this approach
+
+- Introduce the conceptual steps for the multiple-imputation
+
+- Introduce the mice package in R and how to implement multiple-imputation for fitting a regression model to a data set with missing values
+
+- GB: FIML???
+
+**Readings**: 
+
+**Lecture**:
+
+ * Lecture slides: 
+
+**Assignment 4**:
+
+## Unit 5: Introduction to Measurement and Assessment (Week 10)
+
+**Learning Objectives:** 
+
+- Introduction to the concept of reliability
+
+- Talk about the assumption that there is a single underlying construct for a set of items in surveys when you aggregate scores across items
+
+- Show how to compute Cronbach's alpha, how to interpret it, and emphasize the strong underlying assumptions
+
+- Introduce our slate of measurement courses!
+
+**Readings**: 
+
+**Lecture**:
+
+ * Lecture slides: 
+
+**Final Project**:
 
