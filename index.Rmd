@@ -1,7 +1,6 @@
 ---
 title: "EDUC 645: General Linear Model II"
 subtitle: "College of Education, University of Oregon"
-author:
 
 site: distill::distill_website
 output:
