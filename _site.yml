@@ -2,14 +2,15 @@ name: EDUC 645
 output_dir: "docs"
 navbar:
   title: EDUC 645
+
   left:
   - text: Syllabus
     href: syllabus.html
   - text: Schedule
     href: schedule.html
+
   right:
   - text: Assignments
     href: assignments.html
   - text: Course repo
     href: https://github.com/uo-educ-quant/645
-theme: educquant.css

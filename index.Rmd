@@ -1,7 +1,6 @@
 ---
 title: "EDUC 645: General Linear Model II"
 subtitle: "College of Education, University of Oregon"
-author: "TBD"
 
 site: distill::distill_website
 output:
@@ -23,5 +22,8 @@ This course is the third and last in the EDUC quantitative method sequence, whic
 **Pre-requisite: EDUC 641 and EDUC 643. Also a familiarity with at least one statistical programming language - preferably R language - is required.**
 
 # Meeting Time and Location
+TBD
 
 # Instructors 
+TBD
+
