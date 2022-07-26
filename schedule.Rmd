@@ -41,8 +41,6 @@ subject
 
 - If time permits, there may be a discussion that not all nested data needs multilevel modeling and there are alternative approaches to adjust the standard errors for fixed effects if they are the sole interest
 
-- Introduce our HLM and SEM courses!
-
 **Readings**: 
 
 **Lecture**:
@@ -109,7 +107,6 @@ subject
 
 - Introduce the mice package in R and how to implement multiple-imputation for fitting a regression model to a data set with missing values
 
-- GB: FIML???
 
 **Readings**: 
 
@@ -128,8 +125,6 @@ subject
 - Talk about the assumption that there is a single underlying construct for a set of items in surveys when you aggregate scores across items
 
 - Show how to compute Cronbach's alpha, how to interpret it, and emphasize the strong underlying assumptions
-
-- Introduce our slate of measurement courses!
 
 **Readings**: 
 
