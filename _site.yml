@@ -1,7 +1,7 @@
 name: EDUC 645
-output_dir: "docs"
+output_dir: "."
 navbar:
-  title: EDUC 645
+  title: "EDUC 645"
 
   left:
   - text: Syllabus
@@ -14,3 +14,8 @@ navbar:
     href: assignments.html
   - text: Course repo
     href: https://github.com/uo-educ-quant/645
+
+output:
+  html_document:
+   lib_dir: site_libs
+   self_contained: no
