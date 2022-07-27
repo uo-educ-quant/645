@@ -77,7 +77,7 @@ subject
 
 **Assignment 2**:
 
-## Unit 3: Poison Regression (Week 6-7)
+## Unit 3: Poisson Regression (Week 6-7)
 
 **Learning Objectives:** 
 

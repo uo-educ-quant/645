@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Logistic Regression</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="TBD" />
+    <script src="EDUC645_log_regression_files/header-attrs-2.14/header-attrs.js"></script>
+    <link href="EDUC645_log_regression_files/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="EDUC645_log_regression_files/remark-css-0.0.1/uo.css" rel="stylesheet" />
+    <link href="EDUC645_log_regression_files/remark-css-0.0.1/ki-fonts.css" rel="stylesheet" />
+    <link rel="stylesheet" href="my_custom.css" type="text/css" />
+    <link rel="stylesheet" href="xaringanthemer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Logistic Regression
+]
+.subtitle[
+## EDUC 645: General Linear Model II
+]
+.author[
+### TBD
+]
+
+---
+
+
+
+
+# Roadmap
+
+---
+# Goals for the unit
+	• linear probability model and discuss the limitations
+		○ Understand the different model assumptions of logistic regression vs. linear regression.
+	• concept of probability, odds, and logit (Distinguish between odds and probability.)
+	• logistic function and the logistic regression model 
+		○ continuous predictors
+			§ how to interpret the model parameters, 
+			§ inference for model parameters
+		○ categorical predictors 
+			§ how to interpret the model parameters, 
+			§ inference for model parameters
+		○ interaction between a continuous and categorical predictor, 
+			§ how to interpret the model parameters, 
+			§ inference for model parameters
+	• glm function in R to fit the logistic regression model
+• Discuss the predictive power, model fit, and diagnostics for a logistic regression model
+	• Evaluate models based on Area Under ROC Curve method.
+• probit and differentiate from logit
+
+---
+# Binary Data
+
+- You've learned to model continuous outcomes with linear regression models BUT there are many instances when we are interested in the probability of an outcome. How do we handle these sort of data?
+
+- What about when you are interested in probability, an outcome related to binary data? (e.g., yes/no)
+	• Ex. probability of group given individual traits, probability of needs, etc.
+	
+- How are they different? Why can't we apply the same method?
+
+---
+# Binary Outcomes
+- Outcomes with a yes/no or 0/1 response
+- Example: Diseased or not?
+	• Low birth weight or not?
+	• Depression or not?
+	• Vaccinated or not?
+- Proportion vs. Odds
+
+---
+# Proportion
+- Description 1:
+
+---
+# Odds
+- Odds of an event: the probability of 'yes' divided by the probability of 'no'
+
+- Odds = p/1(1-p)
+
+What are the odds of getting Tails when tossing a fair coin?
+What are the odds of getting a 6 when tossing a fair dice?
+
+---
+# Odds and Probability
+
+[insert image comparing trajectories]
+- As the probability of an event increases, so do the odds
+- Odds increase *almost* exponentially as the probability increases
+
+---
+# Binary Outcome and Binary Predictor
+- Measures of Association
+	• Difference in probabilities
+		○ p1-p2
+			§ If the difference in probabilities of the outcome across the categories is NOT 0, there is an association between the outcome and the predictor
+	• Odds ratio (OR)
+		○ OR = odds on category of predictor/ odds other category of predictor
+			§ If the OR is NOT 1, then there is an association between the predictor and the outcome
+
+---
+Odds 
+- One way to quantify a goalkeeper's performance. 
+We see that the odds of a goal scored on a penalty kick are better when the goalkeeper's team is behind than when it is not behind (i.e., better odds of scoring for the shooter when the shooter's team is ahead). 
+
+We can compare these odds by calculating the __odds ratio__ \index{odds ratio} (OR), 11/3.61 or 3.05, 
+
+which tells us that the *odds* of a successful penalty kick are 3.05 times higher when the shooter's team is leading.
+
+In our example, it is also possible to estimate the probability of a goal, `\(p\)`, for either circumstance. When the goalkeeper's team is behind, the probability of a successful penalty kick is `\(p\)` = 22/24 or 0.833. We can see that the ratio of the probability of a goal scored divided by the probability of no goal is `\((22/24)/(2/24)=22/2\)` or 11, the odds we had calculated above. The same calculation can be made when the goalkeeper's team is not behind. In general, we now have several ways of finding the odds of success under certain circumstances:
+
+\[\textrm{Odds} = \frac{\# \textrm{successes}}{\# \textrm{failures}}=
+\frac{\# \textrm{successes}/n}{\# \textrm{failures}/n}=
+\frac{p}{1-p}.\] 
+
+---
+
+Generalized linear models (GLMs)
+- are a way in which to model a variety of different types of responses.
+- we apply the general results of GLMs to the specific application of binomial responses. 
+
+`\(Y\)` = the number scored out of `\(n\)` penalty kicks. 
+The parameter, `\(p\)`, is the probability of a score on a single penalty kick. 
+
+Recall that the theory of GLMs is based on the unifying notion of the one-parameter exponential family form:
+
+`\begin{equation*}
+f(y;\theta)=e^{[a(y)b(\theta)+c(\theta)+d(y)]}
+\end{equation*}`
+
+To see that we can apply the general approach of GLMs \index{generalized linear models (GLMs)} to binomial responses, we first write an expression for the probability of a binomial response and then use a little algebra to rewrite it until we can demonstrate that it, too, can be written in one-parameter exponential family form with `\(\theta = p\)`. This will provide a way in which to specify the canonical link and the form for the model. Additional theory allows us to deduce the mean, standard deviation, and more from this form.
+
+If `\(Y\)` follows a binomial distribution with `\(n\)` trials and probability of success `\(p\)`, we can write:
+
+`\begin{align*}
+P(Y=y)&amp;= \binom{n}{y}p^y(1-p)^{(n-y)} \\
+      &amp;=e^{y\log(p) + (n-y)\log(1-p) + \log\binom{n}{y}}
+\end{align*}`
+
+However, this probability mass function is not quite in one-parameter exponential family form. Note that there are two terms in the exponent which consist of a product of functions of `\(y\)` and `\(p\)`. So more simplification is in order:
+
+`\begin{equation*}
+P(Y=y) = e^{y\log\left(\frac{p}{1-p}\right) + n\log(1-p)+ \log\binom{n}{y}}
+\end{equation*}`
+
+The one-parameter exponential family form for binomial responses shows that the  canonical link is `\(\log\left(\frac{p}{1-p}\right)\)`. Thus, GLM theory suggests that constructing a model using the logit, the log odds of a score, as a linear function of covariates is a reasonable approach.   
+
+---
+# Logistic Regression
+
+binary (0 or 1) response (Y) and a single continuous predictor (X).  The solid line is a linear regression fit with least squares to model the probability of a success (Y=1) for a given value of X.  With a binary response, the line doesn't fit the data well, and it produces predicted probabilities below 0 and above 1.  On the other hand, the logistic regression fit (dashed curve) with its typical "S" shape follows the data closely and always produces predicted probabilities between 0 and 1.  For these and several other reasons detailed in this chapter, we will focus on the following model for logistic regression with binary or binomial responses:
+
+`\begin{equation*}
+log(\frac{p_i}{1-p_i})=\beta_0+\beta_1 x_i
+\end{equation*}`
+where the observed values `\(Y_i \sim\)` binomial with `\(p=p_i\)` for a given `\(x_i\)` and `\(n=1\)` for binary responses.
+
+
+---
+# Assumptions
+- The outcome (Y) is discrete (0/1 variable)
+- There must be enough responses in every category
+- Linearity in the logit scale  - X's must be linearly related to logit(Y)
+- Absence of multicollinearity
+- No outliers
+- Independence of (X,Y)'s
+
+---
+# Interpretation of Model Parameters
+
+
+---
+# Assess Confounding
+
+---
+# Assess Interactions
+
+---
+# Influential Observations
+- Leverage plot
+
+---
+# Predicted Values: Probabilities
+
+---
+# Assessing Predicted Values
+
+---
+# Classification Rule
+
+
+---
+# Types of Classification
+
+---
+# Receiver Operating Characteristic (ROC)
+
+---
+class: middle, inverse
+# Synthesis and wrap-up
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

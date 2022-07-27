@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Measurement &amp; Assessment</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="TBD" />
+    <script src="EDUC645_measure_assess_files/header-attrs-2.14/header-attrs.js"></script>
+    <link href="EDUC645_measure_assess_files/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="EDUC645_measure_assess_files/remark-css-0.0.1/uo.css" rel="stylesheet" />
+    <link href="EDUC645_measure_assess_files/remark-css-0.0.1/ki-fonts.css" rel="stylesheet" />
+    <link rel="stylesheet" href="my_custom.css" type="text/css" />
+    <link rel="stylesheet" href="xaringanthemer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Measurement &amp; Assessment
+]
+.subtitle[
+## EDUC 645: General Linear Model II
+]
+.author[
+### TBD
+]
+
+---
+
+
+
+
+# Roadmap
+
+---
+# Goals for the unit
+Measurement
+
+Validity
+
+Reliability
+
+---
+# Measurement
+
+Our ability to link theoretical concepts and observable responses.
+
+Good measurement is indispensable.
+Allow for the testing of a theory or its parts
+Ensure inferences are accurate and correct
+---
+# Classical Measurement Theory
+
+X = T + E
+
+X is the observed score
+T is the True Score
+E is the Error associated with Measurement 
+---
+# Measurement Error
+Random error
+Chance factors confounding a measure’s true score
+Random error is inversely related to a measure’s reliability
+
+Non-random error
+Systematic bias in measurement
+Non-random error influences the validity of a measure
+
+---
+# Properties of Measurement
+Reliability
+Internal reliability
+Temporal reliability
+
+Validity
+Face validity
+Criterion-related validity
+Concurrent validity
+Predictive validity
+Content validity
+Construct validity
+
+---
+# Reliability
+Consistency of measurement
+Computed by taking the ratio of the true score variance and the observed variance:
+[ insert formula ]
+
+As VAR(T) increases, so does Reliability.
+
+---
+# Measuring Reliability
+Test-Retest method
+
+Alternative form method
+
+Split-halves method
+
+Internal consistency method
+
+---
+# Test-retest
+Examines temporal stability of a measure. May be influenced by the time between assessments. 
+Always provide details regarding the time between assessments in a study. 
+Practice effect bias.
+
+Individuals should not have “changed” in ways that would bias the test-retest assessment. Any difference in the assessment could be non-random error and reduce the reliability.
+
+Only appropriate when the individual has not changed as a result of the first test, and/or the length of time between assessments has diminished the likelihood of practice effect bias.
+
+---
+# Alternative Form
+Developer must create two separate tests examining the same domain, yet use different content.  
+
+This method provides a test of equivalences.
+If possible, both versions are administered as closely in time as possible (e.g., same day). 
+Avoid order effects by randomizing sequence among participants.
+
+Care must be taken. Tests will never be perfectly equivalent, particularly when the measure is assessing abstract elements.
+
+---
+# Splot Halves
+Offer the assessment yet divide (“split-half method”) the items at random.  
+
+Split in two comparable sets, you can compare the reliability of one set to the other.  
+
+In splitting the measure, reliability will be lowered artificially. It is important to adjust the reliability estimate using the Spearman-Brown adjustment:
+			radjusted = N*rsh/[1 + (N-1)rsh]
+
+---
+# Internal Consistency
+Assessment of how well a set of variables correlate with each other (“hang together”).
+
+Internal consistency estimates are sensitive to:
+Missing data
+Unidirection of variables
+Number of items
+
+---
+# Cronbach's Alpha
+
+[ insert formula ]
+
+k = number of items included in scale analysis
+s2i = variance of scores for each item
+s2 = variance of all scores in the scale
+Range = 0-1
+
+---
+# Standards for reliability
+Cronbach's alpha 
+       α ≥ .9 Excellent 
+.9 &gt; α ≥ .8 Good 
+.8 &gt; α ≥ .7 Acceptable 
+.7 &gt; α ≥ .6 Questionable 
+.6 &gt; α ≥ .5 Poor 
+.5 &gt; α Unacceptable
+
+---
+# Reliability: KR-20
+
+Items are dichotomous (0 or 1)
+Kuder-Richardson formula number 20
+
+
+k = number of items included in scale analysis
+pi = proportion responding “positively”
+qi  = 1 – pi
+s2 = variance of all scores in the scale
+
+---
+# Attentuation Correction
+Estimates the correlation between X &amp; Y, assuming perfect measurement.
+
+Observed correlation over the SQRT of the (Reliability of X*Reliability of Y). 
+
+---
+# Validity
+Face validity: Measure seems to assess domain
+
+Criterion-related validity
+Concurrent validity: Measure is correlated with behavior
+Predictive validity: Measure is predictive of behavior
+
+Content validity
+Measurement includes holistic elements of domain
+
+Construct validity
+Measurement relates to other theoretically-derived measures
+---
+# Above and beyond: Factor analysis
+Statistical method to uncover clusters (factors) of interrelated variables.
+
+Each factor represents items that are highly correlated with each other.
+
+The higher the inter-correlation of the item, the higher the factor loading of the item on a given factor. 
+
+*Learn more in SEM courses*
+
+---
+class: middle, inverse
+# Synthesis and wrap-up
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

@@ -2,12 +2,23 @@ name: EDUC 645
 output_dir: "."
 navbar:
   title: "EDUC 645"
-
   left:
   - text: Syllabus
     href: syllabus.html
   - text: Schedule
     href: schedule.html
+  - text: Lectures
+    menu: 
+      - text: "Unit 1: Intro to Logistic Regression"
+        href: 
+      - text: "Unit 2: Intro to Poisson Regression"
+        href: 
+      - text: "Unit 3: Introduction to Measurement and Assessment"
+        href:
+      - text: "Unit 4: Nested Data Structures"
+        href: 
+      - text: "Unit 5: Cleaning Data & Missing Data"
+        href: 
 
   right:
   - text: Assignments

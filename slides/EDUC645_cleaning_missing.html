@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Cleaning Data &amp; Handling Missingness</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="TBD" />
+    <script src="EDUC645_cleaning_missing_files/header-attrs-2.14/header-attrs.js"></script>
+    <link href="EDUC645_cleaning_missing_files/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="EDUC645_cleaning_missing_files/remark-css-0.0.1/uo.css" rel="stylesheet" />
+    <link href="EDUC645_cleaning_missing_files/remark-css-0.0.1/ki-fonts.css" rel="stylesheet" />
+    <link rel="stylesheet" href="my_custom.css" type="text/css" />
+    <link rel="stylesheet" href="xaringanthemer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Cleaning Data &amp; Handling Missingness
+]
+.subtitle[
+## EDUC 645: General Linear Model II
+]
+.author[
+### TBD
+]
+
+---
+
+
+
+
+# Roadmap
+
+---
+# Goals for the unit
+- Forms of Missingness
+- Missing Data Handling Techniques
+  - Traditional
+  - Modern (mainly multiple imputation)
+- Best Practices
+ - Imputation
+ - Reporting
+
+---
+
+# Problems with missing data (missingness)
+
+Power: Missingness often reduces the number of useful observations, and therefore reduces power
+Bias: Missingness induces bias as incomplete data…
+May not be Representative of the intended population
+May not be Balanced across observed and/or unobserved confounders as originally planned
+Are likely to have biased characteristics
+Recoverability: Traditional approaches to missingness have limited our ability to recover statistical power and true variability
+
+---
+# Missing data mechanisms
+
+Missing Completely at Random (MCAR): Missingness is unrelated to the values of variables in the data
+Example: Missingness on Depression Scores (DV) because a school event attended by younger students prevented data collection from those students
+Missing at Random (MAR): Missingness is related to values in the data, but can be explained by other (observed) values in the data
+Generally (assumed to be) the most common form of missingness
+Example: Missingness on Depression Scores (DV) due to perceived stigma of mental health concerns, but Depression Score may be predicted by age, victimization level, etc.
+Missing Not at Random (MNAR): Missingness is caused by an individual’s value of the variable
+Example: Missingness on BDI because of depression level (IV)
+
+*All forms of missingness can co-occur among same data*
+
+---
+# Traditional methods for treating missingness
+## and their shortcomings
+
+Listwise or case deletion (avoid using): Delete observations with missingness
+Under MCAR, reduces power; under MAR and MNAR, reduces power and induced bias
+Particularly impactful in multivariate analysis: limited but widely dispersed missingness can lead to extensive case deletion
+
+### Single Imputation Methods
+- Mean substitution (never use): Replace missing values on a variable with average of that variable (artificially lowers variance, reduces power, and distorts covariances and intercorrelations among variables)
+  The following can perform well, but modern methods perform better
+- Averaging over missing items (artificially inflates variance of average value)
+- Hot-decking: Replaces missing values with random observed values
+- Last-observation-carried-forward 9 (reduces variability)
+
+---
+# Imputation
+
+Uses the underlying structure of the data to replace missing values with new values that could have been reasonably obtained, had they not been missing
+Aims to re-establish the relationship of the data with the population it was sampled from, without creating artificially precise data for the analysis
+
+---
+# Two modern approaches to imputation
+## Different theoretical orientations to missingness
+
+Full-Information Maximum-Likelihood (FIML) imputation
+Estimate model parameters close to their values as estimated from complete data 
+Model-specific and limited to models that are estimated using maximum-likelihood estimation (e.g., SEM, mixed/multilevel models, mixture models)
+Multiple Imputation (MI) 
+Aims to estimate complete data 
+Not model-specific and therefore more versatile application to data analysis
+
+---
+# MI by Chained Equations (MICE)
+Chained equations approach focuses the algorithm on one variable at a time
+Once that variable is imputed, the algorithm moves to the next variable, skipping over complete variables, until all missing data is imputed – this process is then repeated many times to create each imputed data set
+Numerous algorithms exist, and selection depends mainly on the type of variable being imputed (e.g., continuous, ordered or un-ordered nominal/categorical, etc.)
+
+Recommended R package: mice (https://amices.org/mice/)
+
+---
+# Multiple Imputation Process
+
+[ insert visual of steps ]
+Benefits of repeating the process, merging (averaging) each estimate of the missing data:
+Produces a more accurate (and plausible) values
+More precisely defines uncertainty in the data
+Accounts for uncertainty from original data generation (measurement error) and of the imputation process
+
+---
+# Missing Data Diagnostics
+## Inspect missing and imputed data before and after imputation
+
+Before imputation
+Calculate overall amount of missingness in the data (n, percent or proportion)
+Inspect missingness (aka margin) plots, show the observed and missing values across two variables
+Remember: Missingness mechanisms can differ between different variables
+After imputation
+Inspect strip plots, show the observed and imputed data together (as points), to identify erratic patterns among imputed data
+Inspect kernel density plots, show the distributions of observed and imputed data rather than individual values as points (similar purpose to strip plots)
+
+---
+# Best Practices for Reporting
+
+Always report the percent/proportion of data missing on variables included in analyses
+Indicate the primary missingness mechanism you assume to be present, and provide a brief justification for why you make that assumption
+Report the imputation method (MI or FIML), and if MI was used, report the number of imputed data sets (e.g., 20). Mention algorithm choice If space allows.
+Cite the software/package used to impute data
+In cases of substantial missingness, present (or at least mention) a sensitivity analysis of your primary analyses (that used imputed data) and complete case analyses
+
+---
+class: middle, inverse
+# Synthesis and wrap-up
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

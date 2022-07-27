@@ -1,0 +1,221 @@
+---
+title: "Measurement & Assessment"
+subtitle: "EDUC 645: General Linear Model II"
+author: "TBD"
+#date: "`r format(Sys.time(), '%d %B %Y')`"
+output:
+  xaringan::moon_reader:
+    css: ['default', 'uo', 'ki-fonts', 'my_custom.css', 'xaringanthemer.css']
+    # self_contained: true
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{R, setup, include = F}
+library(pacman)
+p_load(here, tidyverse, ggplot2, xaringan, knitr, kableExtra, foreign, broom, xaringanthemer, reshape2)
+
+i_am("slides/EDUC645_log_regression.rmd")
+
+extra_css <- list(
+  ".red"   = list(color = "red"),
+  ".blue"  =list(color = "blue"),
+  ".green" = list(color = "#8bb174"),
+  ".purple" = list(color = "#6A5ACD"),
+  ".red-pink" = list(color= "#e64173"),
+  ".grey-light" = list(color= "grey70"),
+  ".slate" = list(color="#314f4f"),
+  ".small" = list("font-size" = "90%"))
+
+write_extra_css(css = extra_css, outfile = "my_custom.css")
+
+# Knitr options
+opts_chunk$set(
+  comment = "#>",
+  fig.align = "center",
+  fig.height = 6.75,
+  fig.width = 10.5,
+  warning = F,
+  message = F
+)
+opts_chunk$set(dev = "svg")
+options(device = function(file, width, height) {
+  svg(tempfile(), width = width, height = height)
+})
+options(knitr.table.format = "html")
+
+```
+
+# Roadmap
+
+---
+# Goals for the unit
+Measurement
+
+Validity
+
+Reliability
+
+---
+# Measurement
+
+Our ability to link theoretical concepts and observable responses.
+
+Good measurement is indispensable.
+Allow for the testing of a theory or its parts
+Ensure inferences are accurate and correct
+---
+# Classical Measurement Theory
+
+X = T + E
+
+X is the observed score
+T is the True Score
+E is the Error associated with Measurement 
+---
+# Measurement Error
+Random error
+Chance factors confounding a measure’s true score
+Random error is inversely related to a measure’s reliability
+
+Non-random error
+Systematic bias in measurement
+Non-random error influences the validity of a measure
+
+---
+# Properties of Measurement
+Reliability
+Internal reliability
+Temporal reliability
+
+Validity
+Face validity
+Criterion-related validity
+Concurrent validity
+Predictive validity
+Content validity
+Construct validity
+
+---
+# Reliability
+Consistency of measurement
+Computed by taking the ratio of the true score variance and the observed variance:
+[ insert formula ]
+
+As VAR(T) increases, so does Reliability.
+
+---
+# Measuring Reliability
+Test-Retest method
+
+Alternative form method
+
+Split-halves method
+
+Internal consistency method
+
+---
+# Test-retest
+Examines temporal stability of a measure. May be influenced by the time between assessments. 
+Always provide details regarding the time between assessments in a study. 
+Practice effect bias.
+
+Individuals should not have “changed” in ways that would bias the test-retest assessment. Any difference in the assessment could be non-random error and reduce the reliability.
+
+Only appropriate when the individual has not changed as a result of the first test, and/or the length of time between assessments has diminished the likelihood of practice effect bias.
+
+---
+# Alternative Form
+Developer must create two separate tests examining the same domain, yet use different content.  
+
+This method provides a test of equivalences.
+If possible, both versions are administered as closely in time as possible (e.g., same day). 
+Avoid order effects by randomizing sequence among participants.
+
+Care must be taken. Tests will never be perfectly equivalent, particularly when the measure is assessing abstract elements.
+
+---
+# Splot Halves
+Offer the assessment yet divide (“split-half method”) the items at random.  
+
+Split in two comparable sets, you can compare the reliability of one set to the other.  
+
+In splitting the measure, reliability will be lowered artificially. It is important to adjust the reliability estimate using the Spearman-Brown adjustment:
+			radjusted = N*rsh/[1 + (N-1)rsh]
+
+---
+# Internal Consistency
+Assessment of how well a set of variables correlate with each other (“hang together”).
+
+Internal consistency estimates are sensitive to:
+Missing data
+Unidirection of variables
+Number of items
+
+---
+# Cronbach's Alpha
+
+[ insert formula ]
+
+k = number of items included in scale analysis
+s2i = variance of scores for each item
+s2 = variance of all scores in the scale
+Range = 0-1
+
+---
+# Standards for reliability
+Cronbach's alpha 
+       α ≥ .9 Excellent 
+.9 > α ≥ .8 Good 
+.8 > α ≥ .7 Acceptable 
+.7 > α ≥ .6 Questionable 
+.6 > α ≥ .5 Poor 
+.5 > α Unacceptable
+
+---
+# Reliability: KR-20
+
+Items are dichotomous (0 or 1)
+Kuder-Richardson formula number 20
+
+
+k = number of items included in scale analysis
+pi = proportion responding “positively”
+qi  = 1 – pi
+s2 = variance of all scores in the scale
+
+---
+# Attentuation Correction
+Estimates the correlation between X & Y, assuming perfect measurement.
+
+Observed correlation over the SQRT of the (Reliability of X*Reliability of Y). 
+
+---
+# Validity
+Face validity: Measure seems to assess domain
+
+Criterion-related validity
+Concurrent validity: Measure is correlated with behavior
+Predictive validity: Measure is predictive of behavior
+
+Content validity
+Measurement includes holistic elements of domain
+
+Construct validity
+Measurement relates to other theoretically-derived measures
+---
+# Above and beyond: Factor analysis
+Statistical method to uncover clusters (factors) of interrelated variables.
+
+Each factor represents items that are highly correlated with each other.
+
+The higher the inter-correlation of the item, the higher the factor loading of the item on a given factor. 
+
+*Learn more in SEM courses*
+
+---
+class: middle, inverse
+# Synthesis and wrap-up
+
