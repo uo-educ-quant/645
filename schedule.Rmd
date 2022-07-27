@@ -1,17 +1,60 @@
 ---
 title: "EDUC 645 Schedule"
 site: distill::distill_website
+
 output:
   html_document:
-    toc: true
-    toc_float: true
+    toc: TRUE
+    toc_depth: 2
+    toc_float: TRUE
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Unit 1: Introduction to Nested Data (Week 1-2)
+
+## Unit 1: Logistic Regression
+
+**Learning Objectives:** 
+
+- Introduce the linear probability model and discuss the limitations
+
+- Introduce the concept of probability, odds, and logit
+
+- Introduce the logistic function
+
+- Introduce the logistic regression model with continuous predictors and how to interpret the model parameters and inference for model parameters
+
+- Introduce the glm function in R to fit the logistic regression model
+
+- Introduce the logistic regression model with categorical predictors and how to interpret the model parameters and inference for model parameters
+
+- Introduce the logistic regression model with an interaction between a continuous and categorical predictor, how to interpret the model parameters, and inference for model parameters
+
+- Discuss the predictive power, model fit, and diagnostics for a logistic regression model
+
+**Readings**: 
+
+**Lecture**:
+
+ * Lecture slides: 
+
+**Assignment 1**:
+
+## Unit 2: Poisson Regression
+
+**Learning Objectives:** 
+
+**Readings**: 
+
+**Lecture**:
+
+ * Lecture slides: 
+
+**Assignment 2**:
+
+## Unit 3: Introduction to Nested Data
 
 **Learning Objectives:** 
 
@@ -47,49 +90,27 @@ subject
 
  * Lecture slides: 
 
-**Assignment 1**:
-
-## Unit 2: Logistic Regression (Week 3-4-5)
-
-**Learning Objectives:** 
-
-- Introduce the linear probability model and discuss the limitations
-
-- Introduce the concept of probability, odds, and logit
-
-- Introduce the logistic function
-
-- Introduce the logistic regression model with continuous predictors and how to interpret the model parameters and inference for model parameters
-
-- Introduce the glm function in R to fit the logistic regression model
-
-- Introduce the logistic regression model with categorical predictors and how to interpret the model parameters and inference for model parameters
-
-- Introduce the logistic regression model with an interaction between a continuous and categorical predictor, how to interpret the model parameters, and inference for model parameters
-
-- Discuss the predictive power, model fit, and diagnostics for a logistic regression model
-
-**Readings**: 
-
-**Lecture**:
-
- * Lecture slides: 
-
-**Assignment 2**:
-
-## Unit 3: Poisson Regression (Week 6-7)
-
-**Learning Objectives:** 
-
-**Readings**: 
-
-**Lecture**:
-
- * Lecture slides: 
-
 **Assignment 3**:
 
-## Unit 4: Data Cleaning and Handling Missing Data (Week 8-9)
+## Unit 4: Introduction to Measurement and Assessment
+
+**Learning Objectives:** 
+
+- Introduction to the concept of reliability
+
+- Talk about the assumption that there is a single underlying construct for a set of items in surveys when you aggregate scores across items
+
+- Show how to compute Cronbach's alpha, how to interpret it, and emphasize the strong underlying assumptions
+
+**Readings**: 
+
+**Lecture**:
+
+ * Lecture slides: 
+ 
+**Assignment 4**:
+
+## Unit 5: Data Cleaning and Handling Missing Data
 
 **Learning Objectives:** 
 
@@ -114,23 +135,7 @@ subject
 
  * Lecture slides: 
 
-**Assignment 4**:
-
-## Unit 5: Introduction to Measurement and Assessment (Week 10)
-
-**Learning Objectives:** 
-
-- Introduction to the concept of reliability
-
-- Talk about the assumption that there is a single underlying construct for a set of items in surveys when you aggregate scores across items
-
-- Show how to compute Cronbach's alpha, how to interpret it, and emphasize the strong underlying assumptions
-
-**Readings**: 
-
-**Lecture**:
-
- * Lecture slides: 
+**Assignment 5**:
 
 **Final Project**:
 

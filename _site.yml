@@ -9,9 +9,9 @@ navbar:
     href: schedule.html
   - text: Lectures
     menu: 
-      - text: "Unit 1: Intro to Logistic Regression"
+      - text: "Unit 1: Logistic Regression"
         href: 
-      - text: "Unit 2: Intro to Poisson Regression"
+      - text: "Unit 2: Poisson Regression"
         href: 
       - text: "Unit 3: Introduction to Measurement and Assessment"
         href:
@@ -29,4 +29,3 @@ navbar:
 output:
   html_document:
    lib_dir: site_libs
-   self_contained: no

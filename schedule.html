@@ -629,13 +629,13 @@ body {
   padding-top: 60px;
 }
 </style>
-<script src="site_libs/header-attrs-2.14/header-attrs.js"></script>
-<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="/Library/Frameworks/R.framework/Versions/4.2/Resources/library/rmarkdown/rmd/h/pandoc/header-attrs.js"></script>
+<script src="/Library/Frameworks/R.framework/Versions/4.2/Resources/library/jquerylib/lib/3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
-<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
-<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
-<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<link href="/Library/Frameworks/R.framework/Versions/4.2/Resources/library/rmarkdown/rmd/h/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+<script src="/Library/Frameworks/R.framework/Versions/4.2/Resources/library/rmarkdown/rmd/h/bootstrap/js/bootstrap.min.js"></script>
+<script src="/Library/Frameworks/R.framework/Versions/4.2/Resources/library/rmarkdown/rmd/h/bootstrap/shim/html5shiv.min.js"></script>
+<script src="/Library/Frameworks/R.framework/Versions/4.2/Resources/library/rmarkdown/rmd/h/bootstrap/shim/respond.min.js"></script>
 <style>h1 {font-size: 34px;}
        h1.title {font-size: 38px;}
        h2 {font-size: 30px;}
@@ -645,12 +645,12 @@ body {
        h6 {font-size: 12px;}
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
-<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
-<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
-<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
-<script src="site_libs/navigation-1.1/tabsets.js"></script>
-<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
-<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<script src="/Library/Frameworks/R.framework/Versions/4.2/Resources/library/rmarkdown/rmd/h/jqueryui/jquery-ui.min.js"></script>
+<link href="/Library/Frameworks/R.framework/Versions/4.2/Resources/library/rmarkdown/rmd/h/tocify/jquery.tocify.css" rel="stylesheet" />
+<script src="/Library/Frameworks/R.framework/Versions/4.2/Resources/library/rmarkdown/rmd/h/tocify/jquery.tocify.js"></script>
+<script src="/Library/Frameworks/R.framework/Versions/4.2/Resources/library/rmarkdown/rmd/h/navigation-1.1/tabsets.js"></script>
+<link href="/Library/Frameworks/R.framework/Versions/4.2/Resources/library/rmarkdown/rmd/h/highlightjs/default.css" rel="stylesheet" />
+<script src="/Library/Frameworks/R.framework/Versions/4.2/Resources/library/rmarkdown/rmd/h/highlightjs/highlight.js"></script>
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -931,6 +931,20 @@ div.tocify {
 <a href="index.html" class="title">EDUC 645</a>
 <a href="syllabus.html">Syllabus</a>
 <a href="schedule.html">Schedule</a>
+<div class="nav-dropdown">
+<button class="nav-dropbtn">
+Lectures
+ 
+<span class="down-arrow">&#x25BE;</span>
+</button>
+<div class="nav-dropdown-content">
+<span class="nav-dropdown-header">Unit 1: Logistic Regression</span>
+<span class="nav-dropdown-header">Unit 2: Poisson Regression</span>
+<span class="nav-dropdown-header">Unit 3: Introduction to Measurement and Assessment</span>
+<span class="nav-dropdown-header">Unit 4: Nested Data Structures</span>
+<span class="nav-dropdown-header">Unit 5: Cleaning Data &amp; Missing Data</span>
+</div>
+</div>
 </div>
 <div class="nav-right">
 <a href="assignments.html">Assignments</a>
@@ -961,6 +975,20 @@ div.tocify {
 <li>
   <a href="schedule.html">Schedule</a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Lectures
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">Unit 1: Logistic Regression</li>
+    <li class="dropdown-header">Unit 2: Poisson Regression</li>
+    <li class="dropdown-header">Unit 3: Introduction to Measurement and Assessment</li>
+    <li class="dropdown-header">Unit 4: Nested Data Structures</li>
+    <li class="dropdown-header">Unit 5: Cleaning Data &amp; Missing Data</li>
+  </ul>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
@@ -983,9 +1011,47 @@ div.tocify {
 </div>
 
 
-<div id="unit-1-introduction-to-nested-data-week-1-2"
-class="section level2">
-<h2>Unit 1: Introduction to Nested Data (Week 1-2)</h2>
+<div id="unit-1-logistic-regression" class="section level2">
+<h2>Unit 1: Logistic Regression</h2>
+<p><strong>Learning Objectives:</strong></p>
+<ul>
+<li><p>Introduce the linear probability model and discuss the
+limitations</p></li>
+<li><p>Introduce the concept of probability, odds, and logit</p></li>
+<li><p>Introduce the logistic function</p></li>
+<li><p>Introduce the logistic regression model with continuous
+predictors and how to interpret the model parameters and inference for
+model parameters</p></li>
+<li><p>Introduce the glm function in R to fit the logistic regression
+model</p></li>
+<li><p>Introduce the logistic regression model with categorical
+predictors and how to interpret the model parameters and inference for
+model parameters</p></li>
+<li><p>Introduce the logistic regression model with an interaction
+between a continuous and categorical predictor, how to interpret the
+model parameters, and inference for model parameters</p></li>
+<li><p>Discuss the predictive power, model fit, and diagnostics for a
+logistic regression model</p></li>
+</ul>
+<p><strong>Readings</strong>:</p>
+<p><strong>Lecture</strong>:</p>
+<ul>
+<li>Lecture slides:</li>
+</ul>
+<p><strong>Assignment 1</strong>:</p>
+</div>
+<div id="unit-2-poisson-regression" class="section level2">
+<h2>Unit 2: Poisson Regression</h2>
+<p><strong>Learning Objectives:</strong></p>
+<p><strong>Readings</strong>:</p>
+<p><strong>Lecture</strong>:</p>
+<ul>
+<li>Lecture slides:</li>
+</ul>
+<p><strong>Assignment 2</strong>:</p>
+</div>
+<div id="unit-3-introduction-to-nested-data" class="section level2">
+<h2>Unit 3: Introduction to Nested Data</h2>
 <p><strong>Learning Objectives:</strong></p>
 <ul>
 <li><p>Introduce the nested data structure (two-level, e.g., repeated
@@ -1034,50 +1100,30 @@ interest</p></li>
 <ul>
 <li>Lecture slides:</li>
 </ul>
-<p><strong>Assignment 1</strong>:</p>
-</div>
-<div id="unit-2-logistic-regression-week-3-4-5" class="section level2">
-<h2>Unit 2: Logistic Regression (Week 3-4-5)</h2>
-<p><strong>Learning Objectives:</strong></p>
-<ul>
-<li><p>Introduce the linear probability model and discuss the
-limitations</p></li>
-<li><p>Introduce the concept of probability, odds, and logit</p></li>
-<li><p>Introduce the logistic function</p></li>
-<li><p>Introduce the logistic regression model with continuous
-predictors and how to interpret the model parameters and inference for
-model parameters</p></li>
-<li><p>Introduce the glm function in R to fit the logistic regression
-model</p></li>
-<li><p>Introduce the logistic regression model with categorical
-predictors and how to interpret the model parameters and inference for
-model parameters</p></li>
-<li><p>Introduce the logistic regression model with an interaction
-between a continuous and categorical predictor, how to interpret the
-model parameters, and inference for model parameters</p></li>
-<li><p>Discuss the predictive power, model fit, and diagnostics for a
-logistic regression model</p></li>
-</ul>
-<p><strong>Readings</strong>:</p>
-<p><strong>Lecture</strong>:</p>
-<ul>
-<li>Lecture slides:</li>
-</ul>
-<p><strong>Assignment 2</strong>:</p>
-</div>
-<div id="unit-3-poison-regression-week-6-7" class="section level2">
-<h2>Unit 3: Poison Regression (Week 6-7)</h2>
-<p><strong>Learning Objectives:</strong></p>
-<p><strong>Readings</strong>:</p>
-<p><strong>Lecture</strong>:</p>
-<ul>
-<li>Lecture slides:</li>
-</ul>
 <p><strong>Assignment 3</strong>:</p>
 </div>
-<div id="unit-4-data-cleaning-and-handling-missing-data-week-8-9"
+<div id="unit-4-introduction-to-measurement-and-assessment"
 class="section level2">
-<h2>Unit 4: Data Cleaning and Handling Missing Data (Week 8-9)</h2>
+<h2>Unit 4: Introduction to Measurement and Assessment</h2>
+<p><strong>Learning Objectives:</strong></p>
+<ul>
+<li><p>Introduction to the concept of reliability</p></li>
+<li><p>Talk about the assumption that there is a single underlying
+construct for a set of items in surveys when you aggregate scores across
+items</p></li>
+<li><p>Show how to compute Cronbach’s alpha, how to interpret it, and
+emphasize the strong underlying assumptions</p></li>
+</ul>
+<p><strong>Readings</strong>:</p>
+<p><strong>Lecture</strong>:</p>
+<ul>
+<li>Lecture slides:</li>
+</ul>
+<p><strong>Assignment 4</strong>:</p>
+</div>
+<div id="unit-5-data-cleaning-and-handling-missing-data"
+class="section level2">
+<h2>Unit 5: Data Cleaning and Handling Missing Data</h2>
 <p><strong>Learning Objectives:</strong></p>
 <ul>
 <li><p>Students should be ready to talk about the concept of model-based
@@ -1101,25 +1147,7 @@ missing values</p></li>
 <ul>
 <li>Lecture slides:</li>
 </ul>
-<p><strong>Assignment 4</strong>:</p>
-</div>
-<div id="unit-5-introduction-to-measurement-and-assessment-week-10"
-class="section level2">
-<h2>Unit 5: Introduction to Measurement and Assessment (Week 10)</h2>
-<p><strong>Learning Objectives:</strong></p>
-<ul>
-<li><p>Introduction to the concept of reliability</p></li>
-<li><p>Talk about the assumption that there is a single underlying
-construct for a set of items in surveys when you aggregate scores across
-items</p></li>
-<li><p>Show how to compute Cronbach’s alpha, how to interpret it, and
-emphasize the strong underlying assumptions</p></li>
-</ul>
-<p><strong>Readings</strong>:</p>
-<p><strong>Lecture</strong>:</p>
-<ul>
-<li>Lecture slides:</li>
-</ul>
+<p><strong>Assignment 5</strong>:</p>
 <p><strong>Final Project</strong>:</p>
 </div>
 
@@ -1176,7 +1204,7 @@ $(document).ready(function ()  {
 
     // establish options
     var options = {
-      selectors: "h1,h2,h3",
+      selectors: "h1,h2",
       theme: "bootstrap3",
       context: '.toc-content',
       hashGenerator: function (text) {

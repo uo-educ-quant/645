@@ -3,8 +3,9 @@ title: "EDUC 645 Syllabus"
 site: distill::distill_website
 output:
   html_document:
-    toc: true
-    toc_float: true
+    toc: TRUE
+    toc_depth: 2
+    toc_float: TRUE
 ---
 
 ```{r setup, include=FALSE}
