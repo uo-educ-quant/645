@@ -15,7 +15,7 @@ output:
 
 ```{R, setup, include = F}
 library(pacman)
-p_load(here, tidyverse, ggplot2, xaringan, knitr, kableExtra, foreign, broom, xaringanthemer, reshape2)
+p_load(here, tidyverse, ggplot2, xaringan, knitr, kableExtra, foreign, broom, xaringanthemer, reshape2, DiagrammeR)
 
 i_am("slides/EDUC645_log_regression.rmd")
 
@@ -65,10 +65,16 @@ options(knitr.table.format = "html")
 # Problems with missing data (missingness)
 
 Power: Missingness often reduces the number of useful observations, and therefore reduces power
+
+--
+
 Bias: Missingness induces bias as incomplete data…
-May not be Representative of the intended population
-May not be Balanced across observed and/or unobserved confounders as originally planned
-Are likely to have biased characteristics
+- May not be Representative of the intended population
+- May not be Balanced across observed and/or unobserved confounders as originally planned
+- Are likely to have biased characteristics
+
+--
+
 Recoverability: Traditional approaches to missingness have limited our ability to recover statistical power and true variability
 
 ---
@@ -76,11 +82,19 @@ Recoverability: Traditional approaches to missingness have limited our ability t
 
 Missing Completely at Random (MCAR): Missingness is unrelated to the values of variables in the data
 Example: Missingness on Depression Scores (DV) because a school event attended by younger students prevented data collection from those students
+
+--
+
 Missing at Random (MAR): Missingness is related to values in the data, but can be explained by other (observed) values in the data
 Generally (assumed to be) the most common form of missingness
 Example: Missingness on Depression Scores (DV) due to perceived stigma of mental health concerns, but Depression Score may be predicted by age, victimization level, etc.
+
+--
+
 Missing Not at Random (MNAR): Missingness is caused by an individual’s value of the variable
 Example: Missingness on BDI because of depression level (IV)
+
+--
 
 *All forms of missingness can co-occur among same data*
 
@@ -118,16 +132,32 @@ Not model-specific and therefore more versatile application to data analysis
 
 ---
 # MI by Chained Equations (MICE)
-Chained equations approach focuses the algorithm on one variable at a time
-Once that variable is imputed, the algorithm moves to the next variable, skipping over complete variables, until all missing data is imputed – this process is then repeated many times to create each imputed data set
-Numerous algorithms exist, and selection depends mainly on the type of variable being imputed (e.g., continuous, ordered or un-ordered nominal/categorical, etc.)
+- Chained equations approach focuses the algorithm on one variable at a time
+- Once that variable is imputed, the algorithm moves to the next variable, skipping over complete variables, until all missing data is imputed – this process is then repeated many times to create each imputed data set
+- Numerous algorithms exist, and selection depends mainly on the type of variable being imputed (e.g., continuous, ordered or un-ordered nominal/categorical, etc.)
 
 Recommended R package: mice (https://amices.org/mice/)
 
 ---
 # Multiple Imputation Process
 
-[ insert visual of steps ]
+```{r, echo=F, message=F, warning=F, fig.align="center", fig.height=7, fig.width=7}
+m <- DiagrammeR::mermaid("
+                         graph LR
+                         A((d))-->B((m<sub>1</sub>))
+                         A((d))-->C((m<sub>2</sub>))
+                         A((d))-->D((m<sub>3</sub>))
+                         B((m<sub>1</sub>))-->E((a<sub>1</sub>)) 
+                         C((m<sub>2</sub>))-->F((a<sub>2</sub>)) 
+                         D((m<sub>3</sub>))-->G((a<sub>3</sub>))
+                         E((a<sub>1</sub>))-->H((r))
+                         F((a<sub>2</sub>))-->H((r)) 
+                         G((a<sub>3</sub>))-->H((r))
+                         ")
+
+widgetframe::frameableWidget(m)
+```
+
 Benefits of repeating the process, merging (averaging) each estimate of the missing data:
 Produces a more accurate (and plausible) values
 More precisely defines uncertainty in the data

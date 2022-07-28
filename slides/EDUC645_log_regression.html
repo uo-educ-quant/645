@@ -35,7 +35,7 @@ class: center, middle, inverse, title-slide
 ---
 # Goals for the unit
 	• linear probability model and discuss the limitations
-		○ Understand the different model assumptions of logistic regression vs. linear regression.
+	• Understand the different model assumptions of logistic regression vs. linear regression.
 	• concept of probability, odds, and logit (Distinguish between odds and probability.)
 	• logistic function and the logistic regression model 
 		○ continuous predictors
@@ -57,18 +57,27 @@ class: center, middle, inverse, title-slide
 
 - You've learned to model continuous outcomes with linear regression models BUT there are many instances when we are interested in the probability of an outcome. How do we handle these sort of data?
 
-- What about when you are interested in probability, an outcome related to binary data? (e.g., yes/no)
-	• Ex. probability of group given individual traits, probability of needs, etc.
-	
+--
+
+- What about when you are interested in probability, an outcome related to binary data? (e.g., yes/no)  
+    • Ex. probability of group given individual traits, probability of needs, etc.
+    
+--
+
 - How are they different? Why can't we apply the same method?
 
 ---
 # Binary Outcomes
 - Outcomes with a yes/no or 0/1 response
-- Example: Diseased or not?
-	• Low birth weight or not?
-	• Depression or not?
-	• Vaccinated or not?
+
+--
+
+- Examples:  
+  - Depression or not?  
+  - Vaccinated or not?  
+
+--
+	
 - Proportion vs. Odds
 
 ---
@@ -77,11 +86,15 @@ class: center, middle, inverse, title-slide
 
 ---
 # Odds
-- Odds of an event: the probability of 'yes' divided by the probability of 'no'
+Odds of an event: the probability of 'yes' divided by the probability of 'no'
+- `\(Odds = p/1(1-p)\)`
 
-- Odds = p/1(1-p)
+--
 
 What are the odds of getting Tails when tossing a fair coin?
+
+--
+
 What are the odds of getting a 6 when tossing a fair dice?
 
 ---
@@ -94,12 +107,18 @@ What are the odds of getting a 6 when tossing a fair dice?
 ---
 # Binary Outcome and Binary Predictor
 - Measures of Association
-	• Difference in probabilities
-		○ p1-p2
-			§ If the difference in probabilities of the outcome across the categories is NOT 0, there is an association between the outcome and the predictor
-	• Odds ratio (OR)
-		○ OR = odds on category of predictor/ odds other category of predictor
-			§ If the OR is NOT 1, then there is an association between the predictor and the outcome
+	• Difference in probabilities = p1-p2
+			- If difference in probabilities of the outcome across the categories is NOT 0, then predictor is associated with the outcome
+
+--
+
+	• Odds ratio (OR) = odds on category of predictor/odds other category of predictor
+			- If OR is NOT 1, then predictor is associated with the outcome
+
+???
+- If the difference in probabilities of the outcome across the categories is NOT 0, there is an association between the outcome and the predictor
+
+- If the OR is NOT 1, then there is an association between the predictor and the outcome
 
 ---
 Odds 
@@ -112,9 +131,9 @@ which tells us that the *odds* of a successful penalty kick are 3.05 times highe
 
 In our example, it is also possible to estimate the probability of a goal, `\(p\)`, for either circumstance. When the goalkeeper's team is behind, the probability of a successful penalty kick is `\(p\)` = 22/24 or 0.833. We can see that the ratio of the probability of a goal scored divided by the probability of no goal is `\((22/24)/(2/24)=22/2\)` or 11, the odds we had calculated above. The same calculation can be made when the goalkeeper's team is not behind. In general, we now have several ways of finding the odds of success under certain circumstances:
 
-\[\textrm{Odds} = \frac{\# \textrm{successes}}{\# \textrm{failures}}=
+$\[\textrm{Odds} = \frac{\# \textrm{successes}}{\# \textrm{failures}}=
 \frac{\# \textrm{successes}/n}{\# \textrm{failures}/n}=
-\frac{p}{1-p}.\] 
+\frac{p}{1-p}.\]$ 
 
 ---
 
