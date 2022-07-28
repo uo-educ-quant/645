@@ -132,11 +132,20 @@ Not model-specific and therefore more versatile application to data analysis
 
 ---
 # MI by Chained Equations (MICE)
+
+- Chained equations: 
+  - Focuses the algorithm on one variable at a time
+  - Once variable is imputed, the algorithm moves to the next variable, skipping over complete variables, until all missing data is imputed
+  - Process is repeated to create each imputed data set
+- Numerous algorithms exist
+  - Selection on variable being imputed (e.g., continuous, ordered, nominal/categorical)
+
+Recommended R package: mice (https://amices.org/mice/)
+
+???
 - Chained equations approach focuses the algorithm on one variable at a time
 - Once that variable is imputed, the algorithm moves to the next variable, skipping over complete variables, until all missing data is imputed – this process is then repeated many times to create each imputed data set
 - Numerous algorithms exist, and selection depends mainly on the type of variable being imputed (e.g., continuous, ordered or un-ordered nominal/categorical, etc.)
-
-Recommended R package: mice (https://amices.org/mice/)
 
 ---
 # Multiple Imputation Process
