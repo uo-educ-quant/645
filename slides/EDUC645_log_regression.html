@@ -100,7 +100,11 @@ What are the odds of getting a 6 when tossing a fair dice?
 ---
 # Odds and Probability
 
-[insert image comparing trajectories]
+As the probability of an event increases, so do the odds
+
+[insert data visualization comparing trajectories]
+
+???
 - As the probability of an event increases, so do the odds
 - Odds increase *almost* exponentially as the probability increases
 
@@ -121,23 +125,27 @@ What are the odds of getting a 6 when tossing a fair dice?
 - If the OR is NOT 1, then there is an association between the predictor and the outcome
 
 ---
-Odds 
-- One way to quantify a goalkeeper's performance. 
-We see that the odds of a goal scored on a penalty kick are better when the goalkeeper's team is behind than when it is not behind (i.e., better odds of scoring for the shooter when the shooter's team is ahead). 
+# Odds
 
-We can compare these odds by calculating the __odds ratio__ \index{odds ratio} (OR), 11/3.61 or 3.05, 
+- One way to quantify a XX's performance. 
+Example 
+
+__odds ratio__ \index{odds ratio} (OR): 
 
 which tells us that the *odds* of a successful penalty kick are 3.05 times higher when the shooter's team is leading.
 
-In our example, it is also possible to estimate the probability of a goal, `\(p\)`, for either circumstance. When the goalkeeper's team is behind, the probability of a successful penalty kick is `\(p\)` = 22/24 or 0.833. We can see that the ratio of the probability of a goal scored divided by the probability of no goal is `\((22/24)/(2/24)=22/2\)` or 11, the odds we had calculated above. The same calculation can be made when the goalkeeper's team is not behind. In general, we now have several ways of finding the odds of success under certain circumstances:
+In general, we now have several ways of finding the odds of success under certain circumstances:
 
-$\[\textrm{Odds} = \frac{\# \textrm{successes}}{\# \textrm{failures}}=
+$\[Odds} = \frac{\# \textrm{successes}}{\# \textrm{failures}}=
 \frac{\# \textrm{successes}/n}{\# \textrm{failures}/n}=
 \frac{p}{1-p}.\]$ 
 
----
+???
 
-Generalized linear models (GLMs)
+In our example, it is also possible to estimate the probability of a goal, `\(p\)`, for either circumstance. When the goalkeeper's team is behind, the probability of a successful penalty kick is `\(p\)` = 22/24 or 0.833. We can see that the ratio of the probability of a goal scored divided by the probability of no goal is `\((22/24)/(2/24)=22/2\)` or 11, the odds we had calculated above. The same calculation can be made when the goalkeeper's team is not behind.
+
+---
+# Generalized linear models (GLMs)
 - are a way in which to model a variety of different types of responses.
 - we apply the general results of GLMs to the specific application of binomial responses. 
 
@@ -150,6 +158,9 @@ Recall that the theory of GLMs is based on the unifying notion of the one-parame
 f(y;\theta)=e^{[a(y)b(\theta)+c(\theta)+d(y)]}
 \end{equation*}`
 
+---
+# Generalized linear models (GLMs)
+
 To see that we can apply the general approach of GLMs \index{generalized linear models (GLMs)} to binomial responses, we first write an expression for the probability of a binomial response and then use a little algebra to rewrite it until we can demonstrate that it, too, can be written in one-parameter exponential family form with `\(\theta = p\)`. This will provide a way in which to specify the canonical link and the form for the model. Additional theory allows us to deduce the mean, standard deviation, and more from this form.
 
 If `\(Y\)` follows a binomial distribution with `\(n\)` trials and probability of success `\(p\)`, we can write:
@@ -159,7 +170,7 @@ P(Y=y)&amp;= \binom{n}{y}p^y(1-p)^{(n-y)} \\
       &amp;=e^{y\log(p) + (n-y)\log(1-p) + \log\binom{n}{y}}
 \end{align*}`
 
-However, this probability mass function is not quite in one-parameter exponential family form. Note that there are two terms in the exponent which consist of a product of functions of `\(y\)` and `\(p\)`. So more simplification is in order:
+*However*, this probability mass function is not quite in one-parameter exponential family form. Note that there are two terms in the exponent which consist of a product of functions of `\(y\)` and `\(p\)`. So more simplification is in order:
 
 `\begin{equation*}
 P(Y=y) = e^{y\log\left(\frac{p}{1-p}\right) + n\log(1-p)+ \log\binom{n}{y}}
@@ -170,32 +181,92 @@ The one-parameter exponential family form for binomial responses shows that the 
 ---
 # Logistic Regression
 
-binary (0 or 1) response (Y) and a single continuous predictor (X).  The solid line is a linear regression fit with least squares to model the probability of a success (Y=1) for a given value of X.  With a binary response, the line doesn't fit the data well, and it produces predicted probabilities below 0 and above 1.  On the other hand, the logistic regression fit (dashed curve) with its typical "S" shape follows the data closely and always produces predicted probabilities between 0 and 1.  For these and several other reasons detailed in this chapter, we will focus on the following model for logistic regression with binary or binomial responses:
+Binary (0 or 1) response (Y) and a single continuous predictor (X).
+
+### Model for logistic regression with binary or binomial responses:
 
 `\begin{equation*}
 log(\frac{p_i}{1-p_i})=\beta_0+\beta_1 x_i
 \end{equation*}`
+
 where the observed values `\(Y_i \sim\)` binomial with `\(p=p_i\)` for a given `\(x_i\)` and `\(n=1\)` for binary responses.
+
+???
+
+The solid line is a linear regression fit with least squares to model the probability of a success (Y=1) for a given value of X.  With a binary response, the line doesn't fit the data well, and it produces predicted probabilities below 0 and above 1.  On the other hand, the logistic regression fit (dashed curve) with its typical "S" shape follows the data closely and always produces predicted probabilities between 0 and 1.  For these and several other reasons detailed in this chapter, we will focus on the following model for logistic regression with binary or binomial responses:
 
 
 ---
 # Assumptions
-- The outcome (Y) is discrete (0/1 variable)
-- There must be enough responses in every category
-- Linearity in the logit scale  - X's must be linearly related to logit(Y)
+- Outcome (Y) is discrete (0/1 variable)
+- Must be enough responses in every category
+- Linearity in the logit scale 
+  - X's must be linearly related to logit(Y)
 - Absence of multicollinearity
 - No outliers
 - Independence of (X,Y)'s
+  - No clustering of data into groups/contexts that would provide information about the values of other errors
 
 ---
 # Interpretation of Model Parameters
+
+`\begin{align*}
+ln(\frac{p_i}{1-p_i})=\beta_0+\beta_1 X_i
+\end{align*}`
+
+`\(\beta_1\)`: Change in log odds for 1 unit change in `\(X_i\)`
+
+[insert example]
+
+---
+# Interpretation of Model Parameters
+To get the odds ratio, we need to back transform and exponentiate the coefficient, `\(\beta_i\)`:
+
+`\(\beta_1 = ln(\frac{odds|X=1}{odds|X=0})\)`  
+   `\(= ln(OR_{X=1:X=0})\)`  
+
+`\(OR = e^{ln(OR_{X=1:X=0})}\)`  
+  $ = e^{\beta_1}$
+
+---
+# [insert example walk-through with code]
 
 
 ---
 # Assess Confounding
 
+- Compare the unadjusted regression coefficients to the adjusted regression coefficients (not the ORs)
+- 10% confounding rule: if the change in coefficients &gt; 10%, there is evidence for confounding by the variable in the adjusted model
+
+### Calculating change in coefficient
+`\(100*\frac{\beta_{adjusted} - \beta_{unadjusted}} {\beta_{unadjusted}}\)`
+
+
 ---
 # Assess Interactions
+
+- Assess effect modification by adding interaction term to the model
+
+Model *with* interaction term:
+
+`\(ln({Y_{odds}}) - {\beta_0} + {\beta_1}X_1 + {\beta_2}X_2\)`
+
+Model *without* interaction term:
+`\(ln({Y_{odds}}) = {\beta_0} + {\beta_1}X_1 + {\beta_2}X_2 + {\beta_3}(X_1*X_2)\)`
+
+---
+# [Assess Interactions - example walkthrough]
+
+---
+# [Assess Interactions - example walkthrough]
+
+[interpretation of output, example write up]
+
+---
+# Influential Observations
+
+- Are there observations that greatly change the estimated regression coefficients if they are removed from the dataset?
+- Same concept as with DFBetas from multiple linear regression
 
 ---
 # Influential Observations
@@ -203,19 +274,83 @@ where the observed values `\(Y_i \sim\)` binomial with `\(p=p_i\)` for a given `
 
 ---
 # Predicted Values: Probabilities
+- Coefficients tell us the *average* predicted probability for a person, but what if we want to know about more specific groups or contexts?
+
+--
+
+- Obtain predicted probabilities for each person depending on their characteristics
+
+`\(p = \frac{exp(\beta_0 + \beta_1X)}{1 + exp{\beta_0 + \beta_1X}}\)`
 
 ---
 # Assessing Predicted Values
 
+* In MLR, `\(R^2\)` indicates good prediction
+
+--
+
+* In logistic regression, use the predicted probabilities from the model to classify people according to one of the two groups of the predictor variable.
+
 ---
 # Classification Rule
+* Need a threshold for defining probability for belonging in one or two of the groups
 
+* But how do we determine an appropriate threshold?
+
+--
+
+* We can calculate a cut-off by examining the *sensitivity* and *specificity* of our model
 
 ---
 # Types of Classification
 
+|      .    |Predicted  |      .    |  .      |
+|      .    | Y = 1     | Y = 0     |   .     |
+|:--------: |:---------:|:---------:|:-------:|
+|Observed   | Y = 1     | True +    | False - |
+|      .    | Y = 0     | False +   | True -  |
+
+### Sensitivity
+* What is the ratio of correct positive predictions (Y = 1) to total positive predictions?
+* _Positive predictive value (PPV)_ = `\(\frac{number of True +} {Total_{observed} Y = 1}\)`
+
+### Specificity
+* What is the ratio of correct negative predictions (Y = 0) to total negative predictions?
+* _Negative predictive value (PPV)_ = `\(\frac{number of True -} {Total_{observed} Y = 0}\)`
+
 ---
-# Receiver Operating Characteristic (ROC)
+# Specificity vs. Sensitivity
+[insert hypothetical figure 
+"Specificity and Sensitivity Change as the Probability Cutoff Changes"]
+
+---
+# Receiver Operating Characteristic (ROC) Curve
+
+
+---
+# Receiver Operating Characteristic (ROC) Curve
+* Plot of true positive rate against the false positive rate for the different possible cutoff points of a diagnostic test, for example
+* Illustrates the tradeoff between *sensitivity* and *specificity*
+  - Increase in *sensitivity* will result in decrease in *specificity*, and vice versa
+* For more accurate tests, the curve is closer to the left-hand border and the top border of the ROC
+* The __area under the curve (AUC)__ measures *accuracy*
+
+---
+# Area Under the ROC Curve (AUC)
+
+[insert figure of theoretical AUC]
+
+--
+
+### AUC Guidelines:
+* Will vary depending on the outcome variable, but here are some general guidelines:
+  - AUC = 0.5 = Poor (equal to random chance)
+  - 0.7 &lt; AUC &lt; 0.8 = Acceptable
+  - 0.8 &lt; AUC &lt; 0.9 = Excellent
+  - AUC &gt; .9 = Outstanding
+
+---
+# [walk-through example of application and interpretation]
 
 ---
 class: middle, inverse

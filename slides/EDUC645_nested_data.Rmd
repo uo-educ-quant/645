@@ -81,6 +81,8 @@ and how to use it to decide whether one needs to use multilevel modeling
   (a) Effect implies change in individuals over time,
   (b) Effect occurs in groups and organizational settings (e.g., dyads, groups, networks, neighborhoods, clinics, cities, countries).
 
+--
+
 2) Factors are nested across multiple levels; influence the organization of behavior.
 
 ---
@@ -98,15 +100,16 @@ and how to use it to decide whether one needs to use multilevel modeling
 
 ---
 # Traditional Linear Regression Example
-! Unit of analysis: Individual
-! Examine between-individual variability
-! Intercept and slope are the same for all groups
-! Ignores inclusion of important group variables
-! Residual correlation
+* Unit of analysis: Individual
+* Examine between-individual variability
+* Intercept and slope are the same for all groups
+* Ignores inclusion of important group variables
+* Residual correlation
 
 ---
 # What does “independence” mean?
 #### The observation of one participant does not depend on the response of other participants
+
 #### What happens to independence when:
 - We collect data across multiple sites?
 - Collect observations from the same individual over time?
@@ -114,7 +117,11 @@ and how to use it to decide whether one needs to use multilevel modeling
 ---
 # Intraclass Correlation
 ### Intraclass correlation: Proportion of total variability in the outcome that occurs between groups.
-### The greater the intraclass correlation (ICC), the greater the reflection of inequality between groups.
+
+--
+
+### The greater the intraclass correlation coefficient (ICC), the greater the reflection of inequality between groups.
+
 
 ---
 # Intraclass Correlation
@@ -124,21 +131,30 @@ and how to use it to decide whether one needs to use multilevel modeling
 - Group fixed-effects Model
 - Contextual Model
 - Hierarchical Linear Models
+
+--
+
 ### Group-level modeling
+
+--
+
 ### Repeated-measured modeling (“Growth curves”)
 
 ---
 # Multilevel Models (MLM)
-! Units of analysis: Individual and Group
-! Examine between-individual and between-group variability
-! The intercept and slopes may be different for individuals within and across groups
-! These differences may be explained by cross-level interactions (differential effects due to individual and group-level characteristics)
-! Allows for the inclusion of important individual and group variables
-! No residual correlation
+
+* Units of analysis: Individual and Group
+* Examine between-individual and between-group variability
+* The intercept and slopes may be different for individuals within and across groups
+* These differences may be explained by cross-level interactions (differential effects due to individual and group-level characteristics)
+* Allows for the inclusion of important individual and group variables
+* No residual correlation
 
 ---
 # Sampling and Design Considerations
+
 ### Formulating Research Questions
+
 #### Several questions may be proposed and result in different multilevel equations:
 - What is the association between UVI and number of partners among women in PR, after adjusting for clustering effects?
 - Is there an association between UVI and living in a city where female condoms (FCs) are free and accessible?
@@ -148,10 +164,14 @@ and how to use it to decide whether one needs to use multilevel modeling
 # Sampling and Design Considerations
 ### Design
 #### What constitutes a group-level variable?
-- Characteristic of an individual (provider, partner)
-- Characteristic of a setting (number of beds in hospital, allocated budget for HIV prevention in an agency)
-- Characteristics of catchment areas (Census, DHS)
+- Characteristic of
+  - individual (provider, partner)
+  - a setting (number of beds in hospital, allocated budget for HIV prevention in an agency)
+  - catchment areas (Census, DHS)
 - Policies (% of budget allocated to abstinence-only)
+
+--
+
 #### How are group-level variables defined?
 - Aggregating individual-level characteristics into groups
 (neighborhood SES)
@@ -167,9 +187,13 @@ neighborhood)
 - Determine the variable and outcome of interest
 - Determine the sample frame based on the I.V.(s)
 
+--
+
 #### Sampling clusters or sampling individuals?
 - Determine the number of parameters in the model
 - Calculate the number of observations needed for each cluster
+
+--
 
 #### Law of Diminishing Returns
 
@@ -180,7 +204,7 @@ neighborhood)
 # Summary
 ### Multilevel Modeling allows us to answer complex questions adequately if:
 - An appropriate study design is conceptualized
-- Measures across levels are identified from existing datasets and/or operationalized carefully
+- Measures across levels are identified from existing datasets or carefully operationalized
 
 ### Multilevel Modeling may be appropriate if residual correlations exist due to violations of independence
 - Benefit of partitioning variance even when Level-1 or Level-2 variables will not be modeled

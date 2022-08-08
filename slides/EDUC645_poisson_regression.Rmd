@@ -1,0 +1,53 @@
+---
+title: "Poisson Regression"
+subtitle: "EDUC 645: General Linear Model II"
+author: "TBD"
+#date: "`r format(Sys.time(), '%d %B %Y')`"
+output:
+  xaringan::moon_reader:
+    css: ['default', 'uo', 'ki-fonts', 'my_custom.css', 'xaringanthemer.css']
+    # self_contained: true
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{R, setup, include = F}
+library(pacman)
+p_load(here, tidyverse, ggplot2, xaringan, knitr, kableExtra, foreign, broom, xaringanthemer, reshape2, DiagrammeR)
+
+i_am("slides/EDUC645_log_regression.rmd")
+
+extra_css <- list(
+  ".red"   = list(color = "red"),
+  ".blue"  =list(color = "blue"),
+  ".green" = list(color = "#8bb174"),
+  ".purple" = list(color = "#6A5ACD"),
+  ".red-pink" = list(color= "#e64173"),
+  ".grey-light" = list(color= "grey70"),
+  ".slate" = list(color="#314f4f"),
+  ".small" = list("font-size" = "90%"))
+
+write_extra_css(css = extra_css, outfile = "my_custom.css")
+
+# Knitr options
+opts_chunk$set(
+  comment = "#>",
+  fig.align = "center",
+  fig.height = 6.75,
+  fig.width = 10.5,
+  warning = F,
+  message = F
+)
+opts_chunk$set(dev = "svg")
+options(device = function(file, width, height) {
+  svg(tempfile(), width = width, height = height)
+})
+options(knitr.table.format = "html")
+
+```
+
+# Roadmap
+
+---
