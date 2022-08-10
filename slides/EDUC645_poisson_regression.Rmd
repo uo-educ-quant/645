@@ -51,3 +51,115 @@ options(knitr.table.format = "html")
 # Roadmap
 
 ---
+
+???
+As with logistic regression, the underlying mathematics and underlying probability distribution theory are different from ordinary least-squares regression, which is why Poisson regression is treated as a separate topic even though, from the consumer's viewpoint, it's all regression.
+
+Poisson regression seeks to model counts--the number of children, number of colds, number of falls, number of telephone calls...you get the idea. Just as logistic regression models the log odds of an event, Poisson regression models the (natural) log of the expected count.
+
+Since the log of the expected count is being modeled, there is no problem with negative predicted values, since negative values correspond to expected counts between 0 and 1.
+---
+# Poisson Distribution
+
+* A discrete probability distribution is used to describe the off occurrence of unlikely events in a large number of independent trials
+
+* Poisson is a good approximation to the binomial distribution when the probability is small and the number of trials is large
+
+* It expresses the probability of a number of events occurring in a fixed period of time if these events occur with a known average rate and are independent of the time since the last event
+Examine if we want to know "how many of X in what amount of time"
+
+---
+# Poisson Distribution: Dispersion
+
+
+---
+# Assumptions
+
+The outcome (Y) is a count (positive integer)
+* Ex. the number of people in a subgroup of a population who have a learning disorder
+Requires a unit of time:
+* E.g., number of accidents per day, number of exposed per year
+Population is typically divided into groups, each group independent of the other
+
+---
+# Time
+
+Time is used to normalize the count variable that is observed
+(number of accidents per day, per year, per week)
+Time can be units of time, length of time, or other unit
+Number of accidents per mile, students per district
+
+---
+# Rate
+
+Rate = # of events/unit of time
+Sometimes rescaled so that the number of cases per unit is a whole number
+Rate $\neq$ probability
+• Rates include unit of time
+	- Rates can be >1
+• Probabilities do not have a unit
+	- Probabilities are always between 0 and 1
+
+---
+# Comparing Rates
+
+Suppose we want to compare rate of Y at two different sites (X groups) 
+We have to assume that incidents occurred at similar rates throughout the year
+Typically organize information about counts and time in a table:
+
+|	      | Count	| Time |
+|--------|-------|------|
+|Group 1 | N1	  | T1   |
+|Group 2 | N2	  | T2   |
+
+---
+
+# Steps to comparing rates:
+
+### 1. Calculate rates in both groups
+*	Rate = number of events/unit of time
+
+### 2. Calculate Rate Ratio (RR)
+* $RR = \frac{Rate_1}{Rate_2}$
+
+### 3. Conduct test of hypothesis to see is RR $\neq$ 1
+*	$H_0: RR = 1$ vs. $H_a: RR \neq 1$
+  - $z = \frac{ln(RR)}{\sqrt{(\frac{1}{n_1}+\frac{1}{n_2}}}$
+	- Get p-value
+* Get CI for RR
+*	Draw conclusions
+	
+---
+
+# [insert examples]
+
+---
+
+# Rates Accounting for other factor(s)
+Poisson regression allows us to study how rates of an even vary by characteristics of the groups of interest
+$\ln(Rate) = \beta_0 + \beta_1X$
+Or
+$\ln(E[Y]/Time) = \beta_0 + \beta_1X$
+- E[Y]: expected number of events
+- X: predictor variable
+- $\beta_0$: natural log of the rate for the reference group
+- $\beta_1$: natural log of the rate ratio between a given group and the reference group
+	- Similar to the logistic regression where the coefficient was the natural log of the OR
+
+--- 
+$\ln(E[Y]/Time) = \beta_0 + \beta_1X$
+- $\ln(E[Y]) - \ln(Time) = \beta_0 + \beta_1X$
+-  $\ln(E[Y]) = \beta_0 + \beta_1X + \ln(Time)$
+- $\ln(Time)$: *offset variable* takes into account the rate of change over time
+
+---
+# Interpreting Coefficients
+Poisson regression coefficient represents the *change in response corresponding to a one unit difference in the corresponding predictor.* 
+
+???
+Like any other regression coefficient, a Poisson regression coefficient represents the change in response corresponding to a one unit difference in the corresponding predictor. Here, the response is expected (natural) logged count.
+
+---
+# Beyond the Poisson: Other fish in the sea
+* Negative binomial
+* Zero-inflated models

@@ -322,11 +322,11 @@ $p = \frac{exp(\beta_0 + \beta_1X)}{1 + exp{\beta_0 + \beta_1X}}$
 ---
 # Types of Classification
 
-|      .    |Predicted  |      .    |  .      |
-|      .    | Y = 1     | Y = 0     |   .     |
-|:--------: |:---------:|:---------:|:-------:|
-|Observed   | Y = 1     | True +    | False - |
-|      .    | Y = 0     | False +   | True -  |
+|             |         |Predicted|       |
+|-------------|---------|---------|-------|
+|             |         |*Y = 1*  |*Y = 0*|
+|**Observed** | *Y = 1* | True +  | False-|
+|             | *Y = 0* | False + | True- |
 
 ### Sensitivity
 * What is the ratio of correct positive predictions (Y = 1) to total positive predictions?
