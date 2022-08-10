@@ -2,6 +2,7 @@ name: EDUC 645
 output_dir: "."
 navbar:
   title: "EDUC 645"
+  
   left:
   - text: Syllabus
     href: syllabus.html
@@ -29,3 +30,4 @@ navbar:
 output:
   html_document:
    lib_dir: site_libs
+   self_contained: no

@@ -17,7 +17,7 @@ output:
 library(pacman)
 p_load(here, tidyverse, ggplot2, xaringan, knitr, kableExtra, foreign, broom, xaringanthemer, reshape2, DiagrammeR)
 
-i_am("slides/EDUC645_log_regression.rmd")
+i_am("slides/EDUC645_cleaning_missing.rmd")
 
 extra_css <- list(
   ".red"   = list(color = "red"),
