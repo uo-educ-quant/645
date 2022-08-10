@@ -51,13 +51,17 @@ options(knitr.table.format = "html")
 # Roadmap
 
 ---
+# Count Data
 
-???
-As with logistic regression, the underlying mathematics and underlying probability distribution theory are different from ordinary least-squares regression, which is why Poisson regression is treated as a separate topic even though, from the consumer's viewpoint, it's all regression.
+What about examining predictors of outcomes related to a rate or number of events:
+* the number of times an event occurs during a given timeframe?
+* the number of people in line at the grocery store?
 
-Poisson regression seeks to model counts--the number of children, number of colds, number of falls, number of telephone calls...you get the idea. Just as logistic regression models the log odds of an event, Poisson regression models the (natural) log of the expected count.
+These kinds of questions draw from count data
+* Discrete data with non-negative integer values that count a particular outcome according to a defined parameter of time/space
 
-Since the log of the expected count is being modeled, there is no problem with negative predicted values, since negative values correspond to expected counts between 0 and 1.
+**How does this definition differ from continuous and binomial data?**
+
 ---
 # Poisson Distribution
 
@@ -68,6 +72,48 @@ Since the log of the expected count is being modeled, there is no problem with n
 * It expresses the probability of a number of events occurring in a fixed period of time if these events occur with a known average rate and are independent of the time since the last event
 Examine if we want to know "how many of X in what amount of time"
 
+---
+# Poisson Distributions
+
+```{r}
+lambdas <- c(5, 10, 20, 40)
+ggplot(data = data.frame(x = 0:75)) +
+    lapply(lambdas, 
+           function(l) geom_point(aes(x = x, 
+                                      y = dpois(x, lambda = l), 
+                                      col = factor(l)))) +
+    lapply(lambdas, 
+           function(l) stat_function(fun = dnorm, 
+                                     args = list(mean = l, sd = sqrt(l)), 
+                                    aes(x = x, col = factor(l))))
+```
+
+---
+
+# Normal distribution
+```{r, echo=F, fig.height=5.5}
+# create a sequence -3 to +3 with .05 increments
+xseq <- seq(-3, 3, .05)
+
+# generate a Probability Density Function
+densities <- dnorm(xseq, 0, 1)
+
+# plot the graph
+plot(xseq, densities, col = "blue", xlab = "", ylab = "Density", type = "l", lwd = 2)
+# col: changes the color of line
+# 'xlab' and 'ylab' are labels for x and y axis respectively
+# type: defines the type of plot. 'l' gives a line graph
+# lwd: defines line width
+```
+
+---
+# Poisson Vs. Normal Distribution
+
+|Poisson Distribution |	Normal Distribution|
+|----------------------------|---------------------------------|
+|Used for count or rate data |	Used for continuous variables |
+|Skewed by values of lambda	 | Bell-shaped curve symmetric around the mean.|
+|Variance = Mean	| Variance and mean are different parameters; mean, median and mode are equal |
 ---
 # Poisson Distribution: Dispersion
 
@@ -80,6 +126,11 @@ The outcome (Y) is a count (positive integer)
 Requires a unit of time:
 * E.g., number of accidents per day, number of exposed per year
 Population is typically divided into groups, each group independent of the other
+
+Count data can also be expressed as rate data
+* the number of times an event occurs within a timeframe can be expressed as:
+- raw count (i.e. “In a day, we eat three meals”)
+- rate (“We eat at a rate of 0.125 meals per hour”)
 
 ---
 # Time
@@ -113,7 +164,6 @@ Typically organize information about counts and time in a table:
 |Group 2 | N2	  | T2   |
 
 ---
-
 # Steps to comparing rates:
 
 ### 1. Calculate rates in both groups
@@ -134,7 +184,26 @@ Typically organize information about counts and time in a table:
 # [insert examples]
 
 ---
+class: center, middle 
+# Modeling Poisson Distribution
+.left[Poisson Regression]
 
+---
+# Poisson Regression
+
+Like logistic regression, the underlying mathematics and underlying probability distribution theory are different from OLS regression, but it relies on the same parameters of the GLM
+
+Poisson regression seeks to model counts the number of children, number of colds, number of falls, number of telephone calls
+
+While logistic regression models the log odds of an event
+Poisson regression models the (natural) log of the expected count.
+
+Since the log of the expected count is being modeled, there is no problem with negative predicted values, since negative values correspond to expected counts between 0 and 1.
+
+---
+Poisson Regression helps us analyze both count data and rate data by allowing us to determine which explanatory variables (X values) have an effect on a given response variable (Y value, the count or a rate). For example, Poisson regression could be applied by a grocery store to better understand and predict the number of people in a line.
+
+---
 # Rates Accounting for other factor(s)
 Poisson regression allows us to study how rates of an even vary by characteristics of the groups of interest
 $\ln(Rate) = \beta_0 + \beta_1X$
@@ -157,7 +226,7 @@ $\ln(E[Y]/Time) = \beta_0 + \beta_1X$
 Poisson regression coefficient represents the *change in response corresponding to a one unit difference in the corresponding predictor.* 
 
 ???
-Like any other regression coefficient, a Poisson regression coefficient represents the change in response corresponding to a one unit difference in the corresponding predictor. Here, the response is expected (natural) logged count.
+Like other regression coefficients, a Poisson regression coefficient represents the change in response corresponding to a one unit difference in the corresponding predictor. Here, the response is expected (natural) logged count.
 
 ---
 # Beyond the Poisson: Other fish in the sea
