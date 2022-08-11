@@ -87,7 +87,7 @@ class: center, middle, inverse, title-slide
 ---
 # Odds
 Odds of an event: the probability of 'yes' divided by the probability of 'no'
-- `\(Odds = p/1(1-p)\)`
+`$$Odds = \frac{p}{1(1-p)}$$`
 
 --
 
@@ -154,9 +154,8 @@ The parameter, `\(p\)`, is the probability of a score on a single penalty kick.
 
 Recall that the theory of GLMs is based on the unifying notion of the one-parameter exponential family form:
 
-`\begin{equation*}
-f(y;\theta)=e^{[a(y)b(\theta)+c(\theta)+d(y)]}
-\end{equation*}`
+
+`$$f(y;\theta)=e^{[a(y)b(\theta)+c(\theta)+d(y)]}$$`
 
 ---
 # Generalized linear models (GLMs)
@@ -165,16 +164,14 @@ To see that we can apply the general approach of GLMs \index{generalized linear 
 
 If `\(Y\)` follows a binomial distribution with `\(n\)` trials and probability of success `\(p\)`, we can write:
 
-`\begin{align*}
+
 P(Y=y)&amp;= \binom{n}{y}p^y(1-p)^{(n-y)} \\
       &amp;=e^{y\log(p) + (n-y)\log(1-p) + \log\binom{n}{y}}
-\end{align*}`
+\end{align*}
 
 *However*, this probability mass function is not quite in one-parameter exponential family form. Note that there are two terms in the exponent which consist of a product of functions of `\(y\)` and `\(p\)`. So more simplification is in order:
 
-`\begin{equation*}
-P(Y=y) = e^{y\log\left(\frac{p}{1-p}\right) + n\log(1-p)+ \log\binom{n}{y}}
-\end{equation*}`
+`$$P(Y=y) = e^{y\log\left(\frac{p}{1-p}\right) + n\log(1-p)+ \log\binom{n}{y}}$$`
 
 The one-parameter exponential family form for binomial responses shows that the  canonical link is `\(\log\left(\frac{p}{1-p}\right)\)`. Thus, GLM theory suggests that constructing a model using the logit, the log odds of a score, as a linear function of covariates is a reasonable approach.   
 
@@ -185,9 +182,7 @@ Binary (0 or 1) response (Y) and a single continuous predictor (X).
 
 ### Model for logistic regression with binary or binomial responses:
 
-`\begin{equation*}
-log(\frac{p_i}{1-p_i})=\beta_0+\beta_1 x_i
-\end{equation*}`
+`$$\log(\frac{p_i}{1-p_i})=\beta_0+\beta_1 x_i$$`
 
 where the observed values `\(Y_i \sim\)` binomial with `\(p=p_i\)` for a given `\(x_i\)` and `\(n=1\)` for binary responses.
 
@@ -210,9 +205,7 @@ The solid line is a linear regression fit with least squares to model the probab
 ---
 # Interpretation of Model Parameters
 
-`\begin{align*}
-ln(\frac{p_i}{1-p_i})=\beta_0+\beta_1 X_i
-\end{align*}`
+`$$\ln(\frac{p_i}{1-p_i})=\beta_0+\beta_1 X_i$$`
 
 `\(\beta_1\)`: Change in log odds for 1 unit change in `\(X_i\)`
 
@@ -222,25 +215,26 @@ ln(\frac{p_i}{1-p_i})=\beta_0+\beta_1 X_i
 # Interpretation of Model Parameters
 To get the odds ratio, we need to back transform and exponentiate the coefficient, `\(\beta_i\)`:
 
-`\(\beta_1 = ln(\frac{odds|X=1}{odds|X=0})\)`  
-   `\(= ln(OR_{X=1:X=0})\)`  
+`$$\beta_1 = ln(\frac{odds|X=1}{odds|X=0})$$`
+   `$$= ln(OR_{X=1:X=0})$$`
 
-`\(OR = e^{ln(OR_{X=1:X=0})}\)`  
-  $ = e^{\beta_1}$
+`$$OR = e^{ln(OR_{X=1:X=0})}$$`
+  `$$= e^{\beta_1}$$`
 
 ---
 # [insert example walk-through with code]
 
-
 ---
 # Assess Confounding
+1. Compare the unadjusted regression coefficients to the adjusted regression coefficients (not the ORs) 
+- Calculating change in coefficient:
+`$$100*\frac{\beta_{adjusted} - \beta_{unadjusted}} {\beta_{unadjusted}}$$`
+2. If the change in coefficients &gt; 10%, there is evidence for confounding by the variable in the adjusted model (aka, 10% confounding rule)
 
-- Compare the unadjusted regression coefficients to the adjusted regression coefficients (not the ORs)
-- 10% confounding rule: if the change in coefficients &gt; 10%, there is evidence for confounding by the variable in the adjusted model
+---
+class: middle, inverse
 
-### Calculating change in coefficient
-`\(100*\frac{\beta_{adjusted} - \beta_{unadjusted}} {\beta_{unadjusted}}\)`
-
+# Interactions
 
 ---
 # Assess Interactions
@@ -249,16 +243,23 @@ To get the odds ratio, we need to back transform and exponentiate the coefficien
 
 Model *with* interaction term:
 
-`\(ln({Y_{odds}}) - {\beta_0} + {\beta_1}X_1 + {\beta_2}X_2\)`
-
+`$$ln({Y_{odds}}) - {\beta_0} + {\beta_1}X_1 + {\beta_2}X_2$$`
 Model *without* interaction term:
-`\(ln({Y_{odds}}) = {\beta_0} + {\beta_1}X_1 + {\beta_2}X_2 + {\beta_3}(X_1*X_2)\)`
+`$$ln({Y_{odds}}) = {\beta_0} + {\beta_1}X_1 + {\beta_2}X_2 + {\beta_3}(X_1*X_2)$$`
+---
+# Interaction - categorical X categorical
 
 ---
-# [Assess Interactions - example walkthrough]
+# Interaction - continous X categorical
+
+[Assess Interactions - example walkthrough]
 
 ---
-# [Assess Interactions - example walkthrough]
+# Interactions - centering variable
+
+---
+# Interaction - continous X continuous
+[Assess Interactions - example walkthrough]
 
 [interpretation of output, example write up]
 
@@ -280,8 +281,12 @@ Model *without* interaction term:
 
 - Obtain predicted probabilities for each person depending on their characteristics
 
-`\(p = \frac{exp(\beta_0 + \beta_1X)}{1 + exp{\beta_0 + \beta_1X}}\)`
+`$$p = \frac{e^{(\beta_0 + \beta_1X)}}{1 + e^{{(\beta_0 + \beta_1X)}}}$$`
+---
+class: middle, inverse
 
+# Assessing Predicted Values
+ 
 ---
 # Assessing Predicted Values
 
@@ -289,7 +294,8 @@ Model *without* interaction term:
 
 --
 
-* In logistic regression, use the predicted probabilities from the model to classify people according to one of the two groups of the predictor variable.
+* In logistic regression, use the *predicted probabilities* 
+  - *predicted probabilities* classify people according to one of the two groups of the predictor variable.
 
 ---
 # Classification Rule
@@ -299,7 +305,7 @@ Model *without* interaction term:
 
 --
 
-* We can calculate a cut-off by examining the *sensitivity* and *specificity* of our model
+* Calculate a cut-off by examining the *sensitivity* and *specificity* of our model
 
 ---
 # Types of Classification
@@ -312,11 +318,11 @@ Model *without* interaction term:
 
 ### Sensitivity
 * What is the ratio of correct positive predictions (Y = 1) to total positive predictions?
-* _Positive predictive value (PPV)_ = `\(\frac{number of True +} {Total_{observed} Y = 1}\)`
+_Positive predictive value (PPV)_ = `\(\frac{number of True +} {Total_{observed} Y = 1}\)`
 
 ### Specificity
 * What is the ratio of correct negative predictions (Y = 0) to total negative predictions?
-* _Negative predictive value (PPV)_ = `\(\frac{number of True -} {Total_{observed} Y = 0}\)`
+* _Negative predictive value (NPV)_ = `\(\frac{number of True -} {Total_{observed} Y = 0}\)`
 
 ---
 # Specificity vs. Sensitivity
@@ -332,15 +338,186 @@ Model *without* interaction term:
 * Plot of true positive rate against the false positive rate for the different possible cutoff points of a diagnostic test, for example
 * Illustrates the tradeoff between *sensitivity* and *specificity*
   - Increase in *sensitivity* will result in decrease in *specificity*, and vice versa
-* For more accurate tests, the curve is closer to the left-hand border and the top border of the ROC
+* More accurate tests, the curve is closer to the left-hand border and the top border of the ROC
 * The __area under the curve (AUC)__ measures *accuracy*
 
 ---
 # Area Under the ROC Curve (AUC)
 
-[insert figure of theoretical AUC]
 
---
+```r
+simple_roc &lt;- function(labels, scores){
+  labels &lt;- labels[order(scores, decreasing=TRUE)]
+  data.frame(TPR=cumsum(labels)/sum(labels), FPR=cumsum(!labels)/sum(!labels), labels)
+}
+
+set.seed(1)
+sim_d &lt;- function(N, noise=100){
+  x &lt;- runif(N, min=0, max=100)
+  y &lt;- 122 - x/2 + rnorm(N, sd=noise)
+  dv &lt;- factor(y &gt; 100)
+  data.frame(x, y, dv)
+}
+dv_d &lt;- sim_d(500, 10)
+
+test_set_idx &lt;- sample(1:nrow(dv_d), size=floor(nrow(dv_d)/4))
+
+test_set &lt;- dv_d[test_set_idx,]
+training_set &lt;- dv_d[-test_set_idx,]
+```
+
+
+
+```r
+library(ggplot2)
+library(dplyr)
+test_set %&gt;% 
+  ggplot(aes(x=x, y=y, col=dv)) + 
+  scale_color_manual(values=c("blue", "orange")) + 
+  geom_point() + 
+  ggtitle("DV to X")
+```
+
+![](EDUC645_log_regression_files/figure-html/unnamed-chunk-2-1.png)&lt;!-- --&gt;
+
+---
+# Examining the ROC curve
+
+* Two classifiers that put the labels in the same order will have exactly the same ROC curve regardless of the absolute values of the scores.
+
+* This is shown by comparing the ROC curve you get using either the ‘response’ or the ‘link’ predictions from a logistic regression model. 
+
+* The ‘response’ scores have been mapped into the range between 0 and 1 by a sigmoid function and the ‘link’ scores have not.
+
+
+```r
+fit_glm &lt;- glm(dv ~ x, training_set, family=binomial(link="logit"))
+
+glm_link_scores &lt;- predict(fit_glm, test_set, type="link")
+
+glm_response_scores &lt;- predict(fit_glm, test_set, type="response")
+
+score_data &lt;- data.frame(link=glm_link_scores, 
+                         response=glm_response_scores,
+                         dv=test_set$dv,
+                         stringsAsFactors=FALSE)
+```
+
+---
+# Examining the ROC Curve
+
+.pull-left[
+![](EDUC645_log_regression_files/figure-html/plot-first-1.png)&lt;!-- --&gt;
+]
+.pull-right[
+
+```r
+score_data %&gt;% 
+  ggplot(aes(x=link, y=response, col=dv)) + 
+  scale_color_manual(values=c("black", "red")) + 
+  geom_point() + 
+  geom_rug() + 
+  ggtitle("Both link and response scores put cases in the same order")
+```
+]
+---
+# Plotting the ROC Curve
+
+.pull-left[
+
+```
+## Type 'citation("pROC")' for a citation.
+```
+
+```
+## 
+## Attaching package: 'pROC'
+```
+
+```
+## The following objects are masked from 'package:stats':
+## 
+##     cov, smooth, var
+```
+
+```
+## Setting levels: control = FALSE, case = TRUE
+```
+
+![](EDUC645_log_regression_files/figure-html/plot-second-1.png)&lt;!-- --&gt;
+
+]
+.pull-right[
+
+```r
+library(pROC)
+plot(roc(test_set$dv, glm_response_scores, direction="&lt;"),
+     col="yellow", lwd=3, main="The turtle finds its way")
+```
+
+```
+## Setting levels: control = FALSE, case = TRUE
+```
+
+```r
+## 
+## Call:
+## roc.default(response = test_set$bad_widget, predictor = glm_response_scores,     direction = "&lt;")
+## 
+## Data: glm_response_scores in 59 controls (test_set$bad_widget FALSE) &lt; 66 cases (test_set$bad_widget TRUE)
+## Area under the curve: 0.9037
+glm_simple_roc &lt;- simple_roc(test_set$dv=="TRUE", glm_link_scores)
+with(glm_simple_roc, points(1 - FPR, TPR, col=1 + labels))
+```
+]
+
+---
+# Obtaining the AUC
+
+.pull-left[
+
+```
+## Setting levels: control = FALSE, case = TRUE
+```
+
+```
+## Setting direction: controls &lt; cases
+```
+
+![](EDUC645_log_regression_files/figure-html/plot-third-1.png)&lt;!-- --&gt;
+]
+
+.pull-right[
+
+```r
+set.seed(1)
+N &lt;- 2000
+P &lt;- 0.01
+rare_success &lt;- sample(c(TRUE, FALSE), N, replace=TRUE, prob=c(P, 1-P))
+guess_not &lt;- rep(0, N)
+plot(roc(rare_success, guess_not), print.auc=TRUE)
+```
+
+```
+## Setting levels: control = FALSE, case = TRUE
+```
+
+```
+## Setting direction: controls &lt; cases
+```
+
+```r
+## Call:
+## roc.default(response = rare_success, predictor = guess_not)
+## 
+## Data: guess_not in 1978 controls (rare_success FALSE) &lt; 22 cases (rare_success TRUE).
+## Area under the curve: 0.5
+simp_roc &lt;- simple_roc(rare_success, guess_not)
+with(simp_roc, lines(1 - FPR, TPR, col="blue", lty=2))
+```
+]
+
+---
 
 ### AUC Guidelines:
 * Will vary depending on the outcome variable, but here are some general guidelines:
@@ -351,6 +528,13 @@ Model *without* interaction term:
 
 ---
 # [walk-through example of application and interpretation]
+
+---
+# Binomial and Beyond
+- Logit models
+- Count data
+- Hazard ratio
+- Survival analysis
 
 ---
 class: middle, inverse
