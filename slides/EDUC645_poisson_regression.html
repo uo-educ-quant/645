@@ -72,42 +72,31 @@ Examine if we want to know "how many of X in what amount of time"
 |Used for count or rate data |	Used for continuous variables |
 |Skewed by values of lambda	 | Bell-shaped curve symmetric around the mean.|
 |Variance = Mean	| Variance and mean are different parameters; mean, median and mode are equal |
+
 ---
 # Poisson Distribution: Dispersion
 
 
 ---
-# Assumptions
-
-The outcome (Y) is a count (positive integer)
-* Ex. the number of people in a subgroup of a population who have a learning disorder
-Requires a unit of time:
-* E.g., number of accidents per day, number of exposed per year
-Population is typically divided into groups, each group independent of the other
-
-Count data can also be expressed as rate data
-* the number of times an event occurs within a timeframe can be expressed as:
-- raw count (i.e. “In a day, we eat three meals”)
-- rate (“We eat at a rate of 0.125 meals per hour”)
-
----
 # Time
 
-Time is used to normalize the count variable that is observed
-(number of accidents per day, per year, per week)
-Time can be units of time, length of time, or other unit
+Time: normalizes the count variable that is observed
+- Number of accidents per day, per year, per week
+- Units of time, length of time, or other unit
 Number of accidents per mile, students per district
 
 ---
 # Rate
 
 Rate = # of events/unit of time
+
 Sometimes rescaled so that the number of cases per unit is a whole number
 Rate `\(\neq\)` probability
-• Rates include unit of time
-	- Rates can be &gt;1
-• Probabilities do not have a unit
-	- Probabilities are always between 0 and 1
+
+|       |Rate                 |Probability|
+|-------|---------------------|-----------|
+| Units |Include unit of time |Do not have a unit|
+| Range of values |Can be &gt;1            |Between 0 and 1|
 
 ---
 # Comparing Rates
@@ -116,24 +105,27 @@ Suppose we want to compare rate of Y at two different sites (X groups)
 We have to assume that incidents occurred at similar rates throughout the year
 Typically organize information about counts and time in a table:
 
-|	      | Count	| Time |
-|--------|-------|------|
-|Group 1 | N1	  | T1   |
-|Group 2 | N2	  | T2   |
+|	       |Count|Time |
+|--------|-----|-----|
+|Group 1 | N1	 |T1   |
+|Group 2 | N2	 |T2   |
 
 ---
 # Steps to comparing rates:
 
 ### 1. Calculate rates in both groups
-*	Rate = number of events/unit of time
+`$$Rate = \frac{n_{events}}{unit_{time}}$$`
 
 ### 2. Calculate Rate Ratio (RR)
-* `\(RR = \frac{Rate_1}{Rate_2}\)`
+`$$RR = \frac{Rate_1}{Rate_2}$$`
 
 ### 3. Conduct test of hypothesis to see is RR `\(\neq\)` 1
-*	`\(H_0: RR = 1\)` vs. `\(H_a: RR \neq 1\)`
-  - `\(z = \frac{ln(RR)}{\sqrt{(\frac{1}{n_1}+\frac{1}{n_2}}}\)`
-	- Get p-value
+
+`$$H_0: RR = 1$$`
+`$$H_a: RR \neq 1$$`
+
+`$$z = \frac{ln(RR)}{\sqrt{(\frac{1}{n_1}+\frac{1}{n_2}}}$$`
+* Get `\(p\)`-value
 * Get CI for RR
 *	Draw conclusions
 	
@@ -142,7 +134,7 @@ Typically organize information about counts and time in a table:
 # [insert examples]
 
 ---
-class: center, inverse
+class: middle, inverse
 # Modeling Poisson Distribution
 .left[Poisson Regression]
 
@@ -164,6 +156,13 @@ Since the log of the expected count is being modeled, there is no problem with n
 Helps us analyze both count data and rate data by allowing us to determine which explanatory variables (X values) have an effect on a given response variable (Y value, the count or a rate). For example, Poisson regression could be applied by a grocery store to better understand and predict the number of people in a line.
 
 ---
+# Interpretation of Model Parameters
+
+`\(\lambda\)`: Average number of occurrences per unit of time or space, as a function of one or more covariates
+
+`\(\log(\lambda) = \beta_0 + \beta_1X\)`
+
+---
 # Rates Accounting for other factor(s)
 Poisson regression allows us to study how rates of an even vary by characteristics of the groups of interest
 `\(\ln(Rate) = \beta_0 + \beta_1X\)`
@@ -178,7 +177,7 @@ Or
 --- 
 `\(\ln(E[Y]/Time) = \beta_0 + \beta_1X\)`
 - `\(\ln(E[Y]) - \ln(Time) = \beta_0 + \beta_1X\)`
--  `\(\ln(E[Y]) = \beta_0 + \beta_1X + \ln(Time)\)`
+- `\(\ln(E[Y]) = \beta_0 + \beta_1X + \ln(Time)\)`
 - `\(\ln(Time)\)`: *offset variable* takes into account the rate of change over time
 
 ---
@@ -189,9 +188,43 @@ Poisson regression coefficient represents the *change in response corresponding 
 Like other regression coefficients, a Poisson regression coefficient represents the change in response corresponding to a one unit difference in the corresponding predictor. Here, the response is expected (natural) logged count.
 
 ---
+# Assumptions
+
+The outcome (Y) is a count (positive integer)
+* Ex. the number of people in a subgroup of a population who have a learning disorder
+Requires a unit of time:
+* E.g., number of accidents per day, number of exposed per year
+
+Count data can also be expressed as rate data
+* the number of times an event occurs within a timeframe can be expressed as:
+- raw count (i.e. “In a day, we eat three meals”)
+- rate (“We eat at a rate of 0.125 meals per hour”)
+
+* Response Variable: The response variable is a count per unit of time or space, described by a Poisson distribution.
+* Independence: The observations must be independent of one another.
+* Mean=Variance By definition, the mean of a Poisson random variable must be equal to its variance.
+* Linearity: The log of the mean rate, log(λ), must be a linear function of x.
+
+---
+class: middle, inverse
+# Synthesis and wrap-up
+
+---
 # Beyond the Poisson: Other fish in the sea
 * Negative binomial
 * Zero-inflated models
+
+---
+# OLS regression vs. Poisson regression
+
+|                 | Linear Least Squares | Poisson Regression |
+|-----------------|----------------------|--------------------|
+|Response variable| Normal distribution  | Discrete counts    |
+|Variance         | equal for each level of X | Equal to the mean for each level of X |
+|Model fitting    | `\(\mu=\beta_0+\beta_1x\)` with Least Squares | `\(\log(\lambda)=\beta_0+\beta_1x\)` with Maximum Likelihood |
+|EDA              | plot X vs. Y; add line | Find `\(\log(\bar{y})\)` for several subgroups; plot vs. X|
+|Comparing models | extra sum of squares F-tests; AIC/BIC | drop-in-deviance tests; AIC/BIC |
+|Interpreting coef| `\(\beta_1\)` = change in mean response for unit change in X | `\(e^{\beta_1}\)`= percent change in `\(\lambda\)` for unit change in X|
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

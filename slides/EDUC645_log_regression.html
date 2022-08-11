@@ -86,6 +86,7 @@ class: center, middle, inverse, title-slide
 
 ---
 # Odds
+
 Odds of an event: the probability of 'yes' divided by the probability of 'no'
 `$$Odds = \frac{p}{1(1-p)}$$`
 
@@ -136,13 +137,18 @@ which tells us that the *odds* of a successful penalty kick are 3.05 times highe
 
 In general, we now have several ways of finding the odds of success under certain circumstances:
 
-$\[Odds} = \frac{\# \textrm{successes}}{\# \textrm{failures}}=
+`$$Odds = \frac{\# \textrm{successes}}{\# \textrm{failures}}=
 \frac{\# \textrm{successes}/n}{\# \textrm{failures}/n}=
-\frac{p}{1-p}.\]$ 
+\frac{p}{1-p}$$`
 
 ???
 
 In our example, it is also possible to estimate the probability of a goal, `\(p\)`, for either circumstance. When the goalkeeper's team is behind, the probability of a successful penalty kick is `\(p\)` = 22/24 or 0.833. We can see that the ratio of the probability of a goal scored divided by the probability of no goal is `\((22/24)/(2/24)=22/2\)` or 11, the odds we had calculated above. The same calculation can be made when the goalkeeper's team is not behind.
+---
+
+class: middle, inverse
+
+# GLM and Logistic Regression
 
 ---
 # Generalized linear models (GLMs)
@@ -156,7 +162,6 @@ Recall that the theory of GLMs is based on the unifying notion of the one-parame
 
 
 `$$f(y;\theta)=e^{[a(y)b(\theta)+c(\theta)+d(y)]}$$`
-
 ---
 # Generalized linear models (GLMs)
 
@@ -190,10 +195,9 @@ where the observed values `\(Y_i \sim\)` binomial with `\(p=p_i\)` for a given `
 
 The solid line is a linear regression fit with least squares to model the probability of a success (Y=1) for a given value of X.  With a binary response, the line doesn't fit the data well, and it produces predicted probabilities below 0 and above 1.  On the other hand, the logistic regression fit (dashed curve) with its typical "S" shape follows the data closely and always produces predicted probabilities between 0 and 1.  For these and several other reasons detailed in this chapter, we will focus on the following model for logistic regression with binary or binomial responses:
 
-
 ---
 # Assumptions
-- Outcome (Y) is discrete (0/1 variable)
+- Outcome (Y) is discrete binomial variable (0/1 variable)
 - Must be enough responses in every category
 - Linearity in the logit scale 
   - X's must be linearly related to logit(Y)
@@ -223,6 +227,16 @@ To get the odds ratio, we need to back transform and exponentiate the coefficien
 
 ---
 # [insert example walk-through with code]
+
+
+---
+# Tests for Significance of Model Coefficients
+
+---
+# Confidence Intervals for Model Coefficients
+
+---
+# Testing for Goodness-of-Fit
 
 ---
 # Assess Confounding
@@ -271,9 +285,11 @@ Model *without* interaction term:
 
 ---
 # Influential Observations
-- Leverage plot
+
+[insert Leverage plot]
 
 ---
+
 # Predicted Values: Probabilities
 - Coefficients tell us the *average* predicted probability for a person, but what if we want to know about more specific groups or contexts?
 
@@ -288,6 +304,7 @@ class: middle, inverse
 # Assessing Predicted Values
  
 ---
+
 # Assessing Predicted Values
 
 * In MLR, `\(R^2\)` indicates good prediction
@@ -298,6 +315,7 @@ class: middle, inverse
   - *predicted probabilities* classify people according to one of the two groups of the predictor variable.
 
 ---
+
 # Classification Rule
 * Need a threshold for defining probability for belonging in one or two of the groups
 
@@ -407,7 +425,7 @@ score_data &lt;- data.frame(link=glm_link_scores,
 # Examining the ROC Curve
 
 .pull-left[
-![](EDUC645_log_regression_files/figure-html/plot-first-1.png)&lt;!-- --&gt;
+![add caption](EDUC645_log_regression_files/figure-html/plot-first-1.png)
 ]
 .pull-right[
 
@@ -512,6 +530,7 @@ plot(roc(rare_success, guess_not), print.auc=TRUE)
 ## 
 ## Data: guess_not in 1978 controls (rare_success FALSE) &lt; 22 cases (rare_success TRUE).
 ## Area under the curve: 0.5
+
 simp_roc &lt;- simple_roc(rare_success, guess_not)
 with(simp_roc, lines(1 - FPR, TPR, col="blue", lty=2))
 ```
@@ -531,14 +550,27 @@ with(simp_roc, lines(1 - FPR, TPR, col="blue", lty=2))
 
 ---
 # Binomial and Beyond
-- Logit models
+- Probit regression
+- Multinomial logistic regression
 - Count data
 - Hazard ratio
 - Survival analysis
+- Ordinal regression
 
 ---
 class: middle, inverse
 # Synthesis and wrap-up
+
+---
+# Logistic vs. OLS regression
+|                 | Linear Least Squares | Binomial Regression |
+|-----------------|----------------------|---------------------|
+|Response variable| Normal distribution  | Number of successes in `\(n\)` trials |
+|Variance         | equal for each level of X | np(1−p) for each level of X |
+|Model fitting    | μ=β0+β1x using Least Squares | log(p1−p)=β0+β1x using Maximum Likelihood |
+|EDA              | plot X vs. Y; add line | find log⁡(odds) for several subgroups; plot vs. X|
+|Comparing models | extra sum of squares F-tests; AIC/BIC | drop-in-deviance tests; AIC/BIC |
+|Interpreting coef| β1= change in mean response for unit change in X | eβ1= percent change in odds for unit change in X|
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
