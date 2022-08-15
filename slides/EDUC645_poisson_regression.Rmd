@@ -69,9 +69,55 @@ What about examining predictors of outcomes related to a rate or number of event
 These kinds of questions draw from count data
 * Discrete data with non-negative integer values that count a particular outcome according to a defined parameter of time/space
 
-**How does this definition differ from continuous and binomial data?**
+**How does this definition differ from binomial data?**
+
+--
+
+**How does this definition differ from continuous data?**
 
 ---
+
+# Normal distribution vs. poisson distribution
+
+.pull-left[
+```{r, echo=F}
+# create a sequence -3 to +3 with .05 increments
+xseq <- seq(-3, 3, .05)
+
+# generate a Probability Density Function
+densities <- dnorm(xseq, 0, 1)
+
+# plot the graph
+plot(xseq, densities, col = "blue", xlab = "", ylab = "Density", type = "l", lwd = 2)
+# col: changes the color of line
+# 'xlab' and 'ylab' are labels for x and y axis respectively
+# type: defines the type of plot. 'l' gives a line graph
+# lwd: defines line width
+```
+]
+
+--
+
+.pull-right[
+```{r, echo=F}
+# create a sequence -3 to +3 with .05 increments
+xseq <- seq(0, 20, 1)
+
+# generate a Probability Density Function
+densities <- dpois(xseq, lambda = 3)
+
+# plot the graph
+plot(xseq, densities, col = "blue", xlab = "", ylab = "Density", type = "l", lwd = 2)
+# col: changes the color of line
+# 'xlab' and 'ylab' are labels for x and y axis respectively
+# type: defines the type of plot. 'l' gives a line graph
+# lwd: defines line width
+```
+]
+
+
+---
+
 # Poisson Distribution
 
 * A discrete probability distribution is used to describe the off occurrence of unlikely events in a large number of independent trials
@@ -101,20 +147,17 @@ pois_plot
 
 ---
 
-# Normal distribution
-```{r, echo=F, fig.height=5.5}
-# create a sequence -3 to +3 with .05 increments
-xseq <- seq(-3, 3, .05)
-
-# generate a Probability Density Function
-densities <- dnorm(xseq, 0, 1)
-
-# plot the graph
-plot(xseq, densities, col = "blue", xlab = "", ylab = "Density", type = "l", lwd = 2)
-# col: changes the color of line
-# 'xlab' and 'ylab' are labels for x and y axis respectively
-# type: defines the type of plot. 'l' gives a line graph
-# lwd: defines line width
+```{r, echo=F}
+par(mfrow = c(3, 2), mar = c(1, 1, 2, 1), oma = c(4, 4, 2, 0))
+for (i in c(1, 2, 3, 5, 7, 9)) {
+    curve(dpois(x, lambda = i), from = 0, to = 18, n = 19, type = "p", pch = 15,
+        cex = 1.5, xlim = c(0, 19), ylim = c(0, 0.4), xlab = "", ylab = "")
+    text(x = 15, y = 0.3, substitute(lambda == x, list(x = i)), cex = 2)
+}
+mtext("Probability Mass Function for Poisson Distribution", line = 0.5,
+    outer = TRUE, cex = 1.2)
+mtext(expression(P(X == x)), side = 2, line = 1.5, outer = TRUE)
+mtext("X", side = 1, line = 1.5, outer = TRUE)
 ```
 
 ---
