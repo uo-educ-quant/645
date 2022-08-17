@@ -499,12 +499,157 @@ with(simp_roc, lines(1 - FPR, TPR, col="blue", lty=2))
   - AUC > .9 = Outstanding
 
 ---
-# [walk-through example of application and interpretation]
-
----
 
 [shiny app for playing around with ROC and AUC:
 https://kennis-research.shinyapps.io/ROC-Curves/]
+
+---
+# Example -- Unit 1 Logistic Regression
+
+This dataset was drawn from Meta Krüger's (1994) study investigating gender differences in school leadership in Netherlands. The study implemented a matching procedure to generate pairs of comparable schools (N=98) with the only difference being that one school principal was female and the other male, then surveyed the school principals, teachers, and students. Due to deletion of incomplete observations, our dataset is a bit smaller than the one used in the article, it contains 94 school principals and 800 students.
+
+```{r}
+principal <- rio::import(here::here("data", "principal.csv")) %>%
+  mutate(attention = (q1+q2+q3)/3,
+         affective = ifelse(q4 >= 3, 1, 0)) %>% 
+  select(schid, stuid, stufemale, female, match, attention, affective) %>% 
+  group_by(schid) %>% 
+  mutate(attention = (attention-mean(attention))/sd(attention)) %>% 
+  ungroup() 
+
+head(principal)
+```
+
+---
+# The Variables
+ - schid, school identification number
+ - stuid, student identification number within each school
+ - female, coded one for female principals and zero for male principals
+ - stufemale, coded one for female students and zero for male students
+ - match, coded one if student and principal are the same gender
+ - q1, students' rating on a survey item, "Sometimes the principal talks to me", on a 4-point likert scale, 1=low, 4=high
+ - q2, students' rating on a survey item, "I think the principal knows who I am", on a 4-point likert scale, 1=low, 4=high
+ - q3, students' rating on a survey item, "Principal knows how well I am doing", on a 4-point likert scale, 1=low, 4=high
+ - q4, students' rating on a survey item, "The principal is nice", on a 4-point likert scale, 1=low, 4=high
+ 
+For starters, some data managment; we're interested in the association between student-perceived attention from principal and affective attitude toward principal, therefore we compute two variables of interest:
+
+ - attention: take the average score of attention items, q1, q2, and q3, then standardize it at school level to measure student-perceived attention
+ - affective: recode q4 to be a binary variable coded one for students who rated 3 or 4 on this question ("the school principal is nice")
+ 
+---
+# Visualizing the relationship
+ 
+Plot outcome variable, affective, on predictor variable, attention:
+
+```{r}
+principal %>% 
+  mutate(affective = recode(affective, '1' = "Yes", '0' = "No")) %>% 
+  ggplot(aes(attention, affective, color = affective)) +
+  geom_boxplot(size = 0.5) +
+  geom_jitter(alpha = 0.2,
+              size = 0.5) + 
+  scale_x_continuous() + 
+  labs(y = "Affective attitude towards principal",
+       x = "Self-perceived attention from principal") +
+  theme(legend.position = "none") 
+```
+
+What patterns do you notice from the plots above?
+
+---
+
+# 1.1.3 Modeling the relationship
+
+How to model these relationships in our analysis?
+Our inquiry: The associations between student self-perceived attention from principal and affective attitude towards principal.
+
+What models should we use to fit the data when our outcome variable is a dichotomous variable?
+
+---
+
+# Linear probability model (LPM)
+
+```{r}
+m1 <- lm(affective ~ attention, principal)
+m2 <- lm(affective ~ attention + match, principal)
+summary(m1)
+```
+
+Does the regression coefficient of attention confirm your previous impression with the plot?
+
+---
+
+Visualize the coefficient/slope of the fitted line (basically, we force the relationship to be linear):
+
+```{r}
+principal %>% 
+  ggplot(aes(attention, affective)) +
+  geom_point(alpha = 0.01) +
+  geom_smooth(method = "lm", se = FALSE, color = "royalblue") + 
+  labs(y = "Affective attitude towards principal",
+       x = "Self-perceived attention from principal")
+```
+
+
+Interpret the results (report regression coefficients **on a probability scale**) and the figure. 
+
+Will this be the model where you stop at?
+
+#### Binomial logistic regression
+
+```{r}
+m3 <- glm(affective ~ attention, principal, 
+          family = binomial(link = "logit"))
+m4 <- glm(affective ~ attention + match, principal,
+          family = binomial(link = "logit"))
+
+summary(m3)
+```
+
+---
+
+Visualize the coefficient on a log-odds scale (basically we model the change in log-odds of affective in a linear function of attention):
+
+```{r}
+tibble(attention = (-3):3) %>% 
+  mutate(pred = predict(m3, newdata = .)) %>% 
+  ggplot(aes(attention, pred)) +
+  geom_line(color = "royalblue") +
+  labs(y = "Affective attitude towards principal (LOG-ODDS)",
+       x = "Self-perceived attention from principal")
+```
+
+---
+
+Visualize the coefficient on a probability scale (mapping the parameters to probability nonlinearly):
+
+Coder note: in the data, "attention" ranges from -2.42 to 2.61, the plot is therefore limited to a fraction when the probability of "affective" approaching one but still below 0.5. Because we cannot easily guess the missing plot fraction (as appose to when the line is linear, we can tell where the line goes simply by looking at the slope), this plot is not telling us enough information about the population of interest:
+
+```{r}
+tibble(attention = (-3):3) %>% 
+  mutate(pred = predict(m3, newdata = ., type = "response")) %>% 
+  ggplot(aes(attention, pred)) +
+  geom_line(color = "royalblue") +
+  labs(y = "Affective attitude towards principal (PROBABILITY)",
+       x = "Self-perceived attention from principal")
+```
+
+---
+
+I manipulate the X axis to range from -3 to 15 to show the nonlinear relationship in its full image:
+
+```{r}
+tibble(attention = (-3):15) %>% 
+  mutate(pred = predict(m3, newdata = ., type = "response")) %>% 
+  ggplot(aes(attention, pred)) +
+  geom_line(color = "royalblue") +
+  labs(y = "Affective attitude towards principal (PROBABILITY)",
+       x = "Self-perceived attention from principal")
+```
+
+Interpret the results (report regression coefficients **on a log-odds scale**) and the two figures.
+
 
 ---
 # Binomial and Beyond

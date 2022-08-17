@@ -15,7 +15,7 @@ output:
 
 ```{R, setup, include = F}
 library(pacman)
-p_load(here, tidyverse, ggplot2, xaringan, knitr, kableExtra, foreign, broom, xaringanthemer, reshape2, DiagrammeR)
+p_load(here, tidyverse, ggplot2, xaringan, knitr, kableExtra, foreign, broom, xaringanthemer, reshape2, DiagrammeR, lme4, equatiomatic, performance, lmerTest, gtsummary)
 
 i_am("slides/EDUC645_nested_data.rmd")
 
@@ -30,21 +30,6 @@ extra_css <- list(
   ".small" = list("font-size" = "90%"))
 
 write_extra_css(css = extra_css, outfile = "my_custom.css")
-
-# Knitr options
-opts_chunk$set(
-  comment = "#>",
-  fig.align = "center",
-  fig.height = 6.75,
-  fig.width = 10.5,
-  warning = F,
-  message = F
-)
-opts_chunk$set(dev = "svg")
-options(device = function(file, width, height) {
-  svg(tempfile(), width = width, height = height)
-})
-options(knitr.table.format = "html")
 
 ```
 
@@ -199,6 +184,448 @@ neighborhood)
 
 ---
 # Nested and crossed random effects in "lme4"
+
+Load the packages particularly needed for this unit: `lme4`, `equatiomatic`, `performance`, `lmerTest`
+
+---
+# 3.1.1 Inspect the data 
+
+What does each row/observation represent?
+
+```{r, echo = FALSE, fig.cap="add caption"}
+seda <- rio::import(here::here("data", "seda_oregon.csv")) %>%
+  mutate(subject = recode(subject, 'mth' = "Math", 'rla' = "Reading")) 
+
+str(seda)
+head(seda)
+
+seda %>%
+  select(-district) %>% 
+  tbl_summary(
+    statistic = list(all_continuous() ~ "{mean} ({sd})",
+                               all_categorical() ~ "{n} / {N} ({p}%)"),
+    label = list(subject ~ "Subject",
+                 grade ~ "Grade",
+                 achievement ~ "Achievement",
+                 gap_gender ~ "Achievement Gender Gap",
+                 percent_ell ~ "ELL Percentage",
+                 percent_sped ~ "SPED Percentage",
+                 percent_frl ~ "FRL Percentage")) %>%
+  modify_header(label ~ "**Key Variables**")
+```
+
+---
+# 3.1.2 Understand the clustering nature
+
+For starters, look at a single variable - Oregon districts' achievement score 
+
+(note that districts are "randomly" selected by course developer)
+
+Are we losing information by simply looking at district achievement across subject and grade?
+
+```{r, echo = FALSE, fig.cap="add caption"}
+seda %>% 
+  group_by(district) %>% 
+  mutate(mean = mean(achievement)) %>%
+  ungroup() %>% 
+  select(district, mean) %>%
+  ggplot(aes(district, mean)) +
+  geom_point() +
+  labs(x = "District",
+       y = "Achievement")
+```
+
+---
+
+Does achievement differ by subject?
+
+```{r, echo = FALSE, fig.cap="add caption"}
+seda %>% 
+  group_by(district, subject) %>% 
+  mutate(mean = mean(achievement)) %>% 
+  ungroup() %>% 
+  select(district, subject, mean) %>%
+  ggplot(aes(district, mean, color = subject)) +
+  geom_point() +
+  labs(x = "District",
+       y = "Achievement")
+```
+
+---
+
+Differ by grade?
+
+```{r, echo = FALSE, fig.cap="add caption"}
+seda %>% 
+  group_by(district, grade) %>% 
+  mutate(mean = mean(achievement)) %>% 
+  ungroup() %>% 
+  select(district, grade, mean) %>%
+  ggplot(aes(district, mean, color = grade)) +
+  geom_point() +
+  labs(x = "District",
+       y = "Achievement")
+```
+
+---
+
+Differ by grade AND subject?
+
+```{r, echo = FALSE, fig.cap="add caption"}
+seda %>% 
+  group_by(district, subject, grade) %>% 
+  mutate(mean = mean(achievement)) %>% 
+  ungroup() %>% 
+  select(district, subject, grade, mean) %>%
+  ggplot(aes(district, mean, color = grade)) +
+  facet_wrap(vars(subject)) +
+  geom_point() +
+  labs(x = "District",
+       y = "Achievement")
+```
+
+---
+
+Alternatively, 
+
+```{r, echo = FALSE, fig.cap="add caption"}
+seda %>% 
+  mutate(grade = recode(grade, '3' = "G3", '4' = "G4", '5' = "G5", '6' = "G6")) %>% 
+  group_by(district, subject, grade) %>% 
+  mutate(mean = mean(achievement)) %>% 
+  ungroup() %>% 
+  select(district, subject, grade, mean) %>%
+  ggplot(aes(district, mean, color = subject)) +
+  facet_wrap(vars(grade)) +
+  geom_point() +
+  labs(x = "District",
+       y = "Achievement")
+```
+
+Can you describe the "clustering" nature of the data in more details now?
+
+IMPORTANTLY, should we keep in mind of this unique feature when we answering research questions, e.g., about relations between two variables?
+
+---
+# Relationship across grade and subject:
+
+For example, let's look at relationship between percentage of ELL and achievement
+
+```{r, echo = FALSE, fig.cap="add caption"}
+seda %>%
+  group_by(district) %>% 
+  mutate(achievement = mean(achievement)) %>% 
+  ungroup() %>% 
+  ggplot(aes(percent_ell, achievement)) +
+  geom_smooth(method='lm', se = 0) +
+  geom_point(alpha = 0.1) + 
+  labs(x = "ELL Percentage",
+       y = "Achievement")
+```
+
+---
+
+Does this relationship differ by subject?
+
+```{r, echo = FALSE, fig.cap="add caption"}
+seda %>%
+  group_by(district, subject) %>% 
+  mutate(achievement = mean(achievement)) %>% 
+  ungroup() %>% 
+  ggplot(aes(percent_ell, achievement, color = subject)) +
+  geom_smooth(method='lm', se = 0) +
+  geom_point(alpha = 0.1) +
+  labs(x = "ELL Percentage",
+       y = "Achievement")
+```
+
+---
+
+Does this relationship differ by subject AND grade?
+
+```{r, echo = FALSE, fig.cap="add caption"}
+seda %>%
+  mutate(grade = recode(grade, '3' = "G3", '4' = "G4", '5' = "G5", '6' = "G6")) %>% 
+  group_by(district, subject, grade) %>% 
+  mutate(achievement = mean(achievement)) %>% 
+  ungroup() %>% 
+  ggplot(aes(percent_ell, achievement, color = subject)) +
+  facet_wrap(vars(grade)) +
+  geom_smooth(method='lm', se = 0) +
+  geom_point(alpha = 0.1) +
+  labs(x = "ELL Percentage",
+       y = "Achievement")
+```
+
+What is your current understanding of clustered data? Is there a single answer to the relationship between percentage of ELL students and achievement? 
+
+(expect students to realize that there is no universal answer; depends on what you look at, what cluster/clusters you want to include, and model specifications)
+
+---
+
+# 3.1.3 Modeling the relationship between two variables
+
+**For this introductory course, we only focus on two-level clustered data.**
+
+From now on, we pull out the cluster of subject, and focus on math achievement only.
+
+**Overarching inquiry: What is the relationship between percentage of ELL students and math achievement in Oregon districts?**
+
+What model/models can we fit to answer the question? 
+
+```{r, echo = FALSE}
+district <- seda %>%
+  filter(subject == "Math") %>% 
+  select(-subject) %>% 
+  select(math = achievement, everything()) %>% 
+  mutate(grade = recode(grade, '3' = "G3", '4' = "G4", '5' = "G5", '6' = "G6"))
+```
+
+---
+
+# Fixed effects model
+
+.pull-left[
+One way to answer the question is assuming a common intercept for all grades. 
+
+--
+
+Model specifications (using multiple regression knowledge you learned from EDUC 643, you can do it!):
+
+]
+
+Visually:
+.pull-right[
+```{r, echo = FALSE, fig.cap="add caption"}
+district %>% 
+  ggplot(aes(percent_ell, math)) +
+  geom_smooth(method='lm', se = 0) +
+  geom_point(alpha = 0.1) +
+  labs(x = "ELL Percentage",
+       y = "Math")
+```
+]
+
+---
+
+How to interpret these parameters?
+
+.pull-left[
+```{r, echo=T}
+m1 <- lm(math ~ percent_ell, district)
+summary(m1)
+```
+]
+
+.pull-right[
+```{r, echo=T}
+coef(m1)
+```
+]
+
+---
+
+# Random effects model
+
+Another way to answer the question is allowing the intercept to differ across grades - a unique intercept for each grade.
+
+Visually:
+
+```{r}
+district %>% 
+  ggplot(aes(percent_ell, math, color = grade)) +
+  geom_smooth(method='lm', se = 0) +
+  geom_point(alpha = 0.1) + 
+  labs(x = "ELL Percentage",
+       y = "Math")
+```
+
+What parameters changed in the plot? 
+
+ - the intercept: each grade has a unique intercept
+
+ - the slope: the slope also changes accordingly
+
+**In fact, mixed-effects models can do more!** 
+
+let's take advantage of the lme4 package, lmer function to quickly model the data in R:
+
+ - Model 1. Put the simple linear regression model here for comparison
+ 
+```{r}
+m1 <- lm(math ~ percent_ell, district)
+
+coef(m1)
+```
+
+ - Model 2. Multilevel model with random intercepts 
+ 
+      - What parameter differs across grades? what parameter remains the same?
+      - Interpret the parameters
+
+*R notes: starting the basics of the lme4::lmer() syntax*
+
+```{r, echo=TRUE}
+m2 <- lme4::lmer(math ~ percent_ell + (1|grade), district)
+summary(m2)
+coef(m2)$grade
+```
+
+*R Notes: starting the usage of {equatiomatic} package*
+
+The notion being used through this unit:
+
+```{r}
+equatiomatic::extract_eq(m2)
+```
+
+ - Model 3. Multilevel model with random slopes 
+ 
+      - (note that this is a weird practice in real data analysis but here I just include it for comparison purposes)
+ 
+      - How do you interpret the parameters now?
+ 
+```{r, echo=TRUE}
+m3 <- lmer(math ~ 1 + (0 + percent_ell|grade), district)
+summary(m3)
+coef(m3)$grade
+# extract_eq(m3) doesn't work here
+```
+    
+ - Model 4. Multilevel model with random intercepts and slopes 
+ 
+      - How about the parameters for this model specification?
+      - Can you specify the relationship between percentage of ELL and math achievement for grade 3? grade 4? .. grade 6?
+
+```{r, echo=TRUE}
+m4 <- lmer(math ~ percent_ell + (1 + percent_ell|grade), district)
+summary(m4)
+coef(m4)$grade
+extract_eq(m4)
+```
+
+What did we learn so far? Describe the differences between model 1 (simple linear regression) and a model with
+ - Random intercepts, model 2
+ - Random slopes, model 3
+ - Random intercepts and slopes, model 4
+
+---
+#3.1.4 Fixed effects vs random effects
+
+If we put the two previous plots together, can you describe:
+ - what does the bright red line represent? 
+ - what do the other four lines represent? 
+
+```{r, echo = FALSE, fig.cap="add caption"}
+district %>% 
+  ggplot(aes(percent_ell, math)) +
+  geom_smooth(method='lm', se = 0, color = "deeppink") +
+  geom_point(alpha = 0.1) + 
+  geom_smooth(aes(color = grade), method='lm', se = 0) +
+  geom_point(aes(color = grade), alpha = 0.1) +
+  scale_color_hue(l=80, c=30) +
+  labs(x = "ELL Percentage",
+       y = "Math")
+```
+
+---
+
+Also a review of the relationship between fixed effect (model 1) and random effects (model 4) parameters:
+
+Run the code for yourself and see what you notice:
+
+```{r}
+coef(m1)[1]
+mean(unlist(coef(m4)$grade[1]))
+```
+
+Run the code for yourself and see what you notice:
+
+```{r}
+coef(m1)[2]
+mean(unlist(coef(m4)$grade[2]))
+```
+
+What might be the reason behind these?
+
+To sum up:
+
+ - fixed effect represents the aggregation of the different intercepts and slopes by taking an average of varying intercept and slopes across clusters
+ 
+ - random effects represent the difference between cluster-specific intercept and slope and their averages across clusters
+
+---
+# When modeling random effects becomes necessary?
+## Unconditional model and ICC
+
+We estimate a baseline model, model 0, to see how much variance in math is attributable to between-grade variation
+
+*R notes: starting the {performance} package usage*
+
+```{r}
+m0 <- lmer(math ~ 1 + (1 | grade), district)
+extract_eq(m0)
+summary(m0)
+performance::icc(m0)
+```
+
+---
+#ICC: intraclass correlation coefficient
+
+Specifically, about 64.5% of the variance in math achievement lies between grades. 
+
+At this point, the fixed effects model aggregating grade-level achievement to a grand mean is masking important information regarding grade-level achievement.
+ 
+allow you to investigate changes over time
+
+--- 
+# Model fit 
+So far, we have one fixed effects model (simple linear regression, model 1) and four random effects (more accurately, mixed-effects) models including the unconditional model (model 0), random intercepts (model 2), random slopes (model 3), and random intercepts and slopes (model 4). 
+
+How do we know which one is preferred?
+
+--
+
+(from Dr. Daniel Anderson's multilevel modeling II course)
+
+  - RMSE
+  - Chi squared significance test of the change in the model deviance
+  - Information criteria (AIC/BIC)
+  - Cross validation procedures
+
+---
+
+For example, comparing model 1 and model 4:
+
+```{r}
+performance::compare_performance(m1, m4) %>% 
+  print_md()
+```
+
+
+```{r}
+test_likelihoodratio(m1, m4) %>% 
+  print_md
+```
+
+Another example, comparing model 2 and model 4:
+
+```{r}
+performance::compare_performance(m2, m4) %>% 
+  print_md()
+```
+
+
+```{r}
+test_likelihoodratio(m2, m4) %>% 
+  print_md
+```
+
+--
+
+Definitely prefer model 4 over model 1; 
+
+But model 4 doesn't perform much better than model 2 (identical RMSE; insignificant chi squared test of the change in the model deviance; also visually confirmed in the previous random-intercept random-slope plot that the slope of the fitted line didn't vary too much across four grades), so for this little exercise, I would choose model 2 for parsimonious reason.
 
 ---
 # Summary
