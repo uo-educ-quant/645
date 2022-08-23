@@ -531,7 +531,9 @@ head(principal)
  - q2, students' rating on a survey item, "I think the principal knows who I am", on a 4-point likert scale, 1=low, 4=high
  - q3, students' rating on a survey item, "Principal knows how well I am doing", on a 4-point likert scale, 1=low, 4=high
  - q4, students' rating on a survey item, "The principal is nice", on a 4-point likert scale, 1=low, 4=high
- 
+
+---
+
 For starters, some data managment; we're interested in the association between student-perceived attention from principal and affective attitude toward principal, therefore we compute two variables of interest:
 
  - attention: take the average score of attention items, q1, q2, and q3, then standardize it at school level to measure student-perceived attention

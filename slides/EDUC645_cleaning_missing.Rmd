@@ -31,20 +31,7 @@ extra_css <- list(
 
 write_extra_css(css = extra_css, outfile = "my_custom.css")
 
-# Knitr options
-opts_chunk$set(
-  comment = "#>",
-  fig.align = "center",
-  fig.height = 6.75,
-  fig.width = 10.5,
-  warning = F,
-  message = F
-)
-opts_chunk$set(dev = "svg")
-options(device = function(file, width, height) {
-  svg(tempfile(), width = width, height = height)
-})
-options(knitr.table.format = "html")
+
 
 ```
 

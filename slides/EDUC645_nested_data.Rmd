@@ -424,14 +424,11 @@ coef(m1)
 ]
 
 ---
-
 # Random effects model
 
 Another way to answer the question is allowing the intercept to differ across grades - a unique intercept for each grade.
 
-Visually:
-
-```{r}
+```{r, echo = F}
 district %>% 
   ggplot(aes(percent_ell, math, color = grade)) +
   geom_smooth(method='lm', se = 0) +
@@ -440,17 +437,22 @@ district %>%
        y = "Math")
 ```
 
+-- 
+
 What parameters changed in the plot? 
 
- - the intercept: each grade has a unique intercept
+-- 
 
+ - the intercept: each grade has a unique intercept
  - the slope: the slope also changes accordingly
 
 **In fact, mixed-effects models can do more!** 
 
+---
+
 let's take advantage of the lme4 package, lmer function to quickly model the data in R:
 
- - Model 1. Put the simple linear regression model here for comparison
+Model 1. Put the simple linear regression model here for comparison
  
 ```{r}
 m1 <- lm(math ~ percent_ell, district)
@@ -472,17 +474,13 @@ coef(m2)$grade
 ```
 
 *R Notes: starting the usage of {equatiomatic} package*
-
 The notion being used through this unit:
-
 ```{r}
 equatiomatic::extract_eq(m2)
 ```
 
  - Model 3. Multilevel model with random slopes 
- 
       - (note that this is a weird practice in real data analysis but here I just include it for comparison purposes)
- 
       - How do you interpret the parameters now?
  
 ```{r, echo=TRUE}
@@ -499,8 +497,20 @@ coef(m3)$grade
 
 ```{r, echo=TRUE}
 m4 <- lmer(math ~ percent_ell + (1 + percent_ell|grade), district)
+```
+
+
+```{r, echo=TRUE}
 summary(m4)
+```
+
+
+```{r, echo=TRUE}
 coef(m4)$grade
+```
+
+
+```{r, echo=TRUE}
 extract_eq(m4)
 ```
 
@@ -510,7 +520,7 @@ What did we learn so far? Describe the differences between model 1 (simple linea
  - Random intercepts and slopes, model 4
 
 ---
-#3.1.4 Fixed effects vs random effects
+# 3.1.4 Fixed effects vs random effects
 
 If we put the two previous plots together, can you describe:
  - what does the bright red line represent? 
@@ -555,6 +565,7 @@ To sum up:
  - random effects represent the difference between cluster-specific intercept and slope and their averages across clusters
 
 ---
+
 # When modeling random effects becomes necessary?
 ## Unconditional model and ICC
 
