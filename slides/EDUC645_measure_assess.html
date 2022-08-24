@@ -119,7 +119,7 @@ Avoid order effects by randomizing sequence among participants.
 Care must be taken. Tests will never be perfectly equivalent, particularly when the measure is assessing abstract elements.
 
 ---
-# Splot Halves
+# Split Halves
 Offer the assessment yet divide (“split-half method”) the items at random.  
 
 Split in two comparable sets, you can compare the reliability of one set to the other.  
@@ -139,12 +139,15 @@ Number of items
 ---
 # Cronbach's Alpha
 
-[ insert formula ]
+`$$\alpha_{c} = \frac{k}{(k-1)[1-\Sigma(\frac{s^2_{i}}{s^2})]}$$`
 
 k = number of items included in scale analysis
 s2i = variance of scores for each item
 s2 = variance of all scores in the scale
 Range = 0-1
+
+---
+# C.I. for Cronbach's alpha
 
 ---
 # Standards for reliability
@@ -162,6 +165,7 @@ Cronbach's alpha
 Items are dichotomous (0 or 1)
 Kuder-Richardson formula number 20
 
+`$$KR20 = \frac{k}{(k-1)[1-\Sigma\frac{p_{i}q{i}}{s^2}]}$$`
 
 k = number of items included in scale analysis
 pi = proportion responding “positively”
@@ -171,6 +175,8 @@ s2 = variance of all scores in the scale
 ---
 # Attentuation Correction
 Estimates the correlation between X &amp; Y, assuming perfect measurement.
+
+`$${\rho}x_{T}y_{T} = \frac{{\rho}x_{i}y_{j}}{\sqrt{p_{xx'}p_{yy'}}}$$`
 
 Observed correlation over the SQRT of the (Reliability of X*Reliability of Y). 
 
@@ -187,7 +193,9 @@ Measurement includes holistic elements of domain
 
 Construct validity
 Measurement relates to other theoretically-derived measures
+
 ---
+
 # Above and beyond: Factor analysis
 Statistical method to uncover clusters (factors) of interrelated variables.
 

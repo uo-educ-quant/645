@@ -59,12 +59,18 @@ and how to use it to decide whether one needs to use multilevel modeling
 ---
 # What is Nested Data?
 
+levels of one factor vary only within the levels of another factor, that factor is said to be nested. 
+
+For example, when measuring the performance of workers at several job locations, if the workers only work at one site, then the workers are nested within site. If the workers work at more than one location, we would say that workers are crossed with site.
+
 ---
 # Where does it come from?
 ### Why do we need to think hierarchically?
 1) Two realities exist within interventions:
-  (a) Effect implies change in individuals over time,
-  (b) Effect occurs in groups and organizational settings (e.g., dyads, groups, networks, neighborhoods, clinics, cities, countries).
+
+(a) Effect implies change in individuals over time,
+
+(b) Effect occurs in groups and organizational settings (e.g., dyads, groups, networks, neighborhoods, clinics, cities, countries).
 
 --
 
@@ -77,8 +83,10 @@ and how to use it to decide whether one needs to use multilevel modeling
 #### Ecological Fallacy
 - Systematic underestimation of group effects
 - Inadequate intervention development and evaluation
+
 #### Aggregation bias
 - Attribute that an individual-level indicator is representative of the entire group
+
 #### Biased estimation of statistical associations
 - Misestimated standard errors
 - Homogeneity of regression slopes
@@ -158,10 +166,8 @@ and how to use it to decide whether one needs to use multilevel modeling
 --
 
 #### How are group-level variables defined?
-- Aggregating individual-level characteristics into groups
-(neighborhood SES)
-- Developing group-level measures (AIDS stigma in a
-neighborhood)
+- Aggregating individual-level characteristics into groups (school district SES)
+- Developing group-level measures (mental illness stigma in a school district)
 
 ---
 # Sampling and Design Considerations
@@ -188,17 +194,29 @@ neighborhood)
 Load the packages particularly needed for this unit: `lme4`, `equatiomatic`, `performance`, `lmerTest`
 
 ---
+# The Data: Stanford Education Data Archive (SEDA)
+
+SEDA was launched in 2016 to provide nationally comparable, publicly available test score data for U.S. public school districts, allowing scientific inquiries on the relationships between educational conditions, contexts, and outcomes (especially student math/ELA achievements) at the district-level across the nation.
+
+variables including measures of academic achievement and achievement gaps for school districts and counties, as well as district-level measures of racial and socioeconomic composition, racial and socioeconomic segregation patterns, and other features of the schooling system. 
+
+Data set is district-level data for 103 Oregon school districts, year 2017-18 data. Observations with missing values on any of the key variables were deleted for simplification reasons.
+
+---
 # 3.1.1 Inspect the data 
 
 What does each row/observation represent?
 
 ```{r, echo = FALSE, fig.cap="add caption"}
 seda <- rio::import(here::here("data", "seda_oregon.csv")) %>%
-  mutate(subject = recode(subject, 'mth' = "Math", 'rla' = "Reading")) 
+  mutate(subject = recode(subject, 'mth' = "Math", 'rla' = "Reading"))
 
-str(seda)
 head(seda)
+```
 
+---
+# Descriptives
+```{r, echo = FALSE, fig.cap="add caption"}
 seda %>%
   select(-district) %>% 
   tbl_summary(
@@ -219,10 +237,6 @@ seda %>%
 
 For starters, look at a single variable - Oregon districts' achievement score 
 
-(note that districts are "randomly" selected by course developer)
-
-Are we losing information by simply looking at district achievement across subject and grade?
-
 ```{r, echo = FALSE, fig.cap="add caption"}
 seda %>% 
   group_by(district) %>% 
@@ -234,6 +248,13 @@ seda %>%
   labs(x = "District",
        y = "Achievement")
 ```
+
+--
+
+Are we losing information by simply looking at district achievement across subject and grade?
+
+???
+Note that districts are "randomly" selected by course developer
 
 ---
 
@@ -589,7 +610,7 @@ At this point, the fixed effects model aggregating grade-level achievement to a 
  
 allow you to investigate changes over time
 
---- 
+---
 # Model fit 
 So far, we have one fixed effects model (simple linear regression, model 1) and four random effects (more accurately, mixed-effects) models including the unconditional model (model 0), random intercepts (model 2), random slopes (model 3), and random intercepts and slopes (model 4). 
 

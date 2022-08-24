@@ -56,12 +56,18 @@ and how to use it to decide whether one needs to use multilevel modeling
 ---
 # What is Nested Data?
 
+levels of one factor vary only within the levels of another factor, that factor is said to be nested. 
+
+For example, when measuring the performance of workers at several job locations, if the workers only work at one site, then the workers are nested within site. If the workers work at more than one location, we would say that workers are crossed with site.
+
 ---
 # Where does it come from?
 ### Why do we need to think hierarchically?
 1) Two realities exist within interventions:
-  (a) Effect implies change in individuals over time,
-  (b) Effect occurs in groups and organizational settings (e.g., dyads, groups, networks, neighborhoods, clinics, cities, countries).
+
+(a) Effect implies change in individuals over time,
+
+(b) Effect occurs in groups and organizational settings (e.g., dyads, groups, networks, neighborhoods, clinics, cities, countries).
 
 --
 
@@ -74,8 +80,10 @@ and how to use it to decide whether one needs to use multilevel modeling
 #### Ecological Fallacy
 - Systematic underestimation of group effects
 - Inadequate intervention development and evaluation
+
 #### Aggregation bias
 - Attribute that an individual-level indicator is representative of the entire group
+
 #### Biased estimation of statistical associations
 - Misestimated standard errors
 - Homogeneity of regression slopes
@@ -155,10 +163,8 @@ and how to use it to decide whether one needs to use multilevel modeling
 --
 
 #### How are group-level variables defined?
-- Aggregating individual-level characteristics into groups
-(neighborhood SES)
-- Developing group-level measures (AIDS stigma in a
-neighborhood)
+- Aggregating individual-level characteristics into groups (school district SES)
+- Developing group-level measures (mental illness stigma in a school district)
 
 ---
 # Sampling and Design Considerations
@@ -185,22 +191,19 @@ neighborhood)
 Load the packages particularly needed for this unit: `lme4`, `equatiomatic`, `performance`, `lmerTest`
 
 ---
+# The Data: Stanford Education Data Archive (SEDA)
+
+SEDA was launched in 2016 to provide nationally comparable, publicly available test score data for U.S. public school districts, allowing scientific inquiries on the relationships between educational conditions, contexts, and outcomes (especially student math/ELA achievements) at the district-level across the nation.
+
+variables including measures of academic achievement and achievement gaps for school districts and counties, as well as district-level measures of racial and socioeconomic composition, racial and socioeconomic segregation patterns, and other features of the schooling system. 
+
+Data set is district-level data for 103 Oregon school districts, year 2017-18 data. Observations with missing values on any of the key variables were deleted for simplification reasons.
+
+---
 # 3.1.1 Inspect the data 
 
 What does each row/observation represent?
 
-
-```
-## 'data.frame':	352 obs. of  8 variables:
-##  $ district    : chr  "VALE SD 84" "VALE SD 84" "VALE SD 84" "VALE SD 84" ...
-##  $ subject     : chr  "Math" "Reading" "Math" "Reading" ...
-##  $ grade       : int  3 3 4 4 5 5 6 6 3 3 ...
-##  $ achievement : num  2.54 3.23 3.09 4.36 4.57 ...
-##  $ gap_gender  : num  0.974 0.376 -0.788 -1.83 0.836 ...
-##  $ percent_ell : num  0.0492 0.0492 0.0492 0.0492 0.0492 ...
-##  $ percent_sped: num  0.128 0.128 0.128 0.128 0.128 ...
-##  $ percent_frl : num  0.622 0.622 0.622 0.622 0.622 ...
-```
 
 ```
 ##     district subject grade achievement gap_gender percent_ell percent_sped
@@ -219,12 +222,14 @@ What does each row/observation represent?
 ## 6   0.6216102
 ```
 
-<div id="swyjpwpvcd" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+---
+# Descriptives
+<div id="dunqbczdqf" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#swyjpwpvcd .gt_table {
+#dunqbczdqf .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -249,7 +254,7 @@ What does each row/observation represent?
   border-left-color: #D3D3D3;
 }
 
-#swyjpwpvcd .gt_heading {
+#dunqbczdqf .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -261,7 +266,7 @@ What does each row/observation represent?
   border-right-color: #D3D3D3;
 }
 
-#swyjpwpvcd .gt_title {
+#dunqbczdqf .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -273,7 +278,7 @@ What does each row/observation represent?
   border-bottom-width: 0;
 }
 
-#swyjpwpvcd .gt_subtitle {
+#dunqbczdqf .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -285,13 +290,13 @@ What does each row/observation represent?
   border-top-width: 0;
 }
 
-#swyjpwpvcd .gt_bottom_border {
+#dunqbczdqf .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#swyjpwpvcd .gt_col_headings {
+#dunqbczdqf .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -306,7 +311,7 @@ What does each row/observation represent?
   border-right-color: #D3D3D3;
 }
 
-#swyjpwpvcd .gt_col_heading {
+#dunqbczdqf .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -326,7 +331,7 @@ What does each row/observation represent?
   overflow-x: hidden;
 }
 
-#swyjpwpvcd .gt_column_spanner_outer {
+#dunqbczdqf .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -338,15 +343,15 @@ What does each row/observation represent?
   padding-right: 4px;
 }
 
-#swyjpwpvcd .gt_column_spanner_outer:first-child {
+#dunqbczdqf .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#swyjpwpvcd .gt_column_spanner_outer:last-child {
+#dunqbczdqf .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#swyjpwpvcd .gt_column_spanner {
+#dunqbczdqf .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -358,7 +363,7 @@ What does each row/observation represent?
   width: 100%;
 }
 
-#swyjpwpvcd .gt_group_heading {
+#dunqbczdqf .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -383,7 +388,7 @@ What does each row/observation represent?
   vertical-align: middle;
 }
 
-#swyjpwpvcd .gt_empty_group_heading {
+#dunqbczdqf .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -398,15 +403,15 @@ What does each row/observation represent?
   vertical-align: middle;
 }
 
-#swyjpwpvcd .gt_from_md > :first-child {
+#dunqbczdqf .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#swyjpwpvcd .gt_from_md > :last-child {
+#dunqbczdqf .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#swyjpwpvcd .gt_row {
+#dunqbczdqf .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -425,7 +430,7 @@ What does each row/observation represent?
   overflow-x: hidden;
 }
 
-#swyjpwpvcd .gt_stub {
+#dunqbczdqf .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -438,7 +443,7 @@ What does each row/observation represent?
   padding-right: 5px;
 }
 
-#swyjpwpvcd .gt_stub_row_group {
+#dunqbczdqf .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -452,11 +457,11 @@ What does each row/observation represent?
   vertical-align: top;
 }
 
-#swyjpwpvcd .gt_row_group_first td {
+#dunqbczdqf .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#swyjpwpvcd .gt_summary_row {
+#dunqbczdqf .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -466,16 +471,16 @@ What does each row/observation represent?
   padding-right: 5px;
 }
 
-#swyjpwpvcd .gt_first_summary_row {
+#dunqbczdqf .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#swyjpwpvcd .gt_first_summary_row.thick {
+#dunqbczdqf .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#swyjpwpvcd .gt_last_summary_row {
+#dunqbczdqf .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -485,7 +490,7 @@ What does each row/observation represent?
   border-bottom-color: #D3D3D3;
 }
 
-#swyjpwpvcd .gt_grand_summary_row {
+#dunqbczdqf .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -495,7 +500,7 @@ What does each row/observation represent?
   padding-right: 5px;
 }
 
-#swyjpwpvcd .gt_first_grand_summary_row {
+#dunqbczdqf .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -505,11 +510,11 @@ What does each row/observation represent?
   border-top-color: #D3D3D3;
 }
 
-#swyjpwpvcd .gt_striped {
+#dunqbczdqf .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#swyjpwpvcd .gt_table_body {
+#dunqbczdqf .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -518,7 +523,7 @@ What does each row/observation represent?
   border-bottom-color: #D3D3D3;
 }
 
-#swyjpwpvcd .gt_footnotes {
+#dunqbczdqf .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -532,7 +537,7 @@ What does each row/observation represent?
   border-right-color: #D3D3D3;
 }
 
-#swyjpwpvcd .gt_footnote {
+#dunqbczdqf .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-left: 4px;
@@ -541,7 +546,7 @@ What does each row/observation represent?
   padding-right: 5px;
 }
 
-#swyjpwpvcd .gt_sourcenotes {
+#dunqbczdqf .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -555,7 +560,7 @@ What does each row/observation represent?
   border-right-color: #D3D3D3;
 }
 
-#swyjpwpvcd .gt_sourcenote {
+#dunqbczdqf .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -563,36 +568,36 @@ What does each row/observation represent?
   padding-right: 5px;
 }
 
-#swyjpwpvcd .gt_left {
+#dunqbczdqf .gt_left {
   text-align: left;
 }
 
-#swyjpwpvcd .gt_center {
+#dunqbczdqf .gt_center {
   text-align: center;
 }
 
-#swyjpwpvcd .gt_right {
+#dunqbczdqf .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#swyjpwpvcd .gt_font_normal {
+#dunqbczdqf .gt_font_normal {
   font-weight: normal;
 }
 
-#swyjpwpvcd .gt_font_bold {
+#dunqbczdqf .gt_font_bold {
   font-weight: bold;
 }
 
-#swyjpwpvcd .gt_font_italic {
+#dunqbczdqf .gt_font_italic {
   font-style: italic;
 }
 
-#swyjpwpvcd .gt_super {
+#dunqbczdqf .gt_super {
   font-size: 65%;
 }
 
-#swyjpwpvcd .gt_two_val_uncert {
+#dunqbczdqf .gt_two_val_uncert {
   display: inline-block;
   line-height: 1em;
   text-align: right;
@@ -601,31 +606,31 @@ What does each row/observation represent?
   margin-left: 0.1em;
 }
 
-#swyjpwpvcd .gt_footnote_marks {
+#dunqbczdqf .gt_footnote_marks {
   font-style: italic;
   font-weight: normal;
   font-size: 75%;
   vertical-align: 0.4em;
 }
 
-#swyjpwpvcd .gt_asterisk {
+#dunqbczdqf .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#swyjpwpvcd .gt_slash_mark {
+#dunqbczdqf .gt_slash_mark {
   font-size: 0.7em;
   line-height: 0.7em;
   vertical-align: 0.15em;
 }
 
-#swyjpwpvcd .gt_fraction_numerator {
+#dunqbczdqf .gt_fraction_numerator {
   font-size: 0.6em;
   line-height: 0.6em;
   vertical-align: 0.45em;
 }
 
-#swyjpwpvcd .gt_fraction_denominator {
+#dunqbczdqf .gt_fraction_denominator {
   font-size: 0.6em;
   line-height: 0.6em;
   vertical-align: -0.05em;
@@ -681,35 +686,38 @@ What does each row/observation represent?
 
 For starters, look at a single variable - Oregon districts' achievement score 
 
-(note that districts are "randomly" selected by course developer)
+![add caption](EDUC645_nested_data_files/figure-html/unnamed-chunk-3-1.png)
+
+--
 
 Are we losing information by simply looking at district achievement across subject and grade?
 
-![add caption](EDUC645_nested_data_files/figure-html/unnamed-chunk-2-1.png)
+???
+Note that districts are "randomly" selected by course developer
 
 ---
 
 Does achievement differ by subject?
 
-![add caption](EDUC645_nested_data_files/figure-html/unnamed-chunk-3-1.png)
+![add caption](EDUC645_nested_data_files/figure-html/unnamed-chunk-4-1.png)
 
 ---
 
 Differ by grade?
 
-![add caption](EDUC645_nested_data_files/figure-html/unnamed-chunk-4-1.png)
+![add caption](EDUC645_nested_data_files/figure-html/unnamed-chunk-5-1.png)
 
 ---
 
 Differ by grade AND subject?
 
-![add caption](EDUC645_nested_data_files/figure-html/unnamed-chunk-5-1.png)
+![add caption](EDUC645_nested_data_files/figure-html/unnamed-chunk-6-1.png)
 
 ---
 
 Alternatively, 
 
-![add caption](EDUC645_nested_data_files/figure-html/unnamed-chunk-6-1.png)
+![add caption](EDUC645_nested_data_files/figure-html/unnamed-chunk-7-1.png)
 
 Can you describe the "clustering" nature of the data in more details now?
 
@@ -725,7 +733,7 @@ For example, let's look at relationship between percentage of ELL and achievemen
 ## `geom_smooth()` using formula 'y ~ x'
 ```
 
-![add caption](EDUC645_nested_data_files/figure-html/unnamed-chunk-7-1.png)
+![add caption](EDUC645_nested_data_files/figure-html/unnamed-chunk-8-1.png)
 
 ---
 
@@ -736,7 +744,7 @@ Does this relationship differ by subject?
 ## `geom_smooth()` using formula 'y ~ x'
 ```
 
-![add caption](EDUC645_nested_data_files/figure-html/unnamed-chunk-8-1.png)
+![add caption](EDUC645_nested_data_files/figure-html/unnamed-chunk-9-1.png)
 
 ---
 
@@ -747,7 +755,7 @@ Does this relationship differ by subject AND grade?
 ## `geom_smooth()` using formula 'y ~ x'
 ```
 
-![add caption](EDUC645_nested_data_files/figure-html/unnamed-chunk-9-1.png)
+![add caption](EDUC645_nested_data_files/figure-html/unnamed-chunk-10-1.png)
 
 What is your current understanding of clustered data? Is there a single answer to the relationship between percentage of ELL students and achievement? 
 
@@ -787,7 +795,7 @@ Visually:
 ## `geom_smooth()` using formula 'y ~ x'
 ```
 
-![add caption](EDUC645_nested_data_files/figure-html/unnamed-chunk-11-1.png)
+![add caption](EDUC645_nested_data_files/figure-html/unnamed-chunk-12-1.png)
 ]
 
 ---
@@ -845,7 +853,7 @@ Another way to answer the question is allowing the intercept to differ across gr
 ## `geom_smooth()` using formula 'y ~ x'
 ```
 
-![](EDUC645_nested_data_files/figure-html/unnamed-chunk-14-1.png)&lt;!-- --&gt;
+![](EDUC645_nested_data_files/figure-html/unnamed-chunk-15-1.png)&lt;!-- --&gt;
 
 -- 
 
@@ -1111,7 +1119,7 @@ If we put the two previous plots together, can you describe:
 ## `geom_smooth()` using formula 'y ~ x'
 ```
 
-![add caption](EDUC645_nested_data_files/figure-html/unnamed-chunk-23-1.png)
+![add caption](EDUC645_nested_data_files/figure-html/unnamed-chunk-24-1.png)
 
 ---
 
@@ -1237,7 +1245,7 @@ At this point, the fixed effects model aggregating grade-level achievement to a 
  
 allow you to investigate changes over time
 
---- 
+---
 # Model fit 
 So far, we have one fixed effects model (simple linear regression, model 1) and four random effects (more accurately, mixed-effects) models including the unconditional model (model 0), random intercepts (model 2), random slopes (model 3), and random intercepts and slopes (model 4). 
 
