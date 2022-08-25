@@ -33,13 +33,23 @@ Please upload below two files on Canvas before TBD time:
 
 #### 3.1. Assignment 1
 
+* Logistic regression
+
 #### 3.2. Assignment 2
+
+*  
 
 #### 3.3. Assignment 3
 
+* Poisson regression
+
 #### 3.4. Assignment 4
 
+* Nested data
+
 #### 3.5. Assignment 5
+
+* 
 
 #### 3.6. Final Project
 

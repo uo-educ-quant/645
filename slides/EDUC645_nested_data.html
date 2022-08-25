@@ -97,38 +97,9 @@ For example, when measuring the performance of workers at several job locations,
 * Residual correlation
 
 ---
-# What does “independence” mean?
-#### The observation of one participant does not depend on the response of other participants
+class: middle, inverse
 
-#### What happens to independence when:
-- We collect data across multiple sites?
-- Collect observations from the same individual over time?
-
----
-# Intraclass Correlation
-### Intraclass correlation: Proportion of total variability in the outcome that occurs between groups.
-
---
-
-### The greater the intraclass correlation coefficient (ICC), the greater the reflection of inequality between groups.
-
-
----
-# Intraclass Correlation
-### How have we commonly taken care of the ICC “issue”?
-- Ecologic Regression
-- Stratified Regressions
-- Group fixed-effects Model
-- Contextual Model
-- Hierarchical Linear Models
-
---
-
-### Group-level modeling
-
---
-
-### Repeated-measured modeling (“Growth curves”)
+# Multilevel Models (MLM)
 
 ---
 # Multilevel Models (MLM)
@@ -186,21 +157,26 @@ For example, when measuring the performance of workers at several job locations,
 #### Law of Diminishing Returns
 
 ---
+class: middle, inverse
+
 # Nested and crossed random effects in "lme4"
 
-Load the packages particularly needed for this unit: `lme4`, `equatiomatic`, `performance`, `lmerTest`
+---
+# Nested and crossed random effects in "lme4"
+
+Packages particularly needed for this unit: `lme4`, `equatiomatic`, `performance`, `lmerTest`
 
 ---
 # The Data: Stanford Education Data Archive (SEDA)
 
 SEDA was launched in 2016 to provide nationally comparable, publicly available test score data for U.S. public school districts, allowing scientific inquiries on the relationships between educational conditions, contexts, and outcomes (especially student math/ELA achievements) at the district-level across the nation.
 
-variables including measures of academic achievement and achievement gaps for school districts and counties, as well as district-level measures of racial and socioeconomic composition, racial and socioeconomic segregation patterns, and other features of the schooling system. 
+Variable include measures of academic achievement and achievement gaps for school districts and counties, as well as district-level measures of racial and socioeconomic composition, racial and socioeconomic segregation patterns, and other features of the schooling system. 
 
 Data set is district-level data for 103 Oregon school districts, year 2017-18 data. Observations with missing values on any of the key variables were deleted for simplification reasons.
 
 ---
-# 3.1.1 Inspect the data 
+# Inspect the data 
 
 What does each row/observation represent?
 
@@ -224,12 +200,12 @@ What does each row/observation represent?
 
 ---
 # Descriptives
-<div id="dunqbczdqf" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<div id="aawftfbdzp" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#dunqbczdqf .gt_table {
+#aawftfbdzp .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -254,7 +230,7 @@ What does each row/observation represent?
   border-left-color: #D3D3D3;
 }
 
-#dunqbczdqf .gt_heading {
+#aawftfbdzp .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -266,7 +242,7 @@ What does each row/observation represent?
   border-right-color: #D3D3D3;
 }
 
-#dunqbczdqf .gt_title {
+#aawftfbdzp .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -278,7 +254,7 @@ What does each row/observation represent?
   border-bottom-width: 0;
 }
 
-#dunqbczdqf .gt_subtitle {
+#aawftfbdzp .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -290,13 +266,13 @@ What does each row/observation represent?
   border-top-width: 0;
 }
 
-#dunqbczdqf .gt_bottom_border {
+#aawftfbdzp .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#dunqbczdqf .gt_col_headings {
+#aawftfbdzp .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -311,7 +287,7 @@ What does each row/observation represent?
   border-right-color: #D3D3D3;
 }
 
-#dunqbczdqf .gt_col_heading {
+#aawftfbdzp .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -331,7 +307,7 @@ What does each row/observation represent?
   overflow-x: hidden;
 }
 
-#dunqbczdqf .gt_column_spanner_outer {
+#aawftfbdzp .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -343,15 +319,15 @@ What does each row/observation represent?
   padding-right: 4px;
 }
 
-#dunqbczdqf .gt_column_spanner_outer:first-child {
+#aawftfbdzp .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#dunqbczdqf .gt_column_spanner_outer:last-child {
+#aawftfbdzp .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#dunqbczdqf .gt_column_spanner {
+#aawftfbdzp .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -363,7 +339,7 @@ What does each row/observation represent?
   width: 100%;
 }
 
-#dunqbczdqf .gt_group_heading {
+#aawftfbdzp .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -388,7 +364,7 @@ What does each row/observation represent?
   vertical-align: middle;
 }
 
-#dunqbczdqf .gt_empty_group_heading {
+#aawftfbdzp .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -403,15 +379,15 @@ What does each row/observation represent?
   vertical-align: middle;
 }
 
-#dunqbczdqf .gt_from_md > :first-child {
+#aawftfbdzp .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#dunqbczdqf .gt_from_md > :last-child {
+#aawftfbdzp .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#dunqbczdqf .gt_row {
+#aawftfbdzp .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -430,7 +406,7 @@ What does each row/observation represent?
   overflow-x: hidden;
 }
 
-#dunqbczdqf .gt_stub {
+#aawftfbdzp .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -443,7 +419,7 @@ What does each row/observation represent?
   padding-right: 5px;
 }
 
-#dunqbczdqf .gt_stub_row_group {
+#aawftfbdzp .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -457,11 +433,11 @@ What does each row/observation represent?
   vertical-align: top;
 }
 
-#dunqbczdqf .gt_row_group_first td {
+#aawftfbdzp .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#dunqbczdqf .gt_summary_row {
+#aawftfbdzp .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -471,16 +447,16 @@ What does each row/observation represent?
   padding-right: 5px;
 }
 
-#dunqbczdqf .gt_first_summary_row {
+#aawftfbdzp .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#dunqbczdqf .gt_first_summary_row.thick {
+#aawftfbdzp .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#dunqbczdqf .gt_last_summary_row {
+#aawftfbdzp .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -490,7 +466,7 @@ What does each row/observation represent?
   border-bottom-color: #D3D3D3;
 }
 
-#dunqbczdqf .gt_grand_summary_row {
+#aawftfbdzp .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -500,7 +476,7 @@ What does each row/observation represent?
   padding-right: 5px;
 }
 
-#dunqbczdqf .gt_first_grand_summary_row {
+#aawftfbdzp .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -510,11 +486,11 @@ What does each row/observation represent?
   border-top-color: #D3D3D3;
 }
 
-#dunqbczdqf .gt_striped {
+#aawftfbdzp .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#dunqbczdqf .gt_table_body {
+#aawftfbdzp .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -523,7 +499,7 @@ What does each row/observation represent?
   border-bottom-color: #D3D3D3;
 }
 
-#dunqbczdqf .gt_footnotes {
+#aawftfbdzp .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -537,7 +513,7 @@ What does each row/observation represent?
   border-right-color: #D3D3D3;
 }
 
-#dunqbczdqf .gt_footnote {
+#aawftfbdzp .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-left: 4px;
@@ -546,7 +522,7 @@ What does each row/observation represent?
   padding-right: 5px;
 }
 
-#dunqbczdqf .gt_sourcenotes {
+#aawftfbdzp .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -560,7 +536,7 @@ What does each row/observation represent?
   border-right-color: #D3D3D3;
 }
 
-#dunqbczdqf .gt_sourcenote {
+#aawftfbdzp .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -568,36 +544,36 @@ What does each row/observation represent?
   padding-right: 5px;
 }
 
-#dunqbczdqf .gt_left {
+#aawftfbdzp .gt_left {
   text-align: left;
 }
 
-#dunqbczdqf .gt_center {
+#aawftfbdzp .gt_center {
   text-align: center;
 }
 
-#dunqbczdqf .gt_right {
+#aawftfbdzp .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#dunqbczdqf .gt_font_normal {
+#aawftfbdzp .gt_font_normal {
   font-weight: normal;
 }
 
-#dunqbczdqf .gt_font_bold {
+#aawftfbdzp .gt_font_bold {
   font-weight: bold;
 }
 
-#dunqbczdqf .gt_font_italic {
+#aawftfbdzp .gt_font_italic {
   font-style: italic;
 }
 
-#dunqbczdqf .gt_super {
+#aawftfbdzp .gt_super {
   font-size: 65%;
 }
 
-#dunqbczdqf .gt_two_val_uncert {
+#aawftfbdzp .gt_two_val_uncert {
   display: inline-block;
   line-height: 1em;
   text-align: right;
@@ -606,31 +582,31 @@ What does each row/observation represent?
   margin-left: 0.1em;
 }
 
-#dunqbczdqf .gt_footnote_marks {
+#aawftfbdzp .gt_footnote_marks {
   font-style: italic;
   font-weight: normal;
   font-size: 75%;
   vertical-align: 0.4em;
 }
 
-#dunqbczdqf .gt_asterisk {
+#aawftfbdzp .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#dunqbczdqf .gt_slash_mark {
+#aawftfbdzp .gt_slash_mark {
   font-size: 0.7em;
   line-height: 0.7em;
   vertical-align: 0.15em;
 }
 
-#dunqbczdqf .gt_fraction_numerator {
+#aawftfbdzp .gt_fraction_numerator {
   font-size: 0.6em;
   line-height: 0.6em;
   vertical-align: 0.45em;
 }
 
-#dunqbczdqf .gt_fraction_denominator {
+#aawftfbdzp .gt_fraction_denominator {
   font-size: 0.6em;
   line-height: 0.6em;
   vertical-align: -0.05em;
@@ -682,9 +658,9 @@ What does each row/observation represent?
 </div>
 
 ---
-# 3.1.2 Understand the clustering nature
+# Understand the clustering nature
 
-For starters, look at a single variable - Oregon districts' achievement score 
+Let's start with a single variable: Oregon districts' achievement score 
 
 ![add caption](EDUC645_nested_data_files/figure-html/unnamed-chunk-3-1.png)
 
@@ -757,13 +733,15 @@ Does this relationship differ by subject AND grade?
 
 ![add caption](EDUC645_nested_data_files/figure-html/unnamed-chunk-10-1.png)
 
-What is your current understanding of clustered data? Is there a single answer to the relationship between percentage of ELL students and achievement? 
+* What is your current understanding of clustered data? 
+* Is there a single answer to the relationship between percentage of ELL students and achievement? 
 
-(expect students to realize that there is no universal answer; depends on what you look at, what cluster/clusters you want to include, and model specifications)
+???
+
+Expect students to realize that there is no universal answer; depends on what you look at, what cluster/clusters you want to include, and model specifications
 
 ---
-
-# 3.1.3 Modeling the relationship between two variables
+# Modeling the relationship between two variables
 
 **For this introductory course, we only focus on two-level clustered data.**
 
@@ -776,16 +754,25 @@ What model/models can we fit to answer the question?
 
 
 ---
+class: middle, inverse
+
+# Fixed Effects &amp; Random Effects
+
+---
+
+# Fixed effects model
+
+
+---
 
 # Fixed effects model
 
 .pull-left[
-One way to answer the question is assuming a common intercept for all grades. 
+* Assume a common intercept for all grades. 
 
 --
 
-Model specifications (using multiple regression knowledge you learned from EDUC 643, you can do it!):
-
+Model specifications:
 ]
 
 Visually:
@@ -799,6 +786,8 @@ Visually:
 ]
 
 ---
+
+# Fixed effects model
 
 How to interpret these parameters?
 
@@ -831,6 +820,11 @@ summary(m1)
 ```
 ]
 
+---
+# Fixed effects model
+
+How to interpret these parameters?
+
 .pull-right[
 
 ```r
@@ -843,10 +837,11 @@ coef(m1)
 ```
 ]
 
+
 ---
 # Random effects model
 
-Another way to answer the question is allowing the intercept to differ across grades - a unique intercept for each grade.
+* Allow the intercept to differ across grades
 
 
 ```
@@ -861,21 +856,24 @@ What parameters changed in the plot?
 
 -- 
 
- - the intercept: each grade has a unique intercept
- - the slope: the slope also changes accordingly
+ - Intercept: each grade has a unique intercept
+ - Slope: slope changes accordingly
 
 **In fact, mixed-effects models can do more!** 
 
+???
+
+Another way to answer the question is allowing the intercept to differ across grades - a unique intercept for each grade.
+
 ---
 
-let's take advantage of the lme4 package, lmer function to quickly model the data in R:
+`lme4` package: `lmer` function models the data in R:
 
-Model 1. Put the simple linear regression model here for comparison
- 
+Model 1. Simple linear regression model for comparison
+
 
 ```r
 m1 &lt;- lm(math ~ percent_ell, district)
-
 coef(m1)
 ```
 
@@ -884,12 +882,8 @@ coef(m1)
 ##    4.504827   -6.466889
 ```
 
- - Model 2. Multilevel model with random intercepts 
- 
-      - What parameter differs across grades? what parameter remains the same?
-      - Interpret the parameters
-
-*R notes: starting the basics of the lme4::lmer() syntax*
+Model 2. Multilevel model with *random __intercepts__*
+    - What parameter differs across grades? what parameter remains the same?
 
 
 ```r
@@ -951,9 +945,12 @@ $$
 \end{aligned}`
 $$
 
- - Model 3. Multilevel model with random slopes 
-      - (note that this is a weird practice in real data analysis but here I just include it for comparison purposes)
-      - How do you interpret the parameters now?
+---
+
+Model 3. Multilevel model with *random __slopes__* 
+
+* **Note**: this comparison is primarily for instructive purposes
+* How do you interpret the parameters now?
  
 
 ```r
@@ -1001,20 +998,17 @@ coef(m3)$grade
 ```r
 # extract_eq(m3) doesn't work here
 ```
-    
- - Model 4. Multilevel model with random intercepts and slopes 
- 
-      - How about the parameters for this model specification?
-      - Can you specify the relationship between percentage of ELL and math achievement for grade 3? grade 4? .. grade 6?
+
+---
+
+Model 4. Multilevel model with *random __intercepts__ and __slopes__*
+* How about the parameters for this model specification?
+* Specify the relationship between percentage of ELL and math achievement for grades 3, 4 &amp; 6
 
 
 ```r
 m4 &lt;- lmer(math ~ percent_ell + (1 + percent_ell|grade), district)
-```
 
-
-
-```r
 summary(m4)
 ```
 
@@ -1050,7 +1044,6 @@ summary(m4)
 ```
 
 
-
 ```r
 coef(m4)$grade
 ```
@@ -1062,7 +1055,6 @@ coef(m4)$grade
 ## G5    5.075495   -6.584562
 ## G6    6.212885   -6.819096
 ```
-
 
 
 ```r
@@ -1101,17 +1093,17 @@ $$
 \end{aligned}`
 $$
 
+--
+
 What did we learn so far? Describe the differences between model 1 (simple linear regression) and a model with
- - Random intercepts, model 2
- - Random slopes, model 3
- - Random intercepts and slopes, model 4
+* Random intercepts, model 2
+* Random slopes, model 3
+* Random intercepts and slopes, model 4
 
 ---
-# 3.1.4 Fixed effects vs random effects
+# Fixed effects vs random effects
 
-If we put the two previous plots together, can you describe:
- - what does the bright red line represent? 
- - what do the other four lines represent? 
+If we put the two previous plots together:
 
 
 ```
@@ -1119,13 +1111,14 @@ If we put the two previous plots together, can you describe:
 ## `geom_smooth()` using formula 'y ~ x'
 ```
 
-![add caption](EDUC645_nested_data_files/figure-html/unnamed-chunk-24-1.png)
+![add caption](EDUC645_nested_data_files/figure-html/unnamed-chunk-23-1.png)
+
+* what does the bright red line represent? 
+* what do the other four lines represent?
 
 ---
 
 Also a review of the relationship between fixed effect (model 1) and random effects (model 4) parameters:
-
-Run the code for yourself and see what you notice:
 
 
 ```r
@@ -1144,8 +1137,6 @@ mean(unlist(coef(m4)$grade[1]))
 ```
 ## [1] 4.504827
 ```
-
-Run the code for yourself and see what you notice:
 
 
 ```r
@@ -1167,20 +1158,59 @@ mean(unlist(coef(m4)$grade[2]))
 
 What might be the reason behind these?
 
-To sum up:
-
- - fixed effect represents the aggregation of the different intercepts and slopes by taking an average of varying intercept and slopes across clusters
+Summary:
+* **Fixed effect** represents the aggregation of the different intercepts and slopes by taking an average of varying intercept and slopes across clusters
  
- - random effects represent the difference between cluster-specific intercept and slope and their averages across clusters
+* **Random effects** represent the difference between cluster-specific intercept and slope and their averages across clusters
+
+---
+class: middle, inverse
+
+# Interdependence and the Intraclass Correlation Coefficient (ICC)
+
+---
+# What does “independence” mean?
+#### The observation of one participant does not depend on the response of other participants
+
+#### What happens to independence when:
+- We collect data across multiple sites?
+- Collect observations from the same individual over time?
+
+---
+# Intraclass Correlation
+
+**Intraclass correlation coefficient**: Proportion of total variability in the outcome that occurs between groups.
+
+--
+
+* Larger ICC = More inequality between groups
+
+???
+The greater the ICC, the greater the reflection of inequality between groups.
+
+---
+# Intraclass Correlation
+### Common methods to address the ICC “issue”
+- Ecologic Regression
+- Stratified Regressions
+- Group fixed-effects Model
+- Contextual Model
+- Hierarchical Linear Models
+
+--
+
+### Group-level modeling
+
+--
+
+### Repeated-measured modeling (“Growth curves”)
 
 ---
 
 # When modeling random effects becomes necessary?
 ## Unconditional model and ICC
 
-We estimate a baseline model, model 0, to see how much variance in math is attributable to between-grade variation
-
-*R notes: starting the {performance} package usage*
+We estimate a baseline model (model 0) to see how much variance in math is attributable to between-grade variation
 
 
 ```r
@@ -1225,6 +1255,12 @@ summary(m0)
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ```
 
+---
+#Interpreting the ICC
+
+*R notes: starting the {performance} package usage*
+
+
 ```r
 performance::icc(m0)
 ```
@@ -1236,8 +1272,11 @@ performance::icc(m0)
 ##   Unadjusted ICC: 0.645
 ```
 
----
-#ICC: intraclass correlation coefficient
+Interpretation: Approximately 64.5% of the variance in math achievement lies between grades. 
+
+Conclusion: The fixed effects model masks important information regarding differences in grade-level achievement.
+
+???
 
 Specifically, about 64.5% of the variance in math achievement lies between grades. 
 
@@ -1246,23 +1285,36 @@ At this point, the fixed effects model aggregating grade-level achievement to a 
 allow you to investigate changes over time
 
 ---
-# Model fit 
-So far, we have one fixed effects model (simple linear regression, model 1) and four random effects (more accurately, mixed-effects) models including the unconditional model (model 0), random intercepts (model 2), random slopes (model 3), and random intercepts and slopes (model 4). 
+class: middle, inverse
+
+# Assessing Model Fit
+
+---
+# Choosing the preferred model 
+We have several models: 
+* Fixed effects model (simple linear regression, model 1) 
+* Four random effects (i.e., mixed-effects) models
+  - Unconditional model (model 0)
+  - Random intercepts (model 2)
+  - Random slopes (model 3)
+  - Random intercepts and slopes (model 4)
 
 How do we know which one is preferred?
 
 --
+Indices and Methods to assess Model Fit:
+* Root Mean Square Estimate (RMSE)
+* Chi-squared significance test of the change in the model deviance
+* Information criteria (i.e., AIC/BIC)
+* Cross validation procedures
 
-(from Dr. Daniel Anderson's multilevel modeling II course)
-
-  - RMSE
-  - Chi squared significance test of the change in the model deviance
-  - Information criteria (AIC/BIC)
-  - Cross validation procedures
+???
+So far, we have one fixed effects model, but
+how do we know which one is preferred?
 
 ---
 
-For example, comparing model 1 and model 4:
+Compare model 1 and model 4:
 
 
 ```r
@@ -1280,7 +1332,6 @@ Table: Comparison of Model Performance Indices
 |m4   | lmerModLmerTest | 510.08 |        1.00 | 529.10 |        1.00 | 0.94 |  0.95 |      |           | 510.58 |              |       0.72 |       0.07 | 0.70 |
 
 
-
 ```r
 test_likelihoodratio(m1, m4) %&gt;% 
   print_md
@@ -1293,7 +1344,7 @@ test_likelihoodratio(m1, m4) %&gt;%
 |m1   |              lm|  3|        |       |         |
 |m4   | lmerModLmerTest|  6|       3| 159.64| 2.19e-34|
 
-Another example, comparing model 2 and model 4:
+Compare model 2 and model 4:
 
 
 ```r
@@ -1311,7 +1362,6 @@ Table: Comparison of Model Performance Indices
 |m4   | lmerModLmerTest | 510.08 |       0.123 | 510.58 |        0.110 | 529.10 |       0.006 |       0.72 |       0.07 | 0.70 | 0.94 |  0.95 |
 
 
-
 ```r
 test_likelihoodratio(m2, m4) %&gt;% 
   print_md
@@ -1326,9 +1376,22 @@ test_likelihoodratio(m2, m4) %&gt;%
 
 --
 
-Definitely prefer model 4 over model 1; 
+Interpretation: Model 4 performs best
 
-But model 4 doesn't perform much better than model 2 (identical RMSE; insignificant chi squared test of the change in the model deviance; also visually confirmed in the previous random-intercept random-slope plot that the slope of the fitted line didn't vary too much across four grades), so for this little exercise, I would choose model 2 for parsimonious reason.
+**HOWEVER** model 4 doesn't perform much better than model 2 
+
+Conclusion: Choose model 2 for *parsimonious* reason.
+
+???
+
+But model 4 doesn't perform much better than model 2 (identical RMSE;
+- non-significant chi squared test of the change in the model deviance; 
+- also visually confirmed in the previous random-intercept random-slope plot that the slope of the fitted line didn't vary too much across four grades), so for this little exercise, I would choose model 2 for parsimonious reason.
+
+---
+# Model Building and Parsimony
+
+
 
 ---
 # Summary

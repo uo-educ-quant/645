@@ -100,38 +100,9 @@ For example, when measuring the performance of workers at several job locations,
 * Residual correlation
 
 ---
-# What does “independence” mean?
-#### The observation of one participant does not depend on the response of other participants
+class: middle, inverse
 
-#### What happens to independence when:
-- We collect data across multiple sites?
-- Collect observations from the same individual over time?
-
----
-# Intraclass Correlation
-### Intraclass correlation: Proportion of total variability in the outcome that occurs between groups.
-
---
-
-### The greater the intraclass correlation coefficient (ICC), the greater the reflection of inequality between groups.
-
-
----
-# Intraclass Correlation
-### How have we commonly taken care of the ICC “issue”?
-- Ecologic Regression
-- Stratified Regressions
-- Group fixed-effects Model
-- Contextual Model
-- Hierarchical Linear Models
-
---
-
-### Group-level modeling
-
---
-
-### Repeated-measured modeling (“Growth curves”)
+# Multilevel Models (MLM)
 
 ---
 # Multilevel Models (MLM)
@@ -189,21 +160,26 @@ For example, when measuring the performance of workers at several job locations,
 #### Law of Diminishing Returns
 
 ---
+class: middle, inverse
+
 # Nested and crossed random effects in "lme4"
 
-Load the packages particularly needed for this unit: `lme4`, `equatiomatic`, `performance`, `lmerTest`
+---
+# Nested and crossed random effects in "lme4"
+
+Packages particularly needed for this unit: `lme4`, `equatiomatic`, `performance`, `lmerTest`
 
 ---
 # The Data: Stanford Education Data Archive (SEDA)
 
 SEDA was launched in 2016 to provide nationally comparable, publicly available test score data for U.S. public school districts, allowing scientific inquiries on the relationships between educational conditions, contexts, and outcomes (especially student math/ELA achievements) at the district-level across the nation.
 
-variables including measures of academic achievement and achievement gaps for school districts and counties, as well as district-level measures of racial and socioeconomic composition, racial and socioeconomic segregation patterns, and other features of the schooling system. 
+Variable include measures of academic achievement and achievement gaps for school districts and counties, as well as district-level measures of racial and socioeconomic composition, racial and socioeconomic segregation patterns, and other features of the schooling system. 
 
 Data set is district-level data for 103 Oregon school districts, year 2017-18 data. Observations with missing values on any of the key variables were deleted for simplification reasons.
 
 ---
-# 3.1.1 Inspect the data 
+# Inspect the data 
 
 What does each row/observation represent?
 
@@ -233,9 +209,9 @@ seda %>%
 ```
 
 ---
-# 3.1.2 Understand the clustering nature
+# Understand the clustering nature
 
-For starters, look at a single variable - Oregon districts' achievement score 
+Let's start with a single variable: Oregon districts' achievement score 
 
 ```{r, echo = FALSE, fig.cap="add caption"}
 seda %>% 
@@ -378,13 +354,15 @@ seda %>%
        y = "Achievement")
 ```
 
-What is your current understanding of clustered data? Is there a single answer to the relationship between percentage of ELL students and achievement? 
+* What is your current understanding of clustered data? 
+* Is there a single answer to the relationship between percentage of ELL students and achievement? 
 
-(expect students to realize that there is no universal answer; depends on what you look at, what cluster/clusters you want to include, and model specifications)
+???
+
+Expect students to realize that there is no universal answer; depends on what you look at, what cluster/clusters you want to include, and model specifications
 
 ---
-
-# 3.1.3 Modeling the relationship between two variables
+# Modeling the relationship between two variables
 
 **For this introductory course, we only focus on two-level clustered data.**
 
@@ -403,16 +381,25 @@ district <- seda %>%
 ```
 
 ---
+class: middle, inverse
+
+# Fixed Effects & Random Effects
+
+---
+
+# Fixed effects model
+
+
+---
 
 # Fixed effects model
 
 .pull-left[
-One way to answer the question is assuming a common intercept for all grades. 
+* Assume a common intercept for all grades. 
 
 --
 
-Model specifications (using multiple regression knowledge you learned from EDUC 643, you can do it!):
-
+Model specifications:
 ]
 
 Visually:
@@ -429,6 +416,8 @@ district %>%
 
 ---
 
+# Fixed effects model
+
 How to interpret these parameters?
 
 .pull-left[
@@ -438,16 +427,22 @@ summary(m1)
 ```
 ]
 
+---
+# Fixed effects model
+
+How to interpret these parameters?
+
 .pull-right[
 ```{r, echo=T}
 coef(m1)
 ```
 ]
 
+
 ---
 # Random effects model
 
-Another way to answer the question is allowing the intercept to differ across grades - a unique intercept for each grade.
+* Allow the intercept to differ across grades
 
 ```{r, echo = F}
 district %>% 
@@ -464,29 +459,28 @@ What parameters changed in the plot?
 
 -- 
 
- - the intercept: each grade has a unique intercept
- - the slope: the slope also changes accordingly
+ - Intercept: each grade has a unique intercept
+ - Slope: slope changes accordingly
 
 **In fact, mixed-effects models can do more!** 
 
+???
+
+Another way to answer the question is allowing the intercept to differ across grades - a unique intercept for each grade.
+
 ---
 
-let's take advantage of the lme4 package, lmer function to quickly model the data in R:
+`lme4` package: `lmer` function models the data in R:
 
-Model 1. Put the simple linear regression model here for comparison
- 
+Model 1. Simple linear regression model for comparison
+
 ```{r}
 m1 <- lm(math ~ percent_ell, district)
-
 coef(m1)
 ```
 
- - Model 2. Multilevel model with random intercepts 
- 
-      - What parameter differs across grades? what parameter remains the same?
-      - Interpret the parameters
-
-*R notes: starting the basics of the lme4::lmer() syntax*
+Model 2. Multilevel model with *random __intercepts__*
+    - What parameter differs across grades? what parameter remains the same?
 
 ```{r, echo=TRUE}
 m2 <- lme4::lmer(math ~ percent_ell + (1|grade), district)
@@ -500,9 +494,12 @@ The notion being used through this unit:
 equatiomatic::extract_eq(m2)
 ```
 
- - Model 3. Multilevel model with random slopes 
-      - (note that this is a weird practice in real data analysis but here I just include it for comparison purposes)
-      - How do you interpret the parameters now?
+---
+
+Model 3. Multilevel model with *random __slopes__* 
+
+* **Note**: this comparison is primarily for instructive purposes
+* How do you interpret the parameters now?
  
 ```{r, echo=TRUE}
 m3 <- lmer(math ~ 1 + (0 + percent_ell|grade), district)
@@ -510,42 +507,38 @@ summary(m3)
 coef(m3)$grade
 # extract_eq(m3) doesn't work here
 ```
-    
- - Model 4. Multilevel model with random intercepts and slopes 
- 
-      - How about the parameters for this model specification?
-      - Can you specify the relationship between percentage of ELL and math achievement for grade 3? grade 4? .. grade 6?
+
+---
+
+Model 4. Multilevel model with *random __intercepts__ and __slopes__*
+* How about the parameters for this model specification?
+* Specify the relationship between percentage of ELL and math achievement for grades 3, 4 & 6
 
 ```{r, echo=TRUE}
 m4 <- lmer(math ~ percent_ell + (1 + percent_ell|grade), district)
-```
 
-
-```{r, echo=TRUE}
 summary(m4)
 ```
-
 
 ```{r, echo=TRUE}
 coef(m4)$grade
 ```
 
-
 ```{r, echo=TRUE}
 extract_eq(m4)
 ```
 
+--
+
 What did we learn so far? Describe the differences between model 1 (simple linear regression) and a model with
- - Random intercepts, model 2
- - Random slopes, model 3
- - Random intercepts and slopes, model 4
+* Random intercepts, model 2
+* Random slopes, model 3
+* Random intercepts and slopes, model 4
 
 ---
-# 3.1.4 Fixed effects vs random effects
+# Fixed effects vs random effects
 
-If we put the two previous plots together, can you describe:
- - what does the bright red line represent? 
- - what do the other four lines represent? 
+If we put the two previous plots together:
 
 ```{r, echo = FALSE, fig.cap="add caption"}
 district %>% 
@@ -559,18 +552,17 @@ district %>%
        y = "Math")
 ```
 
+* what does the bright red line represent? 
+* what do the other four lines represent?
+
 ---
 
 Also a review of the relationship between fixed effect (model 1) and random effects (model 4) parameters:
-
-Run the code for yourself and see what you notice:
 
 ```{r}
 coef(m1)[1]
 mean(unlist(coef(m4)$grade[1]))
 ```
-
-Run the code for yourself and see what you notice:
 
 ```{r}
 coef(m1)[2]
@@ -579,30 +571,80 @@ mean(unlist(coef(m4)$grade[2]))
 
 What might be the reason behind these?
 
-To sum up:
-
- - fixed effect represents the aggregation of the different intercepts and slopes by taking an average of varying intercept and slopes across clusters
+Summary:
+* **Fixed effect** represents the aggregation of the different intercepts and slopes by taking an average of varying intercept and slopes across clusters
  
- - random effects represent the difference between cluster-specific intercept and slope and their averages across clusters
+* **Random effects** represent the difference between cluster-specific intercept and slope and their averages across clusters
+
+---
+class: middle, inverse
+
+# Interdependence and the Intraclass Correlation Coefficient (ICC)
+
+---
+# What does “independence” mean?
+#### The observation of one participant does not depend on the response of other participants
+
+#### What happens to independence when:
+- We collect data across multiple sites?
+- Collect observations from the same individual over time?
+
+---
+# Intraclass Correlation
+
+**Intraclass correlation coefficient**: Proportion of total variability in the outcome that occurs between groups.
+
+--
+
+* Larger ICC = More inequality between groups
+
+???
+The greater the ICC, the greater the reflection of inequality between groups.
+
+---
+# Intraclass Correlation
+### Common methods to address the ICC “issue”
+- Ecologic Regression
+- Stratified Regressions
+- Group fixed-effects Model
+- Contextual Model
+- Hierarchical Linear Models
+
+--
+
+### Group-level modeling
+
+--
+
+### Repeated-measured modeling (“Growth curves”)
 
 ---
 
 # When modeling random effects becomes necessary?
 ## Unconditional model and ICC
 
-We estimate a baseline model, model 0, to see how much variance in math is attributable to between-grade variation
-
-*R notes: starting the {performance} package usage*
+We estimate a baseline model (model 0) to see how much variance in math is attributable to between-grade variation
 
 ```{r}
 m0 <- lmer(math ~ 1 + (1 | grade), district)
 extract_eq(m0)
 summary(m0)
-performance::icc(m0)
 ```
 
 ---
-#ICC: intraclass correlation coefficient
+#Interpreting the ICC
+
+*R notes: starting the {performance} package usage*
+
+```{r}
+performance::icc(m0)
+```
+
+Interpretation: Approximately 64.5% of the variance in math achievement lies between grades. 
+
+Conclusion: The fixed effects model masks important information regarding differences in grade-level achievement.
+
+???
 
 Specifically, about 64.5% of the variance in math achievement lies between grades. 
 
@@ -611,42 +653,53 @@ At this point, the fixed effects model aggregating grade-level achievement to a 
 allow you to investigate changes over time
 
 ---
-# Model fit 
-So far, we have one fixed effects model (simple linear regression, model 1) and four random effects (more accurately, mixed-effects) models including the unconditional model (model 0), random intercepts (model 2), random slopes (model 3), and random intercepts and slopes (model 4). 
+class: middle, inverse
+
+# Assessing Model Fit
+
+---
+# Choosing the preferred model 
+We have several models: 
+* Fixed effects model (simple linear regression, model 1) 
+* Four random effects (i.e., mixed-effects) models
+  - Unconditional model (model 0)
+  - Random intercepts (model 2)
+  - Random slopes (model 3)
+  - Random intercepts and slopes (model 4)
 
 How do we know which one is preferred?
 
 --
+Indices and Methods to assess Model Fit:
+* Root Mean Square Estimate (RMSE)
+* Chi-squared significance test of the change in the model deviance
+* Information criteria (i.e., AIC/BIC)
+* Cross validation procedures
 
-(from Dr. Daniel Anderson's multilevel modeling II course)
-
-  - RMSE
-  - Chi squared significance test of the change in the model deviance
-  - Information criteria (AIC/BIC)
-  - Cross validation procedures
+???
+So far, we have one fixed effects model, but
+how do we know which one is preferred?
 
 ---
 
-For example, comparing model 1 and model 4:
+Compare model 1 and model 4:
 
 ```{r}
 performance::compare_performance(m1, m4) %>% 
   print_md()
 ```
 
-
 ```{r}
 test_likelihoodratio(m1, m4) %>% 
   print_md
 ```
 
-Another example, comparing model 2 and model 4:
+Compare model 2 and model 4:
 
 ```{r}
 performance::compare_performance(m2, m4) %>% 
   print_md()
 ```
-
 
 ```{r}
 test_likelihoodratio(m2, m4) %>% 
@@ -655,9 +708,22 @@ test_likelihoodratio(m2, m4) %>%
 
 --
 
-Definitely prefer model 4 over model 1; 
+Interpretation: Model 4 performs best
 
-But model 4 doesn't perform much better than model 2 (identical RMSE; insignificant chi squared test of the change in the model deviance; also visually confirmed in the previous random-intercept random-slope plot that the slope of the fitted line didn't vary too much across four grades), so for this little exercise, I would choose model 2 for parsimonious reason.
+**HOWEVER** model 4 doesn't perform much better than model 2 
+
+Conclusion: Choose model 2 for *parsimonious* reason.
+
+???
+
+But model 4 doesn't perform much better than model 2 (identical RMSE;
+- non-significant chi squared test of the change in the model deviance; 
+- also visually confirmed in the previous random-intercept random-slope plot that the slope of the fitted line didn't vary too much across four grades), so for this little exercise, I would choose model 2 for parsimonious reason.
+
+---
+# Model Building and Parsimony
+
+
 
 ---
 # Summary
