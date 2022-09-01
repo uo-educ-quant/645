@@ -544,7 +544,7 @@ For starters, some data managment; we're interested in the association between s
  
 Plot outcome variable, affective, on predictor variable, attention:
 
-```{r}
+```{r echo = FALSE, message = FALSE}
 principal %>% 
   ggplot(aes(attention, affective)) +
   geom_point(color = "royalblue") +
@@ -634,10 +634,10 @@ tibble(attention = (-3):3) %>%
 
 ---
 
-I manipulate the X axis to range from -3 to 15 to show the nonlinear relationship in its full image:
+Manipulate the X axis to show the nonlinear relationship in its full image:
 
 ```{r}
-tibble(attention = (-3):15) %>% 
+tibble(attention = (-15):20) %>% 
   mutate(pred = predict(m3, newdata = ., type = "response")) %>% 
   ggplot(aes(attention, pred)) +
   geom_line(color = "royalblue") +

@@ -605,14 +605,6 @@ For starters, some data managment; we're interested in the association between s
 Plot outcome variable, affective, on predictor variable, attention:
 
 
-```r
-principal %&gt;% 
-  ggplot(aes(attention, affective)) +
-  geom_point(color = "royalblue") +
-  labs(y = "Affective attitude towards principal",
-       x = "Attention from principal")
-```
-
 ```
 ## Warning: Removed 42 rows containing missing values (geom_point).
 ```
@@ -773,11 +765,11 @@ tibble(attention = (-3):3) %&gt;%
 
 ---
 
-I manipulate the X axis to range from -3 to 15 to show the nonlinear relationship in its full image:
+Manipulate the X axis to show the nonlinear relationship in its full image:
 
 
 ```r
-tibble(attention = (-3):15) %&gt;% 
+tibble(attention = (-15):20) %&gt;% 
   mutate(pred = predict(m3, newdata = ., type = "response")) %&gt;% 
   ggplot(aes(attention, pred)) +
   geom_line(color = "royalblue") +
