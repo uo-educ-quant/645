@@ -9,10 +9,9 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="Mark A. Hammond" />
 
 
-<title>POSC 0000: A Class with an R Markdown Syllabus</title>
+<title>EDUC 645: General Linear Model II</title>
 
 <!--radix_placeholder_navigation_in_header-->
 <meta name="distill:offset" content=""/>
@@ -863,17 +862,17 @@ Lectures
 <span class="down-arrow">&#x25BE;</span>
 </button>
 <div class="nav-dropdown-content">
-<span class="nav-dropdown-header">Unit 1: Logistic Regression</span>
-<span class="nav-dropdown-header">Unit 2: Poisson Regression</span>
-<span class="nav-dropdown-header">Unit 3: Introduction to Measurement and Assessment</span>
-<span class="nav-dropdown-header">Unit 4: Nested Data Structures</span>
-<span class="nav-dropdown-header">Unit 5: Cleaning Data &amp; Missing Data</span>
+<a href="./slides/EDUC645_log_regression.html">Unit 1: Logistic Regression</a>
+<a href="./slides/EDUC645_poisson_regression.html">Unit 2: Poisson Regression</a>
+<a href="./slides/EDUC645_nested_data.html">Unit 3: Nested Data Structures</a>
+<a href="./slides/EDUC645_measure_assess.html">Unit 4: Introduction to Measurement and Assessment</a>
+<a href="./slides/EDUC645_cleaning_missing.html">Unit 5: Cleaning Data &amp; Missing Data</a>
 </div>
 </div>
 </div>
 <div class="nav-right">
 <a href="assignments.html">Assignments</a>
-<a href="https://github.com/uo-educ-quant/645">Course repo</a>
+<a href="https://github.com/uo-educ-quant/645">Course Repo</a>
 <a href="javascript:void(0);" class="nav-toggle">&#9776;</a>
 </div>
 </nav>
@@ -907,11 +906,21 @@ Lectures
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
-    <li class="dropdown-header">Unit 1: Logistic Regression</li>
-    <li class="dropdown-header">Unit 2: Poisson Regression</li>
-    <li class="dropdown-header">Unit 3: Introduction to Measurement and Assessment</li>
-    <li class="dropdown-header">Unit 4: Nested Data Structures</li>
-    <li class="dropdown-header">Unit 5: Cleaning Data &amp; Missing Data</li>
+    <li>
+      <a href="./slides/EDUC645_log_regression.html">Unit 1: Logistic Regression</a>
+    </li>
+    <li>
+      <a href="./slides/EDUC645_poisson_regression.html">Unit 2: Poisson Regression</a>
+    </li>
+    <li>
+      <a href="./slides/EDUC645_nested_data.html">Unit 3: Nested Data Structures</a>
+    </li>
+    <li>
+      <a href="./slides/EDUC645_measure_assess.html">Unit 4: Introduction to Measurement and Assessment</a>
+    </li>
+    <li>
+      <a href="./slides/EDUC645_cleaning_missing.html">Unit 5: Cleaning Data &amp; Missing Data</a>
+    </li>
   </ul>
 </li>
       </ul>
@@ -920,7 +929,7 @@ Lectures
   <a href="assignments.html">Assignments</a>
 </li>
 <li>
-  <a href="https://github.com/uo-educ-quant/645">Course repo</a>
+  <a href="https://github.com/uo-educ-quant/645">Course Repo</a>
 </li>
       </ul>
     </div><!--/.nav-collapse -->
@@ -931,9 +940,7 @@ Lectures
 
 
 
-<h1 class="title toc-ignore">POSC 0000: A Class with an R Markdown
-Syllabus</h1>
-<h4 class="author">Mark A. Hammond</h4>
+<h1 class="title toc-ignore">EDUC 645: General Linear Model II</h1>
 <h4 class="date">Spring 2022</h4>
 
 </div>
@@ -1068,68 +1075,79 @@ include all that relevant information here.</p>
 </div>
 <div id="class-schedule" class="section level1">
 <h1>Class Schedule</h1>
-<p>Students must read the following before Tuesday’s class session.
-Important: class readings are subject to change, contingent on
-mitigating circumstances and the progress we make as a class. Students
-are encouraged to attend lectures and check the course website for
+<p>Students must read the following before class session. Important:
+class readings are subject to change, contingent on mitigating
+circumstances and the progress we make as a class. Students are
+encouraged to attend lectures and check the course website for
 updates.</p>
-<div
-id="week-01-0315---0319-reviewing-glm-and-introduction-to-logistic-regression"
-class="section level2">
-<h2>Week 01, 03/15 - 03/19: Reviewing GLM and Introduction to Logistic
-Regression</h2>
-<p>Read <em>all</em> associated documents on course website.</p>
 <ul>
 <li><a href="http://svmiller.com/blog/2014/09/taking-good-notes/">Taking
 Good Notes</a></li>
 <li><a
 href="http://svmiller.com/blog/2015/06/dos-and-donts-of-writing-for-students/">Dos
 and Dont’s of Writing for Students</a></li>
-<li><a
-href="http://svmiller.com/blog/2015/12/assorted-tips-students-research-papers/">Assorted
-Tips for Students on Writing Research Papers</a></li>
-<li><a
-href="https://www.dropbox.com/s/apihjs7di81aqcv/svm-exam-grading-policy.pdf?dl=0">Exam
-Grading Policy</a></li>
-<li><a
-href="http://svmiller.com/blog/2016/05/fun-with-attendance-grades/">Fun
-with Attendance and Grades (i.e. Students Should Attend Class)</a></li>
 </ul>
+<div
+id="week-01-0315---0319-reviewing-glm-and-introduction-to-logistic-regression"
+class="section level2">
+<h2>Week 01, 03/15 - 03/19: Reviewing GLM and Introduction to Logistic
+Regression</h2>
+<p>Required: * BMLR - Ch. 2 (pp. xx-xx) - 6-6.4 (pp. xx-xx)</p>
+<p>Recommended: * BMLR - - 3.3 ‘Discrete Random Variables’
+(pp. xx-xx)</p>
 </div>
 <div id="week-02-0322---0326-logistic-regression"
 class="section level2">
 <h2>Week 02, 03/22 - 03/26: Logistic Regression</h2>
+<p>Required: * BMLR - 6.5-6.7 (pp. xx-xx)</p>
+<p>Recommended:</p>
 </div>
 <div id="week-03-0329---0402-logistic-regression"
 class="section level2">
 <h2>Week 03, 03/29 - 04/02: Logistic Regression</h2>
-<p><em>Your “Slow Ride” appreciation paper is due in Thursday’s
-class</em>.</p>
+<p>Required: * BMLR - (pp. xx-xx)</p>
+<p>Recommended:</p>
 </div>
 <div
 id="week-04-0405---0409-introduction-to-count-data-and-poisson-regression"
 class="section level2">
 <h2>Week 04, 04/05 - 04/09: Introduction to Count Data and Poisson
 Regression</h2>
+<p>Required: * BMLR - 4-4.4 (pp. xx-xx)</p>
+<p>Recommended:</p>
 </div>
 <div id="week-05-0412---0416-poisson-regression" class="section level2">
 <h2>Week 05, 04/12 - 04/16: Poisson Regression</h2>
+<p>Required: * BMLR - 4.5-4.10 (pp. xx-xx) - All of Ch. 5
+(pp. xx-xx)</p>
+<p>Recommended:</p>
 </div>
 <div id="week-06-0419---0423-nested-data" class="section level2">
 <h2>Week 06, 04/19 - 04/23: Nested Data</h2>
+<p>Required: * BMLR - 8-8.5 (pp. xx-xx)</p>
+<p>Recommended:</p>
 </div>
 <div id="week-07-0426---0430-nested-data" class="section level2">
 <h2>Week 07, 04/26 - 04/30: Nested Data</h2>
+<p>Required: * BMLR - 8.6-8.11 (pp. xx-xx)</p>
+<p>Recommended:</p>
 </div>
-<div id="week-08-0503---0507-measurement-error-and-reliability"
+<div id="week-08-0503---0507-nested-data" class="section level2">
+<h2>Week 08, 05/03 - 05/07: Nested Data</h2>
+<p>Required: * BMLR - 9-9.7 (pp. xx-xx) - Ch 11</p>
+<p>Recommended:</p>
+</div>
+<div id="week-09-0510---0514-measurement-error-and-reliability"
 class="section level2">
-<h2>Week 08, 05/03 - 05/07: Measurement Error and Reliability</h2>
-</div>
-<div id="week-09-0510---0514" class="section level2">
-<h2>Week 09, 05/10 - 05/14:</h2>
+<h2>Week 09, 05/10 - 05/14: Measurement Error and Reliability</h2>
+<p>Required: * BMLR - 7-7.8 (pp. xx-xx)</p>
+<p>Recommended:</p>
 </div>
 <div id="week-10-0517---0521-missing-data" class="section level2">
 <h2>Week 10, 05/17 - 05/21: Missing Data</h2>
+<p>Required: *<br />
+- XX (pp. xx-xx)</p>
+<p>Recommended:</p>
 </div>
 </div>
 

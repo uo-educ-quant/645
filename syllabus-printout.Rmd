@@ -7,14 +7,11 @@ output:
     template: svm-latex-syllabus.tex
 geometry: margin=1in
 
-title: "POSC 0000: A Class with an R Markdown Syllabus"
-author: Mark A. Hammond
+title: "EDUC 645: General Linear Model II"
 date: "Spring 2022"
 
 email: "mhammon5@uoregon.edu"
-#web: ""
 officehours: "By appointment"
-#office: ""
 classroom: "*online*"
 classhours: "TBD"
 
@@ -28,6 +25,7 @@ header-includes:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(cache=FALSE, dev='pdf')
+
 mon <- as.Date("2022-03-15")
 # fri <- as.Date("2016-01-08")
 advdate <- function(obj, adv) {
@@ -55,10 +53,6 @@ You'll learn stuff in this class, I hope. Lorem ipsum dolor sit amet, consectetu
 3. Perhaps some of this too.
 
 # Required Readings
-
-```{r, echo = FALSE, results="asis"} 
-
-``` 
 
 # Course Policy
 
@@ -180,6 +174,7 @@ Recommended:
 Required:
 * BMLR 
   - 9-9.7 (pp. xx-xx)
+  - Ch 11
 
 Recommended:
 
@@ -193,6 +188,6 @@ Recommended:
 ##  `r advdate(mon, 10)`: Missing Data
 Required:
 *  
-  - 6.5 (pp. xx-xx)
+  - XX (pp. xx-xx)
 
 Recommended:
