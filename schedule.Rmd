@@ -36,13 +36,18 @@ knitr::opts_chunk$set(echo = TRUE)
 
 **Lecture**:
 
- * Lecture slides: 
+ * Lecture slides: [html](./slides/EDUC645_log_regression.html)
+ * Dataset: [principal.csv](./data/principal.csv)
 
-**Assignment 1**:
+**Assignment**:
+
+ * Assignment description: [assignment1.html](./assignments/assignment1.html)
+ * Dataset: [nscs.csv](./data/nscs.csv)
 
 ## Unit 2: Poisson Regression
 
 **Learning Objectives:** 
+
 - Introduce the count data models
 
 - Introduce the concept of rates
@@ -61,9 +66,14 @@ knitr::opts_chunk$set(echo = TRUE)
 
 **Lecture**:
 
- * Lecture slides: 
+ * Lecture slides: [html](./slides/EDUC645_poisson_regression.html)
+ * Dataset: [ceps_sch.csv](./data/ceps_sch.csv)
 
-**Assignment 2**:
+**Assignment**:
+
+ * Assignment description: [assignment2.html](./assignments/assignment2.html)
+ * Dataset: [ah_smoke.csv](./data/ah_smoke.csv)
+
 
 ## Unit 3: Introduction to Nested Data
 
@@ -99,9 +109,14 @@ subject
 
 **Lecture**:
 
- * Lecture slides: 
+ * Lecture slides: [html](./slides/EDUC645_nested_data.html)
+ * Dataset: [seda.csv](./data/seda.csv) and [portugal.csv](./data/portugal.csv)
 
-**Assignment 3**:
+**Assignment**:
+
+ * Assignment description: [assignment3.html](./assignments/assignment3.html)
+ * Dataset: [gpa.csv](./data/gpa.csv) / [gpa_above.csv](./data/gpa_above.csv)
+
 
 ## Unit 4: Introduction to Measurement and Assessment
 
@@ -117,9 +132,13 @@ subject
 
 **Lecture**:
 
- * Lecture slides: 
+ * Lecture slides: [html](./slides/EDUC645_measure_assess.html)
+ * Dataset:
  
-**Assignment 4**:
+**Assignment**:
+
+ * Assignment description: [assignment4.html](./assignments/assignment4.html)
+ * Dataset: 
 
 ## Unit 5: Data Cleaning and Handling Missing Data
 
@@ -144,9 +163,15 @@ subject
 
 **Lecture**:
 
- * Lecture slides: 
+ * Lecture slides: [html](./slides/EDUC645_cleaning_missing.html)
+ * Dataset: [galo.csv](./data/galo.csv)
+ 
+**Assignment**:
 
-**Assignment 5**:
+No assignment for this unit.
 
 **Final Project**:
+
+ * Final project description: [final.html](./assignments/final.html)
+ * Dataset: 
 

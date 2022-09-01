@@ -4,7 +4,7 @@ site: distill::distill_website
 output:
   html_document:
     toc: TRUE
-    toc_depth: 2
+    toc_depth: 3
     toc_float: TRUE
     theme: cosmo
 ---
@@ -13,48 +13,98 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-### 1. General Guidelines
+## 1. General Guidelines
 
 The goal of the assignments is to practice the concepts and vocabulary we have been modeling in class and implement some of the techniques we have learned. You may work on your own or collaborate with one (1) partner. Please make sure that you engage in a a full, fair and mutually-agreeable collaboration if you do choose to collaborate. If you do collaborate, you should plan, execute and write-up your analyses together, not simply divide the work. Please make sure to indicate clearly when your work is joint and any other individual or resource (outside of class material) you consulted in your responses.
 
-(Here we need to add more details about global expectations and requirements for all the assignments, grading and points distribution for participation, five assignments, and/or final project/exam, late submission policy, etc. from syllabus.)
+(Here we need to add more details about global expectations and requirements for all the assignments, grading and points distribution for participation, assignments, and/or final project/exam, late submission policy, etc. from syllabus.)
 
-### 2. Submission Requirements
+## 2. Submission format
 
-Please upload below two files on Canvas before TBD time:  
+For each of the four assignments as well as the final project, you are required to submit two files:  
 
- * An .html or .pdf file that includes both - 
-   + your typed responses (in your own words and not identical to anybody else's), tables, and/or figures to the problems  
-   + and the R code chunks that generated your answers (hint: if you choose to compose your answers in markdown, simply set up echo = TRUE, include = TRUE in you .Rmd file)  
+ * An .doc, .html, or .pdf file that includes your typed responses (in your own words and not identical to anybody else's), tables, and/or figures to the problems  
    
- * The .Rmd or .R file that you used to render the tables and figures in the above html/pdf. 
+ * The .Rmd or .R file that you used to render the tables and figures in the above doc/html/pdf file. 
 
-### 3. Details about Assignments
+## 3. Assignments details
 
-#### 3.1. Assignment 1
+### 3.1. Assignment 1 (Logistic regression)
 
-* Logistic regression
+Objectives:
 
-#### 3.2. Assignment 2
+ - Using Logistic regression model to estimate a relationship where the dependent variable is dichotomous
+ - Interpret and report the results and make statistic inference from the estimated parameters
+ 
+Deadline: TBD
 
-*  
+Assignment description: [assignment1.html](./assignments/assignment01.html)
 
-#### 3.3. Assignment 3
+Dataset: [nscs.csv](./data/nscs.csv)
 
-* Poisson regression
+Key: [doc file]; [R script]
 
-#### 3.4. Assignment 4
+### 3.2. Assignment 2 (Poisson regression)
 
-* Nested data
+Objectives:
 
-#### 3.5. Assignment 5
+ - Using Poisson regression model to estimate a relationship where the dependent variable is a Poisson random variable
+ - Interpret and report the results and make statistic inference from the estimated parameters
+ 
+Deadline: TBD
 
-* 
+Assignment description: [assignment2.html](./assignments/assignment02.html)
 
-#### 3.6. Final Project
+Dataset: [ah_smoke.csv](./data/ah_smoke.csv)
+
+Key: [doc file]; [R script]
+
+### 3.3. Assignment 3 (Nested data)
+
+Objectives:
+
+ - Using mixed-effects model to estimate a relationship when the clustering nature of data needs to be addressed
+ - Interpret and report the results and make statistic inference from the estimated parameters
+ 
+Deadline: TBD
+
+Assignment description: [assignment3.html](./assignments/assignment03.html)
+
+Dataset: [gpa.csv](./data/gpa.csv)
+
+Key: [doc file]; [R script]
+
+### 3.4. Assignment 4 (Measurement)
+
+Objectives:
+
+ - 
+ - 
+ 
+Deadline: TBD
+
+Assignment description: 
+
+Dataset: 
+
+Key: [doc file]; [R script]
+
+### 3.5. Final Project
+
+Objectives:
+
+ - 
+ - 
+ 
+Deadline: TBD
+
+Assignment description: 
+
+Dataset: 
+
+Key: [doc file]; [R script]
 
 
-### 4. Data
 
 
 

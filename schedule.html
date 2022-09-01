@@ -11,7 +11,7 @@
 
 
 
-<title>EDUC 645 Sschedule</title>
+<title>EDUC 645 Schedule</title>
 
 <!--radix_placeholder_navigation_in_header-->
 <meta name="distill:offset" content=""/>
@@ -938,11 +938,11 @@ Lectures
 <span class="down-arrow">&#x25BE;</span>
 </button>
 <div class="nav-dropdown-content">
-<span class="nav-dropdown-header">Unit 1: Logistic Regression</span>
-<span class="nav-dropdown-header">Unit 2: Poisson Regression</span>
-<span class="nav-dropdown-header">Unit 3: Introduction to Measurement and Assessment</span>
-<span class="nav-dropdown-header">Unit 4: Nested Data Structures</span>
-<span class="nav-dropdown-header">Unit 5: Cleaning Data &amp; Missing Data</span>
+<a href="./slides/EDUC645_log_regression.html">Unit 1: Logistic Regression</a>
+<a href="./slides/EDUC645_poisson_regression.html">Unit 2: Poisson Regression</a>
+<a href="./slides/EDUC645_nested_data.html">Unit 3: Nested Data Structures</a>
+<a href="./slides/EDUC645_measure_assess.html">Unit 4: Introduction to Measurement and Assessment</a>
+<a href="./slides/EDUC645_cleaning_missing.html">Unit 5: Cleaning Data &amp; Missing Data</a>
 </div>
 </div>
 </div>
@@ -982,11 +982,21 @@ Lectures
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
-    <li class="dropdown-header">Unit 1: Logistic Regression</li>
-    <li class="dropdown-header">Unit 2: Poisson Regression</li>
-    <li class="dropdown-header">Unit 3: Introduction to Measurement and Assessment</li>
-    <li class="dropdown-header">Unit 4: Nested Data Structures</li>
-    <li class="dropdown-header">Unit 5: Cleaning Data &amp; Missing Data</li>
+    <li>
+      <a href="./slides/EDUC645_log_regression.html">Unit 1: Logistic Regression</a>
+    </li>
+    <li>
+      <a href="./slides/EDUC645_poisson_regression.html">Unit 2: Poisson Regression</a>
+    </li>
+    <li>
+      <a href="./slides/EDUC645_nested_data.html">Unit 3: Nested Data Structures</a>
+    </li>
+    <li>
+      <a href="./slides/EDUC645_measure_assess.html">Unit 4: Introduction to Measurement and Assessment</a>
+    </li>
+    <li>
+      <a href="./slides/EDUC645_cleaning_missing.html">Unit 5: Cleaning Data &amp; Missing Data</a>
+    </li>
   </ul>
 </li>
       </ul>
@@ -1006,7 +1016,7 @@ Lectures
 
 
 
-<h1 class="title toc-ignore">EDUC 645 Sschedule</h1>
+<h1 class="title toc-ignore">EDUC 645 Schedule</h1>
 
 </div>
 
@@ -1018,10 +1028,9 @@ Lectures
 <li><p>Introduce the linear probability model and discuss the
 limitations</p></li>
 <li><p>Introduce the concept of probability, odds, and logit</p></li>
-<li><p>Introduce the logistic function</p></li>
-<li><p>Introduce the logistic regression model with continuous
-predictors and how to interpret the model parameters and inference for
-model parameters</p></li>
+<li><p>Introduce logistic regression model with continuous predictors
+and how to interpret the model parameters and inference for model
+parameters</p></li>
 <li><p>Introduce the glm function in R to fit the logistic regression
 model</p></li>
 <li><p>Introduce the logistic regression model with categorical
@@ -1036,19 +1045,50 @@ logistic regression model</p></li>
 <p><strong>Readings</strong>:</p>
 <p><strong>Lecture</strong>:</p>
 <ul>
-<li>Lecture slides:</li>
+<li>Lecture slides: <a
+href="./slides/EDUC645_log_regression.html">html</a></li>
+<li>Dataset: <a href="./data/principal.csv">principal.csv</a></li>
 </ul>
-<p><strong>Assignment 1</strong>:</p>
+<p><strong>Assignment</strong>:</p>
+<ul>
+<li>Assignment description: <a
+href="./assignments/assignment1.html">assignment1.html</a></li>
+<li>Dataset: <a href="./data/nscs.csv">nscs.csv</a></li>
+</ul>
 </div>
 <div id="unit-2-poisson-regression" class="section level2">
 <h2>Unit 2: Poisson Regression</h2>
 <p><strong>Learning Objectives:</strong></p>
+<ul>
+<li><p>Introduce the count data models</p></li>
+<li><p>Introduce the concept of rates</p></li>
+<li><p>Introduce the glm function in R to fit the poisson regression
+model</p></li>
+<li><p>Introduce poisson regression model with continuous predictors and
+how to interpret the model parameters and inference for model
+parameters</p></li>
+<li><p>Introduce the poisson regression model with categorical
+predictors and how to interpret the model parameters and inference for
+model parameters</p></li>
+<li><p>Introduce the poisson regression model with an interaction
+between a continuous and categorical predictor, how to interpret the
+model parameters, and inference for model parameters</p></li>
+<li><p>Discuss dispersion, model fit, and diagnostics for a poisson
+regression model</p></li>
+</ul>
 <p><strong>Readings</strong>:</p>
 <p><strong>Lecture</strong>:</p>
 <ul>
-<li>Lecture slides:</li>
+<li>Lecture slides: <a
+href="./slides/EDUC645_poisson_regression.html">html</a></li>
+<li>Dataset: <a href="./data/ceps_sch.csv">ceps_sch.csv</a></li>
 </ul>
-<p><strong>Assignment 2</strong>:</p>
+<p><strong>Assignment</strong>:</p>
+<ul>
+<li>Assignment description: <a
+href="./assignments/assignment2.html">assignment2.html</a></li>
+<li>Dataset: <a href="./data/ah_smoke.csv">ah_smoke.csv</a></li>
+</ul>
 </div>
 <div id="unit-3-introduction-to-nested-data" class="section level2">
 <h2>Unit 3: Introduction to Nested Data</h2>
@@ -1098,9 +1138,18 @@ interest</p></li>
 <p><strong>Readings</strong>:</p>
 <p><strong>Lecture</strong>:</p>
 <ul>
-<li>Lecture slides:</li>
+<li>Lecture slides: <a
+href="./slides/EDUC645_nested_data.html">html</a></li>
+<li>Dataset: <a href="./data/seda.csv">seda.csv</a> and <a
+href="./data/portugal.csv">portugal.csv</a></li>
 </ul>
-<p><strong>Assignment 3</strong>:</p>
+<p><strong>Assignment</strong>:</p>
+<ul>
+<li>Assignment description: <a
+href="./assignments/assignment3.html">assignment3.html</a></li>
+<li>Dataset: <a href="./data/gpa.csv">gpa.csv</a> / <a
+href="./data/gpa_above.csv">gpa_above.csv</a></li>
+</ul>
 </div>
 <div id="unit-4-introduction-to-measurement-and-assessment"
 class="section level2">
@@ -1117,9 +1166,16 @@ emphasize the strong underlying assumptions</p></li>
 <p><strong>Readings</strong>:</p>
 <p><strong>Lecture</strong>:</p>
 <ul>
-<li>Lecture slides:</li>
+<li>Lecture slides: <a
+href="./slides/EDUC645_measure_assess.html">html</a></li>
+<li>Dataset:</li>
 </ul>
-<p><strong>Assignment 4</strong>:</p>
+<p><strong>Assignment</strong>:</p>
+<ul>
+<li>Assignment description: <a
+href="./assignments/assignment4.html">assignment4.html</a></li>
+<li>Dataset:</li>
+</ul>
 </div>
 <div id="unit-5-data-cleaning-and-handling-missing-data"
 class="section level2">
@@ -1145,10 +1201,18 @@ missing values</p></li>
 <p><strong>Readings</strong>:</p>
 <p><strong>Lecture</strong>:</p>
 <ul>
-<li>Lecture slides:</li>
+<li>Lecture slides: <a
+href="./slides/EDUC645_cleaning_missing.html">html</a></li>
+<li>Dataset: <a href="./data/galo.csv">galo.csv</a></li>
 </ul>
-<p><strong>Assignment 5</strong>:</p>
+<p><strong>Assignment</strong>:</p>
+<p>No assignment for this unit.</p>
 <p><strong>Final Project</strong>:</p>
+<ul>
+<li>Final project description: <a
+href="./assignments/final.html">final.html</a></li>
+<li>Dataset:</li>
+</ul>
 </div>
 
 <!--radix_placeholder_site_after_body-->

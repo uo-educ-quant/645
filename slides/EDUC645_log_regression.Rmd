@@ -512,7 +512,7 @@ This dataset was drawn from Meta Krüger's (1994) study investigating gender dif
 principal <- rio::import(here::here("data", "principal.csv")) %>%
   mutate(attention = (q1+q2+q3)/3,
          affective = ifelse(q4 >= 3, 1, 0)) %>% 
-  select(schid, stuid, stufemale, female, match, attention, affective) %>% 
+  select(schid, stuid, pfemale, sfemale, match, attention, affective) %>% 
   group_by(schid) %>% 
   mutate(attention = (attention-mean(attention))/sd(attention)) %>% 
   ungroup() 
@@ -524,8 +524,8 @@ head(principal)
 # The Variables
  - schid, school identification number
  - stuid, student identification number within each school
- - female, coded one for female principals and zero for male principals
- - stufemale, coded one for female students and zero for male students
+ - pfemale, coded one for female principals and zero for male principals
+ - sfemale, coded one for female students and zero for male students
  - match, coded one if student and principal are the same gender
  - q1, students' rating on a survey item, "Sometimes the principal talks to me", on a 4-point likert scale, 1=low, 4=high
  - q2, students' rating on a survey item, "I think the principal knows who I am", on a 4-point likert scale, 1=low, 4=high
@@ -546,15 +546,10 @@ Plot outcome variable, affective, on predictor variable, attention:
 
 ```{r}
 principal %>% 
-  mutate(affective = recode(affective, '1' = "Yes", '0' = "No")) %>% 
-  ggplot(aes(attention, affective, color = affective)) +
-  geom_boxplot(size = 0.5) +
-  geom_jitter(alpha = 0.2,
-              size = 0.5) + 
-  scale_x_continuous() + 
+  ggplot(aes(attention, affective)) +
+  geom_point(color = "royalblue") +
   labs(y = "Affective attitude towards principal",
-       x = "Self-perceived attention from principal") +
-  theme(legend.position = "none") 
+       x = "Attention from principal")
 ```
 
 What patterns do you notice from the plots above?
