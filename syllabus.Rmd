@@ -50,9 +50,9 @@ Here are some sites where you can find the answers to many R questions and learn
 For more details, see [here](./schedule.html). 
 
 ```{r, echo=FALSE, results='asis'}
-d <- readxl::read_xlsx(here::here("./data", "syllabus645.xlsx"))
-d %>% 
-  knitr::kable()
+d <- readxl::read_xlsx(here::here("./data", "syllabus645.xlsx")) 
+out <- knitr::kable(d)
+cat(gsub('\\bNA\\b', '  ', out), sep='\n')
 ```
 
 
