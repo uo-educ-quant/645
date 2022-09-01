@@ -1,76 +1,75 @@
 ---
 title: "EDUC 645 Assignment 1"
-subtitle: "Logistic Regression"
+subtitle: "(Unit 1: Logistic Regression)"
 output: html_document
 ---
 
-### General Guidelines
+#### Submission deadline
 
-* The purpose of this assignment is to practice the concepts and vocabulary we have been modeling in class and implement some of the techniques we have learned. You may work on your own or collaborate with one partner. Please make sure that you engage in a a full, fair and mutually-agreeable collaboration if you do choose to collaborate. If you do collaborate, you should plan, execute and write-up your analyses together, not simply divide the work. Please make sure to indicate clearly when your work is joint and any other individual or resource (outside of class material) you consulted in your responses.
+TBD
 
+#### Submission format
 
-### Submission Requirements
+You are required to submit two files:  
 
-Please upload below two files on Canvas before TBD time:  
+ - An .doc, .html, or .pdf file that includes your typed responses (in your own words and not identical to anybody else's), tables, and/or figures to the problems  
+ - The .Rmd or .R file that you used to render the tables and figures in the above doc/html/pdf file. 
+ 
+#### Dataset
 
- * An .html or .pdf file that includes both - 
-   + your typed responses (in your own words and not identical to anybody else's), tables, and/or figures to the problems  
-   + and the R code chunks that generated your answers (hint: if you choose to compose your answers in markdown, simply set up echo = TRUE, include = TRUE in you .Rmd file)  
-   
- * The .Rmd or .R file that you used to render the tables and figures in the above html/pdf. 
+To gain a broad picture of the counselor experience during the early months of COVID-19 school closures, Savitz-Romer and Rowan-Kenyon (2021) created an 80-question online survey to collect data from 1,060 school counselors and educators in adjacent roles (e.g., college counselors, adjustment counselors, counseling directors) in 48 states and Puerto Rico in the US. For simplicity reasons, we only include in our dataset the key variables as following (dropping incomplete observations resulted in N = 787):
 
-### Objectives of this assignment
+ - id, counselor identification number
+ - grades, school level, 0 = elementary, 1 = middle school, 2 = high school, 3 = mixed
+ - schooltype, school type, 1 = public, 2 = charter, 3 = private
+ - urbanicity, school urbanicity level, 1 = urban, 2 = suburban, 3 = rural
+ - female, counselor gender coded one for female and zero for others
+ - exp, counselor experience measured by years
+ - ooo, dichotomous variable coded one if the counselor had less time for one-on-one counseling due to COVID 
+ - group, dichotomous variable coded one if the counselor had less time for group counseling due to COVID 
+ - sel, dichotomous variable coded one if the counselor had less time for supporting student social emotional needs due to COVID 
+ 
+Download the dataset [here](./data/nscs.csv)
 
- * 
+#### Assignment requirements
 
-### Data Background
+You're interested in *which counselor or school characteristic is significantly associated with reduced counseling service during the early stage of COVID pandemic*. Your assignment will be graded based on the following components:
 
+1. Research significance (10% points) 
 
-**Sample**. 
+    + Conduct a brief literature review on how the pandemic impacted school counseling programming, with a focus on which counselor characteristic (gender OR years of experience) or school characteristic (school level OR type OR urbanicity) was significantly associated with reduced counseling services (one-on-one counseling OR group counseling OR supporting student social emotional needs).     + Based on your research, identify a research question that uses one of the three "reduced counseling services" measures as outcome variable.
+    + Write up your reasoning in a short paragraph that is ended with your specified research question.  
 
-**Key variables**.
+2. Analytic sample summary statistics (10% points)
 
-Details on all variables are as follows:
+    + Load the dataset and perform basic data management
+      + only keep variables that you think will be used in your analysis and drop other variables
+      + drop incomplete observations
+      + check whether your variables are the right class (e.g., you want id and school variables to be factor rather than double), if not, convert them to the right type
+      + other data management you think fit 
+    + Produce a summary statistics table (Table 1)
+    + Write a short paragraph describe your sample, key variables, and the summary statistics
+ 
+3. Methods and analysis (30% points)
 
- * 
+    + Model the relationship of your interest in a linear probability model
+      + add covariates and see if your estimates change
+    + Model this relationship in a logistic regression model
+      + add covariates and see if your estimates change
+    + Write a short paragraph to report the results of each model you fit
 
-### Assignment Details
+4. Logistic regression assumptions and diagnostics (10% points)
 
-### Assignment Details
+    + Check for critical assumptions and outliers
+      + supply with plots if necessary
+    + Write a short paragraph to report your diagnostics tests
 
-Prepare your data (same with assignment 3): open your RStudio, create a project and save it. Go to the root directory of the project and create a folder named "data". Download the [cont.csv dataset](./data/cont.csv) and store it in the folder "data". Create an Rmd/R file in the project root directory. Then read the data into your R environment. Make sure to check whether the variable *treat* is factor as well as whether *coursework* and *vocabulary* are double. Transform them into correct types if needed. 
+5. Discussions and conclusions (30% points)
 
-#### 1. Descriptive Statistics
+    + Put all of your models in a table (Table 2) 
+    + Write a short paragraph to compare the models, summarize your findings, and answer your research question
 
-1.1. Summarize the dataset.
-1.2. Summarize the outcome variable 
- * 1.2.1. Write 2-3 sentences to report and interpret these statistics. 
- * 1.2.2. Compare the mean of *vocabulary* for the consultancy treatment group and control group. Can you decide which is larger? Why or why not?
+6. References, tables, and figures (10% points)
 
-1.3 Create a plot (label the x and y axis) to visualize the relationship between ... 
- * 1.3.1. Write one sentence describe your observation. 
- * 1.3.2. Can you conclude whether ...? Why or why not?
-
-#### 2. Research Question (a): 
-
-2.1. Write your null hypothesis and the assumption(s) you make in investigating this research question.
-
-2.2. Test your hypothesis
-
- * 2.2.1. Which hypothesis testing you choose to answer this question? Why?
-
- * 2.2.2. Run the test then report and interpret your result.
-
-2.3. What is your answer to this research question?
-
-#### 3. Research Question (b): 
-
-3.1. Write your null hypothesis and the assumption(s) you make in investigating this research question.
-
-3.2. Test your hypothesis
-
- * 3.2.1. Which hypothesis testing you choose to answer this question? Why?
-
- * 3.2.2. Run the test then report and interpret your result.
-
-3.3. What is your answer to this research question?
+    + Must include references, Table 1, Tabl 2
+    + Other tables and figures you see fit

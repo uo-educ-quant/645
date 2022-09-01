@@ -11,20 +11,20 @@ navbar:
   - text: Lectures
     menu: 
       - text: "Unit 1: Logistic Regression"
-        href: 
+        href: ./slides/EDUC645_log_regression.html
       - text: "Unit 2: Poisson Regression"
-        href: 
-      - text: "Unit 3: Introduction to Measurement and Assessment"
-        href:
-      - text: "Unit 4: Nested Data Structures"
-        href: 
+        href: ./slides/EDUC645_poisson_regression.html
+      - text: "Unit 3: Nested Data Structures"
+        href: ./slides/EDUC645_nested_data.html
+      - text: "Unit 4: Introduction to Measurement and Assessment"
+        href: ./slides/EDUC645_measure_assess.html
       - text: "Unit 5: Cleaning Data & Missing Data"
-        href: 
+        href: ./slides/EDUC645_cleaning_missing.html
 
   right:
   - text: Assignments
     href: assignments.html
-  - text: Course repo
+  - text: Course Repo
     href: https://github.com/uo-educ-quant/645
 
 output:

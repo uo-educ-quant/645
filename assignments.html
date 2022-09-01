@@ -632,7 +632,7 @@ body {
 <script src="site_libs/header-attrs-2.14/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
@@ -931,10 +931,24 @@ div.tocify {
 <a href="index.html" class="title">EDUC 645</a>
 <a href="syllabus.html">Syllabus</a>
 <a href="schedule.html">Schedule</a>
+<div class="nav-dropdown">
+<button class="nav-dropbtn">
+Lectures
+ 
+<span class="down-arrow">&#x25BE;</span>
+</button>
+<div class="nav-dropdown-content">
+<a href="./slides/EDUC645_log_regression.html">Unit 1: Logistic Regression</a>
+<a href="./slides/EDUC645_poisson_regression.html">Unit 2: Poisson Regression</a>
+<a href="./slides/EDUC645_nested_data.html">Unit 3: Nested Data Structures</a>
+<a href="./slides/EDUC645_measure_assess.html">Unit 4: Introduction to Measurement and Assessment</a>
+<a href="./slides/EDUC645_cleaning_missing.html">Unit 5: Cleaning Data &amp; Missing Data</a>
+</div>
+</div>
 </div>
 <div class="nav-right">
 <a href="assignments.html">Assignments</a>
-<a href="https://github.com/uo-educ-quant/645">Course repo</a>
+<a href="https://github.com/uo-educ-quant/645">Course Repo</a>
 <a href="javascript:void(0);" class="nav-toggle">&#9776;</a>
 </div>
 </nav>
@@ -961,13 +975,37 @@ div.tocify {
 <li>
   <a href="schedule.html">Schedule</a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Lectures
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="./slides/EDUC645_log_regression.html">Unit 1: Logistic Regression</a>
+    </li>
+    <li>
+      <a href="./slides/EDUC645_poisson_regression.html">Unit 2: Poisson Regression</a>
+    </li>
+    <li>
+      <a href="./slides/EDUC645_nested_data.html">Unit 3: Nested Data Structures</a>
+    </li>
+    <li>
+      <a href="./slides/EDUC645_measure_assess.html">Unit 4: Introduction to Measurement and Assessment</a>
+    </li>
+    <li>
+      <a href="./slides/EDUC645_cleaning_missing.html">Unit 5: Cleaning Data &amp; Missing Data</a>
+    </li>
+  </ul>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="assignments.html">Assignments</a>
 </li>
 <li>
-  <a href="https://github.com/uo-educ-quant/645">Course repo</a>
+  <a href="https://github.com/uo-educ-quant/645">Course Repo</a>
 </li>
       </ul>
     </div><!--/.nav-collapse -->
@@ -983,8 +1021,8 @@ div.tocify {
 </div>
 
 
-<div id="general-guidelines" class="section level3">
-<h3>1. General Guidelines</h3>
+<div id="general-guidelines" class="section level2">
+<h2>1. General Guidelines</h2>
 <p>The goal of the assignments is to practice the concepts and
 vocabulary we have been modeling in class and implement some of the
 techniques we have learned. You may work on your own or collaborate with
@@ -996,46 +1034,92 @@ clearly when your work is joint and any other individual or resource
 (outside of class material) you consulted in your responses.</p>
 <p>(Here we need to add more details about global expectations and
 requirements for all the assignments, grading and points distribution
-for participation, five assignments, and/or final project/exam, late
+for participation, assignments, and/or final project/exam, late
 submission policy, etc. from syllabus.)</p>
 </div>
-<div id="submission-requirements" class="section level3">
-<h3>2. Submission Requirements</h3>
-<p>Please upload below two files on Canvas before TBD time:</p>
+<div id="submission-format" class="section level2">
+<h2>2. Submission format</h2>
+<p>For each of the four assignments as well as the final project, you
+are required to submit two files:</p>
 <ul>
-<li>An .html or .pdf file that includes both -
-<ul>
-<li>your typed responses (in your own words and not identical to anybody
-else’s), tables, and/or figures to the problems<br />
-</li>
-<li>and the R code chunks that generated your answers (hint: if you
-choose to compose your answers in markdown, simply set up echo = TRUE,
-include = TRUE in you .Rmd file)</li>
-</ul></li>
-<li>The .Rmd or .R file that you used to render the tables and figures
-in the above html/pdf.</li>
+<li><p>An .doc, .html, or .pdf file that includes your typed responses
+(in your own words and not identical to anybody else’s), tables, and/or
+figures to the problems</p></li>
+<li><p>The .Rmd or .R file that you used to render the tables and
+figures in the above doc/html/pdf file.</p></li>
 </ul>
 </div>
-<div id="details-about-assignments" class="section level3">
-<h3>3. Details about Assignments</h3>
-<div id="assignment-1" class="section level4">
-<h4>3.1. Assignment 1</h4>
+<div id="assignments-details" class="section level2">
+<h2>3. Assignments details</h2>
+<div id="assignment-1-logistic-regression" class="section level3">
+<h3>3.1. Assignment 1 (Logistic regression)</h3>
+<p>Objectives:</p>
+<ul>
+<li>Using Logistic regression model to estimate a relationship where the
+dependent variable is dichotomous</li>
+<li>Interpret and report the results and make statistic inference from
+the estimated parameters</li>
+</ul>
+<p>Deadline: TBD</p>
+<p>Assignment description: <a
+href="./assignments/assignment01.html">assignment1.html</a></p>
+<p>Dataset: <a href="./data/nscs.csv">nscs.csv</a></p>
+<p>Key: [doc file]; [R script]</p>
 </div>
-<div id="assignment-2" class="section level4">
-<h4>3.2. Assignment 2</h4>
+<div id="assignment-2-poisson-regression" class="section level3">
+<h3>3.2. Assignment 2 (Poisson regression)</h3>
+<p>Objectives:</p>
+<ul>
+<li>Using Poisson regression model to estimate a relationship where the
+dependent variable is a Poisson random variable</li>
+<li>Interpret and report the results and make statistic inference from
+the estimated parameters</li>
+</ul>
+<p>Deadline: TBD</p>
+<p>Assignment description: <a
+href="./assignments/assignment02.html">assignment2.html</a></p>
+<p>Dataset: <a href="./data/ah_smoke.csv">ah_smoke.csv</a></p>
+<p>Key: [doc file]; [R script]</p>
 </div>
-<div id="assignment-3" class="section level4">
-<h4>3.3. Assignment 3</h4>
+<div id="assignment-3-nested-data" class="section level3">
+<h3>3.3. Assignment 3 (Nested data)</h3>
+<p>Objectives:</p>
+<ul>
+<li>Using mixed-effects model to estimate a relationship when the
+clustering nature of data needs to be addressed</li>
+<li>Interpret and report the results and make statistic inference from
+the estimated parameters</li>
+</ul>
+<p>Deadline: TBD</p>
+<p>Assignment description: <a
+href="./assignments/assignment03.html">assignment3.html</a></p>
+<p>Dataset: <a href="./data/gpa.csv">gpa.csv</a></p>
+<p>Key: [doc file]; [R script]</p>
 </div>
-<div id="assignment-4" class="section level4">
-<h4>3.4. Assignment 4</h4>
+<div id="assignment-4-measurement" class="section level3">
+<h3>3.4. Assignment 4 (Measurement)</h3>
+<p>Objectives:</p>
+<ul>
+<li></li>
+<li></li>
+</ul>
+<p>Deadline: TBD</p>
+<p>Assignment description:</p>
+<p>Dataset:</p>
+<p>Key: [doc file]; [R script]</p>
 </div>
-<div id="final-project" class="section level4">
-<h4>3.5. Final Project</h4>
+<div id="final-project" class="section level3">
+<h3>3.5. Final Project</h3>
+<p>Objectives:</p>
+<ul>
+<li></li>
+<li></li>
+</ul>
+<p>Deadline: TBD</p>
+<p>Assignment description:</p>
+<p>Dataset:</p>
+<p>Key: [doc file]; [R script]</p>
 </div>
-</div>
-<div id="data" class="section level3">
-<h3>4. Data</h3>
 </div>
 
 <!--radix_placeholder_site_after_body-->
