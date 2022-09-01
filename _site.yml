@@ -24,7 +24,7 @@ navbar:
   right:
   - text: Assignments
     href: assignments.html
-  - text: Repo
+  - text: Course Repo
     href: https://github.com/uo-educ-quant/645
 
 output:
