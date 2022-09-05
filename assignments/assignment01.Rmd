@@ -17,7 +17,9 @@ You are required to submit two files:
  
 #### Dataset
 
-To gain a broad picture of the counselor experience during the early months of COVID-19 school closures, Savitz-Romer and Rowan-Kenyon (2021) created an 80-question online survey to collect data from 1,060 school counselors and educators in adjacent roles (e.g., college counselors, adjustment counselors, counseling directors) in 48 states and Puerto Rico in the US. For simplicity reasons, we only include in our dataset the key variables as following (dropping incomplete observations resulted in N = 787):
+(Download the dataset here: [nscs.csv](./data/nscs.csv))
+
+To gain a broad picture of the counselor experience during the early months of COVID-19 school closures, Savitz-Romer and Rowan-Kenyon (2021) created an 80-question online survey to collect data from 1,060 school counselors and educators in adjacent roles (e.g., college counselors, adjustment counselors, counseling directors) in 48 states and Puerto Rico in the US. For simplicity reasons, in our dataset, we only include key variables as following and keep only complete observations (N = 787):
 
  - id, counselor identification number
  - grades, school level, 0 = elementary, 1 = middle school, 2 = high school, 3 = mixed
@@ -28,8 +30,7 @@ To gain a broad picture of the counselor experience during the early months of C
  - ooo, dichotomous variable coded one if the counselor had less time for one-on-one counseling due to COVID 
  - group, dichotomous variable coded one if the counselor had less time for group counseling due to COVID 
  - sel, dichotomous variable coded one if the counselor had less time for supporting student social emotional needs due to COVID 
- 
-Download the dataset [here](./data/nscs.csv)
+
 
 #### Assignment requirements
 

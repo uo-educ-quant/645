@@ -17,16 +17,16 @@ You are required to submit two files:
  
 #### Dataset
 
+(Download the dataset here: [gpa.csv](./data/gpa.csv))
+
 The GPA data is a longitudinal dataset, where 200 college students were followed for six consecutive semesters. The data was simulated. Key variables are detailed below.
 
- - stuid, student identification number
- - time, a factor variable indexing the six consecutive semesters
- - gpa, student's GPA at the end of semester
- - gpa_above, coded one if student's end of semester GPA is above 3.0 and zero otherwise
- - female, a dichotomous variable coded one for female students and zero for male
- - hsgpa, high school GPA
- 
-Download the dataset [here](./data/gpa.csv)
+ - *stuid*, student identification number
+ - *time*, a factor variable indexing the six consecutive semesters
+ - *gpa*, student's GPA at the end of semester
+ - *gpa_above*, coded one if student's end of semester GPA is above 3.0 and zero otherwise
+ - *female*, a dichotomous variable coded one for female students and zero for male
+ - *hsgpa*, high school GPA
 
 #### Assignment requirements
 

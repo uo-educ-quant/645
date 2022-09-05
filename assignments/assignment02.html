@@ -11,7 +11,7 @@
 
 
 
-<title>EDUC 645 Assignment 12</title>
+<title>EDUC 645 Assignment 2</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -361,7 +361,7 @@ pre code {
 
 
 
-<h1 class="title toc-ignore">EDUC 645 Assignment 12</h1>
+<h1 class="title toc-ignore">EDUC 645 Assignment 2</h1>
 <h3 class="subtitle">(Unit 2: Poisson Regression)</h3>
 
 </div>
@@ -385,16 +385,25 @@ in the above doc/html/pdf file.</li>
 </div>
 <div id="dataset" class="section level4">
 <h4>Dataset</h4>
+<p>(Download the dataset here: <a href="./data/ah_smoke.csv">ah_smoke.csv</a>)</p>
 <p>Research shows that substance use is heavier among adults if they
 start early in adolescence. Among adolescents, tobacco is probably the
 most widely used drugs but the predictive factors related to tobacco use
 are not fully studied in the literature. In this assignment, you are
 required to examine a group of adolescents’ characteristics, home,
-school, and social networks and identify some factors that are
-significantly related to adolescent tobacco use. Your analysis is based
-on a sample drawn from the Add Health public use data. The sample is
-limited to 6,504 middle and high school students who participated in
-wave I inhome survey during 1994-95.</p>
+school, and social networks and identify factors that are significantly
+related to adolescent tobacco use. Your analysis is based on a sample
+drawn from the Add Health public use data. The sample is limited to
+3,078 7th, 8th, and 9th graders who participated in wave I inhome survey
+during 1994-95.</p>
+<p>Note that your outcome variable is <em>weekssmoke</em>, the number of
+weeks on which the individual had smoked within the past 30 days. Your
+predictor variable(s) is dependent upon your own research question (for
+instance, Whether and to what extent is adolescent smoking behavior
+related to relationship with teachers?). You are encouraged to conduct a
+brief literature review before developing your own research question .
+Then draw variables that are essential to your own analysis and drop
+incomplete observations in your own analytic sample.</p>
 <p>Key variables in the dataset are detailed below (you’re not required
 to use all of them):</p>
 <ul>
@@ -432,8 +441,9 @@ you getting along with other students?”; 0=never, 1=just a few times,
 ever smoked</li>
 <li><em>dayssmoke</em>, the number of days on which the individual had
 smoked within the past 30 days</li>
+<li><em>weekssmoke</em>, the number of weeks on which the individual had
+smoked within the past 30 days</li>
 </ul>
-<p>Download the dataset <a href="./data/ah_smoke.csv">here</a></p>
 </div>
 <div id="assignment-requirements" class="section level4">
 <h4>Assignment requirements</h4>
@@ -450,9 +460,9 @@ incomplete observations in your own analytic sample.</p>
 <li><p>Research significance (10% points)</p>
 <ul>
 <li>Conduct a brief literature review and develop your research question
-based on the data availability of the dataset.</li>
+based on the data availability of the dataset</li>
 <li>Write up your reasoning in a short paragraph that is ended with your
-specified research question.</li>
+specified research question</li>
 </ul></li>
 <li><p>Analytic sample summary statistics (10% points)</p>
 <ul>
@@ -466,6 +476,8 @@ them to the right type</li>
 <li>other data management you think fit</li>
 </ul></li>
 <li>Produce a summary statistics table (Table 1)</li>
+<li>Produce a figure to show the distribution of your outcome variable
+(Figure 1)</li>
 <li>Write a short paragraph describe your sample, key variables, and the
 summary statistics</li>
 </ul></li>
@@ -481,7 +493,7 @@ fit</li>
 </ul></li>
 <li><p>Poisson regression assumptions and diagnostics (10% points)</p>
 <ul>
-<li>Check for critical assumptions and outliers
+<li>Check for critical assumptions
 <ul>
 <li>supply with plots if necessary</li>
 </ul></li>
@@ -495,7 +507,7 @@ findings, and answer your research question</li>
 </ul></li>
 <li><p>References, tables, and figures (10% points)</p>
 <ul>
-<li>Must include references, Table 1, Tabl 2</li>
+<li>Must include references, Table 1, Tabl 2, and Figure 1</li>
 <li>Other tables and figures you see fit</li>
 </ul></li>
 </ol>

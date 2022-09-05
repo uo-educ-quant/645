@@ -98,12 +98,11 @@ Objectives:
  
 Deadline: TBD
 
-Assignment description: 
+Assignment description: [final.html](./assignments/final.html)
 
-Dataset: 
+Dataset: [add_health.csv](./data/add_health.csv)
 
 Key: [doc file]; [R script]
-
 
 
 

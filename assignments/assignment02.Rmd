@@ -1,5 +1,5 @@
 ---
-title: "EDUC 645 Assignment 12"
+title: "EDUC 645 Assignment 2"
 subtitle: "(Unit 2: Poisson Regression)"
 output: html_document
 ---
@@ -17,7 +17,11 @@ You are required to submit two files:
  
 #### Dataset
 
-Research shows that substance use is heavier among adults if they start early in adolescence. Among adolescents, tobacco is probably the most widely used drugs but the predictive factors related to tobacco use are not fully studied in the literature. In this assignment, you are required to examine a group of adolescents' characteristics, home, school, and social networks and identify some factors that are significantly related to adolescent tobacco use. Your analysis is based on a sample drawn from the Add Health public use data. The sample is limited to 6,504 middle and high school students who participated in wave I inhome survey during 1994-95. 
+(Download the dataset here: [ah_smoke.csv](./data/ah_smoke.csv))
+
+Research shows that substance use is heavier among adults if they start early in adolescence. Among adolescents, tobacco is probably the most widely used drugs but the predictive factors related to tobacco use are not fully studied in the literature. In this assignment, you are required to examine a group of adolescents' characteristics, home, school, and social networks and identify factors that are significantly related to adolescent tobacco use. Your analysis is based on a sample drawn from the Add Health public use data. The sample is limited to 3,078 7th, 8th, and 9th graders who participated in wave I inhome survey during 1994-95. 
+
+Note that your outcome variable is *weekssmoke*, the number of weeks on which the individual had smoked within the past 30 days. Your predictor variable(s) is dependent upon your own research question (for instance, Whether and to what extent is adolescent smoking behavior related to relationship with teachers?). You are encouraged to conduct a brief literature review before developing your own research question . Then draw variables that are essential to your own analysis and drop incomplete observations in your own analytic sample.
 
 Key variables in the dataset are detailed below (you're not required to use all of them):
 
@@ -36,8 +40,7 @@ Key variables in the dataset are detailed below (you're not required to use all 
  - *tsr* and *ssr* measure the individual's self-rating on the questions "Are you getting along with your teachers?" and "Are you getting along with other students?"; 0=never, 1=just a few times, 2=about once a week, 3=almost everyday, 4=everyday
  - *eversmoke*, dummy variable coded one if the individual had ever smoked
  - *dayssmoke*, the number of days on which the individual had smoked within the past 30 days
- 
-Download the dataset [here](./data/ah_smoke.csv)
+ - *weekssmoke*, the number of weeks on which the individual had smoked within the past 30 days
 
 #### Assignment requirements
 
@@ -47,8 +50,8 @@ Your assignment will be graded based on the following components:
 
 1. Research significance (10% points) 
 
-    + Conduct a brief literature review and develop your research question based on the data availability of the dataset.
-    + Write up your reasoning in a short paragraph that is ended with your specified research question.  
+    + Conduct a brief literature review and develop your research question based on the data availability of the dataset
+    + Write up your reasoning in a short paragraph that is ended with your specified research question  
 
 2. Analytic sample summary statistics (10% points)
 
@@ -58,26 +61,27 @@ Your assignment will be graded based on the following components:
       + check whether your variables are the right class, if not, convert them to the right type
       + other data management you think fit 
     + Produce a summary statistics table (Table 1)
-    + Write a short paragraph describe your sample, key variables, and the summary statistics
+    + Produce a figure to show the distribution of your outcome variable (Figure 1)
+    + Write a short paragraph describe your sample, key variables, and the summary statistics 
  
 3. Methods and analysis (30% points)
 
     + Model the relationship of your interest in a Poisson regression model
       + add covariates and see if your estimates change
-    + Write a short paragraph to report the results of each model you fit
+    + Write a short paragraph to report the results of each model you fit 
 
 4. Poisson regression assumptions and diagnostics (10% points)
 
-    + Check for critical assumptions and outliers
+    + Check for critical assumptions
       + supply with plots if necessary
-    + Write a short paragraph to report your diagnostics tests
+    + Write a short paragraph to report your diagnostics tests 
 
 5. Discussions and conclusions (30% points)
 
     + Put all of your models in a table (Table 2) 
-    + Write a short paragraph to compare the models, summarize your findings, and answer your research question
+    + Write a short paragraph to compare the models, summarize your findings, and answer your research question 
 
 6. References, tables, and figures (10% points)
 
-    + Must include references, Table 1, Tabl 2
+    + Must include references, Table 1, Tabl 2, and Figure 1
     + Other tables and figures you see fit

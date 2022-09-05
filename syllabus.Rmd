@@ -60,7 +60,7 @@ cat(gsub('\\bNA\\b', '  ', out), sep='\n')
 Final grades will be based on the following components:
 
 - Quizzes: 20% (5 quizzes 4% each)
-- Assignments: 60% (5 assignments, 12% each)
+- Assignments: 60% (4 assignments, 15% each)
 - Final: 20%
 
 ## Quizzes

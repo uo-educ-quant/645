@@ -1,0 +1,98 @@
+---
+title: "EDUC 645 Final Project"
+output: html_document
+---
+
+### Submission deadline
+
+TBD
+
+### Submission format
+
+You are required to submit two files:  
+
+ - An .doc, .html, or .pdf file that includes your typed responses (in your own words and not identical to anybody else's), tables, and/or figures to the problems  
+ - The .Rmd or .R file that you used to render the tables and figures in the above doc/html/pdf file. 
+ 
+### Project options
+
+Based on your own research interest, choose one from the following two project options. 
+ 
+#### 1. Final project option 1 (Add Health longitudinal data)
+
+(Download the datasets here: [add_health.csv](./data/add_health.csv))
+
+This dataset is drawn from the first, third, and fourth waves of National Longitudinal Study of Adolescent to Adult Health ([Add Health](https://addhealth.cpc.unc.edu/data/#public-use)) public-use data. Add Health is a longitudinal study of a nationally representative sample of over 20,000 adolescents (the public-use data sample is much smaller in size) who were in grades 7-12 during the first wave (1995) and were aged from 18-26 and from 24-32 when the third (2001) and fourth (2008) waves took place. Add Health data documents rich demographic, social, familial, socioeconomic, behavioral, psychosocial, cognitive, and health information on adolescents and is examined in a wide range of [social science studies](https://addhealth.cpc.unc.edu/publications/).
+
+Note that the public-use data sample is much smaller in size and matching three waves resulted in 3,442 total observations in our dataset.
+
+**Predictor variables and covariates from wave 1:**
+
+ - *id*, the individual's identifier
+ - *grade*, factor variable indicating the individual's grade (7, 8, 9, 10, 11, or 12)
+ - *female*, dummy variable coded one for individuals whose biological sex is female
+ - *age*, the individual's age in wave 1
+ - *hispanic*, *white*, *black*, *native*, and *asian* are all dummy variables coded one for individuals whose self-identified race is Hispanic or Latino, White, Black or African American, American Indian or Native American, and Asian or Pacific Islander, respectively
+ - *prtedu* represents the highest years of education of the individual's household mother and father. 
+ - *health*, the individual's self-report health status; 1=excellent, 2=very good, 3=good, 4=fair, 5=poor
+ - *sleepenough*, the individual's self-report rating of whether they get enough sleep; 0=never, 1=just a few times, 2=about once a week, 3=almost every day, 4=every day
+ - *eversmoke*, dummy variable coded one for individuals who ever smoked
+ - *repeating*, dummy variable coded one for individuals who ever repeated a grade
+ - *skipping*, dummy variable coded one for individuals who ever skipped a grade
+ - *oos*, dummy variable coded one for individuals who got at least one out-of-school suspension
+ - *expelled*, dummy variable coded one for individuals who were ever expelled
+ - *tsr* and *ssr* measure the individual's self-rating on the questions "Are you getting along with your teachers?" and "Are you getting along with other students?"; 0=never, 1=just a few times, 2=about once a week, 3=almost everyday, 4=everyday
+ 
+**Outcome variables from waves 3 and 4:**
+
+ - *gpa*, the individual's high school final GPA points
+ - *education*, the individual's total years of education. 
+ - *income_log*, the individual's log-transformed annual earnings 
+ - *jail*, number of times the individual being arrested since 18th birthday
+ - *suicidethought*, dummy variable coded one for individuals who had ever seriously thought about committing suicide during the past 12 months by the time of survey
+ - *q1* to *q8*, eight survey questions measured on a four-point likert-scale, detailed below:
+
+Survey questions:
+"Think about the past seven days. How often was each of the following things true during the past seven days?"
+q1, "You were bothered by things that usually don't bother you."
+q2, "How often do you feel isolated from others?"
+q3, "You had trouble keeping your mind on what you were doing."
+q4, "You felt depressed."
+q5, "You felt happy."
+q6, "You enjoyed life."
+q7, "You felt sad."
+q8, "You felt that people disliked you."
+
+Levels (6 and 8 were coded as missing):
+0 = Never,
+1 = Sometimes,
+2 = A lot of the time
+3 = Most of the time or all of the time
+
+**Tasks**
+
+1). Logistic regression: using *suicidethought* as outcome variable and wave 1 predictor variables of your interest
+
+2). Poisson regression: using *jail* as outcome variable and wave 1 predictor variables of your interest
+
+3). Nested data: using one of the three variables, *gpa*, *education*, *income_log*, as outcome variable and wave 1 predictor variables of your interest
+
+4). Measurement and assessment: what is the internal consistency for the eight measures of happiness?
+
+5). Dealing with missing data in your analyses
+
+#### 2. Final project option 2 (MOCCA assessment data)
+
+(Download the datasets here: [mocca.csv](./data/mocca.csv))
+
+
+### Project requirements
+
+Your final project will contain FOUR chapters to address the FIRST FOUR TASKS detailed at the end of your selected project. 
+
+For each chapter, the writeup should contain the following elements:
+
+ - What is the research question? What is its research significance?  
+ - Describe your sample and key variables. Present the summary statistics of your key variables, especially the predictor and outcome variables, in a table
+ - Visualize the relationship between the predictor and outcome variables in a plot and describe what you observe. 
+ - Describe your method, report your results, and discuss your findings.

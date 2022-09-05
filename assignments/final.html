@@ -11,7 +11,7 @@
 
 
 
-<title>EDUC 645 Assignment 3</title>
+<title>EDUC 645 Final Project</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -361,18 +361,17 @@ pre code {
 
 
 
-<h1 class="title toc-ignore">EDUC 645 Assignment 3</h1>
-<h3 class="subtitle">(Unit 3: Nested data)</h3>
+<h1 class="title toc-ignore">EDUC 645 Final Project</h1>
 
 </div>
 
 
-<div id="submission-deadline" class="section level4">
-<h4>Submission deadline</h4>
+<div id="submission-deadline" class="section level3">
+<h3>Submission deadline</h3>
 <p>TBD</p>
 </div>
-<div id="submission-format" class="section level4">
-<h4>Submission format</h4>
+<div id="submission-format" class="section level3">
+<h3>Submission format</h3>
 <p>You are required to submit two files:</p>
 <ul>
 <li>An .doc, .html, or .pdf file that includes your typed responses (in
@@ -383,98 +382,120 @@ figures to the problems<br />
 in the above doc/html/pdf file.</li>
 </ul>
 </div>
-<div id="dataset" class="section level4">
-<h4>Dataset</h4>
-<p>(Download the dataset here: <a href="./data/gpa.csv">gpa.csv</a>)</p>
-<p>The GPA data is a longitudinal dataset, where 200 college students
-were followed for six consecutive semesters. The data was simulated. Key
-variables are detailed below.</p>
+<div id="project-options" class="section level3">
+<h3>Project options</h3>
+<p>Based on your own research interest, choose one from the following
+two project options.</p>
+<div id="final-project-option-1-add-health-longitudinal-data" class="section level4">
+<h4>1. Final project option 1 (Add Health longitudinal data)</h4>
+<p>(Download the datasets here: <a href="./data/add_health.csv">add_health.csv</a>)</p>
+<p>This dataset is drawn from the first, third, and fourth waves of
+National Longitudinal Study of Adolescent to Adult Health (<a href="https://addhealth.cpc.unc.edu/data/#public-use">Add Health</a>)
+public-use data. Add Health is a longitudinal study of a nationally
+representative sample of over 20,000 adolescents (the public-use data
+sample is much smaller in size) who were in grades 7-12 during the first
+wave (1995) and were aged from 18-26 and from 24-32 when the third
+(2001) and fourth (2008) waves took place. Add Health data documents
+rich demographic, social, familial, socioeconomic, behavioral,
+psychosocial, cognitive, and health information on adolescents and is
+examined in a wide range of <a href="https://addhealth.cpc.unc.edu/publications/">social science
+studies</a>.</p>
+<p>Note that the public-use data sample is much smaller in size and
+matching three waves resulted in 3,442 total observations in our
+dataset.</p>
+<p><strong>Predictor variables and covariates from wave 1:</strong></p>
 <ul>
-<li><em>stuid</em>, student identification number</li>
-<li><em>time</em>, a factor variable indexing the six consecutive
-semesters</li>
-<li><em>gpa</em>, student’s GPA at the end of semester</li>
-<li><em>gpa_above</em>, coded one if student’s end of semester GPA is
-above 3.0 and zero otherwise</li>
-<li><em>female</em>, a dichotomous variable coded one for female
-students and zero for male</li>
-<li><em>hsgpa</em>, high school GPA</li>
+<li><em>id</em>, the individual’s identifier</li>
+<li><em>grade</em>, factor variable indicating the individual’s grade
+(7, 8, 9, 10, 11, or 12)</li>
+<li><em>female</em>, dummy variable coded one for individuals whose
+biological sex is female</li>
+<li><em>age</em>, the individual’s age in wave 1</li>
+<li><em>hispanic</em>, <em>white</em>, <em>black</em>, <em>native</em>,
+and <em>asian</em> are all dummy variables coded one for individuals
+whose self-identified race is Hispanic or Latino, White, Black or
+African American, American Indian or Native American, and Asian or
+Pacific Islander, respectively</li>
+<li><em>prtedu</em> represents the highest years of education of the
+individual’s household mother and father.</li>
+<li><em>health</em>, the individual’s self-report health status;
+1=excellent, 2=very good, 3=good, 4=fair, 5=poor</li>
+<li><em>sleepenough</em>, the individual’s self-report rating of whether
+they get enough sleep; 0=never, 1=just a few times, 2=about once a week,
+3=almost every day, 4=every day</li>
+<li><em>eversmoke</em>, dummy variable coded one for individuals who
+ever smoked</li>
+<li><em>repeating</em>, dummy variable coded one for individuals who
+ever repeated a grade</li>
+<li><em>skipping</em>, dummy variable coded one for individuals who ever
+skipped a grade</li>
+<li><em>oos</em>, dummy variable coded one for individuals who got at
+least one out-of-school suspension</li>
+<li><em>expelled</em>, dummy variable coded one for individuals who were
+ever expelled</li>
+<li><em>tsr</em> and <em>ssr</em> measure the individual’s self-rating
+on the questions “Are you getting along with your teachers?” and “Are
+you getting along with other students?”; 0=never, 1=just a few times,
+2=about once a week, 3=almost everyday, 4=everyday</li>
 </ul>
+<p><strong>Outcome variables from waves 3 and 4:</strong></p>
+<ul>
+<li><em>gpa</em>, the individual’s high school final GPA points</li>
+<li><em>education</em>, the individual’s total years of education.</li>
+<li><em>income_log</em>, the individual’s log-transformed annual
+earnings</li>
+<li><em>jail</em>, number of times the individual being arrested since
+18th birthday</li>
+<li><em>suicidethought</em>, dummy variable coded one for individuals
+who had ever seriously thought about committing suicide during the past
+12 months by the time of survey</li>
+<li><em>q1</em> to <em>q8</em>, eight survey questions measured on a
+four-point likert-scale, detailed below:</li>
+</ul>
+<p>Survey questions: “Think about the past seven days. How often was
+each of the following things true during the past seven days?” q1, “You
+were bothered by things that usually don’t bother you.” q2, “How often
+do you feel isolated from others?” q3, “You had trouble keeping your
+mind on what you were doing.” q4, “You felt depressed.” q5, “You felt
+happy.” q6, “You enjoyed life.” q7, “You felt sad.” q8, “You felt that
+people disliked you.”</p>
+<p>Levels (6 and 8 were coded as missing): 0 = Never, 1 = Sometimes, 2 =
+A lot of the time 3 = Most of the time or all of the time</p>
+<p><strong>Tasks</strong></p>
+<p>1). Logistic regression: using <em>suicidethought</em> as outcome
+variable and wave 1 predictor variables of your interest</p>
+<p>2). Poisson regression: using <em>jail</em> as outcome variable and
+wave 1 predictor variables of your interest</p>
+<p>3). Nested data: using one of the three variables, <em>gpa</em>,
+<em>education</em>, <em>income_log</em>, as outcome variable and wave 1
+predictor variables of your interest</p>
+<p>4). Measurement and assessment: what is the internal consistency for
+the eight measures of happiness?</p>
+<p>5). Dealing with missing data in your analyses</p>
 </div>
-<div id="assignment-requirements" class="section level4">
-<h4>Assignment requirements</h4>
-<p>You are interested in investigating whether and how the relationship
-between high school GPA and college GPA changes over time (six
-semesters). Note that you can choose your outcome variable from a
-continuous measure of end of semester GPA (gpa) and a dichotomous
-measure of end of semester GPA (gpa_above), but your predictor variable
-is high school GPA (hsgpa). You are encouraged to conduct a brief
-literature review before developing your own research question and
-hypothesis. Then draw variables that are essential to your own analysis
-and drop incomplete observations in your own analytic sample.</p>
-<p>Your assignment will be graded based on the following components:</p>
-<ol style="list-style-type: decimal">
-<li><p>Research significance (10% points)</p>
+<div id="final-project-option-2-mocca-assessment-data" class="section level4">
+<h4>2. Final project option 2 (MOCCA assessment data)</h4>
+<p>(Download the datasets here: <a href="./data/mocca.csv">mocca.csv</a>)</p>
+</div>
+</div>
+<div id="project-requirements" class="section level3">
+<h3>Project requirements</h3>
+<p>Your final project will contain FOUR chapters to address the FIRST
+FOUR TASKS detailed at the end of your selected project.</p>
+<p>For each chapter, the writeup should contain the following
+elements:</p>
 <ul>
-<li>Conduct a brief literature review and develop your research question
-based on the data availability of the dataset.</li>
-<li>Write up your reasoning in a short paragraph that is ended with your
-specified research question.</li>
-</ul></li>
-<li><p>Analytic sample summary statistics (10% points)</p>
-<ul>
-<li>Load the dataset and perform basic data management
-<ul>
-<li>only keep variables that you think will be used in your analysis and
-drop other variables</li>
-<li>drop incomplete observations</li>
-<li>check whether your variables are the right class, if not, convert
-them to the right type</li>
-<li>other data management you think fit</li>
-</ul></li>
-<li>Produce a summary statistics table (Table 1)</li>
-<li>Write a short paragraph describe your sample, key variables, and the
-summary statistics</li>
-</ul></li>
-<li><p>Methods and analysis (30% points)</p>
-<ul>
-<li>Model the relationship of your interest in a series of mixed-effects
-models such as following:
-<ul>
-<li>fixed-effects only model (traditional OLS)</li>
-<li>allow the intercept to vary by semester but not slope (random
-intercept)</li>
-<li>allow both the intercept and slope to vary by semester (random
-intercept and slope)</li>
-<li>any models you see can provide you new perspectives on your research
-question</li>
-</ul></li>
-<li>Write a short paragraph to report the results of each model you
-fit</li>
-</ul></li>
-<li><p>Poisson regression assumptions and diagnostics (10% points)</p>
-<ul>
-<li>Calculate and report the ICC to see if random-effects modeling is
-appropriate</li>
-<li>Check for critical assumptions
-<ul>
-<li>supply with plots if necessary</li>
-</ul></li>
-<li>Write a short paragraph to report your diagnostics tests</li>
-</ul></li>
-<li><p>Discussions and conclusions (30% points)</p>
-<ul>
-<li>Put all of your models in a table (Table 2)</li>
-<li>Write a short paragraph to compare the models (provide evidence on
-model fit), summarize your findings, and answer your research
-question</li>
-</ul></li>
-<li><p>References, tables, and figures (10% points)</p>
-<ul>
-<li>Must include references, Table 1, Tabl 2</li>
-<li>Other tables and figures you see fit</li>
-</ul></li>
-</ol>
+<li>What is the research question? What is its research
+significance?<br />
+</li>
+<li>Describe your sample and key variables. Present the summary
+statistics of your key variables, especially the predictor and outcome
+variables, in a table</li>
+<li>Visualize the relationship between the predictor and outcome
+variables in a plot and describe what you observe.</li>
+<li>Describe your method, report your results, and discuss your
+findings.</li>
+</ul>
 </div>
 
 
