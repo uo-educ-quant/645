@@ -52,7 +52,15 @@ knitr::opts_chunk$set(echo = TRUE)
 
 - Introduce the concept of rates
 
+-	Describe situations which merit the use of Poisson regression.
+	
+Define and calculate person-time variable and understand its purpose in Poisson regression.
+
+-	State the assumptions about rates in Poisson regression.
+
 - Introduce the glm function in R to fit the poisson regression model
+
+-	Describe and write the regression model for Poisson regression.
 
 - Introduce poisson regression model with continuous predictors and how to interpret the model parameters and inference for model parameters
 
@@ -61,6 +69,8 @@ knitr::opts_chunk$set(echo = TRUE)
 - Introduce the poisson regression model with an interaction between a continuous and categorical predictor, how to interpret the model parameters, and inference for model parameters
 
 - Discuss dispersion, model fit, and diagnostics for a poisson regression model
+
+-	Understand the use of the offset variable.
 
 **Readings**: 
 
