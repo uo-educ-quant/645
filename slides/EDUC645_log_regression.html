@@ -181,6 +181,78 @@ P(Y=y)&amp;= \binom{n}{y}p^y(1-p)^{(n-y)} \\
 The one-parameter exponential family form for binomial responses shows that the  canonical link is `\(\log\left(\frac{p}{1-p}\right)\)`. Thus, GLM theory suggests that constructing a model using the logit, the log odds of a score, as a linear function of covariates is a reasonable approach.   
 
 ---
+---
+# Example -- Unit 1 Logistic Regression
+
+This dataset was drawn from Meta Krüger's (1994) study investigating gender differences in school leadership in Netherlands. The study implemented a matching procedure to generate pairs of comparable schools (N=98) with the only difference being that one school principal was female and the other male, then surveyed the school principals, teachers, and students. Due to deletion of incomplete observations, our dataset is a bit smaller than the one used in the article, it contains 94 school principals and 800 students.
+
+
+```r
+principal &lt;- rio::import(here::here("data", "principal.csv")) %&gt;%
+  mutate(attention = (q1+q2+q3)/3,
+         affective = ifelse(q4 &gt;= 3, 1, 0)) %&gt;% 
+  select(schid, stuid, pfemale, sfemale, match, attention, affective) %&gt;% 
+  group_by(schid) %&gt;% 
+  mutate(attention = (attention-mean(attention))/sd(attention)) %&gt;% 
+  ungroup() 
+
+head(principal)
+```
+
+```
+## # A tibble: 6 × 7
+##   schid stuid pfemale sfemale match attention affective
+##   &lt;int&gt; &lt;int&gt;   &lt;int&gt;   &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1     6     0       1       0     0     0.283         0
+## 2     6     1       1       0     0    -2.31          0
+## 3     6     2       1       0     0     0.607         0
+## 4     6     3       1       0     0    -0.364         0
+## 5     6     4       1       0     0     0.607         1
+## 6     6     5       1       0     0     0.607         1
+```
+
+---
+# The Variables
+ - schid, school identification number
+ - stuid, student identification number within each school
+ - pfemale, coded one for female principals and zero for male principals
+ - sfemale, coded one for female students and zero for male students
+ - match, coded one if student and principal are the same gender
+ - q1, students' rating on a survey item, "Sometimes the principal talks to me", on a 4-point likert scale, 1=low, 4=high
+ - q2, students' rating on a survey item, "I think the principal knows who I am", on a 4-point likert scale, 1=low, 4=high
+ - q3, students' rating on a survey item, "Principal knows how well I am doing", on a 4-point likert scale, 1=low, 4=high
+ - q4, students' rating on a survey item, "The principal is nice", on a 4-point likert scale, 1=low, 4=high
+
+---
+
+For starters, some data managment; we're interested in the association between student-perceived attention from principal and affective attitude toward principal, therefore we compute two variables of interest:
+
+ - attention: take the average score of attention items, q1, q2, and q3, then standardize it at school level to measure student-perceived attention
+ - affective: recode q4 to be a binary variable coded one for students who rated 3 or 4 on this question ("the school principal is nice")
+ 
+---
+# Visualizing the relationship
+ 
+Plot outcome variable, affective, on predictor variable, attention:
+
+
+```
+## Warning: Removed 42 rows containing missing values (geom_point).
+```
+
+![](EDUC645_log_regression_files/figure-html/unnamed-chunk-2-1.png)&lt;!-- --&gt;
+
+What patterns do you notice from the plots above?
+
+---
+# Modeling the relationship
+
+How to model these relationships in our analysis?
+Our inquiry: The associations between student self-perceived attention from principal and affective attitude towards principal.
+
+What models should we use to fit the data when our outcome variable is a dichotomous variable?
+
+---
 # Logistic Regression
 
 Binary (0 or 1) response (Y) and a single continuous predictor (X).
@@ -207,6 +279,40 @@ The solid line is a linear regression fit with least squares to model the probab
   - No clustering of data into groups/contexts that would provide information about the values of other errors
 
 ---
+# Describe dichotomous outcome variable
+
+
+```r
+principal %&gt;% 
+  mutate(affective = recode(affective, '1' = "Yes", '0' = "No")) %&gt;%
+  ggplot(aes(affective)) +
+  geom_bar(fill = "royalblue", width = 0.5, alpha = 0.8) +
+  labs(x = "Affective attitude towards principal",
+       y = "Number of Students")
+```
+
+![](EDUC645_log_regression_files/figure-html/unnamed-chunk-3-1.png)&lt;!-- --&gt;
+
+---
+# Describe dichotomous outcome variable
+Plot outcome variable, affective, on predictor variable, attention:
+
+
+```r
+principal %&gt;% 
+  ggplot(aes(attention, affective)) +
+  geom_point(color = "royalblue") +
+  labs(y = "Affective attitude towards principal",
+       x = "Attention from principal")
+```
+
+```
+## Warning: Removed 42 rows containing missing values (geom_point).
+```
+
+![](EDUC645_log_regression_files/figure-html/unnamed-chunk-4-1.png)&lt;!-- --&gt;
+
+---
 # Interpretation of Model Parameters
 
 `$$\ln(\frac{p_i}{1-p_i})=\beta_0+\beta_1 X_i$$`
@@ -214,6 +320,172 @@ The solid line is a linear regression fit with least squares to model the probab
 `\(\beta_1\)`: Change in log odds for 1 unit change in `\(X_i\)`
 
 [insert example]
+---
+
+# Linear probability model (LPM)
+
+## Back to our example from 
+
+
+```r
+m1 &lt;- lm(affective ~ attention, principal)
+summary(m1)
+```
+
+```
+## 
+## Call:
+## lm(formula = affective ~ attention, data = principal)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -0.5532 -0.3561 -0.2524  0.5970  0.8731 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  0.32619    0.01620  20.130  &lt; 2e-16 ***
+## attention    0.08696    0.01714   5.075 4.81e-07 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 0.4617 on 810 degrees of freedom
+##   (42 observations deleted due to missingness)
+## Multiple R-squared:  0.03082,	Adjusted R-squared:  0.02962 
+## F-statistic: 25.75 on 1 and 810 DF,  p-value: 4.812e-07
+```
+
+Does the regression coefficient of attention confirm your previous impression with the plot?
+
+---
+
+Visualize the coefficient/slope of the fitted line (basically, we force the relationship to be linear):
+
+
+```r
+principal %&gt;% 
+  ggplot(aes(attention, affective)) +
+  geom_point(alpha = 0.01) +
+  geom_smooth(method = "lm", se = FALSE, color = "royalblue") + 
+  labs(y = "Affective attitude towards principal",
+       x = "Self-perceived attention from principal")
+```
+
+```
+## `geom_smooth()` using formula 'y ~ x'
+```
+
+```
+## Warning: Removed 42 rows containing non-finite values (stat_smooth).
+```
+
+```
+## Warning: Removed 42 rows containing missing values (geom_point).
+```
+
+![](EDUC645_log_regression_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
+
+
+Interpret the results (report regression coefficients **on a probability scale**) and the figure. 
+
+Will this be the model where you stop at?
+
+---
+
+#### Binomial logistic regression
+
+
+```r
+m2 &lt;- lm(affective ~ attention + match, principal)
+
+m3 &lt;- glm(affective ~ attention, principal, 
+          family = binomial(link = "logit"))
+m4 &lt;- glm(affective ~ attention + match, principal,
+          family = binomial(link = "logit"))
+
+summary(m3)
+```
+
+```
+## 
+## Call:
+## glm(formula = affective ~ attention, family = binomial(link = "logit"), 
+##     data = principal)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -1.3198  -0.9317  -0.7568   1.3454   1.9333  
+## 
+## Coefficients:
+##             Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept) -0.75227    0.07674  -9.802  &lt; 2e-16 ***
+## attention    0.41412    0.08394   4.933 8.09e-07 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 1024.21  on 811  degrees of freedom
+## Residual deviance:  998.57  on 810  degrees of freedom
+##   (42 observations deleted due to missingness)
+## AIC: 1002.6
+## 
+## Number of Fisher Scoring iterations: 4
+```
+
+---
+# Visualize the coefficient on a log-odds scale
+
+Model the change in log-odds of affective in a linear function of attention:
+
+
+```r
+tibble(attention = (-3):3) %&gt;% 
+  mutate(pred = predict(m3, newdata = .)) %&gt;% 
+  ggplot(aes(attention, pred)) +
+  geom_line(color = "royalblue") +
+  labs(y = "Affective attitude towards principal (LOG-ODDS)",
+       x = "Self-perceived attention from principal")
+```
+
+![](EDUC645_log_regression_files/figure-html/unnamed-chunk-8-1.png)&lt;!-- --&gt;
+
+---
+# Coefficient on a probability scale (mapping the parameters to probability nonlinearly)
+
+
+```r
+tibble(attention = (-3):3) %&gt;% 
+  mutate(pred = predict(m3, newdata = ., type = "response")) %&gt;% 
+  ggplot(aes(attention, pred)) +
+  geom_line(color = "royalblue") +
+  labs(y = "Affective attitude towards principal (PROBABILITY)",
+       x = "Self-perceived attention from principal")
+```
+
+![](EDUC645_log_regression_files/figure-html/unnamed-chunk-9-1.png)&lt;!-- --&gt;
+
+???
+
+Note: in the data, "attention" ranges from -2.42 to 2.61, the plot is therefore limited to a fraction when the probability of "affective" approaching one but still below 0.5. Because we cannot easily guess the missing plot fraction (as appose to when the line is linear, we can tell where the line goes simply by looking at the slope), this plot is not telling us enough information about the population of interest:
+
+---
+
+Manipulate the X axis to show the nonlinear relationship in its full image:
+
+
+```r
+tibble(attention = (-15):20) %&gt;% 
+  mutate(pred = predict(m3, newdata = ., type = "response")) %&gt;% 
+  ggplot(aes(attention, pred)) +
+  geom_line(color = "royalblue") +
+  labs(y = "Affective attitude towards principal (PROBABILITY)",
+       x = "Self-perceived attention from principal")
+```
+
+![](EDUC645_log_regression_files/figure-html/unnamed-chunk-10-1.png)&lt;!-- --&gt;
+
+Interpret the results (report regression coefficients **on a log-odds scale**) and the two figures.
+
 
 ---
 # Interpretation of Model Parameters
@@ -396,7 +668,7 @@ test_set %&gt;%
   ggtitle("DV to X")
 ```
 
-![](EDUC645_log_regression_files/figure-html/unnamed-chunk-2-1.png)&lt;!-- --&gt;
+![](EDUC645_log_regression_files/figure-html/unnamed-chunk-12-1.png)&lt;!-- --&gt;
 
 ---
 # Examining the ROC curve
@@ -549,237 +821,6 @@ with(simp_roc, lines(1 - FPR, TPR, col="blue", lty=2))
 
 [shiny app for playing around with ROC and AUC:
 https://kennis-research.shinyapps.io/ROC-Curves/]
-
----
-# Example -- Unit 1 Logistic Regression
-
-This dataset was drawn from Meta Krüger's (1994) study investigating gender differences in school leadership in Netherlands. The study implemented a matching procedure to generate pairs of comparable schools (N=98) with the only difference being that one school principal was female and the other male, then surveyed the school principals, teachers, and students. Due to deletion of incomplete observations, our dataset is a bit smaller than the one used in the article, it contains 94 school principals and 800 students.
-
-
-```r
-principal &lt;- rio::import(here::here("data", "principal.csv")) %&gt;%
-  mutate(attention = (q1+q2+q3)/3,
-         affective = ifelse(q4 &gt;= 3, 1, 0)) %&gt;% 
-  select(schid, stuid, pfemale, sfemale, match, attention, affective) %&gt;% 
-  group_by(schid) %&gt;% 
-  mutate(attention = (attention-mean(attention))/sd(attention)) %&gt;% 
-  ungroup() 
-
-head(principal)
-```
-
-```
-## # A tibble: 6 × 7
-##   schid stuid pfemale sfemale match attention affective
-##   &lt;int&gt; &lt;int&gt;   &lt;int&gt;   &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;     &lt;dbl&gt;
-## 1     6     0       1       0     0     0.283         0
-## 2     6     1       1       0     0    -2.31          0
-## 3     6     2       1       0     0     0.607         0
-## 4     6     3       1       0     0    -0.364         0
-## 5     6     4       1       0     0     0.607         1
-## 6     6     5       1       0     0     0.607         1
-```
-
----
-# The Variables
- - schid, school identification number
- - stuid, student identification number within each school
- - pfemale, coded one for female principals and zero for male principals
- - sfemale, coded one for female students and zero for male students
- - match, coded one if student and principal are the same gender
- - q1, students' rating on a survey item, "Sometimes the principal talks to me", on a 4-point likert scale, 1=low, 4=high
- - q2, students' rating on a survey item, "I think the principal knows who I am", on a 4-point likert scale, 1=low, 4=high
- - q3, students' rating on a survey item, "Principal knows how well I am doing", on a 4-point likert scale, 1=low, 4=high
- - q4, students' rating on a survey item, "The principal is nice", on a 4-point likert scale, 1=low, 4=high
-
----
-
-For starters, some data managment; we're interested in the association between student-perceived attention from principal and affective attitude toward principal, therefore we compute two variables of interest:
-
- - attention: take the average score of attention items, q1, q2, and q3, then standardize it at school level to measure student-perceived attention
- - affective: recode q4 to be a binary variable coded one for students who rated 3 or 4 on this question ("the school principal is nice")
- 
----
-# Visualizing the relationship
- 
-Plot outcome variable, affective, on predictor variable, attention:
-
-
-```
-## Warning: Removed 42 rows containing missing values (geom_point).
-```
-
-![](EDUC645_log_regression_files/figure-html/unnamed-chunk-8-1.png)&lt;!-- --&gt;
-
-What patterns do you notice from the plots above?
-
----
-
-# 1.1.3 Modeling the relationship
-
-How to model these relationships in our analysis?
-Our inquiry: The associations between student self-perceived attention from principal and affective attitude towards principal.
-
-What models should we use to fit the data when our outcome variable is a dichotomous variable?
-
----
-
-# Linear probability model (LPM)
-
-
-```r
-m1 &lt;- lm(affective ~ attention, principal)
-m2 &lt;- lm(affective ~ attention + match, principal)
-summary(m1)
-```
-
-```
-## 
-## Call:
-## lm(formula = affective ~ attention, data = principal)
-## 
-## Residuals:
-##     Min      1Q  Median      3Q     Max 
-## -0.5532 -0.3561 -0.2524  0.5970  0.8731 
-## 
-## Coefficients:
-##             Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)  0.32619    0.01620  20.130  &lt; 2e-16 ***
-## attention    0.08696    0.01714   5.075 4.81e-07 ***
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## Residual standard error: 0.4617 on 810 degrees of freedom
-##   (42 observations deleted due to missingness)
-## Multiple R-squared:  0.03082,	Adjusted R-squared:  0.02962 
-## F-statistic: 25.75 on 1 and 810 DF,  p-value: 4.812e-07
-```
-
-Does the regression coefficient of attention confirm your previous impression with the plot?
-
----
-
-Visualize the coefficient/slope of the fitted line (basically, we force the relationship to be linear):
-
-
-```r
-principal %&gt;% 
-  ggplot(aes(attention, affective)) +
-  geom_point(alpha = 0.01) +
-  geom_smooth(method = "lm", se = FALSE, color = "royalblue") + 
-  labs(y = "Affective attitude towards principal",
-       x = "Self-perceived attention from principal")
-```
-
-```
-## `geom_smooth()` using formula 'y ~ x'
-```
-
-```
-## Warning: Removed 42 rows containing non-finite values (stat_smooth).
-```
-
-```
-## Warning: Removed 42 rows containing missing values (geom_point).
-```
-
-![](EDUC645_log_regression_files/figure-html/unnamed-chunk-10-1.png)&lt;!-- --&gt;
-
-
-Interpret the results (report regression coefficients **on a probability scale**) and the figure. 
-
-Will this be the model where you stop at?
-
-#### Binomial logistic regression
-
-
-```r
-m3 &lt;- glm(affective ~ attention, principal, 
-          family = binomial(link = "logit"))
-m4 &lt;- glm(affective ~ attention + match, principal,
-          family = binomial(link = "logit"))
-
-summary(m3)
-```
-
-```
-## 
-## Call:
-## glm(formula = affective ~ attention, family = binomial(link = "logit"), 
-##     data = principal)
-## 
-## Deviance Residuals: 
-##     Min       1Q   Median       3Q      Max  
-## -1.3198  -0.9317  -0.7568   1.3454   1.9333  
-## 
-## Coefficients:
-##             Estimate Std. Error z value Pr(&gt;|z|)    
-## (Intercept) -0.75227    0.07674  -9.802  &lt; 2e-16 ***
-## attention    0.41412    0.08394   4.933 8.09e-07 ***
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## (Dispersion parameter for binomial family taken to be 1)
-## 
-##     Null deviance: 1024.21  on 811  degrees of freedom
-## Residual deviance:  998.57  on 810  degrees of freedom
-##   (42 observations deleted due to missingness)
-## AIC: 1002.6
-## 
-## Number of Fisher Scoring iterations: 4
-```
-
----
-
-Visualize the coefficient on a log-odds scale (basically we model the change in log-odds of affective in a linear function of attention):
-
-
-```r
-tibble(attention = (-3):3) %&gt;% 
-  mutate(pred = predict(m3, newdata = .)) %&gt;% 
-  ggplot(aes(attention, pred)) +
-  geom_line(color = "royalblue") +
-  labs(y = "Affective attitude towards principal (LOG-ODDS)",
-       x = "Self-perceived attention from principal")
-```
-
-![](EDUC645_log_regression_files/figure-html/unnamed-chunk-12-1.png)&lt;!-- --&gt;
-
----
-
-Visualize the coefficient on a probability scale (mapping the parameters to probability nonlinearly):
-
-Coder note: in the data, "attention" ranges from -2.42 to 2.61, the plot is therefore limited to a fraction when the probability of "affective" approaching one but still below 0.5. Because we cannot easily guess the missing plot fraction (as appose to when the line is linear, we can tell where the line goes simply by looking at the slope), this plot is not telling us enough information about the population of interest:
-
-
-```r
-tibble(attention = (-3):3) %&gt;% 
-  mutate(pred = predict(m3, newdata = ., type = "response")) %&gt;% 
-  ggplot(aes(attention, pred)) +
-  geom_line(color = "royalblue") +
-  labs(y = "Affective attitude towards principal (PROBABILITY)",
-       x = "Self-perceived attention from principal")
-```
-
-![](EDUC645_log_regression_files/figure-html/unnamed-chunk-13-1.png)&lt;!-- --&gt;
-
----
-
-Manipulate the X axis to show the nonlinear relationship in its full image:
-
-
-```r
-tibble(attention = (-15):20) %&gt;% 
-  mutate(pred = predict(m3, newdata = ., type = "response")) %&gt;% 
-  ggplot(aes(attention, pred)) +
-  geom_line(color = "royalblue") +
-  labs(y = "Affective attitude towards principal (PROBABILITY)",
-       x = "Self-perceived attention from principal")
-```
-
-![](EDUC645_log_regression_files/figure-html/unnamed-chunk-14-1.png)&lt;!-- --&gt;
-
-Interpret the results (report regression coefficients **on a log-odds scale**) and the two figures.
 
 
 ---
