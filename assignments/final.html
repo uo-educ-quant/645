@@ -366,39 +366,39 @@ pre code {
 </div>
 
 
-<div id="submission-deadline" class="section level3">
-<h3>Submission deadline</h3>
-<p>TBD</p>
-</div>
-<div id="submission-format" class="section level3">
-<h3>Submission format</h3>
-<p>You are required to submit two files:</p>
-<ul>
-<li>An .doc, .html, or .pdf file that includes your typed responses (in
-your own words and not identical to anybody else’s), tables, and/or
-figures to the problems<br />
-</li>
-<li>The .Rmd or .R file that you used to render the tables and figures
-in the above doc/html/pdf file.</li>
-</ul>
+<div id="general-guidelines" class="section level3">
+<h3>General guidelines</h3>
+<p>The purpose of this final project is to practice the statistical
+concepts and data analysis techniques we’ve learned during this entire
+term.</p>
+<p>You may work on your own or collaborate with one partner. Please make
+sure that you engage in a a full, fair and mutually-agreeable
+collaboration if you do choose to collaborate. If you do collaborate,
+you should plan, execute and write-up your analyses together, not simply
+divide the work. Please make sure to indicate clearly when your work is
+joint and any other individual or resource (outside of class material)
+you consulted in your responses.</p>
 </div>
 <div id="project-options" class="section level3">
 <h3>Project options</h3>
-<p>Based on your own research interest, choose one from the following
-two project options.</p>
+<p>Based on your own research interest, choose one from the
+following.</p>
 <div id="final-project-option-1-add-health-longitudinal-data" class="section level4">
 <h4>1. Final project option 1 (Add Health longitudinal data)</h4>
 <p>(Download the datasets here: <a href="./data/add_health.csv">add_health.csv</a>)</p>
+</div>
+</div>
+<div id="add_health.csv" class="section level3">
+<h3>add_health.csv</h3>
 <p>This dataset is drawn from the first, third, and fourth waves of
 National Longitudinal Study of Adolescent to Adult Health (<a href="https://addhealth.cpc.unc.edu/data/#public-use">Add Health</a>)
-public-use data. Add Health is a longitudinal study of a nationally
-representative sample of over 20,000 adolescents (the public-use data
-sample is much smaller in size) who were in grades 7-12 during the first
-wave (1995) and were aged from 18-26 and from 24-32 when the third
-(2001) and fourth (2008) waves took place. Add Health data documents
-rich demographic, social, familial, socioeconomic, behavioral,
-psychosocial, cognitive, and health information on adolescents and is
-examined in a wide range of <a href="https://addhealth.cpc.unc.edu/publications/">social science
+data. Add Health is a longitudinal study of a nationally representative
+sample of over 20,000 adolescents who were aged from 12-20 during the
+first wave (1995) and aged from 18-26 and from 24-32 when the third
+(2001) and fourth (2008) waves took place. Add Health data contains rich
+demographic, social, familial, socioeconomic, behavioral, psychosocial,
+cognitive, and health information on adolescents as well as their
+adulthood and is examined in a wide range of <a href="https://addhealth.cpc.unc.edu/publications/">social science
 studies</a>.</p>
 <p>Note that the public-use data sample is much smaller in size and
 matching three waves resulted in 3,442 total observations in our
@@ -419,7 +419,7 @@ Pacific Islander, respectively</li>
 <li><em>prtedu</em> represents the highest years of education of the
 individual’s household mother and father.</li>
 <li><em>health</em>, the individual’s self-report health status;
-1=excellent, 2=very good, 3=good, 4=fair, 5=poor</li>
+4=excellent, 3=very good, 2=good, 1=fair, 0=poor</li>
 <li><em>sleepenough</em>, the individual’s self-report rating of whether
 they get enough sleep; 0=never, 1=just a few times, 2=about once a week,
 3=almost every day, 4=every day</li>
@@ -440,39 +440,62 @@ you getting along with other students?”; 0=never, 1=just a few times,
 </ul>
 <p><strong>Outcome variables from waves 3 and 4:</strong></p>
 <ul>
-<li><em>gpa</em>, the individual’s high school final GPA points</li>
-<li><em>education</em>, the individual’s total years of education.</li>
-<li><em>income_log</em>, the individual’s log-transformed annual
-earnings</li>
-<li><em>jail</em>, number of times the individual being arrested since
-18th birthday</li>
-<li><em>suicidethought</em>, dummy variable coded one for individuals
+<li><p><em>gpa</em>, the individual’s high school final GPA
+points</p></li>
+<li><p><em>education</em>, the individual’s total years of
+education.</p></li>
+<li><p><em>income_log</em>, the individual’s log-transformed annual
+earnings</p></li>
+<li><p><em>jail</em>, number of times the individual being arrested
+since 18th birthday</p></li>
+<li><p><em>suicidethought</em>, dummy variable coded one for individuals
 who had ever seriously thought about committing suicide during the past
-12 months by the time of survey</li>
-<li><em>q1</em> to <em>q8</em>, eight survey questions measured on a
-four-point likert-scale, detailed below:</li>
+12 months by the time of survey</p></li>
+<li><p><em>q1</em> to <em>q8</em>, eight survey questions measured on a
+four-point likert-scale, detailed below:</p>
+<ul>
+<li>Survey questions: Think about the past seven days. How often was
+each of the following things true during the past seven days?
+<ul>
+<li><em>q1</em>, “You were bothered by things that usually don’t bother
+you.”</li>
+<li><em>q2</em>, “How often do you feel isolated from others?”</li>
+<li><em>q3</em>, “You had trouble keeping your mind on what you were
+doing.”</li>
+<li><em>q4</em>, “You felt depressed.”</li>
+<li><em>q5</em>, “You felt happy.”</li>
+<li><em>q6</em>, “You enjoyed life.”</li>
+<li><em>q7</em>, “You felt sad.”</li>
+<li><em>q8</em>, “You felt that people disliked you.”</li>
+</ul></li>
+<li>Levels:
+<ul>
+<li>0 = Never,</li>
+<li>1 = Sometimes,</li>
+<li>2 = A lot of the time</li>
+<li>3 = Most of the time or all of the time</li>
+</ul></li>
+</ul></li>
 </ul>
-<p>Survey questions: “Think about the past seven days. How often was
-each of the following things true during the past seven days?” q1, “You
-were bothered by things that usually don’t bother you.” q2, “How often
-do you feel isolated from others?” q3, “You had trouble keeping your
-mind on what you were doing.” q4, “You felt depressed.” q5, “You felt
-happy.” q6, “You enjoyed life.” q7, “You felt sad.” q8, “You felt that
-people disliked you.”</p>
-<p>Levels (6 and 8 were coded as missing): 0 = Never, 1 = Sometimes, 2 =
-A lot of the time 3 = Most of the time or all of the time</p>
 <p><strong>Tasks</strong></p>
 <p>1). Logistic regression: using <em>suicidethought</em> as outcome
-variable and wave 1 predictor variables of your interest</p>
-<p>2). Poisson regression: using <em>jail</em> as outcome variable and
-wave 1 predictor variables of your interest</p>
+variable and one of the wave 1 predictor variables to construct your
+research question (add covariates as you see fit to check the robustness
+of your results)</p>
+<p>2). Poisson regression: using one of the happiness measures
+(<em>q1</em> to <em>q8</em>) as outcome variable and one of the wave 1
+predictor variables to construct your research question (add covariates
+as you see fit to check the robustness of your results); also test for
+over dispersion before conducting analyses to make sure that using
+Poisson regression is appropriate</p>
 <p>3). Nested data: using one of the three variables, <em>gpa</em>,
-<em>education</em>, <em>income_log</em>, as outcome variable and wave 1
-predictor variables of your interest</p>
-<p>4). Measurement and assessment: what is the internal consistency for
-the eight measures of happiness?</p>
+<em>education</em>, <em>income_log</em>, as outcome variable and one of
+the wave 1 predictor variables to construct your research question (add
+covariates as you see fit to check the robustness of your results)</p>
+<p>4). Measurement and assessment: test and report the internal
+consistency for the eight measures of happiness (<em>q1</em> to
+<em>q8</em>)</p>
 <p>5). Dealing with missing data in your analyses</p>
-</div>
 <div id="final-project-option-2-mocca-assessment-data" class="section level4">
 <h4>2. Final project option 2 (MOCCA assessment data)</h4>
 <p>(Download the datasets here: <a href="./data/mocca.csv">mocca.csv</a>)</p>
@@ -480,8 +503,8 @@ the eight measures of happiness?</p>
 </div>
 <div id="project-requirements" class="section level3">
 <h3>Project requirements</h3>
-<p>Your final project will contain FOUR chapters to address the FIRST
-FOUR TASKS detailed at the end of your selected project.</p>
+<p>Your final project will have FOUR chapters to address the first four
+tasks detailed at the end of your selected project.</p>
 <p>For each chapter, the writeup should contain the following
 elements:</p>
 <ul>
@@ -492,9 +515,28 @@ significance?<br />
 statistics of your key variables, especially the predictor and outcome
 variables, in a table</li>
 <li>Visualize the relationship between the predictor and outcome
-variables in a plot and describe what you observe.</li>
+variables in a plot and describe what you observe</li>
 <li>Describe your method, report your results, and discuss your
-findings.</li>
+findings</li>
+</ul>
+</div>
+<div id="submission-timeline" class="section level3">
+<h3>Submission timeline</h3>
+<p>You have three critical deadlines to meet in order to successfully
+finish this final project:</p>
+<ul>
+<li>During week 5 lab, briefly (within 1 minute) present to the class
+the dataset you’ll be using and your research questions</li>
+<li>During week 8 lab, briefly (within 1 minute) present to the class
+the methods you’ll be using to answer your research questions including
+assumptions and model specifications</li>
+<li>At the end of the term (date: TBD), submit two files to Canvas:
+<ul>
+<li>An .doc, .html, or .pdf file that meets the project requirements
+above</li>
+<li>The .Rmd or .R file that you used to render the tables and figures
+in the above doc/html/pdf file</li>
+</ul></li>
 </ul>
 </div>
 
