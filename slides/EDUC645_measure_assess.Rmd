@@ -54,9 +54,14 @@ options(knitr.table.format = "html")
 # Goals for the unit
 Measurement
 
+Reliability
+
 Validity
 
-Reliability
+---
+class: center, inverse
+
+# Measurement
 
 ---
 # Measurement
@@ -99,6 +104,11 @@ Content validity
 Construct validity
 
 ---
+class: center, inverse
+
+# Reliability
+
+---
 # Reliability
 Consistency of measurement
 Computed by taking the ratio of the true score variance and the observed variance:
@@ -108,21 +118,25 @@ As VAR(T) increases, so does Reliability.
 
 ---
 # Measuring Reliability
-Test-Retest method
+* Test-Retest method: tests stability
 
-Alternative form method
+* Inter-rater method: test equivalence
 
-Split-halves method
+* Alternative form method 
 
-Internal consistency method
+* Split-halves method: tests internal consistency
+
+* Coefficient alpha: Internal consistency method
 
 ---
 # Test-retest
-Examines temporal stability of a measure. May be influenced by the time between assessments. 
-Always provide details regarding the time between assessments in a study. 
-Practice effect bias.
+Examines temporal stability of a measure. 
+- May be influenced by the time between assessments. 
+- Always provide details regarding the time between assessments in a study. 
+- Practice effect bias.
 
-Individuals should not have “changed” in ways that would bias the test-retest assessment. Any difference in the assessment could be non-random error and reduce the reliability.
+Individuals should not have “changed” in ways that would bias the test-retest assessment. 
+- Any difference in the assessment could be non-random error and reduce the reliability.
 
 Only appropriate when the individual has not changed as a result of the first test, and/or the length of time between assessments has diminished the likelihood of practice effect bias.
 
@@ -130,7 +144,7 @@ Only appropriate when the individual has not changed as a result of the first te
 # Alternative Form
 Developer must create two separate tests examining the same domain, yet use different content.  
 
-This method provides a test of equivalences.
+Method provides a test of equivalences.
 If possible, both versions are administered as closely in time as possible (e.g., same day). 
 Avoid order effects by randomizing sequence among participants.
 
@@ -138,34 +152,104 @@ Care must be taken. Tests will never be perfectly equivalent, particularly when 
 
 ---
 # Split Halves
-Offer the assessment yet divide (“split-half method”) the items at random.  
 
-Split in two comparable sets, you can compare the reliability of one set to the other.  
-
-In splitting the measure, reliability will be lowered artificially. It is important to adjust the reliability estimate using the Spearman-Brown adjustment:
-			radjusted = N*rsh/[1 + (N-1)rsh]
+Offer the assessment yet divide the items at random, hence “split-half method”:
+  - Split in two comparable sets, you can compare the reliability of one set to the other.  
+  - Splitting the measure 'artificially' lowers reliability
+    - Adjust the reliability estimate using the Spearman-Brown adjustment:
+  
+  $$r_{adjusted} = \frac{N*r_{sh}}{1 + (N-1)r_{sh}}$$
 
 ---
 # Internal Consistency
 Assessment of how well a set of variables correlate with each other (“hang together”).
 
 Internal consistency estimates are sensitive to:
-Missing data
-Unidirection of variables
-Number of items
+- Missing data
+- Unidirection of variables
+- Number of items
 
 ---
 # Cronbach's Alpha
 
-$$\alpha_{c} = \frac{k}{(k-1)[1-\Sigma(\frac{s^2_{i}}{s^2})]}$$
+$$\alpha_{c} = \frac{k}{(k-1)[1-\Sigma(\frac{s^{2}_{i}}{s^{2}})]}$$
 
-k = number of items included in scale analysis
-s2i = variance of scores for each item
-s2 = variance of all scores in the scale
+$k$ = number of items included in scale analysis
+$s^{2}_{i}$ = variance of scores for each item
+$s^{2}$ = variance of all scores in the scale
 Range = 0-1
 
 ---
-# C.I. for Cronbach's alpha
+# Data example
+
+Add Health public use data.
+
+In wave IV inhome survey, there were eight variables collected  on a Likert-type ordinal scale that seem to measure a latent construct - happiness. See details as well as key variables information below. 
+
+Measured on a four-point likert-type scale (0=never or rarely, 1=sometimes, 2=a lot of the time, 3=most of the time or all of the time).
+*q1* to *q8*, the individual's answers to eight survey questions
+The questions are as following:
+   - "Think about the past seven days. How often was each of the following things true during the past seven days?"
+      - q1, "You were bothered by things that usually don't bother you."
+      - q2, "How often do you feel isolated from others?"
+      - q3, "You had trouble keeping your mind on what you were doing."
+      - q4, "You felt depressed."
+      - q5, "You felt happy."
+      - q6, "You enjoyed life."
+      - q7, "You felt sad."
+      - q8, "You felt that people disliked you."
+      
+```{r, echo = F}
+happy0 <- rio::import(here::here("data", "ah_happiness.csv")) %>% 
+  drop_na()
+head(happy0)
+```
+
+### Check for reverse coded items 
+
+Among eight items, q5 and q6 seem to measure happiness but other six items are reverse coded. 
+Recode them to be consistent with q5 and q6.
+
+```{r}
+happy <- happy0 %>% 
+  mutate(q1 = recode (q1, "0"=3, "1"=2, "2"=1, "3"=0),
+         q2 = recode (q2, "0"=3, "1"=2, "2"=1, "3"=0),
+         q3 = recode (q3, "0"=3, "1"=2, "2"=1, "3"=0),
+         q4 = recode (q4, "0"=3, "1"=2, "2"=1, "3"=0),
+         q7 = recode (q7, "0"=3, "1"=2, "2"=1, "3"=0),
+         q8 = recode (q8, "0"=3, "1"=2, "2"=1, "3"=0))
+```
+
+### Look into the eight items
+
+#### Summary statistics 
+
+```{r}
+items <- happy %>% 
+  select(q1:q8) 
+
+summary(items)
+```
+
+#### Response frequencies
+
+```{r}
+items %>%  
+  response.frequencies() %>% 
+  round(2)
+```
+
+#### Internal consistency 
+
+Chronbach’s alpha:
+
+```{r}
+alpha(items[,1:8])
+```
+
+---
+# Interpreting Cronbach's Alpha and C.I. for Cronbach's alpha
+
 
 ---
 # Standards for reliability
@@ -195,26 +279,31 @@ s2 = variance of all scores in the scale
 Estimates the correlation between X & Y, assuming perfect measurement.
 
 $${\rho}x_{T}y_{T} = \frac{{\rho}x_{i}y_{j}}{\sqrt{p_{xx'}p_{yy'}}}$$
-
 Observed correlation over the SQRT of the (Reliability of X*Reliability of Y). 
 
 ---
+class: center, inverse
+
 # Validity
-Face validity: Measure seems to assess domain
 
-Criterion-related validity
-Concurrent validity: Measure is correlated with behavior
-Predictive validity: Measure is predictive of behavior
+---
+# Validity
+* Face validity: Measure seems to assess domain
 
-Content validity
-Measurement includes holistic elements of domain
+* Criterion-related validity
+  - Concurrent validity: Measure is correlated with behavior
+  - Predictive validity: Measure is predictive of behavior
 
-Construct validity
-Measurement relates to other theoretically-derived measures
+* Content validity
+  - Measurement includes holistic elements of domain
+
+* Construct validity
+  - Measurement relates to other theoretically-derived measures
 
 ---
 
 # Above and beyond: Factor analysis
+
 Statistical method to uncover clusters (factors) of interrelated variables.
 
 Each factor represents items that are highly correlated with each other.

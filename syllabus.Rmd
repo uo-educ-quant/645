@@ -37,8 +37,13 @@ By the end of this term, it is expected that students will be able to:
 
 
 # Textbooks and Reading Materials
-We will primarily be referring to chapters in [Beyond Multiple Linear Regression ](https://bookdown.org/roback/bookdown-BeyondMLR/) (**BMLR**) by Paul Roback and Julie Legler. This textbook is available for free online. You may choose to purchase a paper copy if you wish, but it is not required. 
+## Textbooks
+Both textbooks are available for free online. You may choose to purchase a paper copy of if you wish **BMLR**, but it is not required. 
+- We will primarily be referring to chapters in [Beyond Multiple Linear Regression ](https://bookdown.org/roback/bookdown-BeyondMLR/) (**BMLR**) by Paul Roback and Julie Legler. 
+- We will also rely on a couple of chapters in [Introduction to Educational and Psychological Measurement Using R (https://www.thetaminusb.com/intro-measurement-r/)] (**IEPM**) by Tony Albano.
 
+## Supplemental reading materials
+Further readings will be provided in the form of journal articles and links to these papers can be found in the schedule.
 
 ## R and RStudio
 Students must have the latest version of R, which can be downloaded [here](https://ftp.osuosl.org/pub/cran/). It is strongly recommended that students also download the RStudio GUI, available [here](https://www.rstudio.com/products/rstudio/download/#download). Both softwares are free. We will provide tutorials on R/RStudio installation and they are also accessible [here](.slides/tutorial.html).
