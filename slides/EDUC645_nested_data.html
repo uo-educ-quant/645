@@ -35,15 +35,15 @@ class: center, middle, inverse, title-slide
 ---
 # Goals for the unit
 - Introduce nested data structure (two-level, e.g., repeated measures within individuals, students within schools)
-- Understand and explain what nesting/clustering means
-- Demonstrate varying intercepts and slopes across clusters. 
+- Understand nesting/clustering means
+- Demonstrate varying intercepts and slopes across clusters
 - Practice fitting the same regression model independently for each cluster and create a table of intercepts and slopes across clusters
 - Understand what it means for intercepts and slopes to vary across clusters
 - Discuss the notion that regression coefficients may vary across different clusters
 - Develop the concept of:
-  - fixed-effects as the aggregation of the different intercepts and slopes by taking an average of varying intercept and slopes across clusters
-	- random effects as the difference between cluster-specific intercept and slope and their averages across clusters
-	- covariance matrix of random-effects
+  - Fixed-effects as the aggregation of the different intercepts and slopes by taking an average of varying intercept and slopes across clusters
+	- Random effects as the difference between cluster-specific intercept and slope and their averages across clusters
+	- Covariance matrix of random-effects
 - Discuss the implications of ignoring the variance of random-effects in terms of the inference for fixed-effects and statistical power
 
 - Introduce 
@@ -169,11 +169,18 @@ Packages particularly needed for this unit: `lme4`, `equatiomatic`, `performance
 ---
 # The Data: Stanford Education Data Archive (SEDA)
 
-SEDA was launched in 2016 to provide nationally comparable, publicly available test score data for U.S. public school districts, allowing scientific inquiries on the relationships between educational conditions, contexts, and outcomes (especially student math/ELA achievements) at the district-level across the nation.
+Launched in 2016 to provide nationally comparable, publicly available test score data for U.S. public school districts, allowing scientific inquiries on the relationships between educational conditions, contexts, and outcomes (especially student math/ELA achievements) at the district-level across the nation.
 
-Variable include measures of academic achievement and achievement gaps for school districts and counties, as well as district-level measures of racial and socioeconomic composition, racial and socioeconomic segregation patterns, and other features of the schooling system. 
+Variable include measures of:
+- academic achievement 
+- achievement gaps for school districts and counties
+- district-level measures of racial and socioeconomic composition
+- racial and socioeconomic segregation patterns
+- other features of the schooling system
 
-Data set is district-level data for 103 Oregon school districts, year 2017-18 data. Observations with missing values on any of the key variables were deleted for simplification reasons.
+Data set:
+- district-level data for 103 Oregon school districts, year 2017-18 data
+- Observations with missing values on any of the key variables were deleted for simplification
 
 ---
 # Inspect the data 
@@ -199,13 +206,14 @@ What does each row/observation represent?
 ```
 
 ---
+
 # Descriptives
-<div id="aawftfbdzp" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<div id="txsloykrfs" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#aawftfbdzp .gt_table {
+#txsloykrfs .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -230,7 +238,7 @@ What does each row/observation represent?
   border-left-color: #D3D3D3;
 }
 
-#aawftfbdzp .gt_heading {
+#txsloykrfs .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -242,7 +250,7 @@ What does each row/observation represent?
   border-right-color: #D3D3D3;
 }
 
-#aawftfbdzp .gt_title {
+#txsloykrfs .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -254,7 +262,7 @@ What does each row/observation represent?
   border-bottom-width: 0;
 }
 
-#aawftfbdzp .gt_subtitle {
+#txsloykrfs .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -266,13 +274,13 @@ What does each row/observation represent?
   border-top-width: 0;
 }
 
-#aawftfbdzp .gt_bottom_border {
+#txsloykrfs .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#aawftfbdzp .gt_col_headings {
+#txsloykrfs .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -287,7 +295,7 @@ What does each row/observation represent?
   border-right-color: #D3D3D3;
 }
 
-#aawftfbdzp .gt_col_heading {
+#txsloykrfs .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -307,7 +315,7 @@ What does each row/observation represent?
   overflow-x: hidden;
 }
 
-#aawftfbdzp .gt_column_spanner_outer {
+#txsloykrfs .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -319,15 +327,15 @@ What does each row/observation represent?
   padding-right: 4px;
 }
 
-#aawftfbdzp .gt_column_spanner_outer:first-child {
+#txsloykrfs .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#aawftfbdzp .gt_column_spanner_outer:last-child {
+#txsloykrfs .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#aawftfbdzp .gt_column_spanner {
+#txsloykrfs .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -339,7 +347,7 @@ What does each row/observation represent?
   width: 100%;
 }
 
-#aawftfbdzp .gt_group_heading {
+#txsloykrfs .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -364,7 +372,7 @@ What does each row/observation represent?
   vertical-align: middle;
 }
 
-#aawftfbdzp .gt_empty_group_heading {
+#txsloykrfs .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -379,15 +387,15 @@ What does each row/observation represent?
   vertical-align: middle;
 }
 
-#aawftfbdzp .gt_from_md > :first-child {
+#txsloykrfs .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#aawftfbdzp .gt_from_md > :last-child {
+#txsloykrfs .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#aawftfbdzp .gt_row {
+#txsloykrfs .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -406,7 +414,7 @@ What does each row/observation represent?
   overflow-x: hidden;
 }
 
-#aawftfbdzp .gt_stub {
+#txsloykrfs .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -419,7 +427,7 @@ What does each row/observation represent?
   padding-right: 5px;
 }
 
-#aawftfbdzp .gt_stub_row_group {
+#txsloykrfs .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -433,11 +441,11 @@ What does each row/observation represent?
   vertical-align: top;
 }
 
-#aawftfbdzp .gt_row_group_first td {
+#txsloykrfs .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#aawftfbdzp .gt_summary_row {
+#txsloykrfs .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -447,16 +455,16 @@ What does each row/observation represent?
   padding-right: 5px;
 }
 
-#aawftfbdzp .gt_first_summary_row {
+#txsloykrfs .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#aawftfbdzp .gt_first_summary_row.thick {
+#txsloykrfs .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#aawftfbdzp .gt_last_summary_row {
+#txsloykrfs .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -466,7 +474,7 @@ What does each row/observation represent?
   border-bottom-color: #D3D3D3;
 }
 
-#aawftfbdzp .gt_grand_summary_row {
+#txsloykrfs .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -476,7 +484,7 @@ What does each row/observation represent?
   padding-right: 5px;
 }
 
-#aawftfbdzp .gt_first_grand_summary_row {
+#txsloykrfs .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -486,11 +494,11 @@ What does each row/observation represent?
   border-top-color: #D3D3D3;
 }
 
-#aawftfbdzp .gt_striped {
+#txsloykrfs .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#aawftfbdzp .gt_table_body {
+#txsloykrfs .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -499,7 +507,7 @@ What does each row/observation represent?
   border-bottom-color: #D3D3D3;
 }
 
-#aawftfbdzp .gt_footnotes {
+#txsloykrfs .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -513,7 +521,7 @@ What does each row/observation represent?
   border-right-color: #D3D3D3;
 }
 
-#aawftfbdzp .gt_footnote {
+#txsloykrfs .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-left: 4px;
@@ -522,7 +530,7 @@ What does each row/observation represent?
   padding-right: 5px;
 }
 
-#aawftfbdzp .gt_sourcenotes {
+#txsloykrfs .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -536,7 +544,7 @@ What does each row/observation represent?
   border-right-color: #D3D3D3;
 }
 
-#aawftfbdzp .gt_sourcenote {
+#txsloykrfs .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -544,36 +552,36 @@ What does each row/observation represent?
   padding-right: 5px;
 }
 
-#aawftfbdzp .gt_left {
+#txsloykrfs .gt_left {
   text-align: left;
 }
 
-#aawftfbdzp .gt_center {
+#txsloykrfs .gt_center {
   text-align: center;
 }
 
-#aawftfbdzp .gt_right {
+#txsloykrfs .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#aawftfbdzp .gt_font_normal {
+#txsloykrfs .gt_font_normal {
   font-weight: normal;
 }
 
-#aawftfbdzp .gt_font_bold {
+#txsloykrfs .gt_font_bold {
   font-weight: bold;
 }
 
-#aawftfbdzp .gt_font_italic {
+#txsloykrfs .gt_font_italic {
   font-style: italic;
 }
 
-#aawftfbdzp .gt_super {
+#txsloykrfs .gt_super {
   font-size: 65%;
 }
 
-#aawftfbdzp .gt_two_val_uncert {
+#txsloykrfs .gt_two_val_uncert {
   display: inline-block;
   line-height: 1em;
   text-align: right;
@@ -582,31 +590,31 @@ What does each row/observation represent?
   margin-left: 0.1em;
 }
 
-#aawftfbdzp .gt_footnote_marks {
+#txsloykrfs .gt_footnote_marks {
   font-style: italic;
   font-weight: normal;
   font-size: 75%;
   vertical-align: 0.4em;
 }
 
-#aawftfbdzp .gt_asterisk {
+#txsloykrfs .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#aawftfbdzp .gt_slash_mark {
+#txsloykrfs .gt_slash_mark {
   font-size: 0.7em;
   line-height: 0.7em;
   vertical-align: 0.15em;
 }
 
-#aawftfbdzp .gt_fraction_numerator {
+#txsloykrfs .gt_fraction_numerator {
   font-size: 0.6em;
   line-height: 0.6em;
   vertical-align: 0.45em;
 }
 
-#aawftfbdzp .gt_fraction_denominator {
+#txsloykrfs .gt_fraction_denominator {
   font-size: 0.6em;
   line-height: 0.6em;
   vertical-align: -0.05em;
@@ -767,23 +775,16 @@ class: middle, inverse
 
 # Fixed effects model
 
-.pull-left[
 * Assume a common intercept for all grades. 
 
 --
 
-Model specifications:
-]
-
-Visually:
-.pull-right[
 
 ```
 ## `geom_smooth()` using formula 'y ~ x'
 ```
 
 ![add caption](EDUC645_nested_data_files/figure-html/unnamed-chunk-12-1.png)
-]
 
 ---
 
@@ -791,7 +792,6 @@ Visually:
 
 How to interpret these parameters?
 
-.pull-left[
 
 ```r
 m1 &lt;- lm(math ~ percent_ell, district)
@@ -818,14 +818,16 @@ summary(m1)
 ## Multiple R-squared:  0.08858,	Adjusted R-squared:  0.08334 
 ## F-statistic: 16.91 on 1 and 174 DF,  p-value: 6.03e-05
 ```
-]
+
+--
+
+[insert interpretation]
 
 ---
 # Fixed effects model
 
 How to interpret these parameters?
 
-.pull-right[
 
 ```r
 coef(m1)
@@ -835,8 +837,10 @@ coef(m1)
 ## (Intercept) percent_ell 
 ##    4.504827   -6.466889
 ```
-]
 
+--
+
+[insert interpretation]
 
 ---
 # Random effects model
@@ -1376,24 +1380,131 @@ test_likelihoodratio(m2, m4) %&gt;%
 
 --
 
-Interpretation: Model 4 performs best
+**Interpretation**: Model 4 performs best
 
-**HOWEVER** model 4 doesn't perform much better than model 2 
+_**HOWEVER**_ model 4 doesn't perform much better than model 2 
 
-Conclusion: Choose model 2 for *parsimonious* reason.
+**Conclusion:** Choose model 2 for *parsimonious* reason.
 
 ???
 
-But model 4 doesn't perform much better than model 2 (identical RMSE;
+Model 4 doesn't perform much better than model 2 (identical RMSE;
 - non-significant chi squared test of the change in the model deviance; 
 - also visually confirmed in the previous random-intercept random-slope plot that the slope of the fitted line didn't vary too much across four grades), so for this little exercise, I would choose model 2 for parsimonious reason.
 
 ---
+
 # Model Building and Parsimony
 
+---
+class: center, inverse
 
+# Nested Data Applied to Logistic Regression
 
 ---
+
+Binary independent variable/logistic regression
+
+**Dataset: portugal.csv**
+
+Statistics keep Portugal at Europe’s tail end due to its high student failure rates especially in core content areas such as math and the Portuguese language. Cortez and Silva (2008) collected student data from two Portuguese schools during the 2005- 2006 school year using school reports and student survey with a goal of developing models to predict student performance. The data include student grades, demographic, social, and school related features. Our goal here is to investigate the factors associated with student failure in Portuguese and the magnitudes of these associations. 
+
+Student Portuguese grade is measured on a 20-point scale with zero being the lowest and 20 being the perfect grade. The grade can be further measured by a five-level classification system, with 16-10 being excellent, 14-15 being good, 12-13 being satisfactory, 10-11 being sufficient, and 0-9 being fail (our primary interest).   
+
+The dataset contains 649 student observations and 18 variables
+
+---
+# Research question
+
+What is the relationship between first period grade and failing at the end of the school year?
+
+
+```r
+por &lt;- rio::import(here::here("data", "portugal.csv")) %&gt;%
+  select(school, female, age, first = por1, fail = por3_fail) %&gt;% 
+  drop_na() %&gt;% 
+  filter(first != 0)
+
+head(por)
+```
+
+```
+##   school female age first fail
+## 1     GP      1  17     9    0
+## 2     GP      1  15    12    0
+## 3     GP      1  15    14    0
+## 4     GP      1  16    11    0
+## 5     GP      0  16    12    0
+## 6     GP      0  16    13    0
+```
+
+---
+# Visualize the clustering nature of the data:
+
+Count of students who failed Portuguese
+
+
+```r
+por %&gt;% 
+  mutate(fail = factor(fail, levels = c(0,1), labels = c("No", "Yes"))) %&gt;% 
+  ggplot(aes(fail)) +
+  geom_bar(fill = "royalblue", width = 0.5, alpha = 0.8) +
+  labs(x = "Failing Portuguese",
+       y = "Number of Students")
+```
+
+![](EDUC645_nested_data_files/figure-html/unnamed-chunk-33-1.png)&lt;!-- --&gt;
+
+---
+# Count of students who failed Portuguese within each school
+
+
+```r
+por %&gt;% 
+  mutate(fail = factor(fail, levels = c(0,1), labels = c("No", "Yes"))) %&gt;% 
+  ggplot(aes(fail, fill = school)) +
+  geom_bar(position = "dodge", width = 0.5, alpha = 0.8) +
+  labs(x = "Failing Portuguese",
+       y = "Number of Students")
+```
+
+![](EDUC645_nested_data_files/figure-html/unnamed-chunk-34-1.png)&lt;!-- --&gt;
+
+---
+# Relationship between first period grade and fail
+
+
+```r
+por %&gt;% 
+  ggplot(aes(first, fail)) +
+  geom_point(color = "deeppink") +
+  geom_jitter(alpha = 0.4,
+              size = 0.5) +
+  labs(x = "First period grade",
+       y = "Failing Portuguese")
+```
+
+![](EDUC645_nested_data_files/figure-html/unnamed-chunk-35-1.png)&lt;!-- --&gt;
+
+---
+
+# Relationship between first period and fail within each school
+
+
+```r
+por %&gt;% 
+  ggplot(aes(first, fail, color = school)) +
+  geom_point(color = "deeppink") + 
+  geom_jitter(alpha = 0.4,
+              size = 0.5) +
+  labs(x = "First period grade",
+       y = "Failing Portuguese")
+```
+
+![](EDUC645_nested_data_files/figure-html/unnamed-chunk-36-1.png)&lt;!-- --&gt;
+
+---
+
 # Summary
 ### Multilevel Modeling allows us to answer complex questions adequately if:
 - An appropriate study design is conceptualized

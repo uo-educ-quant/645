@@ -21,6 +21,19 @@ library(tidyverse)
 
 
 # Student Learning Outcomes
+By the end of this term, it is expected that students will be able to:
+1. Articulate
+2. Distinguish between fitting a logistic regression and poisson regression differ from fitting a linear least squares regression model
+3. Conduct and interpret (orally and in writing) regression analyses with dichotomous and count outcomes and predictors
+4. Describe the assumptions of logistic and poisson regression analysis and test analytic models for the extent to which they satisfy these assumptions
+5. Generalize the least-squares regression model (conceptually and in practice) to predictors that are categorical, interacted and non-linear
+6. Build taxonomies of sensible regression models in response to independently developed research questions
+7. Recognize when response variables and covariates have been collected at multiple (nested) levels 
+8. Analyze continuous and discrete outcomes using multilevel model, including cases in which covariates are continuous, categorical, or centered.
+9. Understand and measure inter-dependency of observed data
+10. Analyse patterns of missing data and apply modern methods for treating missingness of data in the GLM framework
+11. Use the R programming language to conduct all such analyses
+
 
 
 # Textbooks and Reading Materials
@@ -78,10 +91,10 @@ Graduate students are expected to perform work of high quality and quantity, typ
 |------------------------|---------|---------------------------------
 | Class attendance       | 30      | Three hours per week over 10 weeks
 | Class reading and prep | 30      | Includes reading and review of slides
-| Homework Assignments   | 25      | Five assignments taking 5 hours each (on avg.)
-| Quizzes                | 5       | One hour per quiz
-| Labs                   | 10      | One hour-long lab per week over 10 weeks    
-| Final                  | 20      | Includes familiarization with data, data analysis, preparation of displays and writing
+| Homework Assignments   | 20      | Five assignments taking 5 hours each (on avg.)
+| Quizzes                | 5       | One hour per quiz (40 min preparation, 20 min completing quiz)
+| Lab attendance         | 10      | One hour-long lab per week over 10 weeks    
+| Final project          | 25      | Includes familiarization with data, data analysis, preparation of displays and writing
 | **Total hours**        | **120** | **These are approximations.** Reading and *especially* analytic time will vary per individual
 
 

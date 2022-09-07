@@ -18,17 +18,15 @@ knitr::opts_chunk$set(echo = TRUE)
 
 **Learning Objectives:** 
 
-- Introduce the linear probability model and discuss the limitations
+- Understand the linear probability model and discuss its limitations
 
-- Introduce the concept of probability, odds, and logit
+- Understand and differentiate the concepts of probability, odds, and logit
 
-- Introduce logistic regression model with continuous predictors and how to interpret the model parameters and inference for model parameters
+- Learn how to use the logistic regression model with continuous and categorical predictors and interpret the model parameters and inference for model parameters
 
-- Introduce the glm function in R to fit the logistic regression model
+- Apply logistic regression model with an interaction between a continuous and categorical predictor, how to interpret the model parameters, and inference for model parameters
 
-- Introduce the logistic regression model with categorical predictors and how to interpret the model parameters and inference for model parameters
-
-- Introduce the logistic regression model with an interaction between a continuous and categorical predictor, how to interpret the model parameters, and inference for model parameters
+- Apply glm function in R to fit the logistic regression model
 
 - Discuss the predictive power, model fit, and diagnostics for a logistic regression model
 
@@ -48,29 +46,19 @@ knitr::opts_chunk$set(echo = TRUE)
 
 **Learning Objectives:** 
 
-- Introduce the count data models
+- Introduce regression models for analyzing count and rates
 
-- Introduce the concept of rates
+-	Describe situations which merit the use of Poisson regression
 
--	Describe situations which merit the use of Poisson regression.
-	
-Define and calculate person-time variable and understand its purpose in Poisson regression.
+-	State the assumptions about rates in Poisson regression
 
--	State the assumptions about rates in Poisson regression.
-
-- Introduce the glm function in R to fit the poisson regression model
-
--	Describe and write the regression model for Poisson regression.
-
-- Introduce poisson regression model with continuous predictors and how to interpret the model parameters and inference for model parameters
-
-- Introduce the poisson regression model with categorical predictors and how to interpret the model parameters and inference for model parameters
+- Introduce poisson regression model with continuous and categorical predictors, and how to interpret the model parameters and inference for model parameters
 
 - Introduce the poisson regression model with an interaction between a continuous and categorical predictor, how to interpret the model parameters, and inference for model parameters
 
-- Discuss dispersion, model fit, and diagnostics for a poisson regression model
+- Learn how to apply the glm function in R to fit the poisson regression model
 
--	Understand the use of the offset variable.
+- Discuss dispersion, model fit, and diagnostics for a poisson regression model
 
 **Readings**: 
 
@@ -90,10 +78,12 @@ Define and calculate person-time variable and understand its purpose in Poisson 
 **Learning Objectives:** 
 
 - Introduce the nested data structure (two-level, e.g., repeated measures within individuals, students within schools)
-  - Students will be able to understand and explain what nesting/clustering means
+
+- Students will be able to understand and explain what nesting/clustering means
 
 - Demonstrate varying intercepts and slopes across clusters. Using a dataset, students/instructors can fit the same regression model independently for each cluster and create a table of intercepts and slopes across clusters
-  - Students will understand what it means for intercepts and slopes to vary across clusters
+
+- Students will understand what it means for intercepts and slopes to vary across clusters
 
 - Develop/discuss the notion that regression coefficients may vary across different clusters
 
@@ -113,7 +103,7 @@ and random-effects.
 - Finish by emphasizing that this is a very brief introduction of nested data and refer students to the multilevel modeling sequence for a comprehensive treatment of the
 subject
 
-- If time permits, there may be a discussion that not all nested data needs multilevel modeling and there are alternative approaches to adjust the standard errors for fixed effects if they are the sole interest
+- *Time permitting*: Discuss alternatives to multilevel modeling of nested data
 
 **Readings**: 
 
@@ -134,9 +124,9 @@ subject
 
 - Introduction to the concept of reliability
 
-- Talk about the assumption that there is a single underlying construct for a set of items in surveys when you aggregate scores across items
+- Understand the assumption of underlying shared construct for a set of items in surveys with aggregated scores across items
 
-- Show how to compute Cronbach's alpha, how to interpret it, and emphasize the strong underlying assumptions
+- Demonstrate how to compute and interpret Cronbach's alpha, and emphasize the strong underlying assumptions
 
 **Readings**: 
 

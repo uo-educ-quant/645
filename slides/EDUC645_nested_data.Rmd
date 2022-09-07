@@ -38,15 +38,15 @@ write_extra_css(css = extra_css, outfile = "my_custom.css")
 ---
 # Goals for the unit
 - Introduce nested data structure (two-level, e.g., repeated measures within individuals, students within schools)
-- Understand and explain what nesting/clustering means
-- Demonstrate varying intercepts and slopes across clusters. 
+- Understand nesting/clustering means
+- Demonstrate varying intercepts and slopes across clusters
 - Practice fitting the same regression model independently for each cluster and create a table of intercepts and slopes across clusters
 - Understand what it means for intercepts and slopes to vary across clusters
 - Discuss the notion that regression coefficients may vary across different clusters
 - Develop the concept of:
-  - fixed-effects as the aggregation of the different intercepts and slopes by taking an average of varying intercept and slopes across clusters
-	- random effects as the difference between cluster-specific intercept and slope and their averages across clusters
-	- covariance matrix of random-effects
+  - Fixed-effects as the aggregation of the different intercepts and slopes by taking an average of varying intercept and slopes across clusters
+	- Random effects as the difference between cluster-specific intercept and slope and their averages across clusters
+	- Covariance matrix of random-effects
 - Discuss the implications of ignoring the variance of random-effects in terms of the inference for fixed-effects and statistical power
 
 - Introduce 
@@ -172,11 +172,18 @@ Packages particularly needed for this unit: `lme4`, `equatiomatic`, `performance
 ---
 # The Data: Stanford Education Data Archive (SEDA)
 
-SEDA was launched in 2016 to provide nationally comparable, publicly available test score data for U.S. public school districts, allowing scientific inquiries on the relationships between educational conditions, contexts, and outcomes (especially student math/ELA achievements) at the district-level across the nation.
+Launched in 2016 to provide nationally comparable, publicly available test score data for U.S. public school districts, allowing scientific inquiries on the relationships between educational conditions, contexts, and outcomes (especially student math/ELA achievements) at the district-level across the nation.
 
-Variable include measures of academic achievement and achievement gaps for school districts and counties, as well as district-level measures of racial and socioeconomic composition, racial and socioeconomic segregation patterns, and other features of the schooling system. 
+Variable include measures of:
+- academic achievement 
+- achievement gaps for school districts and counties
+- district-level measures of racial and socioeconomic composition
+- racial and socioeconomic segregation patterns
+- other features of the schooling system
 
-Data set is district-level data for 103 Oregon school districts, year 2017-18 data. Observations with missing values on any of the key variables were deleted for simplification reasons.
+Data set:
+- district-level data for 103 Oregon school districts, year 2017-18 data
+- Observations with missing values on any of the key variables were deleted for simplification
 
 ---
 # Inspect the data 
@@ -191,6 +198,7 @@ head(seda)
 ```
 
 ---
+
 # Descriptives
 ```{r, echo = FALSE, fig.cap="add caption"}
 seda %>%
@@ -394,16 +402,10 @@ class: middle, inverse
 
 # Fixed effects model
 
-.pull-left[
 * Assume a common intercept for all grades. 
 
 --
 
-Model specifications:
-]
-
-Visually:
-.pull-right[
 ```{r, echo = FALSE, fig.cap="add caption"}
 district %>% 
   ggplot(aes(percent_ell, math)) +
@@ -412,7 +414,6 @@ district %>%
   labs(x = "ELL Percentage",
        y = "Math")
 ```
-]
 
 ---
 
@@ -420,24 +421,27 @@ district %>%
 
 How to interpret these parameters?
 
-.pull-left[
 ```{r, echo=T}
 m1 <- lm(math ~ percent_ell, district)
 summary(m1)
 ```
-]
+
+--
+
+[insert interpretation]
 
 ---
 # Fixed effects model
 
 How to interpret these parameters?
 
-.pull-right[
 ```{r, echo=T}
 coef(m1)
 ```
-]
 
+--
+
+[insert interpretation]
 
 ---
 # Random effects model
@@ -708,24 +712,108 @@ test_likelihoodratio(m2, m4) %>%
 
 --
 
-Interpretation: Model 4 performs best
+**Interpretation**: Model 4 performs best
 
-**HOWEVER** model 4 doesn't perform much better than model 2 
+_**HOWEVER**_ model 4 doesn't perform much better than model 2 
 
-Conclusion: Choose model 2 for *parsimonious* reason.
+**Conclusion:** Choose model 2 for *parsimonious* reason.
 
 ???
 
-But model 4 doesn't perform much better than model 2 (identical RMSE;
+Model 4 doesn't perform much better than model 2 (identical RMSE;
 - non-significant chi squared test of the change in the model deviance; 
 - also visually confirmed in the previous random-intercept random-slope plot that the slope of the fitted line didn't vary too much across four grades), so for this little exercise, I would choose model 2 for parsimonious reason.
 
 ---
+
 # Model Building and Parsimony
 
+---
+class: center, inverse
 
+# Nested Data Applied to Logistic Regression
 
 ---
+
+Binary independent variable/logistic regression
+
+**Dataset: portugal.csv**
+
+Statistics keep Portugal at Europe’s tail end due to its high student failure rates especially in core content areas such as math and the Portuguese language. Cortez and Silva (2008) collected student data from two Portuguese schools during the 2005- 2006 school year using school reports and student survey with a goal of developing models to predict student performance. The data include student grades, demographic, social, and school related features. Our goal here is to investigate the factors associated with student failure in Portuguese and the magnitudes of these associations. 
+
+Student Portuguese grade is measured on a 20-point scale with zero being the lowest and 20 being the perfect grade. The grade can be further measured by a five-level classification system, with 16-10 being excellent, 14-15 being good, 12-13 being satisfactory, 10-11 being sufficient, and 0-9 being fail (our primary interest).   
+
+The dataset contains 649 student observations and 18 variables
+
+---
+# Research question
+
+What is the relationship between first period grade and failing at the end of the school year?
+
+```{r}
+por <- rio::import(here::here("data", "portugal.csv")) %>%
+  select(school, female, age, first = por1, fail = por3_fail) %>% 
+  drop_na() %>% 
+  filter(first != 0)
+
+head(por)
+```
+
+---
+# Visualize the clustering nature of the data:
+
+Count of students who failed Portuguese
+
+```{r}
+por %>% 
+  mutate(fail = factor(fail, levels = c(0,1), labels = c("No", "Yes"))) %>% 
+  ggplot(aes(fail)) +
+  geom_bar(fill = "royalblue", width = 0.5, alpha = 0.8) +
+  labs(x = "Failing Portuguese",
+       y = "Number of Students")
+```
+
+---
+# Count of students who failed Portuguese within each school
+
+```{r}
+por %>% 
+  mutate(fail = factor(fail, levels = c(0,1), labels = c("No", "Yes"))) %>% 
+  ggplot(aes(fail, fill = school)) +
+  geom_bar(position = "dodge", width = 0.5, alpha = 0.8) +
+  labs(x = "Failing Portuguese",
+       y = "Number of Students")
+```
+
+---
+# Relationship between first period grade and fail
+
+```{r}
+por %>% 
+  ggplot(aes(first, fail)) +
+  geom_point(color = "deeppink") +
+  geom_jitter(alpha = 0.4,
+              size = 0.5) +
+  labs(x = "First period grade",
+       y = "Failing Portuguese")
+```
+
+---
+
+# Relationship between first period and fail within each school
+
+```{r}
+por %>% 
+  ggplot(aes(first, fail, color = school)) +
+  geom_point(color = "deeppink") + 
+  geom_jitter(alpha = 0.4,
+              size = 0.5) +
+  labs(x = "First period grade",
+       y = "Failing Portuguese")
+```
+
+---
+
 # Summary
 ### Multilevel Modeling allows us to answer complex questions adequately if:
 - An appropriate study design is conceptualized
