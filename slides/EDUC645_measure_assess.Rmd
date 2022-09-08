@@ -202,6 +202,7 @@ The questions are as following:
 ```{r, echo = F}
 happy0 <- rio::import(here::here("data", "ah_happiness.csv")) %>% 
   drop_na()
+
 head(happy0)
 ```
 

@@ -15,7 +15,9 @@ output:
 
 ```{R, setup, include = F}
 library(pacman)
-p_load(here, tidyverse, ggplot2, xaringan, knitr, kableExtra, foreign, broom, xaringanthemer, reshape2, DiagrammeR)
+p_load(here, tidyverse, rio, xaringan, dplyr, knitr, xaringanthemer, kableExtra, lfe, arsenal, foreign, reshape2, ggpubr, broom, stargazer, fixest, gtsummary, huxtable, mice, miceadds, VIM, magrittr, DiagrammeR)
+
+theme_set(theme_classic())
 
 i_am("slides/EDUC645_cleaning_missing.rmd")
 
@@ -31,7 +33,20 @@ extra_css <- list(
 
 write_extra_css(css = extra_css, outfile = "my_custom.css")
 
-
+# Knitr options
+opts_chunk$set(
+  comment = "#>",
+  fig.align = "center",
+  fig.height = 6.75,
+  fig.width = 10.5,
+  warning = F,
+  message = F
+)
+opts_chunk$set(dev = "svg")
+options(device = function(file, width, height) {
+  svg(tempfile(), width = width, height = height)
+})
+options(knitr.table.format = "html")
 
 ```
 
@@ -39,13 +54,13 @@ write_extra_css(css = extra_css, outfile = "my_custom.css")
 
 ---
 # Goals for the unit
-- Forms of Missingness
-- Missing Data Handling Techniques
-  - Traditional
-  - Modern (mainly multiple imputation)
-- Best Practices
- - Imputation
- - Reporting
+* Identify Forms of Missingness
+* Learn about Techniques for handling Missing Data Handling
+  - Traditional methods
+  - Modern approaches (mainly multiple imputation)
+* Apply best practices to treating missing data
+ - Conducting Imputation
+ - Reporting on handling missing data
 
 ---
 
@@ -93,6 +108,8 @@ Listwise or case deletion (avoid using): Delete observations with missingness
 Under MCAR, reduces power; under MAR and MNAR, reduces power and induced bias
 Particularly impactful in multivariate analysis: limited but widely dispersed missingness can lead to extensive case deletion
 
+--
+
 ### Single Imputation Methods
 - Mean substitution (never use): Replace missing values on a variable with average of that variable (artificially lowers variance, reduces power, and distorts covariances and intercorrelations among variables)
   The following can perform well, but modern methods perform better
@@ -103,28 +120,29 @@ Particularly impactful in multivariate analysis: limited but widely dispersed mi
 ---
 # Imputation
 
-Uses the underlying structure of the data to replace missing values with new values that could have been reasonably obtained, had they not been missing
-Aims to re-establish the relationship of the data with the population it was sampled from, without creating artificially precise data for the analysis
+- Uses the underlying structure of the data to replace missing values with new values that could have been reasonably obtained, had they not been missing
+
+- Aims to re-establish the relationship of the data with the population it was sampled from, without creating artificially precise data for the analysis
 
 ---
 # Two modern approaches to imputation
 ## Different theoretical orientations to missingness
 
-Full-Information Maximum-Likelihood (FIML) imputation
-Estimate model parameters close to their values as estimated from complete data 
-Model-specific and limited to models that are estimated using maximum-likelihood estimation (e.g., SEM, mixed/multilevel models, mixture models)
-Multiple Imputation (MI) 
-Aims to estimate complete data 
-Not model-specific and therefore more versatile application to data analysis
+* Full-Information Maximum-Likelihood (FIML) imputation
+  - Estimate model parameters close to their values as estimated from complete data 
+  - Model-specific and limited to models that are estimated using maximum-likelihood estimation (e.g., SEM, mixed/multilevel models, mixture models)
+* Multiple Imputation (MI) 
+  - Aims to estimate complete data 
+  - Not model-specific and therefore more versatile application to data analysis
 
 ---
 # MI by Chained Equations (MICE)
 
-- Chained equations: 
+* Chained equations: 
   - Focuses the algorithm on one variable at a time
   - Once variable is imputed, the algorithm moves to the next variable, skipping over complete variables, until all missing data is imputed
   - Process is repeated to create each imputed data set
-- Numerous algorithms exist
+* Numerous algorithms exist
   - Selection on variable being imputed (e.g., continuous, ordered, nominal/categorical)
 
 Recommended R package: mice (https://amices.org/mice/)
@@ -137,22 +155,6 @@ Recommended R package: mice (https://amices.org/mice/)
 ---
 # Multiple Imputation Process
 
-```{r, echo=F, message=F, warning=F, fig.align="center", fig.height=7, fig.width=7}
-m <- DiagrammeR::mermaid("
-                         graph LR
-                         A((d))-->B((m<sub>1</sub>))
-                         A((d))-->C((m<sub>2</sub>))
-                         A((d))-->D((m<sub>3</sub>))
-                         B((m<sub>1</sub>))-->E((a<sub>1</sub>)) 
-                         C((m<sub>2</sub>))-->F((a<sub>2</sub>)) 
-                         D((m<sub>3</sub>))-->G((a<sub>3</sub>))
-                         E((a<sub>1</sub>))-->H((r))
-                         F((a<sub>2</sub>))-->H((r)) 
-                         G((a<sub>3</sub>))-->H((r))
-                         ")
-
-widgetframe::frameableWidget(m)
-```
 
 Benefits of repeating the process, merging (averaging) each estimate of the missing data:
 Produces a more accurate (and plausible) values
@@ -160,25 +162,179 @@ More precisely defines uncertainty in the data
 Accounts for uncertainty from original data generation (measurement error) and of the imputation process
 
 ---
+class: center, inverse
+
+# Applying missing data treatment
+
+---
+
+# The dataset: galo.csv** 
+
+The GALO data is originally described by Peschar (1975) and analyzed by Dronkers and Schijf (1994) among other studies. The 1959 cohort consists of 1270 school children in the sixth grade of 37 elementary schools in the city of Groningen (Netherlands).
+
+Key variables are detailed below.
+ - schid, school identification number
+ - female, coded one for female students and zero for male
+ - galo, student's achievement score on GALO test
+ - advice, teacher’s advice on the student's secondary school choice; 0="no subsequent school", 1="lowest",..., 6="highest", 999="missing" 
+ - medu, mother's highest education; 1="lowest",..., 9="highest", 999="missing"
+ - fedu, father’s highest education; 1="lowest",..., 9="highest", 999="missing"
+ - focc, father’s occupational status; 1="lowest",..., 6="highest", 9="missing"
+
+```{r}
+galo <- rio::import(here::here("data", "galo.csv"))
+```
+
+---
 # Missing Data Diagnostics
 ## Inspect missing and imputed data before and after imputation
 
-Before imputation
-Calculate overall amount of missingness in the data (n, percent or proportion)
-Inspect missingness (aka margin) plots, show the observed and missing values across two variables
-Remember: Missingness mechanisms can differ between different variables
-After imputation
-Inspect strip plots, show the observed and imputed data together (as points), to identify erratic patterns among imputed data
-Inspect kernel density plots, show the distributions of observed and imputed data rather than individual values as points (similar purpose to strip plots)
+* Before imputation
+  1. Calculate overall amount of missingness in the data (n, percent or proportion)
+  2. Inspect missingness (aka margin) plots, show the observed and missing values across two variables
+  3. Remember: Missingness mechanisms can differ between different variables
+  
+* After imputation
+  4. Inspect strip plots, show the observed and imputed data together (as points), to identify erratic patterns among imputed data
+  5. Inspect kernel density plots, show the distributions of observed and imputed data rather than individual values as points (similar purpose to strip plots)
+
+---
+# Missing on each variable
+
+```{r}
+#I understand we don't want introduce students to the functional programming world
+# I'm in searching  for an easier way to report missing values that can be more accessible to students
+missing <- function(data){
+  na_percentage <- function(x){
+    y = sum(is.na(x))/length(x)
+    paste(round(100*y, 2), "%", sep="")
+  }
+  apply(data, 2, na_percentage)
+}
+
+missing(galo)
+```
+
+---
+# Missing data pattern
+
+There is no set threshold for the percentage of missingness but researchers commonly agree that if the dataset is large and the missingness is below 5%, the incomplete observations can be ignored and the analysis can be conducted based on the rest of the data. 
+
+For secondary data like we are using throughout this course, we don't know whether the missing values are missing completely at random (MCAR), missing at random (MAR), or not missing at random (NMAR). 
+
+```{r}
+galo %>% select(advice, medu, fedu, focc) %>% 
+  md.pattern(rotate.names = TRUE)
+```
+
+How the values are missing in pairs:
+
+```{r}
+galo %>% select(advice, medu, fedu, focc) %>%
+  md.pairs()
+```
+
+---
+# Dealing with missing data
+
+To illustrate how different ways to deal with missing data might affect our analysis, let's start with a research question and an OLS regression to answer the question.
+
+RQ: what is the relationship between teacher's recommendation on secondary school choice and student's GALO score?
+
+Note that the regression functions (e.g., lm()) in R typically only report results based on complete observations.
+
+--
+
+#### Casewise deletion (CD)
+
+```{r}
+m1 <- lm(advice ~ galo, galo)
+m2 <- lm(advice ~ galo + female + medu + fedu + focc, galo)
+list("CD" = m1,
+     "CD (covariates)" = m2) %>% 
+  huxreg()
+```
+
+---
+# Mean imputation
+
+Simply imputing all missing values using mean values, but there're good practice and bad practice. 
+
+ - in our case, due to the fact that students are nested in schools, the best practice is to compute mean values WITHIN EACH SCHOOL rather than across all observations.
+ 
+ - we should be extra careful when dealing with missingness on predictor and outcome variables. Our outcome variable, advice, has a very small missing value (0.45%), so we should drop all incomplete observations rather than replacing them with variable means
+ 
+
+```{r}
+galo_meani <- galo %>% 
+  drop_na(advice) %>% 
+  group_by(schid) %>% 
+  mutate(medumean = mean(medu, na.rm = TRUE),
+         fedumean = mean(fedu, na.rm = TRUE),
+         foccmean = mean(focc, na.rm = TRUE)) %>% 
+  ungroup() %>% 
+  mutate(medu = ifelse(is.na(medu), medumean, medu),
+         fedu = ifelse(is.na(fedu), fedumean, fedu),
+         focc = ifelse(is.na(focc), foccmean, focc))
+```
+
+Rerun the analysis:
+
+```{r}
+m3 <- lm(advice ~ galo, galo_meani)
+m4 <- lm(advice ~ galo + female + medu + fedu + focc, galo_meani)
+list("CD" = m1,
+     "CD (covariates)" = m2,
+     "MeanI" = m3,
+     "MeanI (covariates)" = m4) %>% 
+  huxreg()
+```
+
+---
+# Multiple imputation (MI)
+
+There're several ways to conduct multiple imputation. Note that here we use the package {mice}. MICE stands for Multivariate Imputations via Chained Equations and its idea is, if any variable contains missing values, the package regresses it over the other variables and predicts the missng value. For this strategy to work, it requires the missing at random (MAR) assumption. In other words, if we have some reason to believe that missing on any of the variables we're computing is systematic, this approach is not appropriate.
+
+ - create a new dataset that contains five different versions of imputed datasets that were returned by the mice function
+
+```{r, include = FALSE}
+galo_multi <- mice(galo) 
+class(galo_multi) # should be "mids"
+```
+
+ - look at the first dataset
+
+```{r}
+galo_multi1 <- complete(galo_multi)
+head(galo_multi1)
+```
+
+ - using this dataset to rerun the analysis
+ 
+```{r}
+m5 <- lm(advice ~ galo, galo_multi1)
+m6 <- lm(advice ~ galo + female + medu + fedu + focc, galo_multi1)
+list("CD" = m1,
+     "CD (covariates)" = m2,
+     "MeanI" = m3,
+     "MeanI (covariates)" = m4,
+     "MultI" = m3,
+     "MultI (covariates)" = m4) %>% 
+  huxreg()
+```
 
 ---
 # Best Practices for Reporting
 
-Always report the percent/proportion of data missing on variables included in analyses
-Indicate the primary missingness mechanism you assume to be present, and provide a brief justification for why you make that assumption
-Report the imputation method (MI or FIML), and if MI was used, report the number of imputed data sets (e.g., 20). Mention algorithm choice If space allows.
-Cite the software/package used to impute data
-In cases of substantial missingness, present (or at least mention) a sensitivity analysis of your primary analyses (that used imputed data) and complete case analyses
+* Always report the percent/proportion of data missing on variables included in analyses
+* Indicate the primary missingness mechanism you assume to be present, and provide a brief justification for why you make that assumption
+* Report the imputation method (MI or FIML), and if MI was used, report the number of imputed data sets (e.g., 20). Mention algorithm choice If space allows.
+* Cite the software/package used to impute data
+* In cases of substantial missingness, present (or at least mention) a sensitivity analysis of your primary analyses (that used imputed data) and complete case analyses
+
+---
+
+[insert example write up re data run]
 
 ---
 class: middle, inverse
