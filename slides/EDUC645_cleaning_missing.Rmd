@@ -33,21 +33,6 @@ extra_css <- list(
 
 write_extra_css(css = extra_css, outfile = "my_custom.css")
 
-# Knitr options
-opts_chunk$set(
-  comment = "#>",
-  fig.align = "center",
-  fig.height = 6.75,
-  fig.width = 10.5,
-  warning = F,
-  message = F
-)
-opts_chunk$set(dev = "svg")
-options(device = function(file, width, height) {
-  svg(tempfile(), width = width, height = height)
-})
-options(knitr.table.format = "html")
-
 ```
 
 # Roadmap
@@ -155,20 +140,37 @@ Recommended R package: mice (https://amices.org/mice/)
 ---
 # Multiple Imputation Process
 
-
 Benefits of repeating the process, merging (averaging) each estimate of the missing data:
-Produces a more accurate (and plausible) values
-More precisely defines uncertainty in the data
-Accounts for uncertainty from original data generation (measurement error) and of the imputation process
+* Produces a more accurate (and plausible) values
+* More precisely defines uncertainty in the data
+* Accounts for uncertainty from original data generation (e.g., measurement error) and of the imputation process
+
+```{r, echo=F}
+m <- DiagrammeR::mermaid("
+                         graph LR
+                        A((d))-->B((m<sub>1</sub>))
+                       A((d))-->C((m<sub>2</sub>))
+                      A((d))-->D((m<sub>3</sub>))
+                         B((m<sub>1</sub>))-->E((a<sub>1</sub>)) 
+                        C((m<sub>2</sub>))-->F((a<sub>2</sub>)) 
+                         D((m<sub>3</sub>))-->G((a<sub>3</sub>))
+                         E((a<sub>1</sub>))-->H((r))
+                         F((a<sub>2</sub>))-->H((r)) 
+                         G((a<sub>3</sub>))-->H((r))
+                       ")
+
+widgetframe::frameableWidget(m)
+```
+
 
 ---
-class: center, inverse
+class: middle, inverse
 
 # Applying missing data treatment
 
 ---
 
-# The dataset: galo.csv** 
+# Dataset: galo.csv** 
 
 The GALO data is originally described by Peschar (1975) and analyzed by Dronkers and Schijf (1994) among other studies. The 1959 cohort consists of 1270 school children in the sixth grade of 37 elementary schools in the city of Groningen (Netherlands).
 
@@ -227,7 +229,8 @@ galo %>% select(advice, medu, fedu, focc) %>%
   md.pattern(rotate.names = TRUE)
 ```
 
-How the values are missing in pairs:
+---
+# How the values are missing in pairs:
 
 ```{r}
 galo %>% select(advice, medu, fedu, focc) %>%
@@ -235,13 +238,22 @@ galo %>% select(advice, medu, fedu, focc) %>%
 ```
 
 ---
+# Create a missingness or margin plot to further inspect missingness
+
+```{r}
+marginplot(galo[, c("advice", "medu")], col = mdc(1:2), cex = 1.2, cex.lab = 1.2, cex.numbers = 1.3, pch = 19)
+# Red dots are missing values on the variable on the alternate axis
+
+```
+
+---
 # Dealing with missing data
 
-To illustrate how different ways to deal with missing data might affect our analysis, let's start with a research question and an OLS regression to answer the question.
-
 RQ: what is the relationship between teacher's recommendation on secondary school choice and student's GALO score?
-
 Note that the regression functions (e.g., lm()) in R typically only report results based on complete observations.
+
+???
+To illustrate how different ways to deal with missing data might affect our analysis, let's start with a research question and an OLS regression to answer the question.
 
 --
 
@@ -258,13 +270,6 @@ list("CD" = m1,
 ---
 # Mean imputation
 
-Simply imputing all missing values using mean values, but there're good practice and bad practice. 
-
- - in our case, due to the fact that students are nested in schools, the best practice is to compute mean values WITHIN EACH SCHOOL rather than across all observations.
- 
- - we should be extra careful when dealing with missingness on predictor and outcome variables. Our outcome variable, advice, has a very small missing value (0.45%), so we should drop all incomplete observations rather than replacing them with variable means
- 
-
 ```{r}
 galo_meani <- galo %>% 
   drop_na(advice) %>% 
@@ -278,11 +283,22 @@ galo_meani <- galo %>%
          focc = ifelse(is.na(focc), foccmean, focc))
 ```
 
-Rerun the analysis:
+???
+Simply imputing all missing values using mean values, but there're good practice and bad practice. 
+
+ - Due to the fact that students are nested in schools, the best practice is to compute mean values WITHIN EACH SCHOOL rather than across all observations.
+ 
+ - we should be extra careful when dealing with missingness on predictor and outcome variables. Our outcome variable, advice, has a very small missing value (0.45%), so we should drop all incomplete observations rather than replacing them with variable means
+ 
+
+---
+# Rerun the analysis:
 
 ```{r}
 m3 <- lm(advice ~ galo, galo_meani)
+
 m4 <- lm(advice ~ galo + female + medu + fedu + focc, galo_meani)
+
 list("CD" = m1,
      "CD (covariates)" = m2,
      "MeanI" = m3,
@@ -293,33 +309,94 @@ list("CD" = m1,
 ---
 # Multiple imputation (MI)
 
-There're several ways to conduct multiple imputation. Note that here we use the package {mice}. MICE stands for Multivariate Imputations via Chained Equations and its idea is, if any variable contains missing values, the package regresses it over the other variables and predicts the missng value. For this strategy to work, it requires the missing at random (MAR) assumption. In other words, if we have some reason to believe that missing on any of the variables we're computing is systematic, this approach is not appropriate.
+There're several ways to conduct multiple imputation - here we use the package {mice}.
 
- - create a new dataset that contains five different versions of imputed datasets that were returned by the mice function
-
-```{r, include = FALSE}
-galo_multi <- mice(galo) 
+```{r}
+galo_multi <- mice(galo, seed = 12345) 
 class(galo_multi) # should be "mids"
+summary(galo_multi)
+densityplot(galo_multi, scales = list(x = list(relation = "free")), layout = c(2, 1))
 ```
 
- - look at the first dataset
+---
+# MI specifications
+
+Specifying imputation algorithms:
+- number of imputed data sets (`m`: 5 is default, >= 50 is better)
+- number of iterations (`maxit`: 5 is common, 10 is better). 
+
+```{r}
+galo_multi <- mice(galo, m = 50, maxit = 10, seed = 12345) 
+summary(galo_multi)
+densityplot(galo_multi, scales = list(x = list(relation = "free")), layout = c(2, 1))
+```
+
+Look at the first dataset
 
 ```{r}
 galo_multi1 <- complete(galo_multi)
 head(galo_multi1)
 ```
 
- - using this dataset to rerun the analysis
+???
+
+MICE stands for Multivariate Imputations via Chained Equations and its idea is, if any variable contains missing values, the package regresses it over the other variables and predicts the missng value. For this strategy to work, it requires the missing at random (MAR) assumption. In other words, if we have some reason to believe that missing on any of the variables we're computing is systematic, this approach is not appropriate.
+ 
+---
+# Examine strip plot 
+
+```{r}
+stripplot(galo_multi, pch = 5, cex = 1.2)
+# Red dots are imputed values, blue are observed values
+```
+
+---
+# Examine kernel density plot
+
+```{r}
+
+densityplot(galo_multi, scales = list(x = list(relation = "free")), layout = c(3, 1))
+# Red lines are imputed value distributions, blue are observed value distributions
+
+```
+
+
+```{r}
+densityplot(galo_multi, scales = list(x = list(relation = "free")), layout = c(3, 1))
+
+```
+
+---
+# using this dataset to rerun the analysis
  
 ```{r}
-m5 <- lm(advice ~ galo, galo_multi1)
-m6 <- lm(advice ~ galo + female + medu + fedu + focc, galo_multi1)
+# Alternate scripting using "tidy" approach
+est1 <- galo %>%
+  mice(m = 50, seed = 12345) %>%
+  with(lm(advice ~ galo)) %>%
+  pool()
+summary(est1)
+```
+
+---
+
+```{r}
+est2 <- galo %>%
+  mice(m = 50, seed = 12345) %>%
+  with(lm(advice ~ galo + female + medu + fedu + focc)) %>%
+  pool()
+summary(est2)
+```
+
+---
+
+```{r}
 list("CD" = m1,
      "CD (covariates)" = m2,
      "MeanI" = m3,
      "MeanI (covariates)" = m4,
-     "MultI" = m3,
-     "MultI (covariates)" = m4) %>% 
+     "MultI" = est1,
+     "MultI (covariates)" = est2) %>% 
   huxreg()
 ```
 

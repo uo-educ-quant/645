@@ -4,7 +4,7 @@
     <title>Cleaning Data &amp; Handling Missingness</title>
     <meta charset="utf-8" />
     <meta name="author" content="TBD" />
-    <script src="EDUC645_cleaning_missing_files/header-attrs-2.14/header-attrs.js"></script>
+    <script src="EDUC645_cleaning_missing_files/header-attrs-2.16/header-attrs.js"></script>
     <link href="EDUC645_cleaning_missing_files/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="EDUC645_cleaning_missing_files/remark-css-0.0.1/uo.css" rel="stylesheet" />
     <link href="EDUC645_cleaning_missing_files/remark-css-0.0.1/ki-fonts.css" rel="stylesheet" />
@@ -43,13 +43,13 @@ class: center, middle, inverse, title-slide
 
 ---
 # Goals for the unit
-- Forms of Missingness
-- Missing Data Handling Techniques
-  - Traditional
-  - Modern (mainly multiple imputation)
-- Best Practices
- - Imputation
- - Reporting
+* Identify Forms of Missingness
+* Learn about Techniques for handling Missing Data Handling
+  - Traditional methods
+  - Modern approaches (mainly multiple imputation)
+* Apply best practices to treating missing data
+ - Conducting Imputation
+ - Reporting on handling missing data
 
 ---
 
@@ -97,6 +97,8 @@ Listwise or case deletion (avoid using): Delete observations with missingness
 Under MCAR, reduces power; under MAR and MNAR, reduces power and induced bias
 Particularly impactful in multivariate analysis: limited but widely dispersed missingness can lead to extensive case deletion
 
+--
+
 ### Single Imputation Methods
 - Mean substitution (never use): Replace missing values on a variable with average of that variable (artificially lowers variance, reduces power, and distorts covariances and intercorrelations among variables)
   The following can perform well, but modern methods perform better
@@ -107,28 +109,29 @@ Particularly impactful in multivariate analysis: limited but widely dispersed mi
 ---
 # Imputation
 
-Uses the underlying structure of the data to replace missing values with new values that could have been reasonably obtained, had they not been missing
-Aims to re-establish the relationship of the data with the population it was sampled from, without creating artificially precise data for the analysis
+- Uses the underlying structure of the data to replace missing values with new values that could have been reasonably obtained, had they not been missing
+
+- Aims to re-establish the relationship of the data with the population it was sampled from, without creating artificially precise data for the analysis
 
 ---
 # Two modern approaches to imputation
 ## Different theoretical orientations to missingness
 
-Full-Information Maximum-Likelihood (FIML) imputation
-Estimate model parameters close to their values as estimated from complete data 
-Model-specific and limited to models that are estimated using maximum-likelihood estimation (e.g., SEM, mixed/multilevel models, mixture models)
-Multiple Imputation (MI) 
-Aims to estimate complete data 
-Not model-specific and therefore more versatile application to data analysis
+* Full-Information Maximum-Likelihood (FIML) imputation
+  - Estimate model parameters close to their values as estimated from complete data 
+  - Model-specific and limited to models that are estimated using maximum-likelihood estimation (e.g., SEM, mixed/multilevel models, mixture models)
+* Multiple Imputation (MI) 
+  - Aims to estimate complete data 
+  - Not model-specific and therefore more versatile application to data analysis
 
 ---
 # MI by Chained Equations (MICE)
 
-- Chained equations: 
+* Chained equations: 
   - Focuses the algorithm on one variable at a time
   - Once variable is imputed, the algorithm moves to the next variable, skipping over complete variables, until all missing data is imputed
   - Process is repeated to create each imputed data set
-- Numerous algorithms exist
+* Numerous algorithms exist
   - Selection on variable being imputed (e.g., continuous, ordered, nominal/categorical)
 
 Recommended R package: mice (https://amices.org/mice/)
@@ -141,37 +144,1627 @@ Recommended R package: mice (https://amices.org/mice/)
 ---
 # Multiple Imputation Process
 
-<div id="htmlwidget-71961e00c0774204bacb" style="width:504px;height:504px;" class="DiagrammeR html-widget"></div>
+Benefits of repeating the process, merging (averaging) each estimate of the missing data:
+* Produces a more accurate (and plausible) values
+* More precisely defines uncertainty in the data
+* Accounts for uncertainty from original data generation (e.g., measurement error) and of the imputation process
+
+<div id="htmlwidget-d054b3dca3f8d896f97f" style="width:504px;height:504px;" class="DiagrammeR html-widget"></div>
 <script>HTMLWidgets.pymChild = new pym.Child();HTMLWidgets.addPostRenderHandler(function(){
                                 setTimeout(function(){HTMLWidgets.pymChild.sendHeight();},100);
                             });</script>
-<script type="application/json" data-for="htmlwidget-71961e00c0774204bacb">{"x":{"diagram":"\n                         graph LR\n                         A((d))-->B((m<sub>1<\/sub>))\n                         A((d))-->C((m<sub>2<\/sub>))\n                         A((d))-->D((m<sub>3<\/sub>))\n                         B((m<sub>1<\/sub>))-->E((a<sub>1<\/sub>)) \n                         C((m<sub>2<\/sub>))-->F((a<sub>2<\/sub>)) \n                         D((m<sub>3<\/sub>))-->G((a<sub>3<\/sub>))\n                         E((a<sub>1<\/sub>))-->H((r))\n                         F((a<sub>2<\/sub>))-->H((r)) \n                         G((a<sub>3<\/sub>))-->H((r))\n                         "},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-d054b3dca3f8d896f97f">{"x":{"diagram":"\n                         graph LR\n                        A((d))-->B((m<sub>1<\/sub>))\n                       A((d))-->C((m<sub>2<\/sub>))\n                      A((d))-->D((m<sub>3<\/sub>))\n                         B((m<sub>1<\/sub>))-->E((a<sub>1<\/sub>)) \n                        C((m<sub>2<\/sub>))-->F((a<sub>2<\/sub>)) \n                         D((m<sub>3<\/sub>))-->G((a<sub>3<\/sub>))\n                         E((a<sub>1<\/sub>))-->H((r))\n                         F((a<sub>2<\/sub>))-->H((r)) \n                         G((a<sub>3<\/sub>))-->H((r))\n                       "},"evals":[],"jsHooks":[]}</script>
 
-Benefits of repeating the process, merging (averaging) each estimate of the missing data:
-Produces a more accurate (and plausible) values
-More precisely defines uncertainty in the data
-Accounts for uncertainty from original data generation (measurement error) and of the imputation process
+
+---
+class: middle, inverse
+
+# Applying missing data treatment
+
+---
+
+# Dataset: galo.csv** 
+
+The GALO data is originally described by Peschar (1975) and analyzed by Dronkers and Schijf (1994) among other studies. The 1959 cohort consists of 1270 school children in the sixth grade of 37 elementary schools in the city of Groningen (Netherlands).
+
+Key variables are detailed below.
+ - schid, school identification number
+ - female, coded one for female students and zero for male
+ - galo, student's achievement score on GALO test
+ - advice, teacher’s advice on the student's secondary school choice; 0="no subsequent school", 1="lowest",..., 6="highest", 999="missing" 
+ - medu, mother's highest education; 1="lowest",..., 9="highest", 999="missing"
+ - fedu, father’s highest education; 1="lowest",..., 9="highest", 999="missing"
+ - focc, father’s occupational status; 1="lowest",..., 6="highest", 9="missing"
+
+
+```r
+galo &lt;- rio::import(here::here("data", "galo.csv"))
+```
 
 ---
 # Missing Data Diagnostics
 ## Inspect missing and imputed data before and after imputation
 
-Before imputation
-Calculate overall amount of missingness in the data (n, percent or proportion)
-Inspect missingness (aka margin) plots, show the observed and missing values across two variables
-Remember: Missingness mechanisms can differ between different variables
-After imputation
-Inspect strip plots, show the observed and imputed data together (as points), to identify erratic patterns among imputed data
-Inspect kernel density plots, show the distributions of observed and imputed data rather than individual values as points (similar purpose to strip plots)
+* Before imputation
+  1. Calculate overall amount of missingness in the data (n, percent or proportion)
+  2. Inspect missingness (aka margin) plots, show the observed and missing values across two variables
+  3. Remember: Missingness mechanisms can differ between different variables
+  
+* After imputation
+  4. Inspect strip plots, show the observed and imputed data together (as points), to identify erratic patterns among imputed data
+  5. Inspect kernel density plots, show the distributions of observed and imputed data rather than individual values as points (similar purpose to strip plots)
+
+---
+# Missing on each variable
+
+
+```r
+#I understand we don't want introduce students to the functional programming world
+# I'm in searching  for an easier way to report missing values that can be more accessible to students
+missing &lt;- function(data){
+  na_percentage &lt;- function(x){
+    y = sum(is.na(x))/length(x)
+    paste(round(100*y, 2), "%", sep="")
+  }
+  apply(data, 2, na_percentage)
+}
+
+missing(galo)
+```
+
+```
+##   schid  female    galo  advice    medu    fedu    focc 
+##    "0%"    "0%"    "0%" "0.45%" "3.91%" "5.71%"  "7.5%"
+```
+
+---
+# Missing data pattern
+
+There is no set threshold for the percentage of missingness but researchers commonly agree that if the dataset is large and the missingness is below 5%, the incomplete observations can be ignored and the analysis can be conducted based on the rest of the data. 
+
+For secondary data like we are using throughout this course, we don't know whether the missing values are missing completely at random (MCAR), missing at random (MAR), or not missing at random (NMAR). 
+
+
+```r
+galo %&gt;% select(advice, medu, fedu, focc) %&gt;% 
+  md.pattern(rotate.names = TRUE)
+```
+
+![](EDUC645_cleaning_missing_files/figure-html/unnamed-chunk-4-1.png)&lt;!-- --&gt;
+
+```
+##      advice medu fedu focc    
+## 1382      1    1    1    1   0
+## 76        1    1    1    0   1
+## 3         1    1    0    1   1
+## 31        1    1    0    0   2
+## 6         1    0    1    1   1
+## 46        1    0    0    1   2
+## 8         1    0    0    0   3
+## 5         0    1    1    1   1
+## 1         0    1    1    0   2
+## 1         0    0    0    0   4
+##           7   61   89  117 274
+```
+
+---
+# How the values are missing in pairs:
+
+
+```r
+galo %&gt;% select(advice, medu, fedu, focc) %&gt;%
+  md.pairs()
+```
+
+```
+## $rr
+##        advice medu fedu focc
+## advice   1552 1492 1464 1437
+## medu     1492 1498 1464 1390
+## fedu     1464 1464 1470 1393
+## focc     1437 1390 1393 1442
+## 
+## $rm
+##        advice medu fedu focc
+## advice      0   60   88  115
+## medu        6    0   34  108
+## fedu        6    6    0   77
+## focc        5   52   49    0
+## 
+## $mr
+##        advice medu fedu focc
+## advice      0    6    6    5
+## medu       60    0    6   52
+## fedu       88   34    0   49
+## focc      115  108   77    0
+## 
+## $mm
+##        advice medu fedu focc
+## advice      7    1    1    2
+## medu        1   61   55    9
+## fedu        1   55   89   40
+## focc        2    9   40  117
+```
+
+---
+# Create a missingness or margin plot to further inspect missingness
+
+
+```r
+marginplot(galo[, c("advice", "medu")], col = mdc(1:2), cex = 1.2, cex.lab = 1.2, cex.numbers = 1.3, pch = 19)
+```
+
+![](EDUC645_cleaning_missing_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
+
+```r
+# Red dots are missing values on the variable on the alternate axis
+```
+
+---
+# Dealing with missing data
+
+RQ: what is the relationship between teacher's recommendation on secondary school choice and student's GALO score?
+Note that the regression functions (e.g., lm()) in R typically only report results based on complete observations.
+
+???
+To illustrate how different ways to deal with missing data might affect our analysis, let's start with a research question and an OLS regression to answer the question.
+
+--
+
+#### Casewise deletion (CD)
+
+
+```r
+m1 &lt;- lm(advice ~ galo, galo)
+m2 &lt;- lm(advice ~ galo + female + medu + fedu + focc, galo)
+list("CD" = m1,
+     "CD (covariates)" = m2) %&gt;% 
+  huxreg()
+```
+
+<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:unnamed-chunk-7">
+<col><col><col><tr>
+<th style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;"></th><th style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">CD</th><th style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">CD (covariates)</th></tr>
+<tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(Intercept)</th><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-5.989 ***</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-5.949 ***</td></tr>
+<tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;"></th><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.157)&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.175)&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">galo</th><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.089 ***</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.086 ***</td></tr>
+<tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;"></th><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.002)&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.002)&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">female</th><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.011&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;"></th><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.042)&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">medu</th><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.043 ***</td></tr>
+<tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;"></th><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.013)&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">fedu</th><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.024&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;"></th><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.013)&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">focc</th><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.018&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;"></th><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.019)&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">N</th><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">1552&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">1382&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">R2</th><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.688&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.703&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">logLik</th><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-1826.446&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-1606.309&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">AIC</th><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">3658.893&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">3226.618&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<th colspan="3" style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;"> *** p &lt; 0.001;  ** p &lt; 0.01;  * p &lt; 0.05.</th></tr>
+</table>
+
+
+---
+# Mean imputation
+
+
+```r
+galo_meani &lt;- galo %&gt;% 
+  drop_na(advice) %&gt;% 
+  group_by(schid) %&gt;% 
+  mutate(medumean = mean(medu, na.rm = TRUE),
+         fedumean = mean(fedu, na.rm = TRUE),
+         foccmean = mean(focc, na.rm = TRUE)) %&gt;% 
+  ungroup() %&gt;% 
+  mutate(medu = ifelse(is.na(medu), medumean, medu),
+         fedu = ifelse(is.na(fedu), fedumean, fedu),
+         focc = ifelse(is.na(focc), foccmean, focc))
+```
+
+???
+Simply imputing all missing values using mean values, but there're good practice and bad practice. 
+
+ - Due to the fact that students are nested in schools, the best practice is to compute mean values WITHIN EACH SCHOOL rather than across all observations.
+ 
+ - we should be extra careful when dealing with missingness on predictor and outcome variables. Our outcome variable, advice, has a very small missing value (0.45%), so we should drop all incomplete observations rather than replacing them with variable means
+ 
+
+---
+# Rerun the analysis:
+
+
+```r
+m3 &lt;- lm(advice ~ galo, galo_meani)
+
+m4 &lt;- lm(advice ~ galo + female + medu + fedu + focc, galo_meani)
+
+list("CD" = m1,
+     "CD (covariates)" = m2,
+     "MeanI" = m3,
+     "MeanI (covariates)" = m4) %&gt;% 
+  huxreg()
+```
+
+<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:unnamed-chunk-9">
+<col><col><col><col><col><tr>
+<th style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;"></th><th style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">CD</th><th style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">CD (covariates)</th><th style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">MeanI</th><th style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">MeanI (covariates)</th></tr>
+<tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(Intercept)</th><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-5.989 ***</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-5.949 ***</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-5.989 ***</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-5.781 ***</td></tr>
+<tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;"></th><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.157)&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.175)&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.157)&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.163)&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">galo</th><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.089 ***</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.086 ***</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.089 ***</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.084 ***</td></tr>
+<tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;"></th><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.002)&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.002)&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.002)&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.002)&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">female</th><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.011&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-0.005&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;"></th><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.042)&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.039)&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">medu</th><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.043 ***</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.044 ***</td></tr>
+<tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;"></th><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.013)&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.012)&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">fedu</th><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.024&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.018&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;"></th><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.013)&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.012)&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">focc</th><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.018&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.024&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;"></th><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.019)&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.018)&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">N</th><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">1552&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">1382&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">1552&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">1552&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">R2</th><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.688&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.703&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.688&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.698&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">logLik</th><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-1826.446&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-1606.309&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-1826.446&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-1801.828&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">AIC</th><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">3658.893&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">3226.618&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">3658.893&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">3617.656&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<th colspan="5" style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;"> *** p &lt; 0.001;  ** p &lt; 0.01;  * p &lt; 0.05.</th></tr>
+</table>
+
+
+---
+# Multiple imputation (MI)
+
+There're several ways to conduct multiple imputation - here we use the package {mice}.
+
+
+```r
+galo_multi &lt;- mice(galo, seed = 12345) 
+```
+
+```
+## 
+##  iter imp variable
+##   1   1  advice  medu  fedu  focc
+##   1   2  advice  medu  fedu  focc
+##   1   3  advice  medu  fedu  focc
+##   1   4  advice  medu  fedu  focc
+##   1   5  advice  medu  fedu  focc
+##   2   1  advice  medu  fedu  focc
+##   2   2  advice  medu  fedu  focc
+##   2   3  advice  medu  fedu  focc
+##   2   4  advice  medu  fedu  focc
+##   2   5  advice  medu  fedu  focc
+##   3   1  advice  medu  fedu  focc
+##   3   2  advice  medu  fedu  focc
+##   3   3  advice  medu  fedu  focc
+##   3   4  advice  medu  fedu  focc
+##   3   5  advice  medu  fedu  focc
+##   4   1  advice  medu  fedu  focc
+##   4   2  advice  medu  fedu  focc
+##   4   3  advice  medu  fedu  focc
+##   4   4  advice  medu  fedu  focc
+##   4   5  advice  medu  fedu  focc
+##   5   1  advice  medu  fedu  focc
+##   5   2  advice  medu  fedu  focc
+##   5   3  advice  medu  fedu  focc
+##   5   4  advice  medu  fedu  focc
+##   5   5  advice  medu  fedu  focc
+```
+
+```r
+class(galo_multi) # should be "mids"
+```
+
+```
+## [1] "mids"
+```
+
+```r
+summary(galo_multi)
+```
+
+```
+## Class: mids
+## Number of multiple imputations:  5 
+## Imputation methods:
+##  schid female   galo advice   medu   fedu   focc 
+##     ""     ""     ""  "pmm"  "pmm"  "pmm"  "pmm" 
+## PredictorMatrix:
+##        schid female galo advice medu fedu focc
+## schid      0      1    1      1    1    1    1
+## female     1      0    1      1    1    1    1
+## galo       1      1    0      1    1    1    1
+## advice     1      1    1      0    1    1    1
+## medu       1      1    1      1    0    1    1
+## fedu       1      1    1      1    1    0    1
+```
+
+```r
+densityplot(galo_multi, scales = list(x = list(relation = "free")), layout = c(2, 1))
+```
+
+![](EDUC645_cleaning_missing_files/figure-html/unnamed-chunk-10-1.png)&lt;!-- --&gt;![](EDUC645_cleaning_missing_files/figure-html/unnamed-chunk-10-2.png)&lt;!-- --&gt;
+
+---
+# MI specifications
+
+Specifying imputation algorithms:
+- number of imputed data sets (`m`: 5 is default, &gt;= 50 is better)
+- number of iterations (`maxit`: 5 is common, 10 is better). 
+
+
+```r
+galo_multi &lt;- mice(galo, m = 50, maxit = 10, seed = 12345) 
+```
+
+```
+## 
+##  iter imp variable
+##   1   1  advice  medu  fedu  focc
+##   1   2  advice  medu  fedu  focc
+##   1   3  advice  medu  fedu  focc
+##   1   4  advice  medu  fedu  focc
+##   1   5  advice  medu  fedu  focc
+##   1   6  advice  medu  fedu  focc
+##   1   7  advice  medu  fedu  focc
+##   1   8  advice  medu  fedu  focc
+##   1   9  advice  medu  fedu  focc
+##   1   10  advice  medu  fedu  focc
+##   1   11  advice  medu  fedu  focc
+##   1   12  advice  medu  fedu  focc
+##   1   13  advice  medu  fedu  focc
+##   1   14  advice  medu  fedu  focc
+##   1   15  advice  medu  fedu  focc
+##   1   16  advice  medu  fedu  focc
+##   1   17  advice  medu  fedu  focc
+##   1   18  advice  medu  fedu  focc
+##   1   19  advice  medu  fedu  focc
+##   1   20  advice  medu  fedu  focc
+##   1   21  advice  medu  fedu  focc
+##   1   22  advice  medu  fedu  focc
+##   1   23  advice  medu  fedu  focc
+##   1   24  advice  medu  fedu  focc
+##   1   25  advice  medu  fedu  focc
+##   1   26  advice  medu  fedu  focc
+##   1   27  advice  medu  fedu  focc
+##   1   28  advice  medu  fedu  focc
+##   1   29  advice  medu  fedu  focc
+##   1   30  advice  medu  fedu  focc
+##   1   31  advice  medu  fedu  focc
+##   1   32  advice  medu  fedu  focc
+##   1   33  advice  medu  fedu  focc
+##   1   34  advice  medu  fedu  focc
+##   1   35  advice  medu  fedu  focc
+##   1   36  advice  medu  fedu  focc
+##   1   37  advice  medu  fedu  focc
+##   1   38  advice  medu  fedu  focc
+##   1   39  advice  medu  fedu  focc
+##   1   40  advice  medu  fedu  focc
+##   1   41  advice  medu  fedu  focc
+##   1   42  advice  medu  fedu  focc
+##   1   43  advice  medu  fedu  focc
+##   1   44  advice  medu  fedu  focc
+##   1   45  advice  medu  fedu  focc
+##   1   46  advice  medu  fedu  focc
+##   1   47  advice  medu  fedu  focc
+##   1   48  advice  medu  fedu  focc
+##   1   49  advice  medu  fedu  focc
+##   1   50  advice  medu  fedu  focc
+##   2   1  advice  medu  fedu  focc
+##   2   2  advice  medu  fedu  focc
+##   2   3  advice  medu  fedu  focc
+##   2   4  advice  medu  fedu  focc
+##   2   5  advice  medu  fedu  focc
+##   2   6  advice  medu  fedu  focc
+##   2   7  advice  medu  fedu  focc
+##   2   8  advice  medu  fedu  focc
+##   2   9  advice  medu  fedu  focc
+##   2   10  advice  medu  fedu  focc
+##   2   11  advice  medu  fedu  focc
+##   2   12  advice  medu  fedu  focc
+##   2   13  advice  medu  fedu  focc
+##   2   14  advice  medu  fedu  focc
+##   2   15  advice  medu  fedu  focc
+##   2   16  advice  medu  fedu  focc
+##   2   17  advice  medu  fedu  focc
+##   2   18  advice  medu  fedu  focc
+##   2   19  advice  medu  fedu  focc
+##   2   20  advice  medu  fedu  focc
+##   2   21  advice  medu  fedu  focc
+##   2   22  advice  medu  fedu  focc
+##   2   23  advice  medu  fedu  focc
+##   2   24  advice  medu  fedu  focc
+##   2   25  advice  medu  fedu  focc
+##   2   26  advice  medu  fedu  focc
+##   2   27  advice  medu  fedu  focc
+##   2   28  advice  medu  fedu  focc
+##   2   29  advice  medu  fedu  focc
+##   2   30  advice  medu  fedu  focc
+##   2   31  advice  medu  fedu  focc
+##   2   32  advice  medu  fedu  focc
+##   2   33  advice  medu  fedu  focc
+##   2   34  advice  medu  fedu  focc
+##   2   35  advice  medu  fedu  focc
+##   2   36  advice  medu  fedu  focc
+##   2   37  advice  medu  fedu  focc
+##   2   38  advice  medu  fedu  focc
+##   2   39  advice  medu  fedu  focc
+##   2   40  advice  medu  fedu  focc
+##   2   41  advice  medu  fedu  focc
+##   2   42  advice  medu  fedu  focc
+##   2   43  advice  medu  fedu  focc
+##   2   44  advice  medu  fedu  focc
+##   2   45  advice  medu  fedu  focc
+##   2   46  advice  medu  fedu  focc
+##   2   47  advice  medu  fedu  focc
+##   2   48  advice  medu  fedu  focc
+##   2   49  advice  medu  fedu  focc
+##   2   50  advice  medu  fedu  focc
+##   3   1  advice  medu  fedu  focc
+##   3   2  advice  medu  fedu  focc
+##   3   3  advice  medu  fedu  focc
+##   3   4  advice  medu  fedu  focc
+##   3   5  advice  medu  fedu  focc
+##   3   6  advice  medu  fedu  focc
+##   3   7  advice  medu  fedu  focc
+##   3   8  advice  medu  fedu  focc
+##   3   9  advice  medu  fedu  focc
+##   3   10  advice  medu  fedu  focc
+##   3   11  advice  medu  fedu  focc
+##   3   12  advice  medu  fedu  focc
+##   3   13  advice  medu  fedu  focc
+##   3   14  advice  medu  fedu  focc
+##   3   15  advice  medu  fedu  focc
+##   3   16  advice  medu  fedu  focc
+##   3   17  advice  medu  fedu  focc
+##   3   18  advice  medu  fedu  focc
+##   3   19  advice  medu  fedu  focc
+##   3   20  advice  medu  fedu  focc
+##   3   21  advice  medu  fedu  focc
+##   3   22  advice  medu  fedu  focc
+##   3   23  advice  medu  fedu  focc
+##   3   24  advice  medu  fedu  focc
+##   3   25  advice  medu  fedu  focc
+##   3   26  advice  medu  fedu  focc
+##   3   27  advice  medu  fedu  focc
+##   3   28  advice  medu  fedu  focc
+##   3   29  advice  medu  fedu  focc
+##   3   30  advice  medu  fedu  focc
+##   3   31  advice  medu  fedu  focc
+##   3   32  advice  medu  fedu  focc
+##   3   33  advice  medu  fedu  focc
+##   3   34  advice  medu  fedu  focc
+##   3   35  advice  medu  fedu  focc
+##   3   36  advice  medu  fedu  focc
+##   3   37  advice  medu  fedu  focc
+##   3   38  advice  medu  fedu  focc
+##   3   39  advice  medu  fedu  focc
+##   3   40  advice  medu  fedu  focc
+##   3   41  advice  medu  fedu  focc
+##   3   42  advice  medu  fedu  focc
+##   3   43  advice  medu  fedu  focc
+##   3   44  advice  medu  fedu  focc
+##   3   45  advice  medu  fedu  focc
+##   3   46  advice  medu  fedu  focc
+##   3   47  advice  medu  fedu  focc
+##   3   48  advice  medu  fedu  focc
+##   3   49  advice  medu  fedu  focc
+##   3   50  advice  medu  fedu  focc
+##   4   1  advice  medu  fedu  focc
+##   4   2  advice  medu  fedu  focc
+##   4   3  advice  medu  fedu  focc
+##   4   4  advice  medu  fedu  focc
+##   4   5  advice  medu  fedu  focc
+##   4   6  advice  medu  fedu  focc
+##   4   7  advice  medu  fedu  focc
+##   4   8  advice  medu  fedu  focc
+##   4   9  advice  medu  fedu  focc
+##   4   10  advice  medu  fedu  focc
+##   4   11  advice  medu  fedu  focc
+##   4   12  advice  medu  fedu  focc
+##   4   13  advice  medu  fedu  focc
+##   4   14  advice  medu  fedu  focc
+##   4   15  advice  medu  fedu  focc
+##   4   16  advice  medu  fedu  focc
+##   4   17  advice  medu  fedu  focc
+##   4   18  advice  medu  fedu  focc
+##   4   19  advice  medu  fedu  focc
+##   4   20  advice  medu  fedu  focc
+##   4   21  advice  medu  fedu  focc
+##   4   22  advice  medu  fedu  focc
+##   4   23  advice  medu  fedu  focc
+##   4   24  advice  medu  fedu  focc
+##   4   25  advice  medu  fedu  focc
+##   4   26  advice  medu  fedu  focc
+##   4   27  advice  medu  fedu  focc
+##   4   28  advice  medu  fedu  focc
+##   4   29  advice  medu  fedu  focc
+##   4   30  advice  medu  fedu  focc
+##   4   31  advice  medu  fedu  focc
+##   4   32  advice  medu  fedu  focc
+##   4   33  advice  medu  fedu  focc
+##   4   34  advice  medu  fedu  focc
+##   4   35  advice  medu  fedu  focc
+##   4   36  advice  medu  fedu  focc
+##   4   37  advice  medu  fedu  focc
+##   4   38  advice  medu  fedu  focc
+##   4   39  advice  medu  fedu  focc
+##   4   40  advice  medu  fedu  focc
+##   4   41  advice  medu  fedu  focc
+##   4   42  advice  medu  fedu  focc
+##   4   43  advice  medu  fedu  focc
+##   4   44  advice  medu  fedu  focc
+##   4   45  advice  medu  fedu  focc
+##   4   46  advice  medu  fedu  focc
+##   4   47  advice  medu  fedu  focc
+##   4   48  advice  medu  fedu  focc
+##   4   49  advice  medu  fedu  focc
+##   4   50  advice  medu  fedu  focc
+##   5   1  advice  medu  fedu  focc
+##   5   2  advice  medu  fedu  focc
+##   5   3  advice  medu  fedu  focc
+##   5   4  advice  medu  fedu  focc
+##   5   5  advice  medu  fedu  focc
+##   5   6  advice  medu  fedu  focc
+##   5   7  advice  medu  fedu  focc
+##   5   8  advice  medu  fedu  focc
+##   5   9  advice  medu  fedu  focc
+##   5   10  advice  medu  fedu  focc
+##   5   11  advice  medu  fedu  focc
+##   5   12  advice  medu  fedu  focc
+##   5   13  advice  medu  fedu  focc
+##   5   14  advice  medu  fedu  focc
+##   5   15  advice  medu  fedu  focc
+##   5   16  advice  medu  fedu  focc
+##   5   17  advice  medu  fedu  focc
+##   5   18  advice  medu  fedu  focc
+##   5   19  advice  medu  fedu  focc
+##   5   20  advice  medu  fedu  focc
+##   5   21  advice  medu  fedu  focc
+##   5   22  advice  medu  fedu  focc
+##   5   23  advice  medu  fedu  focc
+##   5   24  advice  medu  fedu  focc
+##   5   25  advice  medu  fedu  focc
+##   5   26  advice  medu  fedu  focc
+##   5   27  advice  medu  fedu  focc
+##   5   28  advice  medu  fedu  focc
+##   5   29  advice  medu  fedu  focc
+##   5   30  advice  medu  fedu  focc
+##   5   31  advice  medu  fedu  focc
+##   5   32  advice  medu  fedu  focc
+##   5   33  advice  medu  fedu  focc
+##   5   34  advice  medu  fedu  focc
+##   5   35  advice  medu  fedu  focc
+##   5   36  advice  medu  fedu  focc
+##   5   37  advice  medu  fedu  focc
+##   5   38  advice  medu  fedu  focc
+##   5   39  advice  medu  fedu  focc
+##   5   40  advice  medu  fedu  focc
+##   5   41  advice  medu  fedu  focc
+##   5   42  advice  medu  fedu  focc
+##   5   43  advice  medu  fedu  focc
+##   5   44  advice  medu  fedu  focc
+##   5   45  advice  medu  fedu  focc
+##   5   46  advice  medu  fedu  focc
+##   5   47  advice  medu  fedu  focc
+##   5   48  advice  medu  fedu  focc
+##   5   49  advice  medu  fedu  focc
+##   5   50  advice  medu  fedu  focc
+##   6   1  advice  medu  fedu  focc
+##   6   2  advice  medu  fedu  focc
+##   6   3  advice  medu  fedu  focc
+##   6   4  advice  medu  fedu  focc
+##   6   5  advice  medu  fedu  focc
+##   6   6  advice  medu  fedu  focc
+##   6   7  advice  medu  fedu  focc
+##   6   8  advice  medu  fedu  focc
+##   6   9  advice  medu  fedu  focc
+##   6   10  advice  medu  fedu  focc
+##   6   11  advice  medu  fedu  focc
+##   6   12  advice  medu  fedu  focc
+##   6   13  advice  medu  fedu  focc
+##   6   14  advice  medu  fedu  focc
+##   6   15  advice  medu  fedu  focc
+##   6   16  advice  medu  fedu  focc
+##   6   17  advice  medu  fedu  focc
+##   6   18  advice  medu  fedu  focc
+##   6   19  advice  medu  fedu  focc
+##   6   20  advice  medu  fedu  focc
+##   6   21  advice  medu  fedu  focc
+##   6   22  advice  medu  fedu  focc
+##   6   23  advice  medu  fedu  focc
+##   6   24  advice  medu  fedu  focc
+##   6   25  advice  medu  fedu  focc
+##   6   26  advice  medu  fedu  focc
+##   6   27  advice  medu  fedu  focc
+##   6   28  advice  medu  fedu  focc
+##   6   29  advice  medu  fedu  focc
+##   6   30  advice  medu  fedu  focc
+##   6   31  advice  medu  fedu  focc
+##   6   32  advice  medu  fedu  focc
+##   6   33  advice  medu  fedu  focc
+##   6   34  advice  medu  fedu  focc
+##   6   35  advice  medu  fedu  focc
+##   6   36  advice  medu  fedu  focc
+##   6   37  advice  medu  fedu  focc
+##   6   38  advice  medu  fedu  focc
+##   6   39  advice  medu  fedu  focc
+##   6   40  advice  medu  fedu  focc
+##   6   41  advice  medu  fedu  focc
+##   6   42  advice  medu  fedu  focc
+##   6   43  advice  medu  fedu  focc
+##   6   44  advice  medu  fedu  focc
+##   6   45  advice  medu  fedu  focc
+##   6   46  advice  medu  fedu  focc
+##   6   47  advice  medu  fedu  focc
+##   6   48  advice  medu  fedu  focc
+##   6   49  advice  medu  fedu  focc
+##   6   50  advice  medu  fedu  focc
+##   7   1  advice  medu  fedu  focc
+##   7   2  advice  medu  fedu  focc
+##   7   3  advice  medu  fedu  focc
+##   7   4  advice  medu  fedu  focc
+##   7   5  advice  medu  fedu  focc
+##   7   6  advice  medu  fedu  focc
+##   7   7  advice  medu  fedu  focc
+##   7   8  advice  medu  fedu  focc
+##   7   9  advice  medu  fedu  focc
+##   7   10  advice  medu  fedu  focc
+##   7   11  advice  medu  fedu  focc
+##   7   12  advice  medu  fedu  focc
+##   7   13  advice  medu  fedu  focc
+##   7   14  advice  medu  fedu  focc
+##   7   15  advice  medu  fedu  focc
+##   7   16  advice  medu  fedu  focc
+##   7   17  advice  medu  fedu  focc
+##   7   18  advice  medu  fedu  focc
+##   7   19  advice  medu  fedu  focc
+##   7   20  advice  medu  fedu  focc
+##   7   21  advice  medu  fedu  focc
+##   7   22  advice  medu  fedu  focc
+##   7   23  advice  medu  fedu  focc
+##   7   24  advice  medu  fedu  focc
+##   7   25  advice  medu  fedu  focc
+##   7   26  advice  medu  fedu  focc
+##   7   27  advice  medu  fedu  focc
+##   7   28  advice  medu  fedu  focc
+##   7   29  advice  medu  fedu  focc
+##   7   30  advice  medu  fedu  focc
+##   7   31  advice  medu  fedu  focc
+##   7   32  advice  medu  fedu  focc
+##   7   33  advice  medu  fedu  focc
+##   7   34  advice  medu  fedu  focc
+##   7   35  advice  medu  fedu  focc
+##   7   36  advice  medu  fedu  focc
+##   7   37  advice  medu  fedu  focc
+##   7   38  advice  medu  fedu  focc
+##   7   39  advice  medu  fedu  focc
+##   7   40  advice  medu  fedu  focc
+##   7   41  advice  medu  fedu  focc
+##   7   42  advice  medu  fedu  focc
+##   7   43  advice  medu  fedu  focc
+##   7   44  advice  medu  fedu  focc
+##   7   45  advice  medu  fedu  focc
+##   7   46  advice  medu  fedu  focc
+##   7   47  advice  medu  fedu  focc
+##   7   48  advice  medu  fedu  focc
+##   7   49  advice  medu  fedu  focc
+##   7   50  advice  medu  fedu  focc
+##   8   1  advice  medu  fedu  focc
+##   8   2  advice  medu  fedu  focc
+##   8   3  advice  medu  fedu  focc
+##   8   4  advice  medu  fedu  focc
+##   8   5  advice  medu  fedu  focc
+##   8   6  advice  medu  fedu  focc
+##   8   7  advice  medu  fedu  focc
+##   8   8  advice  medu  fedu  focc
+##   8   9  advice  medu  fedu  focc
+##   8   10  advice  medu  fedu  focc
+##   8   11  advice  medu  fedu  focc
+##   8   12  advice  medu  fedu  focc
+##   8   13  advice  medu  fedu  focc
+##   8   14  advice  medu  fedu  focc
+##   8   15  advice  medu  fedu  focc
+##   8   16  advice  medu  fedu  focc
+##   8   17  advice  medu  fedu  focc
+##   8   18  advice  medu  fedu  focc
+##   8   19  advice  medu  fedu  focc
+##   8   20  advice  medu  fedu  focc
+##   8   21  advice  medu  fedu  focc
+##   8   22  advice  medu  fedu  focc
+##   8   23  advice  medu  fedu  focc
+##   8   24  advice  medu  fedu  focc
+##   8   25  advice  medu  fedu  focc
+##   8   26  advice  medu  fedu  focc
+##   8   27  advice  medu  fedu  focc
+##   8   28  advice  medu  fedu  focc
+##   8   29  advice  medu  fedu  focc
+##   8   30  advice  medu  fedu  focc
+##   8   31  advice  medu  fedu  focc
+##   8   32  advice  medu  fedu  focc
+##   8   33  advice  medu  fedu  focc
+##   8   34  advice  medu  fedu  focc
+##   8   35  advice  medu  fedu  focc
+##   8   36  advice  medu  fedu  focc
+##   8   37  advice  medu  fedu  focc
+##   8   38  advice  medu  fedu  focc
+##   8   39  advice  medu  fedu  focc
+##   8   40  advice  medu  fedu  focc
+##   8   41  advice  medu  fedu  focc
+##   8   42  advice  medu  fedu  focc
+##   8   43  advice  medu  fedu  focc
+##   8   44  advice  medu  fedu  focc
+##   8   45  advice  medu  fedu  focc
+##   8   46  advice  medu  fedu  focc
+##   8   47  advice  medu  fedu  focc
+##   8   48  advice  medu  fedu  focc
+##   8   49  advice  medu  fedu  focc
+##   8   50  advice  medu  fedu  focc
+##   9   1  advice  medu  fedu  focc
+##   9   2  advice  medu  fedu  focc
+##   9   3  advice  medu  fedu  focc
+##   9   4  advice  medu  fedu  focc
+##   9   5  advice  medu  fedu  focc
+##   9   6  advice  medu  fedu  focc
+##   9   7  advice  medu  fedu  focc
+##   9   8  advice  medu  fedu  focc
+##   9   9  advice  medu  fedu  focc
+##   9   10  advice  medu  fedu  focc
+##   9   11  advice  medu  fedu  focc
+##   9   12  advice  medu  fedu  focc
+##   9   13  advice  medu  fedu  focc
+##   9   14  advice  medu  fedu  focc
+##   9   15  advice  medu  fedu  focc
+##   9   16  advice  medu  fedu  focc
+##   9   17  advice  medu  fedu  focc
+##   9   18  advice  medu  fedu  focc
+##   9   19  advice  medu  fedu  focc
+##   9   20  advice  medu  fedu  focc
+##   9   21  advice  medu  fedu  focc
+##   9   22  advice  medu  fedu  focc
+##   9   23  advice  medu  fedu  focc
+##   9   24  advice  medu  fedu  focc
+##   9   25  advice  medu  fedu  focc
+##   9   26  advice  medu  fedu  focc
+##   9   27  advice  medu  fedu  focc
+##   9   28  advice  medu  fedu  focc
+##   9   29  advice  medu  fedu  focc
+##   9   30  advice  medu  fedu  focc
+##   9   31  advice  medu  fedu  focc
+##   9   32  advice  medu  fedu  focc
+##   9   33  advice  medu  fedu  focc
+##   9   34  advice  medu  fedu  focc
+##   9   35  advice  medu  fedu  focc
+##   9   36  advice  medu  fedu  focc
+##   9   37  advice  medu  fedu  focc
+##   9   38  advice  medu  fedu  focc
+##   9   39  advice  medu  fedu  focc
+##   9   40  advice  medu  fedu  focc
+##   9   41  advice  medu  fedu  focc
+##   9   42  advice  medu  fedu  focc
+##   9   43  advice  medu  fedu  focc
+##   9   44  advice  medu  fedu  focc
+##   9   45  advice  medu  fedu  focc
+##   9   46  advice  medu  fedu  focc
+##   9   47  advice  medu  fedu  focc
+##   9   48  advice  medu  fedu  focc
+##   9   49  advice  medu  fedu  focc
+##   9   50  advice  medu  fedu  focc
+##   10   1  advice  medu  fedu  focc
+##   10   2  advice  medu  fedu  focc
+##   10   3  advice  medu  fedu  focc
+##   10   4  advice  medu  fedu  focc
+##   10   5  advice  medu  fedu  focc
+##   10   6  advice  medu  fedu  focc
+##   10   7  advice  medu  fedu  focc
+##   10   8  advice  medu  fedu  focc
+##   10   9  advice  medu  fedu  focc
+##   10   10  advice  medu  fedu  focc
+##   10   11  advice  medu  fedu  focc
+##   10   12  advice  medu  fedu  focc
+##   10   13  advice  medu  fedu  focc
+##   10   14  advice  medu  fedu  focc
+##   10   15  advice  medu  fedu  focc
+##   10   16  advice  medu  fedu  focc
+##   10   17  advice  medu  fedu  focc
+##   10   18  advice  medu  fedu  focc
+##   10   19  advice  medu  fedu  focc
+##   10   20  advice  medu  fedu  focc
+##   10   21  advice  medu  fedu  focc
+##   10   22  advice  medu  fedu  focc
+##   10   23  advice  medu  fedu  focc
+##   10   24  advice  medu  fedu  focc
+##   10   25  advice  medu  fedu  focc
+##   10   26  advice  medu  fedu  focc
+##   10   27  advice  medu  fedu  focc
+##   10   28  advice  medu  fedu  focc
+##   10   29  advice  medu  fedu  focc
+##   10   30  advice  medu  fedu  focc
+##   10   31  advice  medu  fedu  focc
+##   10   32  advice  medu  fedu  focc
+##   10   33  advice  medu  fedu  focc
+##   10   34  advice  medu  fedu  focc
+##   10   35  advice  medu  fedu  focc
+##   10   36  advice  medu  fedu  focc
+##   10   37  advice  medu  fedu  focc
+##   10   38  advice  medu  fedu  focc
+##   10   39  advice  medu  fedu  focc
+##   10   40  advice  medu  fedu  focc
+##   10   41  advice  medu  fedu  focc
+##   10   42  advice  medu  fedu  focc
+##   10   43  advice  medu  fedu  focc
+##   10   44  advice  medu  fedu  focc
+##   10   45  advice  medu  fedu  focc
+##   10   46  advice  medu  fedu  focc
+##   10   47  advice  medu  fedu  focc
+##   10   48  advice  medu  fedu  focc
+##   10   49  advice  medu  fedu  focc
+##   10   50  advice  medu  fedu  focc
+```
+
+```r
+summary(galo_multi)
+```
+
+```
+## Class: mids
+## Number of multiple imputations:  50 
+## Imputation methods:
+##  schid female   galo advice   medu   fedu   focc 
+##     ""     ""     ""  "pmm"  "pmm"  "pmm"  "pmm" 
+## PredictorMatrix:
+##        schid female galo advice medu fedu focc
+## schid      0      1    1      1    1    1    1
+## female     1      0    1      1    1    1    1
+## galo       1      1    0      1    1    1    1
+## advice     1      1    1      0    1    1    1
+## medu       1      1    1      1    0    1    1
+## fedu       1      1    1      1    1    0    1
+```
+
+```r
+densityplot(galo_multi, scales = list(x = list(relation = "free")), layout = c(2, 1))
+```
+
+![](EDUC645_cleaning_missing_files/figure-html/unnamed-chunk-11-1.png)&lt;!-- --&gt;![](EDUC645_cleaning_missing_files/figure-html/unnamed-chunk-11-2.png)&lt;!-- --&gt;
+
+Look at the first dataset
+
+
+```r
+galo_multi1 &lt;- complete(galo_multi)
+head(galo_multi1)
+```
+
+<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:unnamed-chunk-12">
+<col><col><col><col><col><col><col><tr>
+<th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">schid</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">female</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">galo</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">advice</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">medu</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">fedu</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">focc</th></tr>
+<tr>
+<td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">1</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">0</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">85</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">2</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">1</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">1</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">1</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">1</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">78</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">1</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">1</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">1</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">2</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">1</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">1</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">104</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">4</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">3</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">4</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">4</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">1</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">93</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">2</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">1</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">1</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">2</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">1</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">1</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">114</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">4</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">1</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">2</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">5</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">1</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">1</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">79</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">2</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">1</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">1</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">3</td></tr>
+</table>
+
+
+???
+
+MICE stands for Multivariate Imputations via Chained Equations and its idea is, if any variable contains missing values, the package regresses it over the other variables and predicts the missng value. For this strategy to work, it requires the missing at random (MAR) assumption. In other words, if we have some reason to believe that missing on any of the variables we're computing is systematic, this approach is not appropriate.
+ 
+---
+# Examine strip plot 
+
+
+```r
+stripplot(galo_multi, pch = 5, cex = 1.2)
+```
+
+![](EDUC645_cleaning_missing_files/figure-html/unnamed-chunk-13-1.png)&lt;!-- --&gt;
+
+```r
+# Red dots are imputed values, blue are observed values
+```
+
+---
+# Examine kernel density plot
+
+
+```r
+densityplot(galo_multi, scales = list(x = list(relation = "free")), layout = c(3, 1))
+```
+
+![](EDUC645_cleaning_missing_files/figure-html/unnamed-chunk-14-1.png)&lt;!-- --&gt;![](EDUC645_cleaning_missing_files/figure-html/unnamed-chunk-14-2.png)&lt;!-- --&gt;
+
+```r
+# Red lines are imputed value distributions, blue are observed value distributions
+```
+
+
+
+```r
+densityplot(galo_multi, scales = list(x = list(relation = "free")), layout = c(3, 1))
+```
+
+![](EDUC645_cleaning_missing_files/figure-html/unnamed-chunk-15-1.png)&lt;!-- --&gt;![](EDUC645_cleaning_missing_files/figure-html/unnamed-chunk-15-2.png)&lt;!-- --&gt;
+
+---
+# using this dataset to rerun the analysis
+ 
+
+```r
+# Alternate scripting using "tidy" approach
+est1 &lt;- galo %&gt;%
+  mice(m = 50, seed = 12345) %&gt;%
+  with(lm(advice ~ galo)) %&gt;%
+  pool()
+```
+
+```
+## 
+##  iter imp variable
+##   1   1  advice  medu  fedu  focc
+##   1   2  advice  medu  fedu  focc
+##   1   3  advice  medu  fedu  focc
+##   1   4  advice  medu  fedu  focc
+##   1   5  advice  medu  fedu  focc
+##   1   6  advice  medu  fedu  focc
+##   1   7  advice  medu  fedu  focc
+##   1   8  advice  medu  fedu  focc
+##   1   9  advice  medu  fedu  focc
+##   1   10  advice  medu  fedu  focc
+##   1   11  advice  medu  fedu  focc
+##   1   12  advice  medu  fedu  focc
+##   1   13  advice  medu  fedu  focc
+##   1   14  advice  medu  fedu  focc
+##   1   15  advice  medu  fedu  focc
+##   1   16  advice  medu  fedu  focc
+##   1   17  advice  medu  fedu  focc
+##   1   18  advice  medu  fedu  focc
+##   1   19  advice  medu  fedu  focc
+##   1   20  advice  medu  fedu  focc
+##   1   21  advice  medu  fedu  focc
+##   1   22  advice  medu  fedu  focc
+##   1   23  advice  medu  fedu  focc
+##   1   24  advice  medu  fedu  focc
+##   1   25  advice  medu  fedu  focc
+##   1   26  advice  medu  fedu  focc
+##   1   27  advice  medu  fedu  focc
+##   1   28  advice  medu  fedu  focc
+##   1   29  advice  medu  fedu  focc
+##   1   30  advice  medu  fedu  focc
+##   1   31  advice  medu  fedu  focc
+##   1   32  advice  medu  fedu  focc
+##   1   33  advice  medu  fedu  focc
+##   1   34  advice  medu  fedu  focc
+##   1   35  advice  medu  fedu  focc
+##   1   36  advice  medu  fedu  focc
+##   1   37  advice  medu  fedu  focc
+##   1   38  advice  medu  fedu  focc
+##   1   39  advice  medu  fedu  focc
+##   1   40  advice  medu  fedu  focc
+##   1   41  advice  medu  fedu  focc
+##   1   42  advice  medu  fedu  focc
+##   1   43  advice  medu  fedu  focc
+##   1   44  advice  medu  fedu  focc
+##   1   45  advice  medu  fedu  focc
+##   1   46  advice  medu  fedu  focc
+##   1   47  advice  medu  fedu  focc
+##   1   48  advice  medu  fedu  focc
+##   1   49  advice  medu  fedu  focc
+##   1   50  advice  medu  fedu  focc
+##   2   1  advice  medu  fedu  focc
+##   2   2  advice  medu  fedu  focc
+##   2   3  advice  medu  fedu  focc
+##   2   4  advice  medu  fedu  focc
+##   2   5  advice  medu  fedu  focc
+##   2   6  advice  medu  fedu  focc
+##   2   7  advice  medu  fedu  focc
+##   2   8  advice  medu  fedu  focc
+##   2   9  advice  medu  fedu  focc
+##   2   10  advice  medu  fedu  focc
+##   2   11  advice  medu  fedu  focc
+##   2   12  advice  medu  fedu  focc
+##   2   13  advice  medu  fedu  focc
+##   2   14  advice  medu  fedu  focc
+##   2   15  advice  medu  fedu  focc
+##   2   16  advice  medu  fedu  focc
+##   2   17  advice  medu  fedu  focc
+##   2   18  advice  medu  fedu  focc
+##   2   19  advice  medu  fedu  focc
+##   2   20  advice  medu  fedu  focc
+##   2   21  advice  medu  fedu  focc
+##   2   22  advice  medu  fedu  focc
+##   2   23  advice  medu  fedu  focc
+##   2   24  advice  medu  fedu  focc
+##   2   25  advice  medu  fedu  focc
+##   2   26  advice  medu  fedu  focc
+##   2   27  advice  medu  fedu  focc
+##   2   28  advice  medu  fedu  focc
+##   2   29  advice  medu  fedu  focc
+##   2   30  advice  medu  fedu  focc
+##   2   31  advice  medu  fedu  focc
+##   2   32  advice  medu  fedu  focc
+##   2   33  advice  medu  fedu  focc
+##   2   34  advice  medu  fedu  focc
+##   2   35  advice  medu  fedu  focc
+##   2   36  advice  medu  fedu  focc
+##   2   37  advice  medu  fedu  focc
+##   2   38  advice  medu  fedu  focc
+##   2   39  advice  medu  fedu  focc
+##   2   40  advice  medu  fedu  focc
+##   2   41  advice  medu  fedu  focc
+##   2   42  advice  medu  fedu  focc
+##   2   43  advice  medu  fedu  focc
+##   2   44  advice  medu  fedu  focc
+##   2   45  advice  medu  fedu  focc
+##   2   46  advice  medu  fedu  focc
+##   2   47  advice  medu  fedu  focc
+##   2   48  advice  medu  fedu  focc
+##   2   49  advice  medu  fedu  focc
+##   2   50  advice  medu  fedu  focc
+##   3   1  advice  medu  fedu  focc
+##   3   2  advice  medu  fedu  focc
+##   3   3  advice  medu  fedu  focc
+##   3   4  advice  medu  fedu  focc
+##   3   5  advice  medu  fedu  focc
+##   3   6  advice  medu  fedu  focc
+##   3   7  advice  medu  fedu  focc
+##   3   8  advice  medu  fedu  focc
+##   3   9  advice  medu  fedu  focc
+##   3   10  advice  medu  fedu  focc
+##   3   11  advice  medu  fedu  focc
+##   3   12  advice  medu  fedu  focc
+##   3   13  advice  medu  fedu  focc
+##   3   14  advice  medu  fedu  focc
+##   3   15  advice  medu  fedu  focc
+##   3   16  advice  medu  fedu  focc
+##   3   17  advice  medu  fedu  focc
+##   3   18  advice  medu  fedu  focc
+##   3   19  advice  medu  fedu  focc
+##   3   20  advice  medu  fedu  focc
+##   3   21  advice  medu  fedu  focc
+##   3   22  advice  medu  fedu  focc
+##   3   23  advice  medu  fedu  focc
+##   3   24  advice  medu  fedu  focc
+##   3   25  advice  medu  fedu  focc
+##   3   26  advice  medu  fedu  focc
+##   3   27  advice  medu  fedu  focc
+##   3   28  advice  medu  fedu  focc
+##   3   29  advice  medu  fedu  focc
+##   3   30  advice  medu  fedu  focc
+##   3   31  advice  medu  fedu  focc
+##   3   32  advice  medu  fedu  focc
+##   3   33  advice  medu  fedu  focc
+##   3   34  advice  medu  fedu  focc
+##   3   35  advice  medu  fedu  focc
+##   3   36  advice  medu  fedu  focc
+##   3   37  advice  medu  fedu  focc
+##   3   38  advice  medu  fedu  focc
+##   3   39  advice  medu  fedu  focc
+##   3   40  advice  medu  fedu  focc
+##   3   41  advice  medu  fedu  focc
+##   3   42  advice  medu  fedu  focc
+##   3   43  advice  medu  fedu  focc
+##   3   44  advice  medu  fedu  focc
+##   3   45  advice  medu  fedu  focc
+##   3   46  advice  medu  fedu  focc
+##   3   47  advice  medu  fedu  focc
+##   3   48  advice  medu  fedu  focc
+##   3   49  advice  medu  fedu  focc
+##   3   50  advice  medu  fedu  focc
+##   4   1  advice  medu  fedu  focc
+##   4   2  advice  medu  fedu  focc
+##   4   3  advice  medu  fedu  focc
+##   4   4  advice  medu  fedu  focc
+##   4   5  advice  medu  fedu  focc
+##   4   6  advice  medu  fedu  focc
+##   4   7  advice  medu  fedu  focc
+##   4   8  advice  medu  fedu  focc
+##   4   9  advice  medu  fedu  focc
+##   4   10  advice  medu  fedu  focc
+##   4   11  advice  medu  fedu  focc
+##   4   12  advice  medu  fedu  focc
+##   4   13  advice  medu  fedu  focc
+##   4   14  advice  medu  fedu  focc
+##   4   15  advice  medu  fedu  focc
+##   4   16  advice  medu  fedu  focc
+##   4   17  advice  medu  fedu  focc
+##   4   18  advice  medu  fedu  focc
+##   4   19  advice  medu  fedu  focc
+##   4   20  advice  medu  fedu  focc
+##   4   21  advice  medu  fedu  focc
+##   4   22  advice  medu  fedu  focc
+##   4   23  advice  medu  fedu  focc
+##   4   24  advice  medu  fedu  focc
+##   4   25  advice  medu  fedu  focc
+##   4   26  advice  medu  fedu  focc
+##   4   27  advice  medu  fedu  focc
+##   4   28  advice  medu  fedu  focc
+##   4   29  advice  medu  fedu  focc
+##   4   30  advice  medu  fedu  focc
+##   4   31  advice  medu  fedu  focc
+##   4   32  advice  medu  fedu  focc
+##   4   33  advice  medu  fedu  focc
+##   4   34  advice  medu  fedu  focc
+##   4   35  advice  medu  fedu  focc
+##   4   36  advice  medu  fedu  focc
+##   4   37  advice  medu  fedu  focc
+##   4   38  advice  medu  fedu  focc
+##   4   39  advice  medu  fedu  focc
+##   4   40  advice  medu  fedu  focc
+##   4   41  advice  medu  fedu  focc
+##   4   42  advice  medu  fedu  focc
+##   4   43  advice  medu  fedu  focc
+##   4   44  advice  medu  fedu  focc
+##   4   45  advice  medu  fedu  focc
+##   4   46  advice  medu  fedu  focc
+##   4   47  advice  medu  fedu  focc
+##   4   48  advice  medu  fedu  focc
+##   4   49  advice  medu  fedu  focc
+##   4   50  advice  medu  fedu  focc
+##   5   1  advice  medu  fedu  focc
+##   5   2  advice  medu  fedu  focc
+##   5   3  advice  medu  fedu  focc
+##   5   4  advice  medu  fedu  focc
+##   5   5  advice  medu  fedu  focc
+##   5   6  advice  medu  fedu  focc
+##   5   7  advice  medu  fedu  focc
+##   5   8  advice  medu  fedu  focc
+##   5   9  advice  medu  fedu  focc
+##   5   10  advice  medu  fedu  focc
+##   5   11  advice  medu  fedu  focc
+##   5   12  advice  medu  fedu  focc
+##   5   13  advice  medu  fedu  focc
+##   5   14  advice  medu  fedu  focc
+##   5   15  advice  medu  fedu  focc
+##   5   16  advice  medu  fedu  focc
+##   5   17  advice  medu  fedu  focc
+##   5   18  advice  medu  fedu  focc
+##   5   19  advice  medu  fedu  focc
+##   5   20  advice  medu  fedu  focc
+##   5   21  advice  medu  fedu  focc
+##   5   22  advice  medu  fedu  focc
+##   5   23  advice  medu  fedu  focc
+##   5   24  advice  medu  fedu  focc
+##   5   25  advice  medu  fedu  focc
+##   5   26  advice  medu  fedu  focc
+##   5   27  advice  medu  fedu  focc
+##   5   28  advice  medu  fedu  focc
+##   5   29  advice  medu  fedu  focc
+##   5   30  advice  medu  fedu  focc
+##   5   31  advice  medu  fedu  focc
+##   5   32  advice  medu  fedu  focc
+##   5   33  advice  medu  fedu  focc
+##   5   34  advice  medu  fedu  focc
+##   5   35  advice  medu  fedu  focc
+##   5   36  advice  medu  fedu  focc
+##   5   37  advice  medu  fedu  focc
+##   5   38  advice  medu  fedu  focc
+##   5   39  advice  medu  fedu  focc
+##   5   40  advice  medu  fedu  focc
+##   5   41  advice  medu  fedu  focc
+##   5   42  advice  medu  fedu  focc
+##   5   43  advice  medu  fedu  focc
+##   5   44  advice  medu  fedu  focc
+##   5   45  advice  medu  fedu  focc
+##   5   46  advice  medu  fedu  focc
+##   5   47  advice  medu  fedu  focc
+##   5   48  advice  medu  fedu  focc
+##   5   49  advice  medu  fedu  focc
+##   5   50  advice  medu  fedu  focc
+```
+
+```r
+summary(est1)
+```
+
+<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:unnamed-chunk-16">
+<col><col><col><col><col><col><tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">term</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">estimate</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">std.error</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">statistic</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">df</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">p.value</th></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">(Intercept)</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">-5.94&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">0.157&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">-37.9</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">1.55e+03</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">0</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">galo</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.0886</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.00152</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">58.2</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">1.55e+03</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0</td></tr>
+</table>
+
+
+---
+
+
+```r
+est2 &lt;- galo %&gt;%
+  mice(m = 50, seed = 12345) %&gt;%
+  with(lm(advice ~ galo + female + medu + fedu + focc)) %&gt;%
+  pool()
+```
+
+```
+## 
+##  iter imp variable
+##   1   1  advice  medu  fedu  focc
+##   1   2  advice  medu  fedu  focc
+##   1   3  advice  medu  fedu  focc
+##   1   4  advice  medu  fedu  focc
+##   1   5  advice  medu  fedu  focc
+##   1   6  advice  medu  fedu  focc
+##   1   7  advice  medu  fedu  focc
+##   1   8  advice  medu  fedu  focc
+##   1   9  advice  medu  fedu  focc
+##   1   10  advice  medu  fedu  focc
+##   1   11  advice  medu  fedu  focc
+##   1   12  advice  medu  fedu  focc
+##   1   13  advice  medu  fedu  focc
+##   1   14  advice  medu  fedu  focc
+##   1   15  advice  medu  fedu  focc
+##   1   16  advice  medu  fedu  focc
+##   1   17  advice  medu  fedu  focc
+##   1   18  advice  medu  fedu  focc
+##   1   19  advice  medu  fedu  focc
+##   1   20  advice  medu  fedu  focc
+##   1   21  advice  medu  fedu  focc
+##   1   22  advice  medu  fedu  focc
+##   1   23  advice  medu  fedu  focc
+##   1   24  advice  medu  fedu  focc
+##   1   25  advice  medu  fedu  focc
+##   1   26  advice  medu  fedu  focc
+##   1   27  advice  medu  fedu  focc
+##   1   28  advice  medu  fedu  focc
+##   1   29  advice  medu  fedu  focc
+##   1   30  advice  medu  fedu  focc
+##   1   31  advice  medu  fedu  focc
+##   1   32  advice  medu  fedu  focc
+##   1   33  advice  medu  fedu  focc
+##   1   34  advice  medu  fedu  focc
+##   1   35  advice  medu  fedu  focc
+##   1   36  advice  medu  fedu  focc
+##   1   37  advice  medu  fedu  focc
+##   1   38  advice  medu  fedu  focc
+##   1   39  advice  medu  fedu  focc
+##   1   40  advice  medu  fedu  focc
+##   1   41  advice  medu  fedu  focc
+##   1   42  advice  medu  fedu  focc
+##   1   43  advice  medu  fedu  focc
+##   1   44  advice  medu  fedu  focc
+##   1   45  advice  medu  fedu  focc
+##   1   46  advice  medu  fedu  focc
+##   1   47  advice  medu  fedu  focc
+##   1   48  advice  medu  fedu  focc
+##   1   49  advice  medu  fedu  focc
+##   1   50  advice  medu  fedu  focc
+##   2   1  advice  medu  fedu  focc
+##   2   2  advice  medu  fedu  focc
+##   2   3  advice  medu  fedu  focc
+##   2   4  advice  medu  fedu  focc
+##   2   5  advice  medu  fedu  focc
+##   2   6  advice  medu  fedu  focc
+##   2   7  advice  medu  fedu  focc
+##   2   8  advice  medu  fedu  focc
+##   2   9  advice  medu  fedu  focc
+##   2   10  advice  medu  fedu  focc
+##   2   11  advice  medu  fedu  focc
+##   2   12  advice  medu  fedu  focc
+##   2   13  advice  medu  fedu  focc
+##   2   14  advice  medu  fedu  focc
+##   2   15  advice  medu  fedu  focc
+##   2   16  advice  medu  fedu  focc
+##   2   17  advice  medu  fedu  focc
+##   2   18  advice  medu  fedu  focc
+##   2   19  advice  medu  fedu  focc
+##   2   20  advice  medu  fedu  focc
+##   2   21  advice  medu  fedu  focc
+##   2   22  advice  medu  fedu  focc
+##   2   23  advice  medu  fedu  focc
+##   2   24  advice  medu  fedu  focc
+##   2   25  advice  medu  fedu  focc
+##   2   26  advice  medu  fedu  focc
+##   2   27  advice  medu  fedu  focc
+##   2   28  advice  medu  fedu  focc
+##   2   29  advice  medu  fedu  focc
+##   2   30  advice  medu  fedu  focc
+##   2   31  advice  medu  fedu  focc
+##   2   32  advice  medu  fedu  focc
+##   2   33  advice  medu  fedu  focc
+##   2   34  advice  medu  fedu  focc
+##   2   35  advice  medu  fedu  focc
+##   2   36  advice  medu  fedu  focc
+##   2   37  advice  medu  fedu  focc
+##   2   38  advice  medu  fedu  focc
+##   2   39  advice  medu  fedu  focc
+##   2   40  advice  medu  fedu  focc
+##   2   41  advice  medu  fedu  focc
+##   2   42  advice  medu  fedu  focc
+##   2   43  advice  medu  fedu  focc
+##   2   44  advice  medu  fedu  focc
+##   2   45  advice  medu  fedu  focc
+##   2   46  advice  medu  fedu  focc
+##   2   47  advice  medu  fedu  focc
+##   2   48  advice  medu  fedu  focc
+##   2   49  advice  medu  fedu  focc
+##   2   50  advice  medu  fedu  focc
+##   3   1  advice  medu  fedu  focc
+##   3   2  advice  medu  fedu  focc
+##   3   3  advice  medu  fedu  focc
+##   3   4  advice  medu  fedu  focc
+##   3   5  advice  medu  fedu  focc
+##   3   6  advice  medu  fedu  focc
+##   3   7  advice  medu  fedu  focc
+##   3   8  advice  medu  fedu  focc
+##   3   9  advice  medu  fedu  focc
+##   3   10  advice  medu  fedu  focc
+##   3   11  advice  medu  fedu  focc
+##   3   12  advice  medu  fedu  focc
+##   3   13  advice  medu  fedu  focc
+##   3   14  advice  medu  fedu  focc
+##   3   15  advice  medu  fedu  focc
+##   3   16  advice  medu  fedu  focc
+##   3   17  advice  medu  fedu  focc
+##   3   18  advice  medu  fedu  focc
+##   3   19  advice  medu  fedu  focc
+##   3   20  advice  medu  fedu  focc
+##   3   21  advice  medu  fedu  focc
+##   3   22  advice  medu  fedu  focc
+##   3   23  advice  medu  fedu  focc
+##   3   24  advice  medu  fedu  focc
+##   3   25  advice  medu  fedu  focc
+##   3   26  advice  medu  fedu  focc
+##   3   27  advice  medu  fedu  focc
+##   3   28  advice  medu  fedu  focc
+##   3   29  advice  medu  fedu  focc
+##   3   30  advice  medu  fedu  focc
+##   3   31  advice  medu  fedu  focc
+##   3   32  advice  medu  fedu  focc
+##   3   33  advice  medu  fedu  focc
+##   3   34  advice  medu  fedu  focc
+##   3   35  advice  medu  fedu  focc
+##   3   36  advice  medu  fedu  focc
+##   3   37  advice  medu  fedu  focc
+##   3   38  advice  medu  fedu  focc
+##   3   39  advice  medu  fedu  focc
+##   3   40  advice  medu  fedu  focc
+##   3   41  advice  medu  fedu  focc
+##   3   42  advice  medu  fedu  focc
+##   3   43  advice  medu  fedu  focc
+##   3   44  advice  medu  fedu  focc
+##   3   45  advice  medu  fedu  focc
+##   3   46  advice  medu  fedu  focc
+##   3   47  advice  medu  fedu  focc
+##   3   48  advice  medu  fedu  focc
+##   3   49  advice  medu  fedu  focc
+##   3   50  advice  medu  fedu  focc
+##   4   1  advice  medu  fedu  focc
+##   4   2  advice  medu  fedu  focc
+##   4   3  advice  medu  fedu  focc
+##   4   4  advice  medu  fedu  focc
+##   4   5  advice  medu  fedu  focc
+##   4   6  advice  medu  fedu  focc
+##   4   7  advice  medu  fedu  focc
+##   4   8  advice  medu  fedu  focc
+##   4   9  advice  medu  fedu  focc
+##   4   10  advice  medu  fedu  focc
+##   4   11  advice  medu  fedu  focc
+##   4   12  advice  medu  fedu  focc
+##   4   13  advice  medu  fedu  focc
+##   4   14  advice  medu  fedu  focc
+##   4   15  advice  medu  fedu  focc
+##   4   16  advice  medu  fedu  focc
+##   4   17  advice  medu  fedu  focc
+##   4   18  advice  medu  fedu  focc
+##   4   19  advice  medu  fedu  focc
+##   4   20  advice  medu  fedu  focc
+##   4   21  advice  medu  fedu  focc
+##   4   22  advice  medu  fedu  focc
+##   4   23  advice  medu  fedu  focc
+##   4   24  advice  medu  fedu  focc
+##   4   25  advice  medu  fedu  focc
+##   4   26  advice  medu  fedu  focc
+##   4   27  advice  medu  fedu  focc
+##   4   28  advice  medu  fedu  focc
+##   4   29  advice  medu  fedu  focc
+##   4   30  advice  medu  fedu  focc
+##   4   31  advice  medu  fedu  focc
+##   4   32  advice  medu  fedu  focc
+##   4   33  advice  medu  fedu  focc
+##   4   34  advice  medu  fedu  focc
+##   4   35  advice  medu  fedu  focc
+##   4   36  advice  medu  fedu  focc
+##   4   37  advice  medu  fedu  focc
+##   4   38  advice  medu  fedu  focc
+##   4   39  advice  medu  fedu  focc
+##   4   40  advice  medu  fedu  focc
+##   4   41  advice  medu  fedu  focc
+##   4   42  advice  medu  fedu  focc
+##   4   43  advice  medu  fedu  focc
+##   4   44  advice  medu  fedu  focc
+##   4   45  advice  medu  fedu  focc
+##   4   46  advice  medu  fedu  focc
+##   4   47  advice  medu  fedu  focc
+##   4   48  advice  medu  fedu  focc
+##   4   49  advice  medu  fedu  focc
+##   4   50  advice  medu  fedu  focc
+##   5   1  advice  medu  fedu  focc
+##   5   2  advice  medu  fedu  focc
+##   5   3  advice  medu  fedu  focc
+##   5   4  advice  medu  fedu  focc
+##   5   5  advice  medu  fedu  focc
+##   5   6  advice  medu  fedu  focc
+##   5   7  advice  medu  fedu  focc
+##   5   8  advice  medu  fedu  focc
+##   5   9  advice  medu  fedu  focc
+##   5   10  advice  medu  fedu  focc
+##   5   11  advice  medu  fedu  focc
+##   5   12  advice  medu  fedu  focc
+##   5   13  advice  medu  fedu  focc
+##   5   14  advice  medu  fedu  focc
+##   5   15  advice  medu  fedu  focc
+##   5   16  advice  medu  fedu  focc
+##   5   17  advice  medu  fedu  focc
+##   5   18  advice  medu  fedu  focc
+##   5   19  advice  medu  fedu  focc
+##   5   20  advice  medu  fedu  focc
+##   5   21  advice  medu  fedu  focc
+##   5   22  advice  medu  fedu  focc
+##   5   23  advice  medu  fedu  focc
+##   5   24  advice  medu  fedu  focc
+##   5   25  advice  medu  fedu  focc
+##   5   26  advice  medu  fedu  focc
+##   5   27  advice  medu  fedu  focc
+##   5   28  advice  medu  fedu  focc
+##   5   29  advice  medu  fedu  focc
+##   5   30  advice  medu  fedu  focc
+##   5   31  advice  medu  fedu  focc
+##   5   32  advice  medu  fedu  focc
+##   5   33  advice  medu  fedu  focc
+##   5   34  advice  medu  fedu  focc
+##   5   35  advice  medu  fedu  focc
+##   5   36  advice  medu  fedu  focc
+##   5   37  advice  medu  fedu  focc
+##   5   38  advice  medu  fedu  focc
+##   5   39  advice  medu  fedu  focc
+##   5   40  advice  medu  fedu  focc
+##   5   41  advice  medu  fedu  focc
+##   5   42  advice  medu  fedu  focc
+##   5   43  advice  medu  fedu  focc
+##   5   44  advice  medu  fedu  focc
+##   5   45  advice  medu  fedu  focc
+##   5   46  advice  medu  fedu  focc
+##   5   47  advice  medu  fedu  focc
+##   5   48  advice  medu  fedu  focc
+##   5   49  advice  medu  fedu  focc
+##   5   50  advice  medu  fedu  focc
+```
+
+```r
+summary(est2)
+```
+
+<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:unnamed-chunk-17">
+<col><col><col><col><col><col><tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">term</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">estimate</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">std.error</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">statistic</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">df</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">p.value</th></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">(Intercept)</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">-5.71&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">0.163&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">-35&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">1.53e+03</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">galo</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.0837</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.00166</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">50.4&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">1.53e+03</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">female</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">-0.0109</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">0.0396&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">-0.275</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">1.54e+03</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">0.783&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">medu</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.0426</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.0126&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">3.4&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">1.43e+03</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.000705</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">fedu</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">0.0225</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">0.0126&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">1.79&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">1.34e+03</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">0.0739&nbsp;&nbsp;</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">focc</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.0157</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.0183&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.859</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">1.22e+03</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.39&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+</table>
+
+
+---
+
+
+```r
+list("CD" = m1,
+     "CD (covariates)" = m2,
+     "MeanI" = m3,
+     "MeanI (covariates)" = m4,
+     "MultI" = est1,
+     "MultI (covariates)" = est2) %&gt;% 
+  huxreg()
+```
+
+```
+## Warning in nobs.default(m, use.fallback = TRUE): no 'nobs' method is available
+
+## Warning in nobs.default(m, use.fallback = TRUE): no 'nobs' method is available
+```
+
+<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:unnamed-chunk-18">
+<col><col><col><col><col><col><col><tr>
+<th style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;"></th><th style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">CD</th><th style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">CD (covariates)</th><th style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">MeanI</th><th style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">MeanI (covariates)</th><th style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">MultI</th><th style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">MultI (covariates)</th></tr>
+<tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(Intercept)</th><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-5.989 ***</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-5.949 ***</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-5.989 ***</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-5.781 ***</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-5.942 ***</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-5.709 ***</td></tr>
+<tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;"></th><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.157)&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.175)&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.157)&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.163)&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.157)&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.163)&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">galo</th><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.089 ***</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.086 ***</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.089 ***</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.084 ***</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.089 ***</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.084 ***</td></tr>
+<tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;"></th><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.002)&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.002)&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.002)&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.002)&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.002)&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.002)&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">female</th><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.011&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-0.005&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-0.011&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;"></th><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.042)&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.039)&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.040)&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">medu</th><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.043 ***</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.044 ***</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.043 ***</td></tr>
+<tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;"></th><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.013)&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.012)&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.013)&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">fedu</th><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.024&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.018&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.023&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;"></th><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.013)&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.012)&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.013)&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">focc</th><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.018&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.024&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.016&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;"></th><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.019)&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.018)&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.018)&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">N</th><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">1552&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">1382&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">1552&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">1552&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">R2</th><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.688&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.703&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.688&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.698&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.686&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.696&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">logLik</th><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-1826.446&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-1606.309&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-1826.446&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-1801.828&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">AIC</th><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">3658.893&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">3226.618&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">3658.893&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">3617.656&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<th colspan="7" style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;"> *** p &lt; 0.001;  ** p &lt; 0.01;  * p &lt; 0.05.</th></tr>
+</table>
+
 
 ---
 # Best Practices for Reporting
 
-Always report the percent/proportion of data missing on variables included in analyses
-Indicate the primary missingness mechanism you assume to be present, and provide a brief justification for why you make that assumption
-Report the imputation method (MI or FIML), and if MI was used, report the number of imputed data sets (e.g., 20). Mention algorithm choice If space allows.
-Cite the software/package used to impute data
-In cases of substantial missingness, present (or at least mention) a sensitivity analysis of your primary analyses (that used imputed data) and complete case analyses
+* Always report the percent/proportion of data missing on variables included in analyses
+* Indicate the primary missingness mechanism you assume to be present, and provide a brief justification for why you make that assumption
+* Report the imputation method (MI or FIML), and if MI was used, report the number of imputed data sets (e.g., 20). Mention algorithm choice If space allows.
+* Cite the software/package used to impute data
+* In cases of substantial missingness, present (or at least mention) a sensitivity analysis of your primary analyses (that used imputed data) and complete case analyses
+
+---
+
+[insert example write up re data run]
 
 ---
 class: middle, inverse
