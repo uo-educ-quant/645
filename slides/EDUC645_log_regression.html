@@ -4,7 +4,7 @@
     <title>Logistic Regression</title>
     <meta charset="utf-8" />
     <meta name="author" content="TBD" />
-    <script src="EDUC645_log_regression_files/header-attrs-2.14/header-attrs.js"></script>
+    <script src="EDUC645_log_regression_files/header-attrs-2.16/header-attrs.js"></script>
     <link href="EDUC645_log_regression_files/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="EDUC645_log_regression_files/remark-css-0.0.1/uo.css" rel="stylesheet" />
     <link href="EDUC645_log_regression_files/remark-css-0.0.1/ki-fonts.css" rel="stylesheet" />
@@ -163,53 +163,54 @@ Recall that the theory of GLMs is based on the unifying notion of the one-parame
 
 `$$f(y;\theta)=e^{[a(y)b(\theta)+c(\theta)+d(y)]}$$`
 ---
-# Generalized linear models (GLMs)
+# Binomial distribution and the Generalized Linear Model (GLM)
 
-To see that we can apply the general approach of GLMs \index{generalized linear models (GLMs)} to binomial responses, we first write an expression for the probability of a binomial response and then use a little algebra to rewrite it until we can demonstrate that it, too, can be written in one-parameter exponential family form with `\(\theta = p\)`. This will provide a way in which to specify the canonical link and the form for the model. Additional theory allows us to deduce the mean, standard deviation, and more from this form.
+How can we apply the general approach of GLMs to binomial responses?
+- We first write an expression for the probability of a binomial response 
+  - Then use a little algebra to rewrite it until we can demonstrate that it, too, can be written in one-parameter exponential family form with `\(\theta = p\)`
+  - Provide a way in which to specify the (canonical) link and the form for the model
+  - Additional theory allows us to deduce the mean, standard deviation, and more
 
-If `\(Y\)` follows a binomial distribution with `\(n\)` trials and probability of success `\(p\)`, we can write:
+--
 
+If `\(Y\)` follows a binomial distribution with `\(n\)` trials and probability of success `\(p\)`:
 
-P(Y=y)&amp;= \binom{n}{y}p^y(1-p)^{(n-y)} \\
-      &amp;=e^{y\log(p) + (n-y)\log(1-p) + \log\binom{n}{y}}
-\end{align*}
+`$$P(Y=y) = \binom{n}{y}p^y(1-p)^{(n-y)} \\
+      =e^{y\log(p) + (n-y)\log(1-p) + \log\binom{n}{y}}$$`
+      
+---
+# Binomial distribution and the GLM
 
-*However*, this probability mass function is not quite in one-parameter exponential family form. Note that there are two terms in the exponent which consist of a product of functions of `\(y\)` and `\(p\)`. So more simplification is in order:
+*However*, this probability mass function is not quite in one-parameter exponential family form. 
+- Note: there are two terms in the exponent which consist of a product of functions of `\(y\)` and `\(p\)`. So more simplification is in order:
 
 `$$P(Y=y) = e^{y\log\left(\frac{p}{1-p}\right) + n\log(1-p)+ \log\binom{n}{y}}$$`
 
-The one-parameter exponential family form for binomial responses shows that the  canonical link is `\(\log\left(\frac{p}{1-p}\right)\)`. Thus, GLM theory suggests that constructing a model using the logit, the log odds of a score, as a linear function of covariates is a reasonable approach.   
+- The one-parameter exponential family form for binomial responses shows that the canonical link is `\(\log(\frac{p}{1-p})\)`. 
+- GLM theory suggests that constructing a model using the logit, the log odds of a score, as a linear function of covariates is a reasonable approach.   
 
 ---
----
-# Example -- Unit 1 Logistic Regression
+# Example Logistic Regression
 
 This dataset was drawn from Meta Krüger's (1994) study investigating gender differences in school leadership in Netherlands. The study implemented a matching procedure to generate pairs of comparable schools (N=98) with the only difference being that one school principal was female and the other male, then surveyed the school principals, teachers, and students. Due to deletion of incomplete observations, our dataset is a bit smaller than the one used in the article, it contains 94 school principals and 800 students.
 
+<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:unnamed-chunk-1">
+<col><col><col><col><col><col><col><tr>
+<th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">schid</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">stuid</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">pfemale</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">sfemale</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">match</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">attention</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">affective</th></tr>
+<tr>
+<td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">6</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">0</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">1</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">0</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">0</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">0.283</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">0</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">6</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">1</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">1</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-2.31&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">6</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">2</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">1</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">0</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">0</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">0.607</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">0</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">6</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">3</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">1</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-0.364</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">6</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">4</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">1</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">0</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">0</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">0.607</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">1</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">6</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">5</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">1</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.607</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">1</td></tr>
+</table>
 
-```r
-principal &lt;- rio::import(here::here("data", "principal.csv")) %&gt;%
-  mutate(attention = (q1+q2+q3)/3,
-         affective = ifelse(q4 &gt;= 3, 1, 0)) %&gt;% 
-  select(schid, stuid, pfemale, sfemale, match, attention, affective) %&gt;% 
-  group_by(schid) %&gt;% 
-  mutate(attention = (attention-mean(attention))/sd(attention)) %&gt;% 
-  ungroup() 
-
-head(principal)
-```
-
-```
-## # A tibble: 6 × 7
-##   schid stuid pfemale sfemale match attention affective
-##   &lt;int&gt; &lt;int&gt;   &lt;int&gt;   &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;     &lt;dbl&gt;
-## 1     6     0       1       0     0     0.283         0
-## 2     6     1       1       0     0    -2.31          0
-## 3     6     2       1       0     0     0.607         0
-## 4     6     3       1       0     0    -0.364         0
-## 5     6     4       1       0     0     0.607         1
-## 6     6     5       1       0     0     0.607         1
-```
 
 ---
 # The Variables
@@ -399,6 +400,7 @@ m2 &lt;- lm(affective ~ attention + match, principal)
 
 m3 &lt;- glm(affective ~ attention, principal, 
           family = binomial(link = "logit"))
+
 m4 &lt;- glm(affective ~ attention + match, principal,
           family = binomial(link = "logit"))
 
@@ -498,24 +500,272 @@ To get the odds ratio, we need to back transform and exponentiate the coefficien
   `$$= e^{\beta_1}$$`
 
 ---
-# [insert example walk-through with code]
+# Logistic Regression Assumptions
+
+Linearity assumption: the linear relationship between continuous predictor variable and the logit of the outcome variable
+2. Binomial logistic regression (logistic regression/logit model)
+
+
+```r
+m3 &lt;- glm(affective ~ attention, principal, 
+          family = binomial(link = "logit"))
+m4 &lt;- glm(affective ~ attention + match, principal,
+          family = binomial(link = "logit"))
+```
+
+Check for critical ASSUMPTIONS that unique to logistic regression:
+
+ - linearity assumption/the linear relationship between continuous predictor variable and the logit of the outcome variable
+
+
+```r
+probabilities &lt;- predict(m3, type = "response")
+
+#principal %&gt;% 
+#  mutate(logit_affective = log(probabilities/(1-probabilities))) %&gt;% 
+#      ggplot(aes(attention, logit_affective)) + 
+#      geom_point (alpha = 0.5) +
+#      geom_smooth(method = "loess", color = "brown") 
+```
+
+---
+# Outliers: Cook's distance plot 
+ 
+
+```r
+plot(m3, which = 4, id.n = 3)
+```
+
+![](EDUC645_log_regression_files/figure-html/unnamed-chunk-13-1.png)&lt;!-- --&gt;
+
+---
+# Outliers: Residual Errors 
+
+Check standardized residual errors to identify outliers 
+Rule of thumb: data points with an absolute error above 3
+
+
+```r
+principal_checked &lt;- broom::augment(m3) %&gt;% 
+  mutate(index = 1:n())
+
+principal_checked %&gt;% top_n(3, .cooksd)
+```
+
+<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:unnamed-chunk-14">
+<col><col><col><col><col><col><col><col><col><col><tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">.rownames</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">affective</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">attention</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">.fitted</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">.resid</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">.std.resid</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">.hat</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">.sigma</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">.cooksd</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">index</th></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">283</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">1</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">-1.99</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">-1.58</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">1.88</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">1.88</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">0.00526</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">1.11</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">0.0128</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">280</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">448</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">1</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-1.89</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-1.53</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">1.86</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">1.86</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.00499</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">1.11</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.0117</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">437</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">570</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">1</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">-2.29</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">-1.7&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">1.93</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">1.94</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">0.00609</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">1.11</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">0.0169</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">559</td></tr>
+</table>
+
+
+```r
+principal_checked %&gt;% 
+  mutate(affective = as.factor(affective)) %&gt;% 
+  ggplot(aes(index, .std.resid)) +
+  geom_point(aes(color = affective))
+```
+
+![](EDUC645_log_regression_files/figure-html/unnamed-chunk-14-1.png)&lt;!-- --&gt;
+
+---
+# Multicollinearity  
+
+can add another predictor to see if there is collinearity existing (variance inflation factor exceeds 5) - we're good
+
+
+```r
+car::vif(m4)
+```
+
+```
+## attention     match 
+##  1.000027  1.000027
+```
+
+---
+# Multicollinearity  
+The logit models are usually estimated by a maximum likelihood estimator/MLE.
+
+
+```r
+summary(m3)
+```
+
+```
+## 
+## Call:
+## glm(formula = affective ~ attention, family = binomial(link = "logit"), 
+##     data = principal)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -1.3198  -0.9317  -0.7568   1.3454   1.9333  
+## 
+## Coefficients:
+##             Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept) -0.75227    0.07674  -9.802  &lt; 2e-16 ***
+## attention    0.41412    0.08394   4.933 8.09e-07 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 1024.21  on 811  degrees of freedom
+## Residual deviance:  998.57  on 810  degrees of freedom
+##   (42 observations deleted due to missingness)
+## AIC: 1002.6
+## 
+## Number of Fisher Scoring iterations: 4
+```
+
+```r
+summary(m4)
+```
+
+```
+## 
+## Call:
+## glm(formula = affective ~ attention + match, family = binomial(link = "logit"), 
+##     data = principal)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -1.3168  -0.9342  -0.7566   1.3458   1.9363  
+## 
+## Coefficients:
+##             Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept) -0.75912    0.10962  -6.925 4.35e-12 ***
+## attention    0.41415    0.08395   4.934 8.07e-07 ***
+## match        0.01334    0.15227   0.088     0.93    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 1024.21  on 811  degrees of freedom
+## Residual deviance:  998.56  on 809  degrees of freedom
+##   (42 observations deleted due to missingness)
+## AIC: 1004.6
+## 
+## Number of Fisher Scoring iterations: 4
+```
+
+---
+# Visualize the coefficient on a **log-odds** scale 
+### Model the change in log-odds of affective in a linear function of attention
+
+
+```r
+tibble(attention = (-3):3) %&gt;% 
+  mutate(pred = predict(m3, newdata = .)) %&gt;% 
+  ggplot(aes(attention, pred)) +
+  geom_line(color = "brown") +
+  labs(y = "Affective attitude towards principal (LOG-ODDS)",
+       x = "Attention from principal")
+```
+
+![](EDUC645_log_regression_files/figure-html/unnamed-chunk-17-1.png)&lt;!-- --&gt;
+
+---
+# Visualize the coefficient on a *probability* scale 
+### Mapping the parameters to probability nonlinearly
+
+
+```r
+tibble(attention = (-3):3) %&gt;% 
+  mutate(pred = predict(m3, newdata = ., type = "response")) %&gt;% 
+  ggplot(aes(attention, pred)) +
+  geom_line(color = "brown") +
+  labs(y = "Affective attitude towards principal (PROBABILITY)",
+       x = "Attention from principal")
+```
+
+![](EDUC645_log_regression_files/figure-html/unnamed-chunk-18-1.png)&lt;!-- --&gt;
+
+???
+
+Coder note: in the data, "attention" ranges from -2.42 to 2.61, the plot is therefore limited to a fraction when the probability of "affective" approaching one but still below 0.5. Because we cannot easily guess the missing plot fraction (as appose to when the line is linear, we can tell where the line goes simply by looking at the slope), this plot is not telling us enough information about the population of interest:
+
+---
+
+Manipulated X axis to show the nonlinear relationship in its full image:
+
+
+```r
+tibble(attention = (-3):15) %&gt;% 
+  mutate(pred = predict(m3, newdata = ., type = "response")) %&gt;% 
+  ggplot(aes(attention, pred)) +
+  geom_line(color = "brown") +
+  labs(y = "Affective attitude towards principal (PROBABILITY)",
+       x = "Attention from principal")
+```
+
+![](EDUC645_log_regression_files/figure-html/unnamed-chunk-19-1.png)&lt;!-- --&gt;
 
 
 ---
-# Tests for Significance of Model Coefficients
+# Interpret the results
+
+report regression coefficients **on a log-odds scale**
+
+
+```r
+tibble(attention = (-15):20) %&gt;% 
+  mutate(pred = predict(m3, newdata = ., type = "response")) %&gt;% 
+  ggplot(aes(attention, pred)) +
+  geom_line(color = "brown") +
+  labs(y = "Affective attitude towards principal (PROBABILITY)",
+       x = "Attention from principal")
+```
+
+![](EDUC645_log_regression_files/figure-html/unnamed-chunk-20-1.png)&lt;!-- --&gt;
 
 ---
-# Confidence Intervals for Model Coefficients
+# Comparing models 
 
----
-# Testing for Goodness-of-Fit
+Putting models together and report them in a table:
 
----
-# Assess Confounding
-1. Compare the unadjusted regression coefficients to the adjusted regression coefficients (not the ORs) 
-- Calculating change in coefficient:
-`$$100*\frac{\beta_{adjusted} - \beta_{unadjusted}} {\beta_{unadjusted}}$$`
-2. If the change in coefficients &gt; 10%, there is evidence for confounding by the variable in the adjusted model (aka, 10% confounding rule)
+
+```r
+huxtable::huxreg(
+  "LPM" = m1, 
+  "LPM" = m2,
+  "Logistic" = m3,
+  "Logistic" = m4,
+  coefs = c("Attention" = "attention",
+            "Matched gender" = "match")
+)
+```
+
+<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:unnamed-chunk-21">
+<col><col><col><col><col><tr>
+<th style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;"></th><th style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">LPM</th><th style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">LPM</th><th style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">Logistic</th><th style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">Logistic</th></tr>
+<tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">Attention</th><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.087 ***</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.087 ***</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.414 ***</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.414 ***</td></tr>
+<tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;"></th><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.017)&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.017)&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.084)&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.084)&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">Matched gender</th><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.003&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.013&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;"></th><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.032)&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.152)&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">N</th><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">812&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">812&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">812&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">812&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">R2</th><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.031&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.031&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">logLik</th><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-523.659&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-523.655&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-499.284&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-499.280&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">AIC</th><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">1053.318&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">1055.309&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">1002.567&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">1004.560&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<th colspan="5" style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;"> *** p &lt; 0.001;  ** p &lt; 0.01;  * p &lt; 0.05.</th></tr>
+</table>
+
 
 ---
 class: middle, inverse
@@ -527,10 +777,10 @@ class: middle, inverse
 
 - Assess effect modification by adding interaction term to the model
 
-Model *with* interaction term:
+Model *without* interaction term:
 
 `$$ln({Y_{odds}}) - {\beta_0} + {\beta_1}X_1 + {\beta_2}X_2$$`
-Model *without* interaction term:
+Model *with* interaction term:
 `$$ln({Y_{odds}}) = {\beta_0} + {\beta_1}X_1 + {\beta_2}X_2 + {\beta_3}(X_1*X_2)$$`
 ---
 # Interaction - categorical X categorical
@@ -550,6 +800,29 @@ Model *without* interaction term:
 [interpretation of output, example write up]
 
 ---
+# Tests for Significance of Model Coefficients
+
+---
+# Confidence Intervals for Model Coefficients
+
+
+---
+class: middle, inverse
+
+# Diagnostics
+
+---
+# Testing for Goodness-of-Fit
+
+---
+# Assess Confounding
+1. Compare the unadjusted regression coefficients to the adjusted regression coefficients (not the ORs) 
+- Calculating change in coefficient:
+`$$100*\frac{\beta_{adjusted} - \beta_{unadjusted}} {\beta_{unadjusted}}$$`
+2. If the change in coefficients &gt; 10%, there is evidence for confounding by the variable in the adjusted model (aka, 10% confounding rule)
+
+---
+
 # Influential Observations
 
 - Are there observations that greatly change the estimated regression coefficients if they are removed from the dataset?
@@ -620,19 +893,20 @@ _Positive predictive value (PPV)_ = `\(\frac{number of True +} {Total_{observed}
 "Specificity and Sensitivity Change as the Probability Cutoff Changes"]
 
 ---
-# Receiver Operating Characteristic (ROC) Curve
+class: center, inverse
 
+# Receiver Operating Characteristic (ROC) Curve
 
 ---
-# Receiver Operating Characteristic (ROC) Curve
-* Plot of true positive rate against the false positive rate for the different possible cutoff points of a diagnostic test, for example
-* Illustrates the tradeoff between *sensitivity* and *specificity*
+# ROC Curve: Gauging Accuracy of Model
+* Plot of true positive rate against the false positive rate for the different possible cutoff points of a diagnostic test
+* Illustrates the trade off between *sensitivity* and *specificity*
   - Increase in *sensitivity* will result in decrease in *specificity*, and vice versa
-* More accurate tests, the curve is closer to the left-hand border and the top border of the ROC
 * The __area under the curve (AUC)__ measures *accuracy*
+  - More accurate tests, the curve is closer to the left-hand border and the top border of the ROC
 
 ---
-# Area Under the ROC Curve (AUC)
+# Area Under the (ROC) Curve
 
 
 ```r
@@ -659,8 +933,6 @@ training_set &lt;- dv_d[-test_set_idx,]
 
 
 ```r
-library(ggplot2)
-library(dplyr)
 test_set %&gt;% 
   ggplot(aes(x=x, y=y, col=dv)) + 
   scale_color_manual(values=c("blue", "orange")) + 
@@ -668,7 +940,7 @@ test_set %&gt;%
   ggtitle("DV to X")
 ```
 
-![](EDUC645_log_regression_files/figure-html/unnamed-chunk-12-1.png)&lt;!-- --&gt;
+![](EDUC645_log_regression_files/figure-html/unnamed-chunk-23-1.png)&lt;!-- --&gt;
 
 ---
 # Examining the ROC curve
@@ -696,24 +968,11 @@ score_data &lt;- data.frame(link=glm_link_scores,
 ---
 # Examining the ROC Curve
 
-.pull-left[
 ![add caption](EDUC645_log_regression_files/figure-html/plot-first-1.png)
-]
-.pull-right[
 
-```r
-score_data %&gt;% 
-  ggplot(aes(x=link, y=response, col=dv)) + 
-  scale_color_manual(values=c("black", "red")) + 
-  geom_point() + 
-  geom_rug() + 
-  ggtitle("Both link and response scores put cases in the same order")
-```
-]
 ---
 # Plotting the ROC Curve
 
-.pull-left[
 
 ```
 ## Type 'citation("pROC")' for a citation.
@@ -735,31 +994,6 @@ score_data %&gt;%
 ```
 
 ![](EDUC645_log_regression_files/figure-html/plot-second-1.png)&lt;!-- --&gt;
-
-]
-.pull-right[
-
-```r
-library(pROC)
-plot(roc(test_set$dv, glm_response_scores, direction="&lt;"),
-     col="yellow", lwd=3, main="The turtle finds its way")
-```
-
-```
-## Setting levels: control = FALSE, case = TRUE
-```
-
-```r
-## 
-## Call:
-## roc.default(response = test_set$bad_widget, predictor = glm_response_scores,     direction = "&lt;")
-## 
-## Data: glm_response_scores in 59 controls (test_set$bad_widget FALSE) &lt; 66 cases (test_set$bad_widget TRUE)
-## Area under the curve: 0.9037
-glm_simple_roc &lt;- simple_roc(test_set$dv=="TRUE", glm_link_scores)
-with(glm_simple_roc, points(1 - FPR, TPR, col=1 + labels))
-```
-]
 
 ---
 # Obtaining the AUC

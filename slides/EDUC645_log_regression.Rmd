@@ -15,7 +15,7 @@ output:
 
 ```{R, setup, include = F}
 library(pacman)
-p_load(here, tidyverse, ggplot2, xaringan, knitr, kableExtra, foreign, broom, xaringanthemer, reshape2, DiagrammeR)
+p_load(here, tidyverse, ggplot2, xaringan, knitr, kableExtra, foreign, broom, xaringanthemer, reshape2, lfe, arsenal, ggpubr, stargazer, fixest, gtsummary, huxtable)
 
 i_am("slides/EDUC645_log_regression.rmd")
 
@@ -180,8 +180,10 @@ How can we apply the general approach of GLMs to binomial responses?
 If $Y$ follows a binomial distribution with $n$ trials and probability of success $p$:
 
 $$P(Y=y) = \binom{n}{y}p^y(1-p)^{(n-y)} \\
-      =e^{y\log(p) + (n-y)\log(1-p) + \log\binom{n}{y}}
-$$
+      =e^{y\log(p) + (n-y)\log(1-p) + \log\binom{n}{y}}$$
+      
+---
+# Binomial distribution and the GLM
 
 *However*, this probability mass function is not quite in one-parameter exponential family form. 
 - Note: there are two terms in the exponent which consist of a product of functions of $y$ and $p$. So more simplification is in order:
@@ -430,11 +432,13 @@ Check for critical ASSUMPTIONS that unique to logistic regression:
 
 ```{r}
 probabilities <- predict(m3, type = "response")
-principal %>% 
-  mutate(logit_affective = log(probabilities/(1-probabilities))) %>% 
-  ggplot(aes(attention, logit_affective)) + 
-  geom_point (alpha = 0.5) +
-  geom_smooth(method = "loess", color = "brown") 
+
+#principal %>% 
+#  mutate(logit_affective = log(probabilities/(1-probabilities))) %>% 
+#      ggplot(aes(attention, logit_affective)) + 
+#      geom_point (alpha = 0.5) +
+#      geom_smooth(method = "loess", color = "brown") 
+
 ```
 
 ---
@@ -680,19 +684,20 @@ _Positive predictive value (PPV)_ = $\frac{number of True +} {Total_{observed} Y
 "Specificity and Sensitivity Change as the Probability Cutoff Changes"]
 
 ---
-# Receiver Operating Characteristic (ROC) Curve
+class: center, inverse
 
+# Receiver Operating Characteristic (ROC) Curve
 
 ---
-# Receiver Operating Characteristic (ROC) Curve
-* Plot of true positive rate against the false positive rate for the different possible cutoff points of a diagnostic test, for example
-* Illustrates the tradeoff between *sensitivity* and *specificity*
+# ROC Curve: Gauging Accuracy of Model
+* Plot of true positive rate against the false positive rate for the different possible cutoff points of a diagnostic test
+* Illustrates the trade off between *sensitivity* and *specificity*
   - Increase in *sensitivity* will result in decrease in *specificity*, and vice versa
-* More accurate tests, the curve is closer to the left-hand border and the top border of the ROC
 * The __area under the curve (AUC)__ measures *accuracy*
+  - More accurate tests, the curve is closer to the left-hand border and the top border of the ROC
 
 ---
-# Area Under the ROC Curve (AUC)
+# Area Under the (ROC) Curve
 
 ```{r}
 simple_roc <- function(labels, scores){
@@ -717,8 +722,6 @@ training_set <- dv_d[-test_set_idx,]
 
 
 ```{r}
-library(ggplot2)
-library(dplyr)
 test_set %>% 
   ggplot(aes(x=x, y=y, col=dv)) + 
   scale_color_manual(values=c("blue", "orange")) + 
@@ -751,7 +754,6 @@ score_data <- data.frame(link=glm_link_scores,
 ---
 # Examining the ROC Curve
 
-.pull-left[
 ```{r plot-first, echo = FALSE, fig.cap="add caption"}
 score_data %>% 
   ggplot(aes(x=link, y=response, col=dv)) + 
@@ -760,15 +762,10 @@ score_data %>%
   geom_rug() + 
   ggtitle("Both link and response scores put cases in the same order")
 ```
-]
-.pull-right[
-```{r ref.label = 'plot-first', fig.show = 'hide'}
-```
-]
+
 ---
 # Plotting the ROC Curve
 
-.pull-left[
 ```{r plot-second, echo = FALSE}
 library(pROC)
 plot(roc(test_set$dv, glm_response_scores, direction="<"),
@@ -782,12 +779,6 @@ plot(roc(test_set$dv, glm_response_scores, direction="<"),
 glm_simple_roc <- simple_roc(test_set$dv=="TRUE", glm_link_scores)
 with(glm_simple_roc, points(1 - FPR, TPR, col=1 + labels))
 ```
-
-]
-.pull-right[
-```{r ref.label = 'plot-second', fig.show = 'hide'}
-```
-]
 
 ---
 # Obtaining the AUC

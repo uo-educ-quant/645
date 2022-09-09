@@ -172,12 +172,17 @@ class: middle, inverse
 
 # Dataset: galo.csv** 
 
-The GALO data is originally described by Peschar (1975) and analyzed by Dronkers and Schijf (1994) among other studies. The 1959 cohort consists of 1270 school children in the sixth grade of 37 elementary schools in the city of Groningen (Netherlands).
+GALO data is originally described by Peschar (1975) and analyzed by Dronkers and Schijf (1994)
+1959 cohort: 
+- 1270 sixth grade students
+- 37 elementary schools in Groningen, Netherlands
 
-Key variables are detailed below.
+Key variables.
+DV: galo, student's achievement score on GALO test
+
+Covariates:
  - schid, school identification number
  - female, coded one for female students and zero for male
- - galo, student's achievement score on GALO test
  - advice, teacher’s advice on the student's secondary school choice; 0="no subsequent school", 1="lowest",..., 6="highest", 999="missing" 
  - medu, mother's highest education; 1="lowest",..., 9="highest", 999="missing"
  - fedu, father’s highest education; 1="lowest",..., 9="highest", 999="missing"
@@ -288,9 +293,9 @@ Simply imputing all missing values using mean values, but there're good practice
 
  - Due to the fact that students are nested in schools, the best practice is to compute mean values WITHIN EACH SCHOOL rather than across all observations.
  
- - we should be extra careful when dealing with missingness on predictor and outcome variables. Our outcome variable, advice, has a very small missing value (0.45%), so we should drop all incomplete observations rather than replacing them with variable means
+ - be extra careful when dealing with missingness on predictor and outcome variables. 
+ Our outcome variable, advice, has a very small missing value (0.45%), so we should drop all incomplete observations rather than replacing them with variable means
  
-
 ---
 # Rerun the analysis:
 
