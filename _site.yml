@@ -20,7 +20,9 @@ navbar:
         href: ./slides/EDUC645_measure_assess.html
       - text: "Unit 5: Cleaning Data & Missing Data"
         href: ./slides/EDUC645_cleaning_missing.html
-
+  - text: R Project Workflow
+    href: workflow.html
+    
   right:
   - text: Assignments
     href: assignments.html

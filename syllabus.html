@@ -629,7 +629,7 @@ body {
   padding-top: 60px;
 }
 </style>
-<script src="site_libs/header-attrs-2.14/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.16/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
@@ -760,11 +760,15 @@ $(document).ready(function () {
     href = "index.html";
   var menuAnchor = $('a[href="' + href + '"]');
 
-  // mark it active
-  menuAnchor.tab('show');
-
-  // if it's got a parent navbar menu mark it active as well
-  menuAnchor.closest('li.dropdown').addClass('active');
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
 
   // Navbar adjustments
   var navHeight = $(".navbar").first().height() + 15;
@@ -945,6 +949,7 @@ Lectures
 <a href="./slides/EDUC645_cleaning_missing.html">Unit 5: Cleaning Data &amp; Missing Data</a>
 </div>
 </div>
+<a href="workflow.html">R Project Workflow</a>
 </div>
 <div class="nav-right">
 <a href="assignments.html">Assignments</a>
@@ -999,6 +1004,9 @@ Lectures
     </li>
   </ul>
 </li>
+<li>
+  <a href="workflow.html">R Project Workflow</a>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
@@ -1030,24 +1038,25 @@ Lectures
 <div id="student-learning-outcomes" class="section level1">
 <h1>Student Learning Outcomes</h1>
 <p>By the end of this term, it is expected that students will be able
-to: 1. Articulate 2. Distinguish between fitting a logistic regression
-and poisson regression differ from fitting a linear least squares
-regression model 3. Conduct and interpret (orally and in writing)
-regression analyses with dichotomous and count outcomes and predictors
-4. Describe the assumptions of logistic and poisson regression analysis
-and test analytic models for the extent to which they satisfy these
-assumptions 5. Generalize the least-squares regression model
-(conceptually and in practice) to predictors that are categorical,
-interacted and non-linear 6. Build taxonomies of sensible regression
-models in response to independently developed research questions 7.
-Recognize when response variables and covariates have been collected at
-multiple (nested) levels 8. Analyze continuous and discrete outcomes
-using multilevel model, including cases in which covariates are
-continuous, categorical, or centered. 9. Understand and measure
-inter-dependency of observed data 10. Analyse patterns of missing data
-and apply modern methods for treating missingness of data in the GLM
-framework 11. Use the R programming language to conduct all such
-analyses</p>
+to:<br />
+1. Articulate<br />
+2. Distinguish between fitting a logistic regression and poisson
+regression differ from fitting a linear least squares regression model
+3. Conduct and interpret (orally and in writing) regression analyses
+with dichotomous and count outcomes and predictors 4. Describe the
+assumptions of logistic and poisson regression analysis and test
+analytic models for the extent to which they satisfy these assumptions
+5. Generalize the least-squares regression model (conceptually and in
+practice) to predictors that are categorical, interacted and non-linear
+6. Build taxonomies of sensible regression models in response to
+independently developed research questions 7. Recognize when response
+variables and covariates have been collected at multiple (nested) levels
+8. Analyze continuous and discrete outcomes using multilevel model,
+including cases in which covariates are continuous, categorical, or
+centered. 9. Understand and measure inter-dependency of observed data
+10. Analyse patterns of missing data and apply modern methods for
+treating missingness of data in the GLM framework 11. Use the R
+programming language to conduct all such analyses</p>
 </div>
 <div id="textbooks-and-reading-materials" class="section level1">
 <h1>Textbooks and Reading Materials</h1>
@@ -1199,7 +1208,7 @@ variables are continuous, categorical, and interactions</td>
 <td align="left"></td>
 <td align="left"></td>
 <td align="left">b. Classification and accuracy</td>
-<td align="left">b. Preview Unit 1 assignment</td>
+<td align="left">b. Preview Unit 1 assignment/quiz</td>
 <td align="left"></td>
 <td align="left"></td>
 <td align="left">Assignment 1 (Due: TBD)</td>
@@ -1210,7 +1219,7 @@ variables are continuous, categorical, and interactions</td>
 <td align="left">Poisson Regression</td>
 <td align="left">4</td>
 <td align="left">a. Count data and probability</td>
-<td align="left">a. Review Unit 1 assignment</td>
+<td align="left">a. Review Unit 1 assignment/quiz</td>
 <td align="left">BMLR 4-4.4 (pp. xx-xx)</td>
 <td align="left"></td>
 <td align="left"></td>
@@ -1243,7 +1252,7 @@ variables are continuous, categorical, and interactions</td>
 <td align="left"></td>
 <td align="left"></td>
 <td align="left">b. Significance tests</td>
-<td align="left">b. Preview Unit 2 assignment and final project</td>
+<td align="left">b. Preview Unit 2 assignment/quiz</td>
 <td align="left"></td>
 <td align="left"></td>
 <td align="left">Assignment 2 (Due: TBD)</td>
@@ -1254,7 +1263,7 @@ variables are continuous, categorical, and interactions</td>
 <td align="left">Nested Data</td>
 <td align="left">6</td>
 <td align="left">a. Clustering within datasets</td>
-<td align="left">a. Review Unit 2 assignment</td>
+<td align="left">a. Review Unit 2 assignment/quiz</td>
 <td align="left">BMLR 8-8.5 (pp. xx-xx)</td>
 <td align="left"></td>
 <td align="left"></td>
@@ -1287,7 +1296,7 @@ variables are continuous, categorical, and interactions</td>
 <td align="left"></td>
 <td align="left"></td>
 <td align="left"></td>
-<td align="left">b. Preview Unit 3 assignment</td>
+<td align="left">b. Preview Unit 3 assignment/quiz</td>
 <td align="left"></td>
 <td align="left"></td>
 <td align="left"></td>
@@ -1309,7 +1318,7 @@ variables are continuous, categorical, and interactions</td>
 <td align="left"></td>
 <td align="left"></td>
 <td align="left"></td>
-<td align="left">b. Prepare for final project</td>
+<td align="left">b. Preview and prepare for final project</td>
 <td align="left"></td>
 <td align="left"></td>
 <td align="left">Assignment 3 (Due: TBD)</td>
@@ -1320,13 +1329,8 @@ variables are continuous, categorical, and interactions</td>
 <td align="left">Measurement and Assessment</td>
 <td align="left">9</td>
 <td align="left"></td>
-<<<<<<< HEAD
 <td align="left">a. Review Unit 3 assignment/quiz</td>
 <td align="left">BMLR 7-7.8 (pp. xx-xx);</td>
-=======
-<td align="left">a. Review Unit 3 assignment</td>
-<td align="left">BMLR 7-7.8 (pp. xx-xx)</td>
->>>>>>> 5b834e005e52a097c1d17e2121a905300b1d5221
 <td align="left"></td>
 <td align="left"></td>
 <td align="left"></td>
@@ -1347,7 +1351,7 @@ variables are continuous, categorical, and interactions</td>
 <td align="left"></td>
 <td align="left"></td>
 <td align="left"></td>
-<td align="left">c. Preview Unit 4 assignment</td>
+<td align="left">c. Preview Unit 4 assignment/quiz</td>
 <td align="left"></td>
 <td align="left"></td>
 <td align="left">Assignment 4 (Due: TBD)</td>
@@ -1358,7 +1362,7 @@ variables are continuous, categorical, and interactions</td>
 <td align="left">Missing Data</td>
 <td align="left">10</td>
 <td align="left">Data cleaning and handling missing data</td>
-<td align="left">a. Review Unit 4 assignment</td>
+<td align="left">a. Review Unit 4 assignment/quiz</td>
 <td align="left"></td>
 <td align="left"></td>
 <td align="left"></td>

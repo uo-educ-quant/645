@@ -11,7 +11,7 @@
 
 
 
-<title>EDUC 645 Assignments</title>
+<title>R projects workflow</title>
 
 <!--radix_placeholder_navigation_in_header-->
 <meta name="distill:offset" content=""/>
@@ -1024,111 +1024,145 @@ Lectures
 
 
 
-<h1 class="title toc-ignore">EDUC 645 Assignments</h1>
+<h1 class="title toc-ignore">R projects workflow</h1>
 
 </div>
 
 
-<div id="general-guidelines" class="section level2">
-<h2>1. General Guidelines</h2>
-<p>The goal of the assignments is to practice the concepts and
-vocabulary we have been modeling in class and implement some of the
-techniques we have learned. You may work on your own or collaborate with
-one (1) partner. Please make sure that you engage in a a full, fair and
-mutually-agreeable collaboration if you do choose to collaborate. If you
-do collaborate, you should plan, execute and write-up your analyses
-together, not simply divide the work. Please make sure to indicate
-clearly when your work is joint and any other individual or resource
-(outside of class material) you consulted in your responses.</p>
-<p>(Here we need to add more details about global expectations and
-requirements for all the assignments, grading and points distribution
-for participation, assignments, and/or final project/exam, late
-submission policy, etc. from syllabus.)</p>
-</div>
-<div id="submission-format" class="section level2">
-<h2>2. Submission format</h2>
-<p>For each of the four assignments as well as the final project, you
-are required to submit two files:</p>
+<div id="software-preparation" class="section level3">
+<h3>Software preparation</h3>
+<p>If you haven’t done so, finish the steps below:</p>
+<ol style="list-style-type: decimal">
+<li>Download <a href="https://www.r-project.org/">R</a> and install</li>
+<li>Download <a
+href="https://www.rstudio.com/products/rstudio/download/preview/">RStudio</a>
+and install</li>
+<li>(Optional) Setting up Git and Github (<a
+href="https://happygitwithr.com">tutorial</a>)
 <ul>
-<li><p>An .doc, .html, or .pdf file that includes your typed responses
-(in your own words and not identical to anybody else’s), tables, and/or
-figures to the problems</p></li>
-<li><p>The .Rmd or .R file that you used to render the tables and
-figures in the above doc/html/pdf file.</p></li>
-</ul>
-</div>
-<div id="assignments-details" class="section level2">
-<h2>3. Assignments details</h2>
-<div id="assignment-1-logistic-regression" class="section level3">
-<h3>3.1. Assignment 1 (Logistic regression)</h3>
-<p>Objectives:</p>
+<li>Download <a href="https://git-scm.com/downloads">Git</a> and
+install</li>
+<li>Create your account on <a href="https://github.com/">GitHub</a></li>
+</ul></li>
+<li>Check for the status of your software, run the following code in
+your RStudio console (you don’t need to keep everything up-to-date but
+these information will set you off for a good start if you encounter
+software/package issues)
 <ul>
-<li>Using Logistic regression model to estimate a relationship where the
-dependent variable is dichotomous</li>
-<li>Interpret and report the results and make statistic inference from
-the estimated parameters</li>
-</ul>
-<p>Deadline: TBD</p>
-<p>Assignment description: <a
-href="./assignments/assignment01.html">assignment1.html</a></p>
-<p>Dataset: <a href="./data/nscs.csv">nscs.csv</a></p>
-<p>Key: [doc file]; [R script]</p>
-</div>
-<div id="assignment-2-poisson-regression" class="section level3">
-<h3>3.2. Assignment 2 (Poisson regression)</h3>
-<p>Objectives:</p>
+<li><em>version$version.string</em>
 <ul>
-<li>Using Poisson regression model to estimate a relationship where the
-dependent variable is a Poisson random variable</li>
-<li>Interpret and report the results and make statistic inference from
-the estimated parameters</li>
-</ul>
-<p>Deadline: TBD</p>
-<p>Assignment description: <a
-href="./assignments/assignment02.html">assignment2.html</a></p>
-<p>Dataset: <a href="./data/ah_smoke.csv">ah_smoke.csv</a></p>
-<p>Key: [doc file]; [R script]</p>
-</div>
-<div id="assignment-3-nested-data" class="section level3">
-<h3>3.3. Assignment 3 (Nested data)</h3>
-<p>Objectives:</p>
+<li>check whether you have the most recent version of R</li>
+</ul></li>
+<li><em>RStudio.Version()$version</em>
 <ul>
-<li>Using mixed-effects model to estimate a relationship when the
-clustering nature of data needs to be addressed</li>
-<li>Interpret and report the results and make statistic inference from
-the estimated parameters</li>
-</ul>
-<p>Deadline: TBD</p>
-<p>Assignment description: <a
-href="./assignments/assignment03.html">assignment3.html</a></p>
-<p>Dataset: <a href="./data/gpa.csv">gpa.csv</a></p>
-<p>Key: [doc file]; [R script]</p>
-</div>
-<div id="assignment-4-measurement" class="section level3">
-<h3>3.4. Assignment 4 (Measurement)</h3>
-<p>Objectives:</p>
+<li>check whether you have the most recent version of RStudio</li>
+</ul></li>
+<li><em>update.packages(ask = FALSE, checkBuilt = TRUE)</em>
 <ul>
-<li></li>
-<li></li>
-</ul>
-<p>Deadline: TBD</p>
-<p>Assignment description:</p>
-<p>Dataset:</p>
-<p>Key: [doc file]; [R script]</p>
+<li>check whether you’ve updated all your R packages</li>
+</ul></li>
+</ul></li>
+</ol>
 </div>
-<div id="final-project" class="section level3">
-<h3>3.5. Final Project</h3>
-<p>Objectives:</p>
+<div id="r-project-preparation" class="section level3">
+<h3>R project preparation</h3>
+<p>Many ways to do this, here is one working for our class:</p>
+<ol style="list-style-type: decimal">
+<li>In your RStudio, create a new project
 <ul>
-<li></li>
-<li></li>
-</ul>
-<p>Deadline: TBD</p>
-<p>Assignment description: <a
-href="./assignments/final.html">final.html</a></p>
-<p>Dataset: <a href="./data/add_health.csv">add_health.csv</a></p>
-<p>Key: [doc file]; [R script]</p>
+<li>If you don’t have a collaborator and don’t need version control, <a
+href="https://bookdown.org/daniel_dauber_io/r4np_book/starting-your-r-projects.html">tutorial
+here</a></li>
+<li>If you need version control, <a
+href="https://raw.githack.com/uo-ec607/lectures/master/02-git/02-Git.html#12">Dr. Grant
+McDermott’s lecture</a> may be the best way to learn</li>
+</ul></li>
+<li>Organize your project
+<ul>
+<li>Go to your project root folder, create some subfolders (data, files,
+archive, etc.) to maintain the cleanness of your root folder
+<ul>
+<li>the data folder especially makes your life easier</li>
+</ul></li>
+<li>Download your datasets and store them in the data folder you just
+created</li>
+</ul></li>
+</ol>
 </div>
+<div id="r-project-workflow" class="section level3">
+<h3>R Project workflow</h3>
+<ol style="list-style-type: decimal">
+<li>Find the .Rproj file in your R project root folder and open it in
+RStudio</li>
+<li>Create any new files, here we take an <a
+href="https://rmarkdown.rstudio.com/lesson-1.html">R Markdown</a> file
+(an .Rmd file) as example</li>
+<li>In your .Rmd file, create the following code chunks:
+<ul>
+<li>the chunk to set up global chunk options used through out the whole
+file
+<ul>
+<li>using command <em>knitr::opts_chunk$set()</em></li>
+<li>check <a href="https://yihui.org/knitr/options/">here</a> for what
+these options mean</li>
+<li>any options in a chunk label will overwrite the global options for
+that specific chunk</li>
+</ul></li>
+<li>the chunk to load packages
+<ul>
+<li>call one package by using command <em>library()</em></li>
+<li>call multiple packages by using the command
+<em>pacman::p_load</em></li>
+</ul></li>
+<li>the chunk to set global theme
+<ul>
+<li>using the command <em>ggplot2::theme_set()</em> to set global theme
+for your plots</li>
+</ul></li>
+<li>the chunk to read in dataset
+<ul>
+<li>all datasets used in this course can be loaded using command
+<em>rio::import(here::here(“data”, “your dataset”))</em></li>
+<li>for more information on how to load different types of data, see a
+brief tutorial <a
+href="https://www.statmethods.net/input/importingdata.html">here</a></li>
+</ul></li>
+<li>other code chunks for managing, visualizing, describing, and
+modeling data</li>
+</ul></li>
+<li>Knit your .Rmd file and obtain .html, .doc, .pdf, or other types of
+files as outputs (<a
+href="https://rmarkdown.rstudio.com/lesson-9.html">see all
+formats</a>)</li>
+</ol>
+</div>
+<div id="r-helps" class="section level3">
+<h3>R helps</h3>
+<ol style="list-style-type: decimal">
+<li>RStudio built in help documents
+<ul>
+<li>for documentations on packages, using command <em>?package</em></li>
+<li>for documentations on functions, using command
+<em>??function</em></li>
+</ul></li>
+<li>Did you form a habit of asking <a
+href="https://www.rstudio.com/resources/"
+class="uri">https://www.rstudio.com/resources/</a> rather than Google
+for R-related questions?
+<ul>
+<li>Very handy <a
+href="https://www.rstudio.com/resources/cheatsheets/">cheat
+sheets</a></li>
+<li>Free <a href="https://www.rstudio.com/resources/books/">textbooks
+for all levels of R learners</a></li>
+<li><a href="https://education.rstudio.com/learn/">Finding your way to
+R</a></li>
+<li>and so much more</li>
+</ul></li>
+<li>For specific questions and debugging, try <a
+href="https://support.rstudio.com">RStudio Support</a> and <a
+href="https://stackoverflow.com">stackoverflow</a></li>
+</ol>
 </div>
 
 <!--radix_placeholder_site_after_body-->
