@@ -66,8 +66,8 @@ Many ways to do this, here is one working for our class:
 ### R helps
 
 1. RStudio built in help documents
-   - for documentations on packages, using command *?package*
-   - for documentations on functions, using command *??function*
+   - for documentations on packages/functions, using command *?* or *help()*
+   - for scanning through documents on all the packages installed, using command *??* or *help.search()*
 2. Did you form a habit of asking https://www.rstudio.com/resources/ rather than Google for R-related questions?
    - Very handy [cheat sheets](https://www.rstudio.com/resources/cheatsheets/)
    - Free [textbooks for all levels of R learners](https://www.rstudio.com/resources/books/) 
