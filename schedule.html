@@ -629,7 +629,7 @@ body {
   padding-top: 60px;
 }
 </style>
-<script src="site_libs/header-attrs-2.14/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.16/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
@@ -760,11 +760,15 @@ $(document).ready(function () {
     href = "index.html";
   var menuAnchor = $('a[href="' + href + '"]');
 
-  // mark it active
-  menuAnchor.tab('show');
-
-  // if it's got a parent navbar menu mark it active as well
-  menuAnchor.closest('li.dropdown').addClass('active');
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
 
   // Navbar adjustments
   var navHeight = $(".navbar").first().height() + 15;
@@ -1041,6 +1045,12 @@ model</p></li>
 logistic regression model</p></li>
 </ul>
 <p><strong>Readings</strong>:</p>
+<ul>
+<li></li>
+<li>Fawcett, T. (2006). An introduction to ROC analysis. <em>Pattern
+Recognition Letters</em>, 27(8), 861-874.<a
+href="https://www.sciencedirect.com/science/article/abs/pii/S016786550500303X">https://doi.org/10.1016/j.patrec.2005.10.010</a></li>
+</ul>
 <p><strong>Lecture</strong>:</p>
 <ul>
 <li>Lecture slides: <a
@@ -1075,6 +1085,14 @@ regression model</p></li>
 regression model</p></li>
 </ul>
 <p><strong>Readings</strong>:</p>
+<ul>
+<li></li>
+<li>Coxe, S., West, S. G., &amp; Aiken, L. S. (2009). The analysis of
+count data: A gentle introduction to Poisson regression and its
+alternatives. <em>Journal of Personality Assessment</em>, 91(2),
+121-136. <a
+href="https://doi-org.libproxy.uoregon.edu/10.1080/00223890802634175">https://doi.org/10.1080/00223890802634175</a></li>
+</ul>
 <p><strong>Lecture</strong>:</p>
 <ul>
 <li>Lecture slides: <a
@@ -1190,6 +1208,16 @@ multiple-imputation for fitting a regression model to a data set with
 missing values</p></li>
 </ul>
 <p><strong>Readings</strong>:</p>
+<ul>
+<li>Raghunathan, T. E. (2004). What do we do with missing data? Some
+options for analysis of incomplete data. <em>Annual Review of Public
+Health</em>, 25(1), 99-117. <a
+href="https://pubmed.ncbi.nlm.nih.gov/15015914/">https://doi.org/10.1146/annurev.publhealth.25.102802.124410</a></li>
+<li>Baraldi, A. N., &amp; Enders, C. K. (2010). An introduction to
+modern missing data analyses. <em>Journal of School Psychology</em>,
+48(1), 5-37. <a
+href="https://pubmed.ncbi.nlm.nih.gov/20006986/">https://doi.org/10.1016/j.jsp.2009.10.001</a></li>
+</ul>
 <p><strong>Lecture</strong>:</p>
 <ul>
 <li>Lecture slides: <a

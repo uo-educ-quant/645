@@ -30,7 +30,10 @@ knitr::opts_chunk$set(echo = TRUE)
 
 - Discuss the predictive power, model fit, and diagnostics for a logistic regression model
 
-**Readings**: 
+**Readings**:
+
+ *
+ * Fawcett, T. (2006). An introduction to ROC analysis. *Pattern Recognition Letters*, 27(8), 861-874.[https://doi.org/10.1016/j.patrec.2005.10.010](https://www.sciencedirect.com/science/article/abs/pii/S016786550500303X)
 
 **Lecture**:
 
@@ -62,6 +65,9 @@ knitr::opts_chunk$set(echo = TRUE)
 
 **Readings**: 
 
+ * 
+ * Coxe, S., West, S. G., & Aiken, L. S. (2009). The analysis of count data: A gentle introduction to Poisson regression and its alternatives. *Journal of Personality Assessment*, 91(2), 121-136. [https://doi.org/10.1080/00223890802634175](https://doi-org.libproxy.uoregon.edu/10.1080/00223890802634175)
+ 
 **Lecture**:
 
  * Lecture slides: [html](./slides/EDUC645_poisson_regression.html)
@@ -160,6 +166,9 @@ subject
 
 
 **Readings**: 
+  
+  * Raghunathan, T. E. (2004). What do we do with missing data? Some options for analysis of incomplete data. *Annual Review of Public Health*, 25(1), 99-117. [https://doi.org/10.1146/annurev.publhealth.25.102802.124410](https://pubmed.ncbi.nlm.nih.gov/15015914/)
+  * Baraldi, A. N., & Enders, C. K. (2010). An introduction to modern missing data analyses. *Journal of School Psychology*, 48(1), 5-37. [https://doi.org/10.1016/j.jsp.2009.10.001](https://pubmed.ncbi.nlm.nih.gov/20006986/)
 
 **Lecture**:
 
