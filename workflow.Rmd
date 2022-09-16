@@ -1,0 +1,77 @@
+---
+title: "R projects workflow"
+site: distill::distill_website
+output:
+  html_document:
+    toc: TRUE
+    toc_depth: 3
+    toc_float: TRUE
+    theme: cosmo
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+### Software preparation
+
+If you haven't done so, finish the steps below:
+
+1. Download [R](https://www.r-project.org/) and install
+2. Download [RStudio](https://www.rstudio.com/products/rstudio/download/preview/) and install
+3. (Optional) Setting up Git and Github ([tutorial](https://happygitwithr.com))
+   - Download [Git](https://git-scm.com/downloads) and install
+   - Create your account on [GitHub](https://github.com/)
+4. Check for the status of your software, run the following code in your RStudio console (you don't need to keep everything up-to-date but these information will set you off for a good start if you encounter software/package issues)
+   - *version$version.string*
+     - check whether you have the most recent version of R
+   - *RStudio.Version()$version*
+     - check whether you have the most recent version of RStudio
+   - *update.packages(ask = FALSE, checkBuilt = TRUE)*
+     - check whether you've updated all your R packages 
+
+### R project preparation
+
+Many ways to do this, here is one working for our class:
+
+1. In your RStudio, create a new project
+   - If you don't have a collaborator and don't need version control, [tutorial here](https://bookdown.org/daniel_dauber_io/r4np_book/starting-your-r-projects.html)
+   - If you need version control, [Dr. Grant McDermott's lecture](https://raw.githack.com/uo-ec607/lectures/master/02-git/02-Git.html#12) may be the best way to learn
+2. Organize your project  
+   - Go to your project root folder, create some subfolders (data, files, archive, etc.) to maintain the cleanness of your root folder 
+     - the data folder especially makes your life easier
+   - Download your datasets and store them in the data folder you just created
+
+### R Project workflow
+
+1. Find the .Rproj file in your R project root folder and open it in RStudio
+2. Create any new files, here we take an [R Markdown](https://rmarkdown.rstudio.com/lesson-1.html) file (an .Rmd file) as example
+3. In your .Rmd file, create the following code chunks:
+   - the chunk to set up global chunk options used through out the whole file 
+     - using command *knitr::opts_chunk$set()*
+     - check [here](https://yihui.org/knitr/options/) for what these options mean
+     - any options in a chunk label will overwrite the global options for that specific chunk
+   - the chunk to load packages
+     - call one package by using command *library()*
+     - call multiple packages by using the command *pacman::p_load* 
+   - the chunk to set global theme 
+     - using the command *ggplot2::theme_set()* to set global theme for your plots
+   - the chunk to read in dataset
+     - all datasets used in this course can be loaded using command *rio::import(here::here("data", "your dataset"))*
+     - for more information on how to load different types of data, see a brief tutorial [here](https://www.statmethods.net/input/importingdata.html)
+   - other code chunks for managing, visualizing, describing, and modeling data
+4. Knit your .Rmd file and obtain .html, .doc, .pdf, or other types of files as outputs ([see all formats](https://rmarkdown.rstudio.com/lesson-9.html))
+
+### R helps
+
+1. RStudio built in help documents
+   - for documentations on packages/functions, using command *?* or *help()*
+   - for scanning through documents on all the packages installed, using command *??* or *help.search()*
+2. Did you form a habit of asking https://www.rstudio.com/resources/ rather than Google for R-related questions?
+   - Very handy [cheat sheets](https://www.rstudio.com/resources/cheatsheets/)
+   - Free [textbooks for all levels of R learners](https://www.rstudio.com/resources/books/) 
+   - [Finding your way to R](https://education.rstudio.com/learn/)
+   - and so much more
+3. For specific questions and debugging, try [RStudio Support](https://support.rstudio.com) and [stackoverflow](https://stackoverflow.com) 
+
