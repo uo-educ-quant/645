@@ -18,21 +18,17 @@ knitr::opts_chunk$set(echo = TRUE)
 
 **Learning Objectives:** 
 
-- Understand the linear probability model and discuss its limitations
+- Describe the linear probability model and discuss its limitations
 
-- Understand and differentiate the concepts of probability, odds, and logit
+- Differentiate between the concepts of probability, odds, and logit
 
-- Learn how to use the logistic regression model with continuous and categorical predictors and interpret the model parameters and inference for model parameters
+- Estimate and interpret model parameters logistic regression model with continuous and categorical predictors
 
-- Apply logistic regression model with an interaction between a continuous and categorical predictor, how to interpret the model parameters, and inference for model parameters
-
-- Apply glm function in R to fit the logistic regression model
-
-- Discuss the predictive power, model fit, and diagnostics for a logistic regression model
+- Discuss predictive power, model fit, and diagnostics for logistic regression models
 
 **Readings**:
 
- *
+ * BMLR Chapter
  * Fawcett, T. (2006). An introduction to ROC analysis. *Pattern Recognition Letters*, 27(8), 861-874.[https://doi.org/10.1016/j.patrec.2005.10.010](https://www.sciencedirect.com/science/article/abs/pii/S016786550500303X)
 
 **Lecture**:
@@ -59,13 +55,11 @@ knitr::opts_chunk$set(echo = TRUE)
 
 - Introduce the poisson regression model with an interaction between a continuous and categorical predictor, how to interpret the model parameters, and inference for model parameters
 
-- Learn how to apply the glm function in R to fit the poisson regression model
-
-- Discuss dispersion, model fit, and diagnostics for a poisson regression model
+- Evaluate dispersion, model fit, and diagnostics for a poisson regression model
 
 **Readings**: 
 
- * 
+ * BMLR Chapter
  * Coxe, S., West, S. G., & Aiken, L. S. (2009). The analysis of count data: A gentle introduction to Poisson regression and its alternatives. *Journal of Personality Assessment*, 91(2), 121-136. [https://doi.org/10.1080/00223890802634175](https://doi-org.libproxy.uoregon.edu/10.1080/00223890802634175)
  
 **Lecture**:
@@ -112,7 +106,9 @@ subject
 - *Time permitting*: Discuss alternatives to multilevel modeling of nested data
 
 **Readings**: 
-
+ 
+ * BMLR Chapter
+ 
 **Lecture**:
 
  * Lecture slides: [html](./slides/EDUC645_nested_data.html)
@@ -128,13 +124,18 @@ subject
 
 **Learning Objectives:** 
 
-- Introduction to the concept of reliability
+- Differentiate and define different aspects of measurement
 
-- Understand the assumption of underlying shared construct for a set of items in surveys with aggregated scores across items
+- Articulate the assumption of underlying shared construct for a set of items in surveys with aggregated scores across items
 
-- Demonstrate how to compute and interpret Cronbach's alpha, and emphasize the strong underlying assumptions
+- Demonstrate how to compute and interpret Cronbach's alpha
+
+ * Define assumptions and limitations for methods to assess reliability
 
 **Readings**: 
+
+ * BMLR Chapter
+ * IEPM Chapter
 
 **Lecture**:
 

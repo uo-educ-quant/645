@@ -15,7 +15,7 @@ output:
 
 ```{R, setup, include = F}
 library(pacman)
-p_load(here, tidyverse, ggplot2, xaringan, knitr, kableExtra, foreign, broom, xaringanthemer, reshape2)
+p_load(here, tidyverse, ggplot2, xaringan, lfe, ggpubr, fixest, gtsummary, huxtable, psych, arsenal, stargazer, knitr, kableExtra, foreign, broom, xaringanthemer, reshape2)
 
 i_am("slides/EDUC645_measure_assess.rmd")
 
@@ -31,21 +31,6 @@ extra_css <- list(
 
 write_extra_css(css = extra_css, outfile = "my_custom.css")
 
-# Knitr options
-opts_chunk$set(
-  comment = "#>",
-  fig.align = "center",
-  fig.height = 6.75,
-  fig.width = 10.5,
-  warning = F,
-  message = F
-)
-opts_chunk$set(dev = "svg")
-options(device = function(file, width, height) {
-  svg(tempfile(), width = width, height = height)
-})
-options(knitr.table.format = "html")
-
 ```
 
 # Roadmap
@@ -59,7 +44,7 @@ Reliability
 Validity
 
 ---
-class: center, inverse
+class: middle, inverse
 
 # Measurement
 
@@ -82,37 +67,41 @@ E is the Error associated with Measurement
 ---
 # Measurement Error
 Random error
-Chance factors confounding a measure’s true score
-Random error is inversely related to a measure’s reliability
+
+* Chance factors confounding a measure’s true score
+* Random error is inversely related to a measure’s reliability
 
 Non-random error
-Systematic bias in measurement
-Non-random error influences the validity of a measure
+
+* Systematic bias in measurement
+* Non-random error influences the validity of a measure
 
 ---
 # Properties of Measurement
 Reliability
-Internal reliability
-Temporal reliability
+
+* Internal reliability
+* Temporal reliability
 
 Validity
-Face validity
-Criterion-related validity
-Concurrent validity
-Predictive validity
-Content validity
-Construct validity
+
+* Face validity
+* Criterion-related validity
+* Concurrent validity
+* Predictive validity
+* Content validity
+* Construct validity
 
 ---
-class: center, inverse
+class: middle, inverse
 
 # Reliability
 
 ---
 # Reliability
 Consistency of measurement
-Computed by taking the ratio of the true score variance and the observed variance:
-[ insert formula ]
+* Computed by taking the ratio of the true score variance and the observed variance:
+$$[ insert formula ]$$
 
 As VAR(T) increases, so does Reliability.
 
@@ -154,6 +143,7 @@ Care must be taken. Tests will never be perfectly equivalent, particularly when 
 # Split Halves
 
 Offer the assessment yet divide the items at random, hence “split-half method”:
+
   - Split in two comparable sets, you can compare the reliability of one set to the other.  
   - Splitting the measure 'artificially' lowers reliability
     - Adjust the reliability estimate using the Spearman-Brown adjustment:
@@ -165,6 +155,7 @@ Offer the assessment yet divide the items at random, hence “split-half method�
 Assessment of how well a set of variables correlate with each other (“hang together”).
 
 Internal consistency estimates are sensitive to:
+
 - Missing data
 - Unidirection of variables
 - Number of items
@@ -181,13 +172,13 @@ Range = 0-1
 
 ---
 # Data example
+## Add Health
 
-Add Health public use data.
-
-In wave IV inhome survey, there were eight variables collected  on a Likert-type ordinal scale that seem to measure a latent construct - happiness. See details as well as key variables information below. 
+In wave IV inhome survey, there were eight variables collected  on a Likert-type ordinal scale that seem to measure a latent construct - happiness.
 
 Measured on a four-point likert-type scale (0=never or rarely, 1=sometimes, 2=a lot of the time, 3=most of the time or all of the time).
 *q1* to *q8*, the individual's answers to eight survey questions
+
 The questions are as following:
    - "Think about the past seven days. How often was each of the following things true during the past seven days?"
       - q1, "You were bothered by things that usually don't bother you."
@@ -199,13 +190,14 @@ The questions are as following:
       - q7, "You felt sad."
       - q8, "You felt that people disliked you."
       
-```{r, echo = F}
+```{r}
 happy0 <- rio::import(here::here("data", "ah_happiness.csv")) %>% 
   drop_na()
 
 head(happy0)
 ```
 
+---
 ### Check for reverse coded items 
 
 Among eight items, q5 and q6 seem to measure happiness but other six items are reverse coded. 
@@ -221,8 +213,8 @@ happy <- happy0 %>%
          q8 = recode (q8, "0"=3, "1"=2, "2"=1, "3"=0))
 ```
 
+---
 ### Look into the eight items
-
 #### Summary statistics 
 
 ```{r}
@@ -232,6 +224,7 @@ items <- happy %>%
 summary(items)
 ```
 
+---
 #### Response frequencies
 
 ```{r}
@@ -240,6 +233,7 @@ items %>%
   round(2)
 ```
 
+---
 #### Internal consistency 
 
 Chronbach’s alpha:
@@ -253,14 +247,27 @@ alpha(items[,1:8])
 
 
 ---
+#### Split half reliability
+
+```{r}
+psych::splitHalf(items)
+```
+
+---
 # Standards for reliability
-Cronbach's alpha 
-       α ≥ .9 Excellent 
-.9 > α ≥ .8 Good 
-.8 > α ≥ .7 Acceptable 
-.7 > α ≥ .6 Questionable 
-.6 > α ≥ .5 Poor 
-.5 > α Unacceptable
+
+* Assessing the reliability will vary depending on the implications for the measure's use.
+* Measurement with significant impact will likely require higher reliability than less important measures:
+  - $\alpha = .75$ may be "Good" for a personality quiz online, whereas it may not be "Unacceptable" for a medical test result
+
+|Cronbach's \alpha  | Reliability  |
+|-------------------|--------------|
+|$     \alpha ≥ .9$ | Excellent    |
+|$.9 > \alpha ≥ .8$ | Good         |
+|$.8 > \alpha ≥ .7$ | Acceptable   |
+|$.7 > \alpha ≥ .6$ | Questionable | 
+|$.6 > \alpha ≥ .5$ | Poor         |
+|$.5 > \alpha     $ | Unacceptable |
 
 ---
 # Reliability: KR-20
@@ -268,12 +275,11 @@ Cronbach's alpha
 Items are dichotomous (0 or 1)
 Kuder-Richardson formula number 20
 
-$$KR20 = \frac{k}{(k-1)[1-\Sigma\frac{p_{i}q{i}}{s^2}]}$$
-
-k = number of items included in scale analysis
-pi = proportion responding “positively”
-qi  = 1 – pi
-s2 = variance of all scores in the scale
+$$KR20 = \frac{k}{(k-1)[1-\Sigma\frac{p_{i}q_{i}}{s^2}]}$$
+$k$ = number of items included in scale analysis
+$p_{i}$ = proportion responding “positively”
+$q_{i}$  = 1 – pi
+$s^{2}$ = variance of all scores in the scale
 
 ---
 # Attentuation Correction
@@ -283,7 +289,7 @@ $${\rho}x_{T}y_{T} = \frac{{\rho}x_{i}y_{j}}{\sqrt{p_{xx'}p_{yy'}}}$$
 Observed correlation over the SQRT of the (Reliability of X*Reliability of Y). 
 
 ---
-class: center, inverse
+class: middle, inverse
 
 # Validity
 
