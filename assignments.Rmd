@@ -55,7 +55,7 @@ Deadline: TBD
 
 Assignment description: [assignment2.html](./assignments/assignment02.html)
 
-Dataset: [ah_smoke.csv](./data/ah_smoke.csv)
+Dataset: [ah_smoke.csv](./data/ah_smoke.csv); [fsi.csv](./data/fsi.csv)
 
 Key: [doc file]; [R script]
 
@@ -85,7 +85,7 @@ Deadline: TBD
 
 Assignment description: 
 
-Dataset: 
+Dataset: [fsi.csv](./data/fsi.csv)
 
 Key: [doc file]; [R script]
 
@@ -100,7 +100,7 @@ Deadline: TBD
 
 Assignment description: [final.html](./assignments/final.html)
 
-Dataset: [add_health.csv](./data/add_health.csv)
+Datasets: [add_health.csv](./data/add_health.csv); [fsi.csv](./data/fsi.csv)
 
 Key: [doc file]; [R script]
 

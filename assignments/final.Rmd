@@ -77,9 +77,25 @@ Note that the public-use data sample is much smaller in size and matching three 
 
 5). Dealing with missing data in your analyses
 
-#### 2. Final project option 2 (MOCCA assessment data)
+#### 2. Final project option 2 (FSI assessment data)
 
-(Download the datasets here: [mocca.csv](./data/mocca.csv))
+Dynamic Indicators of Basic Early Literacy Skills (DIBELS) is a set of procedures and measures for assessing the acquisition of literacy skills. They are designed to be short (one minute) fluency measures that can be used to regularly detect risk and monitor the development of early literacy and early reading skills in kindergarten through eighth grade. Researchers at UO began work on DIBELS 8th Edition in 2016 and over the course of three years have been hard at work making the 8th Edition of DIBELS better than any previous DIBELS edition. Our dataset is drawn from DIBELS 8th Edition user database and focus on a small sample of kindergarten kids (N = 128) from 4 schools, 8 classrooms. It contains 32 variables including student raw scores on First Sound Isolation (FSI) measures as well as school and classroom demographics, detailed below.
+
+ - *id*, student identifier
+ - *school*, school identifier
+ - *classroom*, classroom identifier
+ - *fsi_b01* to *fsi_b20* are student raw scores on isolating first sound of 20 words (he, off, toe, is, pay, up, my, at, fin, egg, bad, rock, zip, nose, sat, kids, dance, gold, vans, lips). For the first ten words, each score is measured on a binary scale: 0 = incorrect, 2 = correct. For the remaining ten words, each score is measured on a three-point likert scale: 0 = incorrect, 1 = somehow correct, 2 = correct. Scoring rubric is available upon request.
+ - *total*, student's total FSI score
+ - *locale*, nominal measure of school location
+ - *class_size*, classroom size
+ - *avg_age*, classroom average age in month
+ - *pct_female*, classroom percentage of female students
+ - *pct_sped*, classroom percentage of sped students
+ - *pct_white*, classroom percentage of white students
+ - *pct_black*, classroom percentage of African American students
+ - *pct_hispanic*, classroom percentage of Hispanic and Latino students
+
+(Download the datasets here: [fsi.csv](./data/fsi.csv))
 
 
 ### Project requirements
