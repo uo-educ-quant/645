@@ -4,7 +4,7 @@
     <title>Poisson Regression</title>
     <meta charset="utf-8" />
     <meta name="author" content="TBD" />
-    <script src="EDUC645_poisson_regression_files/header-attrs-2.14/header-attrs.js"></script>
+    <script src="EDUC645_poisson_regression_files/header-attrs-2.16/header-attrs.js"></script>
     <link href="EDUC645_poisson_regression_files/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="EDUC645_poisson_regression_files/remark-css-0.0.1/uo.css" rel="stylesheet" />
     <link href="EDUC645_poisson_regression_files/remark-css-0.0.1/ki-fonts.css" rel="stylesheet" />
@@ -158,45 +158,59 @@ class: middle, inverse
 .left[Poisson Regression]
 
 ---
-# Poisson Regression
+# Poisson Regression V. Logistic Regression
 
-Like logistic regression, the underlying mathematics and underlying probability distribution theory are different from OLS regression, but it relies on the same parameters of the GLM
+- Like logistic regression, the underlying mathematics and underlying probability distribution theory are different from OLS regression
+  - Relies on the same parameters of the GLM
 
-Poisson regression seeks to model counts the number of children, number of colds, number of falls, number of telephone calls
+* Logistic regression models the **log odds of _an event_**
 
-While logistic regression models the log odds of an event
-Poisson regression models the (natural) log of the expected count.
-
-Since the log of the expected count is being modeled, there is no problem with negative predicted values, since negative values correspond to expected counts between 0 and 1.
+* Poisson regression models the **natural log of _an expected count_**
+  - Negative predicted values non-issue (negative values correspond to expected counts between 0 and 1)
 
 ---
 # Poisson Regression 
 
-Helps us analyze both count data and rate data by allowing us to determine which explanatory variables (X values) have an effect on a given response variable (Y value, the count or a rate). For example, Poisson regression could be applied by a grocery store to better understand and predict the number of people in a line.
+* Helps us analyze both count data and rate data 
+  - Can determine which explanatory variables (X values) have an effect on a given response variable (Y value, the count or a rate). 
+  - For example, school districts could use to better predict the number of students who receive free/reduced lunch.
 
 ---
 # Interpretation of Model Parameters
 
+`$$\log(\lambda) = \beta_0 + \beta_1X$$`
 `\(\lambda\)`: Average number of occurrences per unit of time or space, as a function of one or more covariates
 
-`\(\log(\lambda) = \beta_0 + \beta_1X\)`
+`\(\beta_0\)`: log of the rate for the reference group
+
+`\(\beta_1\)`: log of the rate ratio between a given group and the reference group
+
+`\(X\)`:predictor variable
 
 ---
 # Rates Accounting for other factor(s)
 Poisson regression allows us to study how rates of an even vary by characteristics of the groups of interest
-`\(\ln(Rate) = \beta_0 + \beta_1X\)`
-Or
-`\(\ln(E[Y]/Time) = \beta_0 + \beta_1X\)`
-- E[Y]: expected number of events
-- X: predictor variable
+`$$\ln(Rate) = \beta_0 + \beta_1X$$`
+
+- `\(E[Y]\)`: expected number of events
+
+- `\(X\)`: predictor variable
+
 - `\(\beta_0\)`: natural log of the rate for the reference group
+
 - `\(\beta_1\)`: natural log of the rate ratio between a given group and the reference group
 	- Similar to the logistic regression where the coefficient was the natural log of the OR
 
---- 
-`\(\ln(E[Y]/Time) = \beta_0 + \beta_1X\)`
-- `\(\ln(E[Y]) - \ln(Time) = \beta_0 + \beta_1X\)`
-- `\(\ln(E[Y]) = \beta_0 + \beta_1X + \ln(Time)\)`
+--
+
+### alternatively written...
+
+`$$\ln(\frac{E[Y]}{Time}) = \beta_0 + \beta_1X$$`
+
+`$$\ln(E[Y]) - \ln(Time) = \beta_0 + \beta_1X$$`
+
+`$$\ln(E[Y]) = \beta_0 + \beta_1X + \ln(Time)$$`
+
 - `\(\ln(Time)\)`: *offset variable* takes into account the rate of change over time
 
 ---

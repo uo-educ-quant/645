@@ -161,11 +161,13 @@ Internal consistency estimates are sensitive to:
 # Cronbach's Alpha
 
 `$$\alpha_{c} = \frac{k}{(k-1)[1-\Sigma(\frac{s^{2}_{i}}{s^{2}})]}$$`
-
 `\(k\)` = number of items included in scale analysis
+
 `\(s^{2}_{i}\)` = variance of scores for each item
+
 `\(s^{2}\)` = variance of all scores in the scale
-Range = 0-1
+
+`\(\alpha_{c}\)` range = 0-1
 
 ---
 # Data example
@@ -173,11 +175,11 @@ Range = 0-1
 
 In wave IV inhome survey, there were eight variables collected  on a Likert-type ordinal scale that seem to measure a latent construct - happiness.
 
-Measured on a four-point likert-type scale (0=never or rarely, 1=sometimes, 2=a lot of the time, 3=most of the time or all of the time).
-*q1* to *q8*, the individual's answers to eight survey questions
-
 The questions are as following:
    - "Think about the past seven days. How often was each of the following things true during the past seven days?"
+  
+Measured on a four-point likert-type scale (0=never or rarely, 1=sometimes, 2=a lot of the time, 3=most of the time or all of the time).
+*q1* to *q8*, the individual's answers to eight survey questions
       - q1, "You were bothered by things that usually don't bother you."
       - q2, "How often do you feel isolated from others?"
       - q3, "You had trouble keeping your mind on what you were doing."
@@ -186,7 +188,11 @@ The questions are as following:
       - q6, "You enjoyed life."
       - q7, "You felt sad."
       - q8, "You felt that people disliked you."
-      
+
+---
+# Data example
+## Add Health
+
 
 ```r
 happy0 &lt;- rio::import(here::here("data", "ah_happiness.csv")) %&gt;% 
@@ -214,7 +220,8 @@ head(happy0)
 
 
 ---
-### Check for reverse coded items 
+# Data example
+## Check for reverse coded items 
 
 Among eight items, q5 and q6 seem to measure happiness but other six items are reverse coded. 
 Recode them to be consistent with q5 and q6.
@@ -231,8 +238,8 @@ happy &lt;- happy0 %&gt;%
 ```
 
 ---
-### Look into the eight items
-#### Summary statistics 
+# Data Example
+## Summary statistics 
 
 
 ```r
@@ -339,10 +346,6 @@ alpha(items[,1:8])
 ```
 
 ---
-# Interpreting Cronbach's Alpha and C.I. for Cronbach's alpha
-
-
----
 #### Split half reliability
 
 
@@ -366,18 +369,19 @@ psych::splitHalf(items)
 ---
 # Standards for reliability
 
+|Cronbach's 𝛂  | Reliability  |
+|-------------------|--------------|
+|     𝛂 ≥ .9 | Excellent    |
+|.9 &gt; 𝛂 ≥ .8 | Good         |
+|.8 &gt; 𝛂 ≥ .7 | Acceptable   |
+|.7 &gt; 𝛂 ≥ .6 | Questionable | 
+|.6 &gt; 𝛂 ≥ .5 | Poor         |
+|.5 &gt; 𝛂      | Unacceptable |
+
 * Assessing the reliability will vary depending on the implications for the measure's use.
 * Measurement with significant impact will likely require higher reliability than less important measures:
   - `\(\alpha = .75\)` may be "Good" for a personality quiz online, whereas it may not be "Unacceptable" for a medical test result
-
-|Cronbach's \alpha  | Reliability  |
-|-------------------|--------------|
-|$     \alpha ≥ .9$ | Excellent    |
-|$.9 &gt; \alpha ≥ .8$ | Good         |
-|$.8 &gt; \alpha ≥ .7$ | Acceptable   |
-|$.7 &gt; \alpha ≥ .6$ | Questionable | 
-|$.6 &gt; \alpha ≥ .5$ | Poor         |
-|$.5 &gt; \alpha     $ | Unacceptable |
+* Rely on literature and content expertise to substantiate claims for reliability
 
 ---
 # Reliability: KR-20
@@ -387,8 +391,11 @@ Kuder-Richardson formula number 20
 
 `$$KR20 = \frac{k}{(k-1)[1-\Sigma\frac{p_{i}q_{i}}{s^2}]}$$`
 `\(k\)` = number of items included in scale analysis
+
 `\(p_{i}\)` = proportion responding “positively”
+
 `\(q_{i}\)`  = 1 – pi
+
 `\(s^{2}\)` = variance of all scores in the scale
 
 ---
@@ -421,11 +428,11 @@ class: middle, inverse
 
 # Above and beyond: Factor analysis
 
-Statistical method to uncover clusters (factors) of interrelated variables.
+Factor analysis: Statistical method to uncover clusters (factors) of interrelated variables.
 
-Each factor represents items that are highly correlated with each other.
+- Each factor represents items that are highly correlated with each other.
 
-The higher the inter-correlation of the item, the higher the factor loading of the item on a given factor. 
+- The higher the inter-correlation of the item, the higher the factor loading of the item on a given factor. 
 
 *Learn more in SEM courses*
 
