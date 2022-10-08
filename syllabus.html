@@ -1040,28 +1040,27 @@ Lectures
 <p>By the end of this term, it is expected that students will be able
 to:</p>
 <ol style="list-style-type: decimal">
-<li>Distinguish between fitting a logistic and Poisson regression, and
-understand how they differ from fitting a linear least squares
-regression model.</li>
 <li>Conduct and interpret (orally and written) regression analyses with
-dichotomous and count outcomes and predictors.</li>
-<li>Describe the assumptions of logistic and poisson regression analysis
+dichotomous and count outcomes and predictors in response to
+independently developed research questions.</li>
+<li>Determine when it is appropriate to conduct analyses with
+generalized linear models and multilevel models over linear least
+squares regression models.</li>
+<li>Describe the assumptions of logistic and Poisson regression analyses
 and test analytic models for the extent to which they satisfy these
 assumptions.</li>
-<li>Generalize the logistic and Poisson regression models (conceptually
-and in practice) to predictors that are categorical, interacted and
-non-linear.</li>
-<li>Build taxonomies of sensible logistic and Poisson regression models
-in response to independently developed research questions.</li>
-<li>Recognize when response variables and covariates have been collected
-at multiple (nested) levels.</li>
+<li>Compare different approaches to fitting models with predictors that
+are categorical, interacting, and that have non-linear relationships
+with the outcome variable.</li>
+<li>Determine when it is appropriate to fit multilevel models over
+linear regression models.</li>
 <li>Analyze discrete outcomes using multilevel model, including cases in
 which covariates are continuous, categorical, or centered.</li>
-<li>Understand and measure inter-dependency of observed data.</li>
-<li>Analyse patterns of missing data and apply modern methods for
-treating missingness of data in the GLM framework.</li>
-<li>Use the R programming language to conduct all aforementioned
-analyses.</li>
+<li>Analyze assessment data using classical-test-theory reliability,
+generalizability theory, and item analysis.</li>
+<li>Apply modern methods for treating missingness of data in the GLM
+framework.</li>
+<li>Use the R programming language to conduct these analyses.</li>
 </ol>
 </div>
 <div id="textbooks-and-reading-materials" class="section level1">
@@ -1131,16 +1130,16 @@ href="https://stackoverflow.com/questions/tagged/r">StackOverflow</a></li>
 <div id="schedule" class="section level1">
 <h1>Schedule</h1>
 <p>For more details, see <a href="./schedule.html">here</a>.</p>
-<table style="width:100%;">
+<table>
 <colgroup>
 <col width="1%" />
-<col width="8%" />
+<col width="7%" />
 <col width="1%" />
 <col width="14%" />
-<col width="33%" />
-<col width="13%" />
+<col width="32%" />
+<col width="15%" />
 <col width="14%" />
-<col width="7%" />
+<col width="6%" />
 <col width="5%" />
 </colgroup>
 <thead>
@@ -1163,8 +1162,8 @@ href="https://stackoverflow.com/questions/tagged/r">StackOverflow</a></li>
 <td align="left">1</td>
 <td align="left">a. Review OLS</td>
 <td align="left">a. R basics and R packages</td>
-<td align="left">BMLR Ch. 2 (pp. xx-xx), 6-6.4 (pp. xx-xx)</td>
-<td align="left">BMLR 3.3 ‘Discrete Random Variables’ (pp. xx-xx)</td>
+<td align="left">BMLR Ch. 2 (pp. 39-68), 6.1-6.4 (pp. 151-155)</td>
+<td align="left">BMLR 3.3 ‘Discrete Random Variables’ (pp. 72-79)</td>
 <td align="left"></td>
 <td align="left"></td>
 </tr>
@@ -1186,7 +1185,7 @@ variables are continuous, categorical, and interactions</td>
 <td align="left">2</td>
 <td align="left">a. Interpreting logistic regression coefficients</td>
 <td align="left">a. Logistic regression programming in R</td>
-<td align="left">BMLR 6.5-6.7 (pp. xx-xx)</td>
+<td align="left">BMLR Ch. 6.5-6.7 (pp. 159-180)</td>
 <td align="left"></td>
 <td align="left"></td>
 <td align="left"></td>
@@ -1230,7 +1229,7 @@ variables are continuous, categorical, and interactions</td>
 <td align="left">4</td>
 <td align="left">a. Count data and probability</td>
 <td align="left">a. Review Unit 1 assignment/quiz</td>
-<td align="left">BMLR 4-4.4 (pp. xx-xx)</td>
+<td align="left">BMLR Ch. 4.1-4.4 (pp. 93-112)</td>
 <td align="left"></td>
 <td align="left"></td>
 <td align="left"></td>
@@ -1252,7 +1251,8 @@ variables are continuous, categorical, and interactions</td>
 <td align="left">5</td>
 <td align="left">a. Coefficient estimation and interpretation</td>
 <td align="left">a. Poisson regression programming in R</td>
-<td align="left">BMLR 4.5-4.10 (pp. xx-xx), Ch. 5 (pp. xx-xx)</td>
+<td align="left">BMLR Ch. 4.5-4.10 (pp. 113-132), Ch. 5
+(pp. 145-148)</td>
 <td align="left"></td>
 <td align="left"></td>
 <td align="left"></td>
@@ -1274,7 +1274,7 @@ variables are continuous, categorical, and interactions</td>
 <td align="left">6</td>
 <td align="left">a. Clustering within datasets</td>
 <td align="left">a. Review Unit 2 assignment/quiz</td>
-<td align="left">BMLR 8-8.5 (pp. xx-xx)</td>
+<td align="left">BMLR Ch. 8.1-8.5 (pp. 211-231)</td>
 <td align="left"></td>
 <td align="left"></td>
 <td align="left"></td>
@@ -1296,7 +1296,7 @@ variables are continuous, categorical, and interactions</td>
 <td align="left">7</td>
 <td align="left"></td>
 <td align="left">a. Nested data and OLS estimator</td>
-<td align="left">BMLR 8.6-8.11 (pp. xx-xx)</td>
+<td align="left">BMLR Ch. 8.6-8.11 (pp. 234-251)</td>
 <td align="left"></td>
 <td align="left"></td>
 <td align="left"></td>
@@ -1318,7 +1318,8 @@ variables are continuous, categorical, and interactions</td>
 <td align="left">8</td>
 <td align="left"></td>
 <td align="left">a. Nested data and Logistic regression</td>
-<td align="left">BMLR 9-9.7 (pp. xx-xx), Ch 11</td>
+<td align="left">BMLR Ch. 9.1-9.7 (pp. 263-306), Ch. 11
+(pp. 373-398)</td>
 <td align="left"></td>
 <td align="left"></td>
 <td align="left"></td>
@@ -1340,7 +1341,7 @@ variables are continuous, categorical, and interactions</td>
 <td align="left">9</td>
 <td align="left"></td>
 <td align="left">a. Review Unit 3 assignment/quiz</td>
-<td align="left">BMLR 7-7.8 (pp. xx-xx);</td>
+<td align="left">BMLR 7.1-7.8 (pp. 193-206)</td>
 <td align="left"></td>
 <td align="left"></td>
 <td align="left"></td>
