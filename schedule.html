@@ -1029,8 +1029,8 @@ Lectures
 </div>
 
 
-<div id="unit-1-logistic-regression" class="section level2">
-<h2>Unit 1: Logistic Regression</h2>
+<div id="unit-1-dichotomous-outcomes" class="section level2">
+<h2>Unit 1: Dichotomous Outcomes</h2>
 <p><strong>Learning Objectives:</strong></p>
 <ul>
 <li><p>Describe the linear probability model and discuss its
@@ -1062,23 +1062,20 @@ href="./assignments/assignment1.html">assignment1.html</a></li>
 <li>Dataset: <a href="./data/nscs.csv">nscs.csv</a></li>
 </ul>
 </div>
-<div id="unit-2-poisson-regression" class="section level2">
-<h2>Unit 2: Poisson Regression</h2>
+<div id="unit-2-count-outcomes" class="section level2">
+<h2>Unit 2: Count Outcomes</h2>
 <p><strong>Learning Objectives:</strong></p>
 <ul>
-<li><p>Introduce regression models for analyzing count and
-rates</p></li>
+<li><p>Apply regression models to analyze count and rates as outcome
+variables</p></li>
 <li><p>Describe situations which merit the use of Poisson
 regression</p></li>
 <li><p>State the assumptions about rates in Poisson regression</p></li>
-<li><p>Introduce poisson regression model with continuous and
-categorical predictors, and how to interpret the model parameters and
-inference for model parameters</p></li>
-<li><p>Introduce the poisson regression model with an interaction
-between a continuous and categorical predictor, how to interpret the
-model parameters, and inference for model parameters</p></li>
-<li><p>Evaluate dispersion, model fit, and diagnostics for a poisson
-regression model</p></li>
+<li><p>Use Poisson regression model with continuous and categorical
+predictors, and interpret the model parameters and inference for model
+parameters</p></li>
+<li><p>Evaluate dispersion of the outcome variable, model fit, and
+diagnostics for a Poisson regression model</p></li>
 </ul>
 <p><strong>Readings</strong>:</p>
 <ul>
@@ -1102,42 +1099,22 @@ href="./assignments/assignment2.html">assignment2.html</a></li>
 <li>Dataset: <a href="./data/ah_smoke.csv">ah_smoke.csv</a></li>
 </ul>
 </div>
-<div id="unit-3-introduction-to-nested-data" class="section level2">
-<h2>Unit 3: Introduction to Nested Data</h2>
+<div id="unit-3-nested-data-structures" class="section level2">
+<h2>Unit 3: Nested Data Structures</h2>
 <p><strong>Learning Objectives:</strong></p>
 <ul>
-<li><p>Introduce the nested data structure (two-level, e.g., repeated
+<li><p>Describe nested data structures (two-level, e.g., repeated
 measures within individuals, students within schools)</p></li>
-<li><p>Students will be able to understand and explain what
-nesting/clustering means</p></li>
-<li><p>Demonstrate varying intercepts and slopes across clusters. Using
-a dataset, students/instructors can fit the same regression model
-independently for each cluster and create a table of intercepts and
-slopes across clusters</p></li>
-<li><p>Students will understand what it means for intercepts and slopes
-to vary across clusters</p></li>
-<li><p>Develop/discuss the notion that regression coefficients may vary
-across different clusters</p></li>
-<li><p>Develop the concept of <strong>fixed-effects</strong> as the
-aggregation of the different intercepts and slopes by taking an average
-of varying intercept and slopes across clusters</p></li>
-<li><p>Develop the concept of <strong>random effects</strong> as the
-difference between cluster-specific intercept and slope and their
-averages across clusters</p></li>
-<li><p>Develop the concept of the covariance matrix of
-<strong>random-effects</strong></p></li>
-<li><p>Discuss the implications of ignoring the variance of
-random-effects in terms of the inference for fixed-effects and
-statistical power</p></li>
-<li><p>Introduce the random intercept-only model, its estimation through
-the R lmer package, interpret the model parameters and align them with
-the earlier discussion of fixed-effects and random-effects.</p></li>
-<li><p>Introduce the intra-class correlation as a measure of
-within-cluster dependency, and how to use it to decide whether one needs
-to use multilevel modeling</p></li>
-<li><p>Finish by emphasizing that this is a very brief introduction of
-nested data and refer students to the multilevel modeling sequence for a
-comprehensive treatment of the subject</p></li>
+<li><p>Demonstrate how intercepts, slopes, and regression coefficients
+may vary across clusters</p></li>
+<li><p>Compare and contrast using fixed-effects and random-effects in
+regression models</p></li>
+<li><p>Explain the covariance matrix of random-effects and describe
+implications of ignoring the variance of random-effects in terms of the
+inference for fixed-effects and statistical power</p></li>
+<li><p>Practice creating fixed and random intercept-only models, and
+interpreting the model parameters using the R <code>lmer</code>
+package</p></li>
 <li><p><em>Time permitting</em>: Discuss alternatives to multilevel
 modeling of nested data</p></li>
 </ul>
@@ -1160,9 +1137,8 @@ href="./assignments/assignment3.html">assignment3.html</a></li>
 href="./data/gpa_above.csv">gpa_above.csv</a></li>
 </ul>
 </div>
-<div id="unit-4-introduction-to-measurement-and-assessment"
-class="section level2">
-<h2>Unit 4: Introduction to Measurement and Assessment</h2>
+<div id="unit-4-measurement-and-assessment" class="section level2">
+<h2>Unit 4: Measurement and Assessment</h2>
 <p><strong>Learning Objectives:</strong></p>
 <ul>
 <li><p>Differentiate and define different aspects of
@@ -1171,6 +1147,9 @@ measurement</p></li>
 set of items in surveys with aggregated scores across items</p></li>
 <li><p>Demonstrate how to compute and interpret Cronbach’s
 alpha</p></li>
+<li><p>Measure within-cluster dependency using intra-class correlation,
+and describe how to evaluate whether one needs to use multilevel
+modeling</p></li>
 <li><p>Define assumptions and limitations for methods to assess
 reliability</p></li>
 </ul>
@@ -1192,26 +1171,26 @@ href="./assignments/assignment4.html">assignment4.html</a></li>
 <li>Dataset:</li>
 </ul>
 </div>
-<div id="unit-5-data-cleaning-and-handling-missing-data"
-class="section level2">
-<h2>Unit 5: Data Cleaning and Handling Missing Data</h2>
+<div id="unit-5-missing-data" class="section level2">
+<h2>Unit 5: Missing Data</h2>
 <p><strong>Learning Objectives:</strong></p>
 <ul>
-<li><p>Students should be ready to talk about the concept of model-based
-imputation as earlier lectures in the sequence covered linear regression
-and logistic regression</p></li>
-<li><p>Introduce the missing data mechanisms (MCAR, MAR, MNAR)</p></li>
-<li><p>Introduce the concepts of the listwise deletion and pairwise
-deletion and their potential limitations</p></li>
-<li><p>Introduce the single-imputation methods (mean, regression, and
-stochastic regression imputation)</p></li>
-<li><p>Introduce the “missing-value-dummy” method (Cohen) and some
-issues with this approach</p></li>
-<li><p>Introduce the conceptual steps for the
-multiple-imputation</p></li>
-<li><p>Introduce the mice package in R and how to implement
-multiple-imputation for fitting a regression model to a data set with
-missing values</p></li>
+<li><p>Discuss the concept of model-based imputation in the context of
+linear regression, logistic regression, and Poisson regression
+models</p></li>
+<li><p>Identify and describe missing data mechanisms (MCAR, MAR,
+MNAR)</p></li>
+<li><p>Differentiate listwise deletion and pairwise deletion from
+single-imputation methods (mean, regression, and stochastic regression
+imputation)</p></li>
+<li><p>Describe the “missing-value-dummy” method (Cohen) and some issues
+with this approach</p></li>
+<li><p>Compare and contrast the conceptual steps for the
+multiple-imputation with using full-information maximum likelihood
+estimators to account for missing data</p></li>
+<li><p>Using the R <code>mice</code> package to practice applying
+multiple-imputation to fit linear, logistic, and Poisson regression
+models for a data set with missing values</p></li>
 </ul>
 <p><strong>Readings</strong>:</p>
 <ul>

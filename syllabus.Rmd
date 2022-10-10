@@ -26,13 +26,14 @@ By the end of this term, it is expected that students will be able to:
 
 1. Conduct and interpret (orally and written) regression analyses with dichotomous and count outcomes and predictors in response to independently developed research questions.
 2. Determine when it is appropriate to conduct analyses with generalized linear models and multilevel models over linear least squares regression models.
-3. Describe the assumptions of logistic and Poisson regression analyses and test analytic models for the extent to which they satisfy these assumptions.
+3. Describe the assumptions of logistic and Poisson regression analyses and test analytic models for the extent to which they satisfy the models' assumptions.
 4. Compare different approaches to fitting models with predictors that are categorical, interacting, and that have non-linear relationships with the outcome variable.
 6. Determine when it is appropriate to fit multilevel models over linear regression models.
 7. Analyze discrete outcomes using multilevel model, including cases in which covariates are continuous, categorical, or centered.
-8. Analyze assessment data using classical-test-theory reliability, generalizability theory, and item analysis.
-9. Apply modern methods for treating missingness of data in the GLM framework.
-10. Use the R programming language to conduct these analyses.
+8. CTT reliability, inter-rater consistency/agreement ICCs, g-theory (which encompasses ICCs), and item difficulty and discrimination. 
+9. Analyze assessment data using classical-test-theory reliability, generalizability theory, and item analysis.
+10. Apply modern methods for treating missingness of data in the GLM framework.
+11. Use the R programming language to conduct analyses throughout the course.
 
 
 
