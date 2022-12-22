@@ -13,7 +13,65 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Unit 1: Nested Data Structures
+
+## Unit 1: Dichotomous Outcomes
+
+**Learning Objectives:** 
+
+- Describe the linear probability model and discuss its limitations
+
+- Differentiate between the concepts of probability, odds, and logit
+
+- Estimate and interpret model parameters logistic regression model with continuous and categorical predictors
+
+- Discuss predictive power, model fit, and diagnostics for logistic regression models
+
+**Readings**:
+
+ * BMLR Chapter
+ * Mood, C. (2010). Logistic regression: Why we cannot do what we think we can do, and what we can do about it. *European Sociological Review*, 26(1), 67-82. 861-874.[https://doi-org.libproxy.uoregon.edu/10.1093/esr/jcp006](https://www.jstor.org/stable/40602478)
+
+**Lecture**:
+
+ * Lecture slides: [html](./slides/EDUC645_log_regression.html)
+ * Dataset: [principal.csv](./data/principal.csv)
+
+**Assignment**:
+
+ * Assignment description: [assignment1.html](./assignments/assignment1.html)
+ * Dataset: [nscs.csv](./data/nscs.csv)
+
+## Unit 2: Count Outcomes
+
+**Learning Objectives:** 
+
+- Apply regression models to analyze count and rates as outcome variables
+
+-	Describe situations which merit the use of Poisson regression
+
+-	State the assumptions about rates in Poisson regression
+
+- Use Poisson regression model with continuous and categorical predictors, and interpret the model parameters and inference for model parameters
+
+- Evaluate dispersion of the outcome variable, model fit, and diagnostics for a Poisson regression model
+
+**Readings**: 
+
+ * BMLR Chapter
+ * Coxe, S., West, S. G., & Aiken, L. S. (2009). The analysis of count data: A gentle introduction to Poisson regression and its alternatives. *Journal of Personality Assessment*, 91(2), 121-136. [https://doi.org/10.1080/00223890802634175](https://doi-org.libproxy.uoregon.edu/10.1080/00223890802634175)
+ 
+**Lecture**:
+
+ * Lecture slides: [html](./slides/EDUC645_poisson_regression.html)
+ * Dataset: [ceps_sch.csv](./data/ceps_sch.csv)
+
+**Assignment**:
+
+ * Assignment description: [assignment2.html](./assignments/assignment2.html)
+ * Dataset: [ah_smoke.csv](./data/ah_smoke.csv)
+
+
+## Unit 3: Nested Data Structures
 
 **Learning Objectives:** 
 
@@ -44,63 +102,6 @@ knitr::opts_chunk$set(echo = TRUE)
 
  * Assignment description: [assignment3.html](./assignments/assignment3.html)
  * Dataset: [gpa.csv](./data/gpa.csv) / [gpa_above.csv](./data/gpa_above.csv)
-
-
-## Unit 2: Dichotomous Outcomes
-
-**Learning Objectives:** 
-
-- Describe the linear probability model and discuss its limitations
-
-- Differentiate between the concepts of probability, odds, and logit
-
-- Estimate and interpret model parameters logistic regression model with continuous and categorical predictors
-
-- Discuss predictive power, model fit, and diagnostics for logistic regression models
-
-**Readings**:
-
- * BMLR Chapter
- * Mood, C. (2010). Logistic regression: Why we cannot do what we think we can do, and what we can do about it. *European Sociological Review*, 26(1), 67-82. 861-874.[https://doi-org.libproxy.uoregon.edu/10.1093/esr/jcp006](https://www.jstor.org/stable/40602478)
-
-**Lecture**:
-
- * Lecture slides: [html](./slides/EDUC645_log_regression.html)
- * Dataset: [principal.csv](./data/principal.csv)
-
-**Assignment**:
-
- * Assignment description: [assignment1.html](./assignments/assignment1.html)
- * Dataset: [nscs.csv](./data/nscs.csv)
-
-## Unit 3: Count Outcomes
-
-**Learning Objectives:** 
-
-- Apply regression models to analyze count and rates as outcome variables
-
--	Describe situations which merit the use of Poisson regression
-
--	State the assumptions about rates in Poisson regression
-
-- Use Poisson regression model with continuous and categorical predictors, and interpret the model parameters and inference for model parameters
-
-- Evaluate dispersion of the outcome variable, model fit, and diagnostics for a Poisson regression model
-
-**Readings**: 
-
- * BMLR Chapter
- * Coxe, S., West, S. G., & Aiken, L. S. (2009). The analysis of count data: A gentle introduction to Poisson regression and its alternatives. *Journal of Personality Assessment*, 91(2), 121-136. [https://doi.org/10.1080/00223890802634175](https://doi-org.libproxy.uoregon.edu/10.1080/00223890802634175)
- 
-**Lecture**:
-
- * Lecture slides: [html](./slides/EDUC645_poisson_regression.html)
- * Dataset: [ceps_sch.csv](./data/ceps_sch.csv)
-
-**Assignment**:
-
- * Assignment description: [assignment2.html](./assignments/assignment2.html)
- * Dataset: [ah_smoke.csv](./data/ah_smoke.csv)
 
 
 ## Unit 4: Measurement and Assessment

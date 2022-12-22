@@ -48,6 +48,9 @@ write_extra_css(css = extra_css, outfile = "my_custom.css")
  - Reporting on handling missing data
 
 ---
+# Missing Data Motivating example
+
+---
 
 # Problems with missing data (missingness)
 
@@ -72,13 +75,12 @@ Example: Missingness on Depression Scores (DV) because a school event attended b
 
 --
 
-Missing at Random (MAR): Missingness is related to values in the data, but can be explained by other (observed) values in the data
-Generally (assumed to be) the most common form of missingness
+Missing at Random (MAR): Missingness is related to values in the data, but can be explained by other (observed) values in the data. Generally (assumed to be) the most common form of missingness
 Example: Missingness on Depression Scores (DV) due to perceived stigma of mental health concerns, but Depression Score may be predicted by age, victimization level, etc.
 
 --
 
-Missing Not at Random (MNAR): Missingness is caused by an individual’s value of the variable
+Missing Not at Random (MNAR): Missing data are caused by an individual’s value of the variable
 Example: Missingness on BDI because of depression level (IV)
 
 --
@@ -116,6 +118,9 @@ Particularly impactful in multivariate analysis: limited but widely dispersed mi
 * Full-Information Maximum-Likelihood (FIML) imputation
   - Estimate model parameters close to their values as estimated from complete data 
   - Model-specific and limited to models that are estimated using maximum-likelihood estimation (e.g., SEM, mixed/multilevel models, mixture models)
+
+--
+
 * Multiple Imputation (MI) 
   - Aims to estimate complete data 
   - Not model-specific and therefore more versatile application to data analysis
@@ -166,7 +171,7 @@ widgetframe::frameableWidget(m)
 ---
 class: middle, inverse
 
-# Applying missing data treatment
+# Applying missing data treatment: Multiple Imputation
 
 ---
 
@@ -196,14 +201,19 @@ galo <- rio::import(here::here("data", "galo.csv"))
 # Missing Data Diagnostics
 ## Inspect missing and imputed data before and after imputation
 
-* Before imputation
-  1. Calculate overall amount of missingness in the data (n, percent or proportion)
-  2. Inspect missingness (aka margin) plots, show the observed and missing values across two variables
-  3. Remember: Missingness mechanisms can differ between different variables
-  
-* After imputation
-  4. Inspect strip plots, show the observed and imputed data together (as points), to identify erratic patterns among imputed data
-  5. Inspect kernel density plots, show the distributions of observed and imputed data rather than individual values as points (similar purpose to strip plots)
+*Before imputation*
+  1. Calculate overall amount of missingness in the data (n, percent/ proportion)
+  2. Examine missingness using plots (e.g., margin plots)
+    * Show the observed and missing values across pairs of variables
+    * Note: Reasons for missing data can differ between variables
+
+--
+
+*After imputation*
+  3. Inspect strip plots
+  * Identify inconsistent patterns of missingness among imputed data by displaying observed (original data) and imputed data together
+  4. View kernel density plots
+  * Review distributions of observed and imputed data rather than individual values as points (similar purpose to strip plots)
 
 ---
 # Missing on each variable
@@ -314,7 +324,7 @@ list("CD" = m1,
 ---
 # Multiple imputation (MI)
 
-There're several ways to conduct multiple imputation - here we use the package {mice}.
+There are several ways to conduct multiple imputation - here we use the package {mice}.
 
 ```{r}
 galo_multi <- mice(galo, seed = 12345) 
@@ -406,17 +416,23 @@ list("CD" = m1,
 ```
 
 ---
-# Best Practices for Reporting
+# Best Reporting Practices
 
-* Always report the percent/proportion of data missing on variables included in analyses
-* Indicate the primary missingness mechanism you assume to be present, and provide a brief justification for why you make that assumption
-* Report the imputation method (MI or FIML), and if MI was used, report the number of imputed data sets (e.g., 20). Mention algorithm choice If space allows.
+* Report the percent/proportion of data missing on variables in analyses
+* Indicate the primary reason you believe data are missing and briefly justify your assumption
+* Report the imputation method. If using MI, report the number of imputed data sets and mention algorithm used
 * Cite the software/package used to impute data
-* In cases of substantial missingness, present (or at least mention) a sensitivity analysis of your primary analyses (that used imputed data) and complete case analyses
+* If there is substantial missingness, conduct and mention a sensitivity analysis of primary analyses using the imputed data and complete case analyses
 
 ---
 
 [insert example write up re data run]
+
+---
+
+{Emphasize the importance of different approaches being most appropriate to particular situations}
+
+{Note the strong assumptions that MI and FIML make on observables vs. unobservables}
 
 ---
 class: middle, inverse
