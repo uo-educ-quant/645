@@ -49,126 +49,6 @@ write_extra_css(css = extra_css, outfile = "my_custom.css")
 
 ---
 # Missing Data Motivating example
-
----
-
-# Problems with missing data (missingness)
-
-Power: Missingness often reduces the number of useful observations, and therefore reduces power
-
---
-
-Bias: Missingness induces bias as incomplete data…
-- May not be Representative of the intended population
-- May not be Balanced across observed and/or unobserved confounders as originally planned
-- Are likely to have biased characteristics
-
---
-
-Recoverability: Traditional approaches to missingness have limited our ability to recover statistical power and true variability
-
----
-# Missing data mechanisms
-
-Missing Completely at Random (MCAR): Missingness is unrelated to the values of variables in the data
-Example: Missingness on Depression Scores (DV) because a school event attended by younger students prevented data collection from those students
-
---
-
-Missing at Random (MAR): Missingness is related to values in the data, but can be explained by other (observed) values in the data. Generally (assumed to be) the most common form of missingness
-Example: Missingness on Depression Scores (DV) due to perceived stigma of mental health concerns, but Depression Score may be predicted by age, victimization level, etc.
-
---
-
-Missing Not at Random (MNAR): Missing data are caused by an individual’s value of the variable
-Example: Missingness on BDI because of depression level (IV)
-
---
-
-*All forms of missingness can co-occur among same data*
-
----
-# Traditional methods for treating missingness
-## and their shortcomings
-
-Listwise or case deletion (avoid using): Delete observations with missingness
-Under MCAR, reduces power; under MAR and MNAR, reduces power and induced bias
-Particularly impactful in multivariate analysis: limited but widely dispersed missingness can lead to extensive case deletion
-
---
-
-### Single Imputation Methods
-- Mean substitution (never use): Replace missing values on a variable with average of that variable (artificially lowers variance, reduces power, and distorts covariances and intercorrelations among variables)
-  The following can perform well, but modern methods perform better
-- Averaging over missing items (artificially inflates variance of average value)
-- Hot-decking: Replaces missing values with random observed values
-- Last-observation-carried-forward 9 (reduces variability)
-
----
-# Imputation
-
-- Uses the underlying structure of the data to replace missing values with new values that could have been reasonably obtained, had they not been missing
-
-- Aims to re-establish the relationship of the data with the population it was sampled from, without creating artificially precise data for the analysis
-
----
-# Two modern approaches to imputation
-## Different theoretical orientations to missingness
-
-* Full-Information Maximum-Likelihood (FIML) imputation
-  - Estimate model parameters close to their values as estimated from complete data 
-  - Model-specific and limited to models that are estimated using maximum-likelihood estimation (e.g., SEM, mixed/multilevel models, mixture models)
-
---
-
-* Multiple Imputation (MI) 
-  - Aims to estimate complete data 
-  - Not model-specific and therefore more versatile application to data analysis
-
----
-# MI by Chained Equations (MICE)
-
-* Chained equations: 
-  - Focuses the algorithm on one variable at a time
-  - Once variable is imputed, the algorithm moves to the next variable, skipping over complete variables, until all missing data is imputed
-  - Process is repeated to create each imputed data set
-* Numerous algorithms exist
-  - Selection on variable being imputed (e.g., continuous, ordered, nominal/categorical)
-
-Recommended R package: mice (https://amices.org/mice/)
-
-???
-- Chained equations approach focuses the algorithm on one variable at a time
-- Once that variable is imputed, the algorithm moves to the next variable, skipping over complete variables, until all missing data is imputed – this process is then repeated many times to create each imputed data set
-- Numerous algorithms exist, and selection depends mainly on the type of variable being imputed (e.g., continuous, ordered or un-ordered nominal/categorical, etc.)
-
----
-# Multiple Imputation Process
-
-Benefits of repeating the process, merging (averaging) each estimate of the missing data:
-* Produces a more accurate (and plausible) values
-* More precisely defines uncertainty in the data
-* Accounts for uncertainty from original data generation (e.g., measurement error) and of the imputation process
-
-```{r, echo=F}
-m <- DiagrammeR::mermaid("
-                         graph LR
-                        A((d))-->B((m<sub>1</sub>))
-                       A((d))-->C((m<sub>2</sub>))
-                      A((d))-->D((m<sub>3</sub>))
-                         B((m<sub>1</sub>))-->E((a<sub>1</sub>)) 
-                        C((m<sub>2</sub>))-->F((a<sub>2</sub>)) 
-                         D((m<sub>3</sub>))-->G((a<sub>3</sub>))
-                         E((a<sub>1</sub>))-->H((r))
-                         F((a<sub>2</sub>))-->H((r)) 
-                         G((a<sub>3</sub>))-->H((r))
-                       ")
-
-widgetframe::frameableWidget(m)
-```
-
-
----
 class: middle, inverse
 
 # Applying missing data treatment: Multiple Imputation
@@ -271,6 +151,151 @@ Note that the regression functions (e.g., lm()) in R typically only report resul
 To illustrate how different ways to deal with missing data might affect our analysis, let's start with a research question and an OLS regression to answer the question.
 
 --
+---
+
+# Problems with missing data (missingness)
+
+Power: Missingness often reduces the number of useful observations, and therefore reduces power
+
+--
+
+Bias: Missingness induces bias as incomplete data…
+- May not be representative of the intended population
+- May not be balanced across observed and/or unobserved confounders as originally planned
+- Are likely to have biased characteristics
+
+--
+
+Recoverability: Traditional approaches to missingness have limited our ability to recover statistical power and true variability
+
+---
+
+# Missing data mechanisms
+
+Missing Completely at Random (MCAR): Missingness is unrelated to the values of variables in the data
+Example: Missingness on Depression Scores (DV) because a school event attended by younger students prevented data collection from those students
+
+--
+
+Missing at Random (MAR): Missingness is related to values in the data, but can be explained by other (observed) values in the data. Generally (assumed to be) the most common form of missingness
+Example: Missingness on Depression Scores (DV) due to perceived stigma of mental health concerns, but Depression Score may be predicted by age, victimization level, etc.
+
+--
+
+Missing Not at Random (MNAR): Missing data are caused by an individual’s value of the variable
+Example: Missingness on BDI because of depression level (IV)
+
+--
+
+*All forms of missingness can co-occur among same data*
+
+---
+# Traditional methods for treating missingness
+## and their shortcomings
+
+### Listwise or case deletion
+- Delete observations with missingness
+- Under MCAR, reduces power; under MAR and MNAR, reduces power and induced bias
+- Especially useful for multivariate analysis
+  - limited but widely dispersed missingness can lead to extensive case deletion
+
+--
+
+### Dummy variable adjustment
+- Data are missing on X because that variable doesn’t apply or has no meaning for some subset of the sample
+- Missing data on baseline covariates in randomized controlled trials.
+
+--
+
+### Single Imputation Methods
+- Mean substitution (never use): Replace missing values on a variable with average of that variable (artificially lowers variance, reduces power, and distorts covariances and intercorrelations among variables)
+  The following can perform well, but modern methods perform better
+- Averaging over missing items (artificially inflates average value variances)
+- Hot-decking: Replaces missing values with random observed values
+- Last-observation-carried-forward 9 (reduces variability)
+
+---
+# Dummy Value Adjusted Method
+Context: You want to do a linear regression of Y on two variables, X and Z, with a substantial number of cases that have missing values on X. 
+1. Create a dummy (indicator) variable D that has a value of 1 if X is observed and 0 if X is missing
+2. For the missing values of X, you substitute some constant value c (e.g., 2)
+3. All three variables, X, Z, and D, then go into the regression as predictors
+
+https://statisticalhorizons.com/is-dummy-variable-adjustment-ever-good-for-missing-data/ 
+
+Optimal use (even over FIML and MI)
+- Data are missing on X because that variable doesn’t apply or has no meaning for some subset of the sample
+- Missing data on baseline covariates in randomized controlled trials
+
+---
+# Imputation
+
+- Uses the underlying structure of the data to replace missing values with new values that could have been reasonably obtained, had they not been missing
+
+- Aims to re-establish the relationship of the data with the population it was sampled from, without creating artificially precise data for the analysis
+
+---
+# Two modern imputation approaches
+## Different theoretical orientations to missingness
+
+* Full-Information Maximum-Likelihood (FIML) imputation
+  - Estimate model parameters close to their values as estimated from complete data 
+  - Model-specific and limited to models that are estimated using maximum-likelihood estimation (e.g., SEM, mixed/multilevel models, mixture models)
+
+--
+
+* Multiple Imputation (MI) 
+  - Aims to estimate complete data 
+  - Not model-specific and therefore more versatile application to data analysis
+
+---
+# Assumptions of MI and FIML
+
+{Note the strong assumptions that MI and FIML make on observables vs. unobservables}
+
+---
+# MI by Chained Equations (MICE)
+
+* Chained equations: 
+  - Focuses the algorithm on one variable at a time
+  - Once variable is imputed, the algorithm moves to the next variable, skipping over complete variables, until all missing data is imputed
+  - Process is repeated to create each imputed data set
+* Numerous algorithms exist
+  - Selection on variable being imputed (e.g., continuous, ordered, nominal/categorical)
+
+Recommended R package: mice (https://amices.org/mice/)
+
+???
+- Chained equations approach focuses the algorithm on one variable at a time
+- Once that variable is imputed, the algorithm moves to the next variable, skipping over complete variables, until all missing data is imputed – this process is then repeated many times to create each imputed data set
+- Numerous algorithms exist, and selection depends mainly on the type of variable being imputed (e.g., continuous, ordered or un-ordered nominal/categorical, etc.)
+
+---
+# Multiple Imputation Process
+
+Benefits of repeating the process, merging (averaging) each estimate of the missing data:
+* Produces a more accurate (and plausible) values
+* More precisely defines uncertainty in the data
+* Accounts for uncertainty from original data generation (e.g., measurement error) and of the imputation process
+
+```{r, echo=F}
+m <- DiagrammeR::mermaid("
+                         graph LR
+                        A((d))-->B((m<sub>1</sub>))
+                       A((d))-->C((m<sub>2</sub>))
+                      A((d))-->D((m<sub>3</sub>))
+                         B((m<sub>1</sub>))-->E((a<sub>1</sub>)) 
+                        C((m<sub>2</sub>))-->F((a<sub>2</sub>)) 
+                         D((m<sub>3</sub>))-->G((a<sub>3</sub>))
+                         E((a<sub>1</sub>))-->H((r))
+                         F((a<sub>2</sub>))-->H((r)) 
+                         G((a<sub>3</sub>))-->H((r))
+                       ")
+
+widgetframe::frameableWidget(m)
+```
+
+---
 
 #### Casewise deletion (CD)
 
@@ -415,6 +440,12 @@ list("CD" = m1,
   huxreg()
 ```
 
+
+---
+
+{Emphasize the importance of different approaches being most appropriate to particular situations}
+
+
 ---
 # Best Reporting Practices
 
@@ -427,12 +458,6 @@ list("CD" = m1,
 ---
 
 [insert example write up re data run]
-
----
-
-{Emphasize the importance of different approaches being most appropriate to particular situations}
-
-{Note the strong assumptions that MI and FIML make on observables vs. unobservables}
 
 ---
 class: middle, inverse

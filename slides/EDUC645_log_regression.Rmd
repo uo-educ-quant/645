@@ -57,6 +57,91 @@ write_extra_css(css = extra_css, outfile = "my_custom.css")
 • probit and differentiate from logit
 
 ---
+# Motivating Example: Logistic Regression
+
+Meta Krüger's (1994) 
+Study investigating gender differences in school leadership in Netherlands. 
+
+The study implemented a matching procedure to generate pairs of comparable schools (N=98) with the only difference being that one school principal was female and the other male, then surveyed the school principals, teachers, and students. Due to deletion of incomplete observations, our dataset is a bit smaller than the one used in the article, it contains 94 school principals and 800 students.
+
+```{r, echo = F}
+principal <- rio::import(here::here("data", "principal.csv")) %>%
+  mutate(attention = (q1+q2+q3)/3,
+         affective = ifelse(q4 >= 3, 1, 0)) %>% 
+  select(schid, stuid, pfemale, sfemale, match, attention, affective) %>% 
+  group_by(schid) %>% 
+  mutate(attention = (attention-mean(attention))/sd(attention)) %>% 
+  ungroup() 
+
+head(principal)
+```
+
+---
+# The Variables
+ - schid, school identification number
+ - stuid, student identification number within each school
+ - pfemale, coded one for female principals and zero for male principals
+ - sfemale, coded one for female students and zero for male students
+ - match, coded one if student and principal are the same gender
+ - q1, students' rating on a survey item, "Sometimes the principal talks to me", on a 4-point likert scale, 1=low, 4=high
+ - q2, students' rating on a survey item, "I think the principal knows who I am", on a 4-point likert scale, 1=low, 4=high
+ - q3, students' rating on a survey item, "Principal knows how well I am doing", on a 4-point likert scale, 1=low, 4=high
+ - q4, students' rating on a survey item, "The principal is nice", on a 4-point likert scale, 1=low, 4=high
+
+---
+For starters, some data management; we're interested in the association between student-perceived attention from principal and affective attitude toward principal, therefore we compute two variables of interest:
+
+ - attention: take the average score of attention items, q1, q2, and q3, then standardize it at school level to measure student-perceived attention
+ - affective: recode q4 to be a binary variable coded one for students who rated 3 or 4 on this question ("the school principal is nice")
+ 
+---
+# Visualizing the relationship
+ 
+Plot outcome variable, affective, on predictor variable, attention. What patterns do you notice from the plots?
+
+```{r echo = FALSE, message = FALSE}
+principal %>% 
+  ggplot(aes(attention, affective)) +
+  geom_point(color = "royalblue") +
+  labs(y = "Affective attitude towards principal",
+       x = "Attention from principal")
+```
+
+---
+# Modeling the relationship
+
+How to model these relationships in our analysis?
+
+Our inquiry: The associations between student self-perceived attention from principal and affective attitude towards principal.
+
+# show students what this would look like were one to estimate this relationship using OLS
+
+What models should we use to fit the data when our outcome variable is a dichotomous variable?
+
+---
+# Logistic Regression
+
+Binary (0 or 1) response (Y) and a single continuous predictor (X).
+
+### Model for logistic regression with binary or binomial responses:
+
+$$\log(\frac{p_i}{1-p_i})=\beta_0+\beta_1 x_i$$
+
+where the observed values $Y_i \sim$ binomial with $p=p_i$ for a given $x_i$ and $n=1$ for binary responses.
+
+???
+
+The solid line is a linear regression fit with least squares to model the probability of a success (Y=1) for a given value of X.  With a binary response, the line doesn't fit the data well, and it produces predicted probabilities below 0 and above 1.  On the other hand, the logistic regression fit (dashed curve) with its typical "S" shape follows the data closely and always produces predicted probabilities between 0 and 1.  For these and several other reasons detailed in this chapter, we will focus on the following model for logistic regression with binary or binomial responses:
+
+---
+
+o	show plots of the residuals, residual v. fitted plot, etc. to build intuition around some of emergent issues with using OLS
+  •	highlight that different approaches have different strengths/weaknesses:
+o	In instances where the goal is to estimate treatment effects, and the predicted probability does not fall close to 0/1, an LPM approach is probably superior (more consistent and easier to interpret)
+o	Estimates from logistic models with covariates are not comparable at different values of the covariates or across models
+o	Highlight more clearly that LPM generate predicted values for some value of the predictor exceeding 0/1
+
+---
 # Binary Data
 
 - You've learned to model continuous outcomes with linear regression models BUT there are many instances when we are interested in the probability of an outcome. How do we handle these sort of data?
@@ -183,6 +268,10 @@ $$P(Y=y) = \binom{n}{y}p^y(1-p)^{(n-y)} \\
       =e^{y\log(p) + (n-y)\log(1-p) + \log\binom{n}{y}}$$
       
 ---
+•	Explicit that the logit function serves as a link between linear regression and logistic regression
+    o	directly connect these models parameter by parameter
+
+---
 # Binomial distribution and the GLM
 
 *However*, this probability mass function is not quite in one-parameter exponential family form. 
@@ -194,78 +283,27 @@ $$P(Y=y) = e^{y\log\left(\frac{p}{1-p}\right) + n\log(1-p)+ \log\binom{n}{y}}$$
 - GLM theory suggests that constructing a model using the logit, the log odds of a score, as a linear function of covariates is a reasonable approach.   
 
 ---
-# Example Logistic Regression
+# Maximum Likelihood Estimation
 
-This dataset was drawn from Meta Krüger's (1994) study investigating gender differences in school leadership in Netherlands. The study implemented a matching procedure to generate pairs of comparable schools (N=98) with the only difference being that one school principal was female and the other male, then surveyed the school principals, teachers, and students. Due to deletion of incomplete observations, our dataset is a bit smaller than the one used in the article, it contains 94 school principals and 800 students.
+The maximum likelihood estimation (MLE) is a general class of method in statistics that is used to estimate the model parameters
 
-```{r, echo = F}
-principal <- rio::import(here::here("data", "principal.csv")) %>%
-  mutate(attention = (q1+q2+q3)/3,
-         affective = ifelse(q4 >= 3, 1, 0)) %>% 
-  select(schid, stuid, pfemale, sfemale, match, attention, affective) %>% 
-  group_by(schid) %>% 
-  mutate(attention = (attention-mean(attention))/sd(attention)) %>% 
-  ungroup() 
-
-head(principal)
-```
-
----
-# The Variables
- - schid, school identification number
- - stuid, student identification number within each school
- - pfemale, coded one for female principals and zero for male principals
- - sfemale, coded one for female students and zero for male students
- - match, coded one if student and principal are the same gender
- - q1, students' rating on a survey item, "Sometimes the principal talks to me", on a 4-point likert scale, 1=low, 4=high
- - q2, students' rating on a survey item, "I think the principal knows who I am", on a 4-point likert scale, 1=low, 4=high
- - q3, students' rating on a survey item, "Principal knows how well I am doing", on a 4-point likert scale, 1=low, 4=high
- - q4, students' rating on a survey item, "The principal is nice", on a 4-point likert scale, 1=low, 4=high
+Note: we will not discuss MLE in the general form. Instead, we will consider a simple case of MLE that is relevant to the logistic regression.
 
 ---
 
-For starters, some data managment; we're interested in the association between student-perceived attention from principal and affective attitude toward principal, therefore we compute two variables of interest:
-
- - attention: take the average score of attention items, q1, q2, and q3, then standardize it at school level to measure student-perceived attention
- - affective: recode q4 to be a binary variable coded one for students who rated 3 or 4 on this question ("the school principal is nice")
- 
----
-# Visualizing the relationship
- 
-Plot outcome variable, affective, on predictor variable, attention:
-
-```{r echo = FALSE, message = FALSE}
-principal %>% 
-  ggplot(aes(attention, affective)) +
-  geom_point(color = "royalblue") +
-  labs(y = "Affective attitude towards principal",
-       x = "Attention from principal")
-```
-
-What patterns do you notice from the plots above?
+•	Visually show how the maximum likelihood estimator works 
+o	iterates over local maxima
+o	show a contour plot
 
 ---
-# Modeling the relationship
+# MLE limitations
 
-How to model these relationships in our analysis?
-Our inquiry: The associations between student self-perceived attention from principal and affective attitude towards principal.
+MLE is primarily used as a point estimate solution and the information contained in a single value will always be limited. Likelihoods will not necessarily be symmetrically dispersed around the point of maximum likelihood. 
 
-What models should we use to fit the data when our outcome variable is a dichotomous variable?
+We may be interested in the full distribution of credible parameter values, so that we can perform sensitivity analyses and understand the possible outcomes or optimal decisions associated with particular credible intervals. 
 
----
-# Logistic Regression
+Bayesian methods can be applied to circumvent these limitations.
 
-Binary (0 or 1) response (Y) and a single continuous predictor (X).
-
-### Model for logistic regression with binary or binomial responses:
-
-$$\log(\frac{p_i}{1-p_i})=\beta_0+\beta_1 x_i$$
-
-where the observed values $Y_i \sim$ binomial with $p=p_i$ for a given $x_i$ and $n=1$ for binary responses.
-
-???
-
-The solid line is a linear regression fit with least squares to model the probability of a success (Y=1) for a given value of X.  With a binary response, the line doesn't fit the data well, and it produces predicted probabilities below 0 and above 1.  On the other hand, the logistic regression fit (dashed curve) with its typical "S" shape follows the data closely and always produces predicted probabilities between 0 and 1.  For these and several other reasons detailed in this chapter, we will focus on the following model for logistic regression with binary or binomial responses:
 
 ---
 # Assumptions
@@ -277,6 +315,7 @@ The solid line is a linear regression fit with least squares to model the probab
 - No outliers
 - Independence of (X,Y)'s
   - No clustering of data into groups/contexts that would provide information about the values of other errors
+
 
 ---
 # Describe dichotomous outcome variable
@@ -412,6 +451,10 @@ $$\beta_1 = ln(\frac{odds|X=1}{odds|X=0})$$
 
 $$OR = e^{ln(OR_{X=1:X=0})}$$
   $$= e^{\beta_1}$$
+
+---
+
+•	Give students opportunities to practice calculating odds ratios by hand, and the interpreting them
 
 ---
 # Logistic Regression Assumptions
