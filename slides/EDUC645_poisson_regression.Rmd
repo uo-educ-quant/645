@@ -16,8 +16,11 @@ output:
 ---
 
 ```{R, setup, include = F}
-library(pacman)
-p_load(here, tidyverse, ggplot2, xaringan, knitr, kableExtra, foreign, broom, xaringanthemer)
+knitr::opts_chunk$set(echo = TRUE)
+if (!require(pacman)) install.packages('pacman', repos = 'https://cran.rstudio.com')
+pacman::p_load(here, tidyverse, ggplot2, xaringan, kableExtra, foreign, xaringanthemer, dplyr, knitr, lfe, arsenal, ggpubr, broom, stargazer, fixest, gtsummary, huxtable, scales, AER)
+theme_set(theme_classic())
+
 
 i_am("slides/EDUC645_poisson_regression.rmd")
 
@@ -58,6 +61,240 @@ write_extra_css(css = extra_css, outfile = "my_custom.css")
 ```
 
 # Roadmap
+
+---
+# Motivating Example
+
+### Important R packages used in this unit
+
+ - AER [Kleiber and Zeileis 2022](https://cran.r-project.org/web/packages/AER/index.html), [vignette here](https://cran.r-project.org/web/packages/AER/vignettes/AER.pdf), which stands for "Applied Econometrics with R"
+   - dispersiontest() function tests the null hypothesis of equidispersion in Poisson regressions against the alternative of overdispersion and/or underdispersion
+
+### The dataset 
+
+**Dataset: ceps_sch.csv**
+
+```{r}
+ceps <- rio::import(here::here("data", "ceps_sch.csv")) 
+
+ceps %>% 
+  filter(row_number() < 6) %>% 
+  kable()
+```
+
+This dataset was drawn from the China Education Panel Survey (CEPS), China’s first nationally representative, longitudinal survey of middle school students. CEPS first wave was conducted during school year 2013-2014 and a stratified, four-step random sampling procedure was implemented to draw a random sample of middle schools (N=112) from the nation and collect rich data from school administrators, teachers, students, and parents. This school-level dataset is limited to 45 schools that have eight teacher participants and no missing values on any key variables. Our primary goal with this dataset is to investigate the school-level factors associated with teacher job satisfaction that is measured by the count of teachers who feel satisfied with their job and their school. 
+
+ - *schids*, school identifier
+ - *njobsatis*, number of teachers who answered yes to the question of whether to choose being a teacher if given other job options
+ - *nschsatis*, number of teachers who answered yes to the question of whether to choose the current school if being allowed to move to other schools
+ - *rural*, categorical measure of proportion of rural students in school; 1=lower than 25%, 2=25% to 60%, 3=60% to 80%, 4=higher than 80%
+ - *clsize*, average class size
+ - *computer*, number of computers available to students
+ - *ctyeduz*, neighborhood average years of education (standardized)
+
+---
+# Summary statistics 
+
+```{r}
+ceps %>% 
+  select(-schids) %>%
+  select(njobsatis, nschsatis, everything()) %>% 
+  mutate(rural = factor(rural, levels = c(1,2,3,4), labels = c("lower than 25%", "25% to 60%", "60% to 80%", "higher than 80%"))) %>% 
+  tbl_summary(
+    type = list(c("clsize", "ctyeduz", "computer") ~ "continuous",
+                c("njobsatis", "nschsatis", "rural") ~ "categorical"),
+    statistic = list(all_continuous() ~ "{mean} ({min}, {max})",
+                       all_categorical() ~ "{n} / {N} ({p}%)"),
+    label = list(njobsatis ~ "Number of teachers satisfied with job",
+                 nschsatis ~ "Number of teachers satisfied with school",
+                 rural ~ "Proportion of rural students",
+                 clsize ~ "Average class size",
+                 computer ~ "Number of computers",
+                 ctyeduz ~ "Neighborhood average years of education (standardized)")
+    )
+```
+
+---
+# Visualizations
+
+## The two teacher satisfaction measures
+
+Job satisfaction:
+
+```{r}
+ceps %>% 
+  ggplot(aes(njobsatis)) +
+  geom_bar(fill = "steelblue") +
+  labs(x = "Number of teachers satisfied with job",
+       y = "Number of schools") + 
+  scale_y_continuous(labels = label_number(accuracy = 1))
+```
+
+---
+# Visualizations
+
+Satisfaction towards school:
+
+```{r}
+ceps %>% 
+  ggplot(aes(nschsatis)) +
+  geom_bar(fill = "cadetblue") +
+  labs(x = "Number of teachers satisfied with school",
+       y = "Number of schools") + 
+  scale_y_continuous(labels = label_number(accuracy = 1))
+```
+Henceforce investigating job satisfaction (njobsatis). We may use job satisfaction (njobsatis) as outcome in the class and school satisfaction (nschsatis) in the lab or assignment.
+
+---
+# Poisson regression
+
+Research inquiry: relationship between class size and job satisfaction
+
+## Why simple linear regression is not ideal for Poisson data
+
+Do you think a linear fitted line is a good way to describe the relationship between these two variables?
+
+```{r}
+ceps %>% 
+  ggplot(aes(clsize, njobsatis)) +
+  geom_point() +
+  geom_smooth(method = "lm", alpha = 0, color = "orangered") +
+  labs(x = "Average class size",
+       y = "Number of teachers satisfied with job") + 
+  scale_y_continuous(labels = label_number(accuracy = 1))
+```
+
+---
+
+An important reason why a linear least squares regression model doesn't work for Poisson data is the violation of equal variance assumption, see the plot below:
+
+```{r}
+ols <- lm(njobsatis ~ clsize, ceps)
+
+plot(density(resid(ols)))
+```
+
+---
+
+```{r}
+# try to replicate Figure 4.1 in textbook (in progress)
+
+# get the residuals of linear regression
+ceps$residuals_ols <- residuals(ols)
+# get the residuals of poisson regression
+ceps$residuals_glm <- ceps$njobsatis - 0.1 * ceps$clsize
+```
+
+---
+# Poission regression assumptions
+
+First, the number of teachers satisfied with their job still demonstrate Poisson distribution when grouped by class size:
+
+```{r}
+# table(ceps$clsize)
+cuts = cut(ceps$clsize,
+           breaks=c(10, 30, 50, 70))
+data.frame(cuts, ceps) %>% 
+  ggplot(aes(njobsatis)) +
+  geom_histogram(color = "royalblue") +
+  facet_wrap(cuts) +
+  labs(x = "Number of teachers satisfied with job",
+       y = "Number of schools")
+```
+
+---
+# Poission regression assumptions
+
+```{r}
+data.frame(cuts, ceps) %>% 
+  ggplot(aes(njobsatis, fill = cuts)) +
+  geom_histogram(position = "fill") +
+  labs(x = "Number of teachers satisfied with job",
+       fill = "Groups of class size") +
+  scale_fill_brewer(palette="Dark2")
+```
+
+---
+# Poission regression assumptions
+Second, the mean equals to variance assumption for Poisson random variables are largely met:
+
+```{r}
+data.frame(cuts, ceps) %>% 
+  group_by(cuts) %>% 
+  summarise(mean = mean(njobsatis),
+            var = var(njobsatis),
+            n = n()) %>% 
+  kable(col.names = c("Class size groups", "Mean", "Variance", "n")) 
+```
+
+---
+# Poission regression assumptions
+
+More formally, the dispersion test:
+
+```{r}
+dispersiontest(glm(njobsatis ~ clsize, family = poisson, ceps))
+```
+
+---
+# Poission regression assumptions
+
+Third, check for the linearity assumption:
+
+```{r}
+ceps %>% 
+  group_by(clsize) %>% 
+  summarize(mean = mean(njobsatis),
+            logmean = log(mean),
+            n = n()) %>% 
+  ggplot(aes(clsize, logmean)) +
+  geom_point(color = "grey60") +
+  geom_smooth(method = "loess", size = 1.2, color = "firebrick", alpha = 0.2) +
+  labs(x = "Average class size",
+       y = "Log of the empirical mean of number of teacher satisfied")
+```
+
+---
+# Poission regression assumptions
+
+#### Poisson regression estimator
+
+```{r}
+m1 <- glm(njobsatis ~ clsize, family = poisson, ceps)
+m2 <- glm(njobsatis ~ clsize + rural + computer + ctyeduz, family = poisson, ceps)
+```
+
+```{r}
+list(m1, m2) %>% 
+  huxreg()
+```
+
+Compared to OLS estimators:
+
+```{r}
+m3 <- lm(njobsatis ~ clsize, ceps)
+m4 <- lm(njobsatis ~ clsize + rural + computer + ctyeduz, ceps)
+
+huxreg(
+  "Poisson" = m1,
+  "Poisson (covariates)" = m2,
+  "OLS" = m3,
+  "OLS (covariates)" = m4,
+  coefs = c("Average class size" = "clsize",
+            "Proportion of rural students" = "rural",
+            "Number of computers" = "computer",
+            "Neigbhorhood education (standardized)" = "ctyeduz")
+  )
+```
+
+---
+# Poission regression assumptions
+
+#### Model fit
+
+```{r}
+anova(m1, m2, test = "Chisq")
+```
 
 ---
 # Count Data

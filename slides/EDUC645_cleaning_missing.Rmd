@@ -48,13 +48,12 @@ write_extra_css(css = extra_css, outfile = "my_custom.css")
  - Reporting on handling missing data
 
 ---
-# Missing Data Motivating example
+
 class: middle, inverse
 
-# Applying missing data treatment: Multiple Imputation
+# Missing Data Motivating example
 
 ---
-
 # Dataset: galo.csv** 
 
 GALO data is originally described by Peschar (1975) and analyzed by Dronkers and Schijf (1994)
@@ -63,18 +62,19 @@ GALO data is originally described by Peschar (1975) and analyzed by Dronkers and
 - 37 elementary schools in Groningen, Netherlands
 
 Key variables.
-DV: galo, student's achievement score on GALO test
+DV: score, student's achievement score on GALO test
 
-Covariates:
- - schid, school identification number
- - female, coded one for female students and zero for male
- - advice, teacher’s advice on the student's secondary school choice; 0="no subsequent school", 1="lowest",..., 6="highest", 999="missing" 
- - medu, mother's highest education; 1="lowest",..., 9="highest", 999="missing"
- - fedu, father’s highest education; 1="lowest",..., 9="highest", 999="missing"
- - focc, father’s occupational status; 1="lowest",..., 6="highest", 9="missing"
+Covariates
+ - schid: school identification number
+ - female: coded one for female students and zero for male
+ - advice: teacher’s advice on the student's secondary school choice; 0="no subsequent school", 1="lowest",..., 6="highest", 999="missing" 
+ - medu: mother's highest education; 1="lowest",..., 9="highest", 999="missing"
+ - fedu: father’s highest education; 1="lowest",..., 9="highest", 999="missing"
+ - focc: father’s occupational status; 1="lowest",..., 6="highest", 9="missing"
 
 ```{r}
 galo <- rio::import(here::here("data", "galo.csv"))
+
 ```
 
 ---
@@ -150,7 +150,6 @@ Note that the regression functions (e.g., lm()) in R typically only report resul
 ???
 To illustrate how different ways to deal with missing data might affect our analysis, let's start with a research question and an OLS regression to answer the question.
 
---
 ---
 
 # Problems with missing data (missingness)
@@ -300,8 +299,9 @@ widgetframe::frameableWidget(m)
 #### Casewise deletion (CD)
 
 ```{r}
-m1 <- lm(advice ~ galo, galo)
-m2 <- lm(advice ~ galo + female + medu + fedu + focc, galo)
+m1 <- lm(advice ~ score, galo)
+m2 <- lm(advice ~ score + female + medu + fedu + focc, galo)
+
 list("CD" = m1,
      "CD (covariates)" = m2) %>% 
   huxreg()
@@ -321,23 +321,12 @@ galo_meani <- galo %>%
   mutate(medu = ifelse(is.na(medu), medumean, medu),
          fedu = ifelse(is.na(fedu), fedumean, fedu),
          focc = ifelse(is.na(focc), foccmean, focc))
-```
 
-???
-Simply imputing all missing values using mean values, but there're good practice and bad practice. 
-
- - Due to the fact that students are nested in schools, the best practice is to compute mean values WITHIN EACH SCHOOL rather than across all observations.
- 
- - be extra careful when dealing with missingness on predictor and outcome variables. 
- Our outcome variable, advice, has a very small missing value (0.45%), so we should drop all incomplete observations rather than replacing them with variable means
- 
----
 # Rerun the analysis:
 
-```{r}
-m3 <- lm(advice ~ galo, galo_meani)
+m3 <- lm(advice ~ score, galo_meani)
 
-m4 <- lm(advice ~ galo + female + medu + fedu + focc, galo_meani)
+m4 <- lm(advice ~ score + female + medu + fedu + focc, galo_meani)
 
 list("CD" = m1,
      "CD (covariates)" = m2,
@@ -345,6 +334,15 @@ list("CD" = m1,
      "MeanI (covariates)" = m4) %>% 
   huxreg()
 ```
+
+ - Due to the fact that students are nested in schools, the best practice is to compute mean values WITHIN EACH SCHOOL rather than across all observations.
+ 
+ - be extra careful when dealing with missingness on predictor and outcome variables. 
+
+Our outcome variable, advice, has a very small missing value (0.45%), so we should drop all incomplete observations rather than replacing them with variable means
+
+???
+Simply imputing all missing values using mean values, but there's good practice and bad practice. 
 
 ---
 # Multiple imputation (MI)
@@ -370,6 +368,8 @@ galo_multi <- mice(galo, m = 50, maxit = 10, seed = 12345)
 summary(galo_multi)
 densityplot(galo_multi, scales = list(x = list(relation = "free")), layout = c(2, 1))
 ```
+
+--
 
 Look at the first dataset
 
@@ -413,7 +413,7 @@ densityplot(galo_multi, scales = list(x = list(relation = "free")), layout = c(3
 # Alternate scripting using "tidy" approach
 est1 <- galo %>%
   mice(m = 50, seed = 12345) %>%
-  with(lm(advice ~ galo)) %>%
+  with(lm(advice ~ score)) %>%
   pool()
 summary(est1)
 ```
@@ -423,7 +423,7 @@ summary(est1)
 ```{r}
 est2 <- galo %>%
   mice(m = 50, seed = 12345) %>%
-  with(lm(advice ~ galo + female + medu + fedu + focc)) %>%
+  with(lm(advice ~ score + female + medu + fedu + focc)) %>%
   pool()
 summary(est2)
 ```
