@@ -68,7 +68,7 @@ The study implemented a matching procedure to generate pairs of comparable schoo
 principal <- rio::import(here::here("data", "principal.csv")) %>%
   mutate(attention = (q1+q2+q3)/3,
          affective = ifelse(q4 >= 3, 1, 0)) %>% 
-  select(schid, stuid, pfemale, sfemale, match, attention, affective) %>% 
+  select(schid, stuid, female, stufemale, match, attention, affective) %>% 
   group_by(schid) %>% 
   mutate(attention = (attention-mean(attention))/sd(attention)) %>% 
   ungroup() 
@@ -283,18 +283,110 @@ $$P(Y=y) = e^{y\log\left(\frac{p}{1-p}\right) + n\log(1-p)+ \log\binom{n}{y}}$$
 - GLM theory suggests that constructing a model using the logit, the log odds of a score, as a linear function of covariates is a reasonable approach.   
 
 ---
-# Maximum Likelihood Estimation
+# Likelihood Models and Estimation
 
-The maximum likelihood estimation (MLE) is a general class of method in statistics that is used to estimate the model parameters
+Fitting simple linear models using ordinary least squares (OLS) assumes that the mean value of a response, Y, is linearly related to some variable, X. However, often responses are not normally distributed. 
+
+*binary response linearly represented*
+```{r}
+
+```
+
+
+---
+# Fitting logistic regression requires *likelihood methods*. 
+
+*Likelihood* function tells us how likely we are to observe our data for a given parameter value, pB. 
+- Likelihood methods come into play is when data is produced from a complex structure which may imply correlation among outcomes (e.g., students' test scores taught by the same teacher)
+- provide flexibility in the types of models we can fit
+- provide ways in which to compare models
+
+For a single X which has a Y, GBB, the likelihood function looks like:
+[insert function]
+
+*Distribution of likelihood function pB*
+```{r, echo= F}
+set.seed(110951)
+x <- rgamma(1000, 6, 0.5)
+library(MASS)
+truehist(x, xlim = c(0, 35))
+xpts <- seq(from = 0, to = 35, length = 1000)
+lines(xpts, dgamma(xpts, 6, 0.5))
+```
 
 Note: we will not discuss MLE in the general form. Instead, we will consider a simple case of MLE that is relevant to the logistic regression.
 
 ---
+# Maximum Likelihood Estimation
 
-•	Visually show how the maximum likelihood estimator works 
-o	iterates over local maxima
-o	show a contour plot
+*Maximum likelihood estimation (MLE)* is a general class of method in statistics that is used to estimate the model parameters
 
+[simple MLE estimation figure]
+```{r}
+
+```
+
+
+---
+# Maximum Likelihood Estimation
+
+MLE: is the optimal estimate of pB, the value where we are most likely to see our data from all possible values between 0 and 1.
+-  iterates over local maxima find the value of pB where the likelihood or log likelihood is a maximum.
+
+*Contour plot*
+```{r, echo = F}
+# Reference: https://rpubs.com/gill1109/contour
+fit <- fitdistr(x, "gamma")
+
+NxPts <- 100
+NyPts <- 100
+
+xGridPts <- seq(from = 5, to = 7, length = NxPts)
+yGridPts <- seq(from = 0.4, to = 0.6, length = NyPts)
+
+xypairs <- expand.grid(xGridPts, yGridPts) 
+       # coordinates of all gridpoints, rows of an N x 2 matrix
+       # N = NxPts * NyPts
+
+LogLikFun <- function(shape, rate) sum(dgamma(x, shape = shape, rate = rate, log = TRUE))
+
+LogLikOnGrid <- mapply(LogLikFun, xypairs[ , 1], xypairs[ ,2]) # another long vector
+
+## Can you understand the error message when you do
+##    LogLikOnGrid <- outer(xGridPts, yGridPts, LogLikFun)   ?
+## Why doesn't "outer" work here??
+## Can you come up with something better than my solution?
+## You'll also notice that "mapply" is rather slow ...
+## There is an explicit "for loop" going on inside of "mapply".
+## There ought to be a "vectorised" way to do this.
+
+dim(LogLikOnGrid) <- c(NxPts, NyPts) # convert to matrix
+
+## I'll subtract the maximum from the log likelihood function.
+## We are only interested in *differences*, not in its absolute
+## value. Now I know the maximum of the surface is at height z = 0.
+## Also I reshape as a matrix.
+
+MaxLogLik <- max(LogLikOnGrid)
+
+LogLikOnGrid <- matrix(LogLikOnGrid, NxPts, NyPts) - max(LogLikOnGrid)
+
+contour(x = xGridPts, y = yGridPts, z = LogLikOnGrid)
+
+contour(x = xGridPts, y = yGridPts, z = LogLikOnGrid, 
+        levels = c( (0:-8)*10), col = "blue", add = TRUE)
+
+contour(x = xGridPts, y = yGridPts, z = LogLikOnGrid, 
+        levels = - qchisq(0.95, 2)/2, col = "red", add = TRUE)
+```
+
+---
+# Same idea, different plot
+
+*Wire-frame plot*
+```{r, echo = F}
+persp(x = xGridPts, y = yGridPts, z = LogLikOnGrid)
+```
 ---
 # MLE limitations
 
@@ -303,7 +395,6 @@ MLE is primarily used as a point estimate solution and the information contained
 We may be interested in the full distribution of credible parameter values, so that we can perform sensitivity analyses and understand the possible outcomes or optimal decisions associated with particular credible intervals. 
 
 Bayesian methods can be applied to circumvent these limitations.
-
 
 ---
 # Assumptions
@@ -315,7 +406,6 @@ Bayesian methods can be applied to circumvent these limitations.
 - No outliers
 - Independence of (X,Y)'s
   - No clustering of data into groups/contexts that would provide information about the values of other errors
-
 
 ---
 # Describe dichotomous outcome variable
@@ -352,9 +442,7 @@ $\beta_1$: Change in log odds for 1 unit change in $X_i$
 ---
 
 # Linear probability model (LPM)
-
-## Back to our example from 
-
+Back to our example
 ```{r}
 m1 <- lm(affective ~ attention, principal)
 summary(m1)

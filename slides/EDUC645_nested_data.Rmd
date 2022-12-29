@@ -221,6 +221,8 @@ seda %>%
 
 Let's start with a single variable: Oregon districts' achievement score 
 
+Are we losing information by simply looking at district achievement across subject and grade?
+
 ```{r, echo = FALSE, fig.cap="add caption"}
 seda %>% 
   group_by(district) %>% 
@@ -233,9 +235,6 @@ seda %>%
        y = "Achievement")
 ```
 
---
-
-Are we losing information by simply looking at district achievement across subject and grade?
 
 ???
 Note that districts are "randomly" selected by course developer
@@ -292,6 +291,9 @@ seda %>%
 ---
 
 Alternatively, 
+Can you describe the "clustering" nature of the data in more details now?
+
+IMPORTANTLY, should we keep in mind of this unique feature when we answering research questions, e.g., about relations between two variables?
 
 ```{r, echo = FALSE, fig.cap="add caption"}
 seda %>% 
@@ -306,10 +308,6 @@ seda %>%
   labs(x = "District",
        y = "Achievement")
 ```
-
-Can you describe the "clustering" nature of the data in more details now?
-
-IMPORTANTLY, should we keep in mind of this unique feature when we answering research questions, e.g., about relations between two variables?
 
 ---
 # Relationship across grade and subject:
@@ -397,11 +395,6 @@ class: middle, inverse
 
 # Fixed effects model
 
-
----
-
-# Fixed effects model
-
 * Assume a common intercept for all grades. 
 
 --
@@ -473,7 +466,6 @@ What parameters changed in the plot?
 Another way to answer the question is allowing the intercept to differ across grades - a unique intercept for each grade.
 
 ---
-
 `lme4` package: `lmer` function models the data in R:
 
 Model 1. Simple linear regression model for comparison
@@ -499,8 +491,7 @@ equatiomatic::extract_eq(m2)
 ```
 
 ---
-
-Model 3. Multilevel model with *random __slopes__* 
+# Model 3. Multilevel model with *random __slopes__* 
 
 * **Note**: this comparison is primarily for instructive purposes
 * How do you interpret the parameters now?
@@ -513,8 +504,8 @@ coef(m3)$grade
 ```
 
 ---
-
 Model 4. Multilevel model with *random __intercepts__ and __slopes__*
+
 * How about the parameters for this model specification?
 * Specify the relationship between percentage of ELL and math achievement for grades 3, 4 & 6
 
@@ -598,6 +589,10 @@ class: middle, inverse
 
 **Intraclass correlation coefficient**: Proportion of total variability in the outcome that occurs between groups.
 
+i.e., the ICC is calculated as a ratio
+
+ICC = $(variance of interest) / (total variance) = (variance of interest) / (variance of interest + unwanted variance)
+
 --
 
 * Larger ICC = More inequality between groups
@@ -606,6 +601,7 @@ class: middle, inverse
 The greater the ICC, the greater the reflection of inequality between groups.
 
 ---
+
 # Intraclass Correlation
 ### Common methods to address the ICC “issue”
 - Ecologic Regression
@@ -623,7 +619,11 @@ The greater the ICC, the greater the reflection of inequality between groups.
 ### Repeated-measured modeling (“Growth curves”)
 
 ---
+# Manually Calculate ICC
 
+[insert example]
+
+---
 # When modeling random effects becomes necessary?
 ## Unconditional model and ICC
 
@@ -727,6 +727,8 @@ Model 4 doesn't perform much better than model 2 (identical RMSE;
 ---
 
 # Model Building and Parsimony
+
+
 
 ---
 class: center, inverse

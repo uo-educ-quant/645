@@ -16,6 +16,7 @@ output:
 ---
 
 ```{R, setup, include = F}
+
 knitr::opts_chunk$set(echo = TRUE)
 if (!require(pacman)) install.packages('pacman', repos = 'https://cran.rstudio.com')
 pacman::p_load(here, tidyverse, ggplot2, xaringan, kableExtra, foreign, xaringanthemer, dplyr, knitr, lfe, arsenal, ggpubr, broom, stargazer, fixest, gtsummary, huxtable, scales, AER)
@@ -561,6 +562,7 @@ class: middle, inverse
 * Negative binomial
 * Zero-inflated models
 
+[and explain tradeoffs across approaches!]
 ---
 # OLS regression vs. Poisson regression
 
