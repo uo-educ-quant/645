@@ -57,25 +57,33 @@ extra_css <- list(
   ".small" = list("font-size" = "90%"))
 write_extra_css(css = extra_css, outfile = "my_custom.css")
 
-
+# Knitr options
+opts_chunk$set(
+  comment = "#>",
+  fig.align = "center",
+  fig.height = 5,
+  fig.width = 8,
+  warning = F,
+  message = F
+)
 
 ```
 
 # Roadmap
 
 ---
-# Motivating Example
+# A Motivating Question
 
-### Important R packages used in this unit
+This dataset was drawn from the China Education Panel Survey (CEPS), China’s first nationally representative, longitudinal survey of middle school students. CEPS first wave was conducted during school year 2013-2014 and a stratified, four-step random sampling procedure was implemented to draw a random sample of middle schools (N=112) from the nation and collect rich data from school administrators, teachers, students, and parents. This school-level dataset is limited to 45 schools that have eight teacher participants and no missing values on any key variables. Our primary goal with this dataset is to investigate the school-level factors associated with teacher job satisfaction that is measured by the count of teachers who feel satisfied with their job and their school. 
 
- - AER [Kleiber and Zeileis 2022](https://cran.r-project.org/web/packages/AER/index.html), [vignette here](https://cran.r-project.org/web/packages/AER/vignettes/AER.pdf), which stands for "Applied Econometrics with R"
-   - dispersiontest() function tests the null hypothesis of equidispersion in Poisson regressions against the alternative of overdispersion and/or underdispersion
+Research inquiry: relationship between class size and job satisfaction
 
-### The dataset 
+---
+# The dataset 
 
 **Dataset: ceps_sch.csv**
 
-```{r}
+```{r, echo = F}
 ceps <- rio::import(here::here("data", "ceps_sch.csv")) 
 
 ceps %>% 
@@ -83,7 +91,6 @@ ceps %>%
   kable()
 ```
 
-This dataset was drawn from the China Education Panel Survey (CEPS), China’s first nationally representative, longitudinal survey of middle school students. CEPS first wave was conducted during school year 2013-2014 and a stratified, four-step random sampling procedure was implemented to draw a random sample of middle schools (N=112) from the nation and collect rich data from school administrators, teachers, students, and parents. This school-level dataset is limited to 45 schools that have eight teacher participants and no missing values on any key variables. Our primary goal with this dataset is to investigate the school-level factors associated with teacher job satisfaction that is measured by the count of teachers who feel satisfied with their job and their school. 
 
  - *schids*, school identifier
  - *njobsatis*, number of teachers who answered yes to the question of whether to choose being a teacher if given other job options
@@ -96,7 +103,7 @@ This dataset was drawn from the China Education Panel Survey (CEPS), China’s f
 ---
 # Summary statistics 
 
-```{r}
+```{r, echo = F}
 ceps %>% 
   select(-schids) %>%
   select(njobsatis, nschsatis, everything()) %>% 
@@ -122,7 +129,7 @@ ceps %>%
 
 Job satisfaction:
 
-```{r}
+```{r, echo = F}
 ceps %>% 
   ggplot(aes(njobsatis)) +
   geom_bar(fill = "steelblue") +
@@ -136,7 +143,7 @@ ceps %>%
 
 Satisfaction towards school:
 
-```{r}
+```{r, echo = F}
 ceps %>% 
   ggplot(aes(nschsatis)) +
   geom_bar(fill = "cadetblue") +
@@ -149,13 +156,11 @@ Henceforce investigating job satisfaction (njobsatis). We may use job satisfacti
 ---
 # Poisson regression
 
-Research inquiry: relationship between class size and job satisfaction
-
 ## Why simple linear regression is not ideal for Poisson data
 
 Do you think a linear fitted line is a good way to describe the relationship between these two variables?
 
-```{r}
+```{r, echo = F}
 ceps %>% 
   ggplot(aes(clsize, njobsatis)) +
   geom_point() +
@@ -169,7 +174,7 @@ ceps %>%
 
 An important reason why a linear least squares regression model doesn't work for Poisson data is the violation of equal variance assumption, see the plot below:
 
-```{r}
+```{r, echo = F}
 ols <- lm(njobsatis ~ clsize, ceps)
 
 plot(density(resid(ols)))
@@ -184,117 +189,6 @@ plot(density(resid(ols)))
 ceps$residuals_ols <- residuals(ols)
 # get the residuals of poisson regression
 ceps$residuals_glm <- ceps$njobsatis - 0.1 * ceps$clsize
-```
-
----
-# Poission regression assumptions
-
-First, the number of teachers satisfied with their job still demonstrate Poisson distribution when grouped by class size:
-
-```{r}
-# table(ceps$clsize)
-cuts = cut(ceps$clsize,
-           breaks=c(10, 30, 50, 70))
-data.frame(cuts, ceps) %>% 
-  ggplot(aes(njobsatis)) +
-  geom_histogram(color = "royalblue") +
-  facet_wrap(cuts) +
-  labs(x = "Number of teachers satisfied with job",
-       y = "Number of schools")
-```
-
----
-# Poission regression assumptions
-
-```{r}
-data.frame(cuts, ceps) %>% 
-  ggplot(aes(njobsatis, fill = cuts)) +
-  geom_histogram(position = "fill") +
-  labs(x = "Number of teachers satisfied with job",
-       fill = "Groups of class size") +
-  scale_fill_brewer(palette="Dark2")
-```
-
----
-# Poission regression assumptions
-Second, the mean equals to variance assumption for Poisson random variables are largely met:
-
-```{r}
-data.frame(cuts, ceps) %>% 
-  group_by(cuts) %>% 
-  summarise(mean = mean(njobsatis),
-            var = var(njobsatis),
-            n = n()) %>% 
-  kable(col.names = c("Class size groups", "Mean", "Variance", "n")) 
-```
-
----
-# Poission regression assumptions
-
-More formally, the dispersion test:
-
-```{r}
-dispersiontest(glm(njobsatis ~ clsize, family = poisson, ceps))
-```
-
----
-# Poission regression assumptions
-
-Third, check for the linearity assumption:
-
-```{r}
-ceps %>% 
-  group_by(clsize) %>% 
-  summarize(mean = mean(njobsatis),
-            logmean = log(mean),
-            n = n()) %>% 
-  ggplot(aes(clsize, logmean)) +
-  geom_point(color = "grey60") +
-  geom_smooth(method = "loess", size = 1.2, color = "firebrick", alpha = 0.2) +
-  labs(x = "Average class size",
-       y = "Log of the empirical mean of number of teacher satisfied")
-```
-
----
-# Poission regression assumptions
-
-#### Poisson regression estimator
-
-```{r}
-m1 <- glm(njobsatis ~ clsize, family = poisson, ceps)
-m2 <- glm(njobsatis ~ clsize + rural + computer + ctyeduz, family = poisson, ceps)
-```
-
-```{r}
-list(m1, m2) %>% 
-  huxreg()
-```
-
-Compared to OLS estimators:
-
-```{r}
-m3 <- lm(njobsatis ~ clsize, ceps)
-m4 <- lm(njobsatis ~ clsize + rural + computer + ctyeduz, ceps)
-
-huxreg(
-  "Poisson" = m1,
-  "Poisson (covariates)" = m2,
-  "OLS" = m3,
-  "OLS (covariates)" = m4,
-  coefs = c("Average class size" = "clsize",
-            "Proportion of rural students" = "rural",
-            "Number of computers" = "computer",
-            "Neigbhorhood education (standardized)" = "ctyeduz")
-  )
-```
-
----
-# Poission regression assumptions
-
-#### Model fit
-
-```{r}
-anova(m1, m2, test = "Chisq")
 ```
 
 ---
@@ -315,7 +209,7 @@ These kinds of questions draw from count data
 
 ---
 
-# Normal distribution vs. poisson distribution
+# Normal distribution vs. Poisson distribution
 
 .pull-left[
 ```{r, echo=F}
@@ -355,7 +249,6 @@ plot(xseq, densities, col = "blue", xlab = "", ylab = "Density", type = "l", lwd
 
 
 ---
-
 # Poisson Distribution
 
 * A discrete probability distribution is used to describe the off occurrence of unlikely events in a large number of independent trials
@@ -491,6 +384,141 @@ class: middle, inverse
   - For example, school districts could use to better predict the number of students who receive free/reduced lunch.
 
 ---
+# Assumptions pt. 1
+* Response Variable: The response variable is a count per unit of time or space, described by a Poisson distribution.
+* Independence: The observations must be independent of one another.
+* Mean = Variance by definition, the mean of a Poisson random variable must be equal to its variance.
+* Linearity: The log of the mean rate, log(λ), must be a linear function of x.
+
+---
+# Assumptions pt. 2
+
+The outcome (Y) is a count (positive integer)
+* Ex. the number of people in a subgroup of a population who have a learning disorder
+Requires a unit of time:
+* E.g., number of accidents per day, number of exposed per year
+
+Count data can also be expressed as rate data
+* the number of times an event occurs within a timeframe can be expressed as:
+  - raw count (i.e. “In a day, we eat three meals”)
+  - rate (“We eat at a rate of 0.125 meals per hour”)
+
+
+---
+# Poisson regression assumptions
+
+First, the number of teachers satisfied with their job still demonstrate Poisson distribution when grouped by class size:
+
+```{r, echo = F}
+# table(ceps$clsize)
+cuts = cut(ceps$clsize,
+           breaks=c(10, 30, 50, 70))
+data.frame(cuts, ceps) %>% 
+  ggplot(aes(njobsatis)) +
+  geom_histogram(color = "royalblue") +
+  facet_wrap(cuts) +
+  labs(x = "Number of teachers satisfied with job",
+       y = "Number of schools")
+```
+
+---
+# Poisson regression assumptions
+
+```{r, echo = F}
+data.frame(cuts, ceps) %>% 
+  ggplot(aes(njobsatis, fill = cuts)) +
+  geom_histogram(position = "fill") +
+  labs(x = "Number of teachers satisfied with job",
+       fill = "Groups of class size") +
+  scale_fill_brewer(palette="Dark2")
+```
+
+---
+# Poisson regression assumptions
+Second, the mean equals to variance assumption for Poisson random variables are largely met:
+
+```{r, echo = F}
+data.frame(cuts, ceps) %>% 
+  group_by(cuts) %>% 
+  summarise(mean = mean(njobsatis),
+            var = var(njobsatis),
+            n = n()) %>% 
+  kable(col.names = c("Class size groups", "Mean", "Variance", "n")) 
+```
+
+---
+# Poission regression assumptions
+
+equidispersion in Poisson regressions against the alternative of overdispersion and/or underdispersion
+
+More formally, the dispersion test:
+
+```{r}
+dispersiontest(glm(njobsatis ~ clsize, family = poisson, ceps))
+```
+
+---
+# Poisson regression assumptions
+
+Third, check for the linearity assumption:
+
+```{r, echo = F}
+ceps %>% 
+  group_by(clsize) %>% 
+  summarize(mean = mean(njobsatis),
+            logmean = log(mean),
+            n = n()) %>% 
+  ggplot(aes(clsize, logmean)) +
+  geom_point(color = "grey60") +
+  geom_smooth(method = "loess", size = 1.2, color = "firebrick", alpha = 0.2) +
+  labs(x = "Average class size",
+       y = "Log of the empirical mean of number of teacher satisfied")
+```
+
+---
+# Poisson regression assumptions
+
+#### Poisson regression estimator
+
+```{r, echo = F}
+m1 <- glm(njobsatis ~ clsize, family = poisson, ceps)
+m2 <- glm(njobsatis ~ clsize + rural + computer + ctyeduz, family = poisson, ceps)
+```
+
+```{r, echo = F}
+list(m1, m2) %>% 
+  huxreg()
+```
+
+---
+Compared to OLS estimators:
+
+```{r, echo = F}
+m3 <- lm(njobsatis ~ clsize, ceps)
+m4 <- lm(njobsatis ~ clsize + rural + computer + ctyeduz, ceps)
+
+huxreg(
+  "Poisson" = m1,
+  "Poisson (covariates)" = m2,
+  "OLS" = m3,
+  "OLS (covariates)" = m4,
+  coefs = c("Average class size" = "clsize",
+            "Proportion of rural students" = "rural",
+            "Number of computers" = "computer",
+            "Neigbhorhood education (standardized)" = "ctyeduz")
+  )
+```
+
+---
+# Poisson regression assumptions
+
+#### Model fit
+
+```{r}
+anova(m1, m2, test = "Chisq")
+```
+
+---
 # Interpretation of Model Parameters
 
 $$\log(\lambda) = \beta_0 + \beta_1X$$
@@ -532,38 +560,29 @@ $$\ln(E[Y]) = \beta_0 + \beta_1X + \ln(Time)$$
 # Interpreting Coefficients
 Poisson regression coefficient represents the *change in response corresponding to a one unit difference in the corresponding predictor.* 
 
+[Make sure to devote substantial time to work on interpreting what the parameter estimates mean]
+
 ???
 Like other regression coefficients, a Poisson regression coefficient represents the change in response corresponding to a one unit difference in the corresponding predictor. Here, the response is expected (natural) logged count.
 
 ---
-# Assumptions
-
-The outcome (Y) is a count (positive integer)
-* Ex. the number of people in a subgroup of a population who have a learning disorder
-Requires a unit of time:
-* E.g., number of accidents per day, number of exposed per year
-
-Count data can also be expressed as rate data
-* the number of times an event occurs within a timeframe can be expressed as:
-- raw count (i.e. “In a day, we eat three meals”)
-- rate (“We eat at a rate of 0.125 meals per hour”)
-
-* Response Variable: The response variable is a count per unit of time or space, described by a Poisson distribution.
-* Independence: The observations must be independent of one another.
-* Mean=Variance By definition, the mean of a Poisson random variable must be equal to its variance.
-* Linearity: The log of the mean rate, log(λ), must be a linear function of x.
+# Interpreting Coefficients
 
 ---
-class: middle, inverse
-# Synthesis and wrap-up
+# Interpreting Coefficients
+
 
 ---
-# Beyond the Poisson: Other fish in the sea
-* Negative binomial
-* Zero-inflated models
+# Other fish in the sea: Alternative models for count data
+
+| Model Type        | Benefits                           |  Drawbacks                      |
+|-------------------|------------------------------------|---------------------------------|
+| Negative binomial | Accounts for overly-dispersed data |                                |
+| Zero-inflated models | Accounts for a large number of zero's (e.g., # of cigarettes smoked by general population)| |
 
 [and explain tradeoffs across approaches!]
 ---
+
 # OLS regression vs. Poisson regression
 
 |                 | Linear Least Squares | Poisson Regression |
@@ -574,3 +593,24 @@ class: middle, inverse
 |EDA              | plot X vs. Y; add line | Find $\log(\bar{y})$ for several subgroups; plot vs. X|
 |Comparing models | extra sum of squares F-tests; AIC/BIC | drop-in-deviance tests; AIC/BIC |
 |Interpreting coef| $\beta_1$ = change in mean response for unit change in X | $e^{\beta_1}$= percent change in $\lambda$ for unit change in X|
+
+---
+# Key Takeaways
+
+
+---
+class: middle, inverse
+# Synthesis and wrap-up
+
+---
+# Unit Goals
+
+---
+# To Dos
+
+### Reading
+-
+
+### Assignments
+- Assignment #X Due XX at 11:59PM
+- Quiz #X Due on X XX at 5PM

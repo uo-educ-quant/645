@@ -4,7 +4,7 @@
     <title>Logistic Regression</title>
     <meta charset="utf-8" />
     <meta name="author" content="TBD" />
-    <script src="EDUC645_log_regression_files/header-attrs-2.18/header-attrs.js"></script>
+    <script src="EDUC645_log_regression_files/header-attrs-2.19/header-attrs.js"></script>
     <link href="EDUC645_log_regression_files/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="EDUC645_log_regression_files/remark-css-0.0.1/uo.css" rel="stylesheet" />
     <link href="EDUC645_log_regression_files/remark-css-0.0.1/ki-fonts.css" rel="stylesheet" />
@@ -101,7 +101,7 @@ For starters, some data management; we're interested in the association between 
  
 Plot outcome variable, affective, on predictor variable, attention. What patterns do you notice from the plots?
 
-![](EDUC645_log_regression_files/figure-html/unnamed-chunk-2-1.png)&lt;!-- --&gt;
+&lt;img src="EDUC645_log_regression_files/figure-html/unnamed-chunk-2-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 # Modeling the relationship
@@ -299,25 +299,7 @@ For a single X which has a Y, GBB, the likelihood function looks like:
 [insert function]
 
 *Distribution of likelihood function pB*
-
-```
-## 
-## Attaching package: 'MASS'
-```
-
-```
-## The following object is masked from 'package:gtsummary':
-## 
-##     select
-```
-
-```
-## The following object is masked from 'package:dplyr':
-## 
-##     select
-```
-
-![](EDUC645_log_regression_files/figure-html/unnamed-chunk-4-1.png)&lt;!-- --&gt;
+&lt;img src="EDUC645_log_regression_files/figure-html/unnamed-chunk-4-1.png" style="display: block; margin: auto;" /&gt;
 
 Note: we will not discuss MLE in the general form. Instead, we will consider a simple case of MLE that is relevant to the logistic regression.
 
@@ -337,20 +319,13 @@ MLE: is the optimal estimate of pB, the value where we are most likely to see ou
 -  iterates over local maxima find the value of pB where the likelihood or log likelihood is a maximum.
 
 *Contour plot*
-
-```
-## Warning in densfun(x, parm[1], parm[2], ...): NaNs produced
-
-## Warning in densfun(x, parm[1], parm[2], ...): NaNs produced
-```
-
-![](EDUC645_log_regression_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
+&lt;img src="EDUC645_log_regression_files/figure-html/unnamed-chunk-6-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 # Same idea, different plot
 
 *Wire-frame plot*
-![](EDUC645_log_regression_files/figure-html/unnamed-chunk-7-1.png)&lt;!-- --&gt;
+&lt;img src="EDUC645_log_regression_files/figure-html/unnamed-chunk-7-1.png" style="display: block; margin: auto;" /&gt;
 ---
 # MLE limitations
 
@@ -384,7 +359,7 @@ principal %&gt;%
        y = "Number of Students")
 ```
 
-![](EDUC645_log_regression_files/figure-html/unnamed-chunk-8-1.png)&lt;!-- --&gt;
+&lt;img src="EDUC645_log_regression_files/figure-html/unnamed-chunk-8-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 # Describe dichotomous outcome variable
@@ -399,7 +374,7 @@ principal %&gt;%
        x = "Attention from principal")
 ```
 
-![](EDUC645_log_regression_files/figure-html/unnamed-chunk-9-1.png)&lt;!-- --&gt;
+&lt;img src="EDUC645_log_regression_files/figure-html/unnamed-chunk-9-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 # Interpretation of Model Parameters
@@ -412,9 +387,7 @@ principal %&gt;%
 ---
 
 # Linear probability model (LPM)
-
-## Back to our example from 
-
+Back to our example
 
 ```r
 m1 &lt;- lm(affective ~ attention, principal)
@@ -422,24 +395,24 @@ summary(m1)
 ```
 
 ```
-## 
-## Call:
-## lm(formula = affective ~ attention, data = principal)
-## 
-## Residuals:
-##      Min       1Q   Median       3Q      Max 
-## -0.35343 -0.22301 -0.15955 -0.09906  0.95905 
-## 
-## Coefficients:
-##             Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)  0.18750    0.01365  13.732  &lt; 2e-16 ***
-## attention    0.06358    0.01453   4.374 1.38e-05 ***
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## Residual standard error: 0.3862 on 798 degrees of freedom
-## Multiple R-squared:  0.02341,	Adjusted R-squared:  0.02219 
-## F-statistic: 19.13 on 1 and 798 DF,  p-value: 1.381e-05
+#&gt; 
+#&gt; Call:
+#&gt; lm(formula = affective ~ attention, data = principal)
+#&gt; 
+#&gt; Residuals:
+#&gt;      Min       1Q   Median       3Q      Max 
+#&gt; -0.35343 -0.22301 -0.15955 -0.09906  0.95905 
+#&gt; 
+#&gt; Coefficients:
+#&gt;             Estimate Std. Error t value Pr(&gt;|t|)    
+#&gt; (Intercept)  0.18750    0.01365  13.732  &lt; 2e-16 ***
+#&gt; attention    0.06358    0.01453   4.374 1.38e-05 ***
+#&gt; ---
+#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#&gt; 
+#&gt; Residual standard error: 0.3862 on 798 degrees of freedom
+#&gt; Multiple R-squared:  0.02341,	Adjusted R-squared:  0.02219 
+#&gt; F-statistic: 19.13 on 1 and 798 DF,  p-value: 1.381e-05
 ```
 
 Does the regression coefficient of attention confirm your previous impression with the plot?
@@ -458,11 +431,7 @@ principal %&gt;%
        x = "Self-perceived attention from principal")
 ```
 
-```
-## `geom_smooth()` using formula = 'y ~ x'
-```
-
-![](EDUC645_log_regression_files/figure-html/unnamed-chunk-11-1.png)&lt;!-- --&gt;
+&lt;img src="EDUC645_log_regression_files/figure-html/unnamed-chunk-11-1.png" style="display: block; margin: auto;" /&gt;
 
 
 Interpret the results (report regression coefficients **on a probability scale**) and the figure. 
@@ -487,29 +456,29 @@ summary(m3)
 ```
 
 ```
-## 
-## Call:
-## glm(formula = affective ~ attention, family = binomial(link = "logit"), 
-##     data = principal)
-## 
-## Deviance Residuals: 
-##     Min       1Q   Median       3Q      Max  
-## -1.0231  -0.7025  -0.5764  -0.4744   2.2826  
-## 
-## Coefficients:
-##             Estimate Std. Error z value Pr(&gt;|z|)    
-## (Intercept) -1.51822    0.09474 -16.026  &lt; 2e-16 ***
-## attention    0.43823    0.10266   4.269 1.96e-05 ***
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## (Dispersion parameter for binomial family taken to be 1)
-## 
-##     Null deviance: 772.12  on 799  degrees of freedom
-## Residual deviance: 752.86  on 798  degrees of freedom
-## AIC: 756.86
-## 
-## Number of Fisher Scoring iterations: 4
+#&gt; 
+#&gt; Call:
+#&gt; glm(formula = affective ~ attention, family = binomial(link = "logit"), 
+#&gt;     data = principal)
+#&gt; 
+#&gt; Deviance Residuals: 
+#&gt;     Min       1Q   Median       3Q      Max  
+#&gt; -1.0231  -0.7025  -0.5764  -0.4744   2.2826  
+#&gt; 
+#&gt; Coefficients:
+#&gt;             Estimate Std. Error z value Pr(&gt;|z|)    
+#&gt; (Intercept) -1.51822    0.09474 -16.026  &lt; 2e-16 ***
+#&gt; attention    0.43823    0.10266   4.269 1.96e-05 ***
+#&gt; ---
+#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#&gt; 
+#&gt; (Dispersion parameter for binomial family taken to be 1)
+#&gt; 
+#&gt;     Null deviance: 772.12  on 799  degrees of freedom
+#&gt; Residual deviance: 752.86  on 798  degrees of freedom
+#&gt; AIC: 756.86
+#&gt; 
+#&gt; Number of Fisher Scoring iterations: 4
 ```
 
 ---
@@ -527,7 +496,7 @@ tibble(attention = (-3):3) %&gt;%
        x = "Self-perceived attention from principal")
 ```
 
-![](EDUC645_log_regression_files/figure-html/unnamed-chunk-13-1.png)&lt;!-- --&gt;
+&lt;img src="EDUC645_log_regression_files/figure-html/unnamed-chunk-13-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 # Coefficient on a probability scale (mapping the parameters to probability nonlinearly)
@@ -542,7 +511,7 @@ tibble(attention = (-3):3) %&gt;%
        x = "Self-perceived attention from principal")
 ```
 
-![](EDUC645_log_regression_files/figure-html/unnamed-chunk-14-1.png)&lt;!-- --&gt;
+&lt;img src="EDUC645_log_regression_files/figure-html/unnamed-chunk-14-1.png" style="display: block; margin: auto;" /&gt;
 
 ???
 
@@ -562,7 +531,7 @@ tibble(attention = (-15):20) %&gt;%
        x = "Self-perceived attention from principal")
 ```
 
-![](EDUC645_log_regression_files/figure-html/unnamed-chunk-15-1.png)&lt;!-- --&gt;
+&lt;img src="EDUC645_log_regression_files/figure-html/unnamed-chunk-15-1.png" style="display: block; margin: auto;" /&gt;
 
 Interpret the results (report regression coefficients **on a log-odds scale**) and the two figures.
 
@@ -618,7 +587,7 @@ probabilities &lt;- predict(m3, type = "response")
 plot(m3, which = 4, id.n = 3)
 ```
 
-![](EDUC645_log_regression_files/figure-html/unnamed-chunk-18-1.png)&lt;!-- --&gt;
+&lt;img src="EDUC645_log_regression_files/figure-html/unnamed-chunk-18-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 # Outliers: Residual Errors 
@@ -653,7 +622,7 @@ principal_checked %&gt;%
   geom_point(aes(color = affective))
 ```
 
-![](EDUC645_log_regression_files/figure-html/unnamed-chunk-19-1.png)&lt;!-- --&gt;
+&lt;img src="EDUC645_log_regression_files/figure-html/unnamed-chunk-19-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 # Multicollinearity  
@@ -666,8 +635,8 @@ car::vif(m4)
 ```
 
 ```
-## attention     match 
-##  1.000002  1.000002
+#&gt; attention     match 
+#&gt;  1.000002  1.000002
 ```
 
 ---
@@ -680,29 +649,29 @@ summary(m3)
 ```
 
 ```
-## 
-## Call:
-## glm(formula = affective ~ attention, family = binomial(link = "logit"), 
-##     data = principal)
-## 
-## Deviance Residuals: 
-##     Min       1Q   Median       3Q      Max  
-## -1.0231  -0.7025  -0.5764  -0.4744   2.2826  
-## 
-## Coefficients:
-##             Estimate Std. Error z value Pr(&gt;|z|)    
-## (Intercept) -1.51822    0.09474 -16.026  &lt; 2e-16 ***
-## attention    0.43823    0.10266   4.269 1.96e-05 ***
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## (Dispersion parameter for binomial family taken to be 1)
-## 
-##     Null deviance: 772.12  on 799  degrees of freedom
-## Residual deviance: 752.86  on 798  degrees of freedom
-## AIC: 756.86
-## 
-## Number of Fisher Scoring iterations: 4
+#&gt; 
+#&gt; Call:
+#&gt; glm(formula = affective ~ attention, family = binomial(link = "logit"), 
+#&gt;     data = principal)
+#&gt; 
+#&gt; Deviance Residuals: 
+#&gt;     Min       1Q   Median       3Q      Max  
+#&gt; -1.0231  -0.7025  -0.5764  -0.4744   2.2826  
+#&gt; 
+#&gt; Coefficients:
+#&gt;             Estimate Std. Error z value Pr(&gt;|z|)    
+#&gt; (Intercept) -1.51822    0.09474 -16.026  &lt; 2e-16 ***
+#&gt; attention    0.43823    0.10266   4.269 1.96e-05 ***
+#&gt; ---
+#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#&gt; 
+#&gt; (Dispersion parameter for binomial family taken to be 1)
+#&gt; 
+#&gt;     Null deviance: 772.12  on 799  degrees of freedom
+#&gt; Residual deviance: 752.86  on 798  degrees of freedom
+#&gt; AIC: 756.86
+#&gt; 
+#&gt; Number of Fisher Scoring iterations: 4
 ```
 
 ```r
@@ -710,30 +679,30 @@ summary(m4)
 ```
 
 ```
-## 
-## Call:
-## glm(formula = affective ~ attention + match, family = binomial(link = "logit"), 
-##     data = principal)
-## 
-## Deviance Residuals: 
-##     Min       1Q   Median       3Q      Max  
-## -0.9976  -0.6999  -0.5789  -0.4735   2.3080  
-## 
-## Coefficients:
-##             Estimate Std. Error z value Pr(&gt;|z|)    
-## (Intercept)  -1.5817     0.1363 -11.602  &lt; 2e-16 ***
-## attention     0.4379     0.1026   4.266 1.99e-05 ***
-## match         0.1211     0.1838   0.659     0.51    
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## (Dispersion parameter for binomial family taken to be 1)
-## 
-##     Null deviance: 772.12  on 799  degrees of freedom
-## Residual deviance: 752.43  on 797  degrees of freedom
-## AIC: 758.43
-## 
-## Number of Fisher Scoring iterations: 4
+#&gt; 
+#&gt; Call:
+#&gt; glm(formula = affective ~ attention + match, family = binomial(link = "logit"), 
+#&gt;     data = principal)
+#&gt; 
+#&gt; Deviance Residuals: 
+#&gt;     Min       1Q   Median       3Q      Max  
+#&gt; -0.9976  -0.6999  -0.5789  -0.4735   2.3080  
+#&gt; 
+#&gt; Coefficients:
+#&gt;             Estimate Std. Error z value Pr(&gt;|z|)    
+#&gt; (Intercept)  -1.5817     0.1363 -11.602  &lt; 2e-16 ***
+#&gt; attention     0.4379     0.1026   4.266 1.99e-05 ***
+#&gt; match         0.1211     0.1838   0.659     0.51    
+#&gt; ---
+#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#&gt; 
+#&gt; (Dispersion parameter for binomial family taken to be 1)
+#&gt; 
+#&gt;     Null deviance: 772.12  on 799  degrees of freedom
+#&gt; Residual deviance: 752.43  on 797  degrees of freedom
+#&gt; AIC: 758.43
+#&gt; 
+#&gt; Number of Fisher Scoring iterations: 4
 ```
 
 ---
@@ -750,7 +719,7 @@ tibble(attention = (-3):3) %&gt;%
        x = "Attention from principal")
 ```
 
-![](EDUC645_log_regression_files/figure-html/unnamed-chunk-22-1.png)&lt;!-- --&gt;
+&lt;img src="EDUC645_log_regression_files/figure-html/unnamed-chunk-22-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 # Visualize the coefficient on a *probability* scale 
@@ -766,7 +735,7 @@ tibble(attention = (-3):3) %&gt;%
        x = "Attention from principal")
 ```
 
-![](EDUC645_log_regression_files/figure-html/unnamed-chunk-23-1.png)&lt;!-- --&gt;
+&lt;img src="EDUC645_log_regression_files/figure-html/unnamed-chunk-23-1.png" style="display: block; margin: auto;" /&gt;
 
 ???
 
@@ -786,7 +755,7 @@ tibble(attention = (-3):15) %&gt;%
        x = "Attention from principal")
 ```
 
-![](EDUC645_log_regression_files/figure-html/unnamed-chunk-24-1.png)&lt;!-- --&gt;
+&lt;img src="EDUC645_log_regression_files/figure-html/unnamed-chunk-24-1.png" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -804,7 +773,7 @@ tibble(attention = (-15):20) %&gt;%
        x = "Attention from principal")
 ```
 
-![](EDUC645_log_regression_files/figure-html/unnamed-chunk-25-1.png)&lt;!-- --&gt;
+&lt;img src="EDUC645_log_regression_files/figure-html/unnamed-chunk-25-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 # Comparing models 
@@ -1020,7 +989,7 @@ test_set %&gt;%
   ggtitle("DV to X")
 ```
 
-![](EDUC645_log_regression_files/figure-html/unnamed-chunk-28-1.png)&lt;!-- --&gt;
+&lt;img src="EDUC645_log_regression_files/figure-html/unnamed-chunk-28-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 # Examining the ROC curve
@@ -1048,47 +1017,21 @@ score_data &lt;- data.frame(link=glm_link_scores,
 ---
 # Examining the ROC Curve
 
-![add caption](EDUC645_log_regression_files/figure-html/plot-first-1.png)
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="EDUC645_log_regression_files/figure-html/plot-first-1.png" alt="add caption"  /&gt;
+&lt;p class="caption"&gt;add caption&lt;/p&gt;
+&lt;/div&gt;
 
 ---
 # Plotting the ROC Curve
 
-
-```
-## Type 'citation("pROC")' for a citation.
-```
-
-```
-## 
-## Attaching package: 'pROC'
-```
-
-```
-## The following objects are masked from 'package:stats':
-## 
-##     cov, smooth, var
-```
-
-```
-## Setting levels: control = FALSE, case = TRUE
-```
-
-![](EDUC645_log_regression_files/figure-html/plot-second-1.png)&lt;!-- --&gt;
+&lt;img src="EDUC645_log_regression_files/figure-html/plot-second-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 # Obtaining the AUC
 
 .pull-left[
-
-```
-## Setting levels: control = FALSE, case = TRUE
-```
-
-```
-## Setting direction: controls &lt; cases
-```
-
-![](EDUC645_log_regression_files/figure-html/plot-third-1.png)&lt;!-- --&gt;
+&lt;img src="EDUC645_log_regression_files/figure-html/plot-third-1.png" style="display: block; margin: auto;" /&gt;
 ]
 
 .pull-right[
@@ -1100,17 +1043,7 @@ P &lt;- 0.01
 rare_success &lt;- sample(c(TRUE, FALSE), N, replace=TRUE, prob=c(P, 1-P))
 guess_not &lt;- rep(0, N)
 plot(roc(rare_success, guess_not), print.auc=TRUE)
-```
 
-```
-## Setting levels: control = FALSE, case = TRUE
-```
-
-```
-## Setting direction: controls &lt; cases
-```
-
-```r
 ## Call:
 ## roc.default(response = rare_success, predictor = guess_not)
 ## 
@@ -1147,10 +1080,6 @@ https://kennis-research.shinyapps.io/ROC-Curves/]
 - Survival analysis
 
 ---
-class: middle, inverse
-# Synthesis and wrap-up
-
----
 # Logistic vs. OLS regression
 |                 | Linear Least Squares | Binomial Regression |
 |-----------------|----------------------|---------------------|
@@ -1160,6 +1089,27 @@ class: middle, inverse
 |EDA              | plot X vs. Y; add line | find log⁡(odds) for several subgroups; plot vs. X|
 |Comparing models | extra sum of squares F-tests; AIC/BIC | drop-in-deviance tests; AIC/BIC |
 |Interpreting coef| β1= change in mean response for unit change in X | eβ1= percent change in odds for unit change in X|
+
+---
+# Key Takeaways
+
+
+---
+class: middle, inverse
+# Synthesis and wrap-up
+
+---
+# Unit Goals
+
+---
+# To Dos
+
+### Reading
+-
+
+### Assignments
+- Assignment #X Due XX at 11:59PM
+- Quiz #X Due on X XX at 5PM
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

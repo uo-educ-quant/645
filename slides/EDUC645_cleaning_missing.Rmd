@@ -11,6 +11,9 @@ output:
       highlightStyle: github
       highlightLines: true
       countIncrementalSlides: false
+editor_options: 
+  
+  chunk_output_type: console
 ---
 
 ```{R, setup, include = F}
@@ -21,17 +24,38 @@ theme_set(theme_classic())
 
 i_am("slides/EDUC645_cleaning_missing.rmd")
 
+red_pink <- "#e64173"
+turquoise = "#20B2AA"
+orange = "#FFA500"
+red = "#fb6107"
+blue = "#3b3b9a"
+green = "#8bb174"
+grey_light = "#B3B3B3"
+grey_mid = "#7F7F7F"
+grey_dark = "grey20"
+purple = "#6A5ACD"
+slate = "#314f4f"
 extra_css <- list(
   ".red"   = list(color = "red"),
   ".blue"  =list(color = "blue"),
-  ".green" = list(color = "#8bb174"),
-  ".purple" = list(color = "#6A5ACD"),
-  ".red-pink" = list(color= "#e64173"),
-  ".grey-light" = list(color= "grey70"),
-  ".slate" = list(color="#314f4f"),
-  ".small" = list("font-size" = "90%"))
-
+  ".red-pink" = list(color= "red_pink"),
+  ".gray" = list(color= "#B3B3B3"),
+  ".purple" = list(color = "purple"),
+  ".small" = list("font-size" = "90%"),
+  ".large" = list("font-size" = "120%"),
+  ".tiny" = list("font-size" = "70%"),
+  ".tiny2" = list("font-size" = "50%"))
 write_extra_css(css = extra_css, outfile = "my_custom.css")
+
+# Knitr options
+opts_chunk$set(
+  comment = "#>",
+  fig.align = "center",
+  fig.height = 6.75,
+  fig.width = 10.5,
+  warning = F,
+  message = F
+)
 
 ```
 
@@ -72,10 +96,6 @@ Covariates
  - fedu: father’s highest education; 1="lowest",..., 9="highest", 999="missing"
  - focc: father’s occupational status; 1="lowest",..., 6="highest", 9="missing"
 
-```{r}
-galo <- rio::import(here::here("data", "galo.csv"))
-
-```
 
 ---
 # Missing Data Diagnostics
@@ -99,8 +119,10 @@ galo <- rio::import(here::here("data", "galo.csv"))
 # Missing on each variable
 
 ```{r}
+galo <- rio::import(here::here("data", "galo.csv"))
+
 #I understand we don't want introduce students to the functional programming world
-# I'm in searching  for an easier way to report missing values that can be more accessible to students
+# I'm in searching for an easier way to report missing values that can be more accessible to students
 missing <- function(data){
   na_percentage <- function(x){
     y = sum(is.na(x))/length(x)
@@ -460,5 +482,22 @@ list("CD" = m1,
 [insert example write up re data run]
 
 ---
+# Key Takeaways
+
+
+---
 class: middle, inverse
 # Synthesis and wrap-up
+
+---
+# Unit Goals
+
+---
+# To Dos
+
+### Reading
+-
+
+### Assignments
+- Assignment #X Due XX at 11:59PM
+- Quiz #X Due on X XX at 5PM

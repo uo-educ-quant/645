@@ -31,6 +31,15 @@ extra_css <- list(
 
 write_extra_css(css = extra_css, outfile = "my_custom.css")
 
+# Knitr options
+opts_chunk$set(
+  comment = "#>",
+  fig.align = "center",
+  fig.height = 6.75,
+  fig.width = 10.5,
+  warning = F,
+  message = F
+)
 
 ```
 
@@ -964,10 +973,6 @@ https://kennis-research.shinyapps.io/ROC-Curves/]
 - Survival analysis
 
 ---
-class: middle, inverse
-# Synthesis and wrap-up
-
----
 # Logistic vs. OLS regression
 |                 | Linear Least Squares | Binomial Regression |
 |-----------------|----------------------|---------------------|
@@ -977,3 +982,24 @@ class: middle, inverse
 |EDA              | plot X vs. Y; add line | find log⁡(odds) for several subgroups; plot vs. X|
 |Comparing models | extra sum of squares F-tests; AIC/BIC | drop-in-deviance tests; AIC/BIC |
 |Interpreting coef| β1= change in mean response for unit change in X | eβ1= percent change in odds for unit change in X|
+
+---
+# Key Takeaways
+
+
+---
+class: middle, inverse
+# Synthesis and wrap-up
+
+---
+# Unit Goals
+
+---
+# To Dos
+
+### Reading
+-
+
+### Assignments
+- Assignment #X Due XX at 11:59PM
+- Quiz #X Due on X XX at 5PM
