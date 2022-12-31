@@ -4,7 +4,7 @@
     <title>Introduction to Nested Data</title>
     <meta charset="utf-8" />
     <meta name="author" content="TBD" />
-    <script src="EDUC645_nested_data_files/header-attrs-2.18/header-attrs.js"></script>
+    <script src="EDUC645_nested_data_files/header-attrs-2.19/header-attrs.js"></script>
     <link href="EDUC645_nested_data_files/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="EDUC645_nested_data_files/remark-css-0.0.1/uo.css" rel="stylesheet" />
     <link href="EDUC645_nested_data_files/remark-css-0.0.1/ki-fonts.css" rel="stylesheet" />
@@ -54,10 +54,112 @@ class: center, middle, inverse, title-slide
 and how to use it to decide whether one needs to use multilevel modeling
 
 ---
+# A Motivating Question
+
+The Data: Stanford Education Data Archive (SEDA), launched in 2016 to provide nationally comparable, publicly available test score data for U.S. public school districts, allowing scientific inquiries on the relationships between educational conditions, contexts, and outcomes (especially student math/ELA achievements) at the district-level across the nation.
+
+Data set:
+- district-level data for 103 Oregon school districts, year 2017-18 data
+- Observations with missing values on any of the key variables were deleted for simplification
+
+From now on, we pull out the cluster of subject, and focus on math achievement only.
+**Overarching inquiry: What is the relationship between percentage of ELL students and math achievement in Oregon districts?**
+
+---
+# Inspect the data 
+
+each row/observation represents...
+
+
+```
+#&gt;     district subject grade achievement gap_gender percent_ell percent_sped
+#&gt; 1 VALE SD 84    Math     3    2.539072  0.9736566  0.04923414    0.1280088
+#&gt; 2 VALE SD 84 Reading     3    3.229844  0.3761424  0.04923414    0.1280088
+#&gt; 3 VALE SD 84    Math     4    3.089542 -0.7882404  0.04923414    0.1280088
+#&gt; 4 VALE SD 84 Reading     4    4.362786 -1.8302576  0.04923414    0.1280088
+#&gt; 5 VALE SD 84    Math     5    4.574462  0.8356159  0.04923414    0.1280088
+#&gt; 6 VALE SD 84 Reading     5    4.778020  0.3570311  0.04923414    0.1280088
+#&gt;   percent_frl
+#&gt; 1   0.6216102
+#&gt; 2   0.6216102
+#&gt; 3   0.6216102
+#&gt; 4   0.6216102
+#&gt; 5   0.6216102
+#&gt; 6   0.6216102
+```
+
+---
+# Understand the clustering nature
+
+Let's start with a single variable: Oregon districts' achievement score 
+We lose information by looking at district achievement across subject and grade alone.
+
+&lt;img src="EDUC645_nested_data_files/figure-html/unnamed-chunk-2-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+Does achievement differ by subject
+
+&lt;img src="EDUC645_nested_data_files/figure-html/unnamed-chunk-3-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+Differ by grade?
+
+&lt;img src="EDUC645_nested_data_files/figure-html/unnamed-chunk-4-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+Differ by grade AND subject?
+
+&lt;img src="EDUC645_nested_data_files/figure-html/unnamed-chunk-5-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+Alternatively, 
+Can you describe the "clustering" nature of the data in more details now?
+
+IMPORTANTLY, should we keep in mind of this unique feature when we answering research questions, e.g., about relations between two variables?
+
+&lt;img src="EDUC645_nested_data_files/figure-html/unnamed-chunk-6-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+# Relationship across grade and subject:
+
+For example, let's look at relationship between percentage of ELL and achievement
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="EDUC645_nested_data_files/figure-html/unnamed-chunk-7-1.png" alt="add caption"  /&gt;
+&lt;p class="caption"&gt;add caption&lt;/p&gt;
+&lt;/div&gt;
+
+---
+
+Does this relationship differ by subject?
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="EDUC645_nested_data_files/figure-html/unnamed-chunk-8-1.png" alt="add caption"  /&gt;
+&lt;p class="caption"&gt;add caption&lt;/p&gt;
+&lt;/div&gt;
+
+---
+
+Does this relationship differ by subject AND grade?
+
+&lt;img src="EDUC645_nested_data_files/figure-html/unnamed-chunk-9-1.png" style="display: block; margin: auto;" /&gt;
+
+* What is your current understanding of clustered data? 
+* Is there a single answer to the relationship between percentage of ELL students and achievement? 
+
+???
+
+Expect students to realize that there is no universal answer; depends on what you look at, what cluster/clusters you want to include, and model specifications
+
+
+---
 # What is Nested Data?
 
-levels of one factor vary only within the levels of another factor, that factor is said to be nested. 
-
+Levels of one factor vary only within the levels of another factor, that factor is said to be nested. 
 For example, when measuring the performance of workers at several job locations, if the workers only work at one site, then the workers are nested within site. If the workers work at more than one location, we would say that workers are crossed with site.
 
 ---
@@ -99,7 +201,7 @@ For example, when measuring the performance of workers at several job locations,
 ---
 class: middle, inverse
 
-# Multilevel Models (MLM)
+# Multilevel Models
 
 ---
 # Multilevel Models (MLM)
@@ -122,8 +224,8 @@ class: middle, inverse
 - Do characteristics pertaining to a city modify the association between UVI and number of partners?
 
 ---
-# Sampling and Design Considerations
-### Design
+# Design Considerations
+
 #### What constitutes a group-level variable?
 - Characteristic of
   - individual (provider, partner)
@@ -138,8 +240,8 @@ class: middle, inverse
 - Developing group-level measures (mental illness stigma in a school district)
 
 ---
-# Sampling and Design Considerations
-### Sampling
+# Sampling Considerations
+
 #### Calculating Statistical Power is similar to “traditional” analyses
 - Formulate the hypotheses to be tested
 - Compute or Estimate the ICC
@@ -159,61 +261,23 @@ class: middle, inverse
 ---
 class: middle, inverse
 
-# Nested and crossed random effects in "lme4"
+# Nested and Crossed Random Effects
 
 ---
-# Nested and crossed random effects in "lme4"
+# Modeling the relationship between two variables
+**For this introductory course, we only focus on two-level clustered data.**
 
-Packages particularly needed for this unit: `lme4`, `equatiomatic`, `performance`, `lmerTest`
+**Overarching inquiry: What is the relationship between percentage of ELL students and math achievement in Oregon districts?**
 
----
-# The Data: Stanford Education Data Archive (SEDA)
-
-Launched in 2016 to provide nationally comparable, publicly available test score data for U.S. public school districts, allowing scientific inquiries on the relationships between educational conditions, contexts, and outcomes (especially student math/ELA achievements) at the district-level across the nation.
-
-Variable include measures of:
-- academic achievement 
-- achievement gaps for school districts and counties
-- district-level measures of racial and socioeconomic composition
-- racial and socioeconomic segregation patterns
-- other features of the schooling system
-
-Data set:
-- district-level data for 103 Oregon school districts, year 2017-18 data
-- Observations with missing values on any of the key variables were deleted for simplification
-
----
-# Inspect the data 
-
-What does each row/observation represent?
-
-
-```
-##     district subject grade achievement gap_gender percent_ell percent_sped
-## 1 VALE SD 84    Math     3    2.539072  0.9736566  0.04923414    0.1280088
-## 2 VALE SD 84 Reading     3    3.229844  0.3761424  0.04923414    0.1280088
-## 3 VALE SD 84    Math     4    3.089542 -0.7882404  0.04923414    0.1280088
-## 4 VALE SD 84 Reading     4    4.362786 -1.8302576  0.04923414    0.1280088
-## 5 VALE SD 84    Math     5    4.574462  0.8356159  0.04923414    0.1280088
-## 6 VALE SD 84 Reading     5    4.778020  0.3570311  0.04923414    0.1280088
-##   percent_frl
-## 1   0.6216102
-## 2   0.6216102
-## 3   0.6216102
-## 4   0.6216102
-## 5   0.6216102
-## 6   0.6216102
-```
-
----
+What model/models can we fit to answer the question? 
 
 # Descriptives
-<div id="mnhzftouzy" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<div id="olocfxpgfy" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#mnhzftouzy .gt_table {
+#olocfxpgfy .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -238,7 +302,7 @@ What does each row/observation represent?
   border-left-color: #D3D3D3;
 }
 
-#mnhzftouzy .gt_heading {
+#olocfxpgfy .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -250,12 +314,12 @@ What does each row/observation represent?
   border-right-color: #D3D3D3;
 }
 
-#mnhzftouzy .gt_caption {
+#olocfxpgfy .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#mnhzftouzy .gt_title {
+#olocfxpgfy .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -267,7 +331,7 @@ What does each row/observation represent?
   border-bottom-width: 0;
 }
 
-#mnhzftouzy .gt_subtitle {
+#olocfxpgfy .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -279,13 +343,13 @@ What does each row/observation represent?
   border-top-width: 0;
 }
 
-#mnhzftouzy .gt_bottom_border {
+#olocfxpgfy .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#mnhzftouzy .gt_col_headings {
+#olocfxpgfy .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -300,7 +364,7 @@ What does each row/observation represent?
   border-right-color: #D3D3D3;
 }
 
-#mnhzftouzy .gt_col_heading {
+#olocfxpgfy .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -320,7 +384,7 @@ What does each row/observation represent?
   overflow-x: hidden;
 }
 
-#mnhzftouzy .gt_column_spanner_outer {
+#olocfxpgfy .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -332,15 +396,15 @@ What does each row/observation represent?
   padding-right: 4px;
 }
 
-#mnhzftouzy .gt_column_spanner_outer:first-child {
+#olocfxpgfy .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#mnhzftouzy .gt_column_spanner_outer:last-child {
+#olocfxpgfy .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#mnhzftouzy .gt_column_spanner {
+#olocfxpgfy .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -352,7 +416,7 @@ What does each row/observation represent?
   width: 100%;
 }
 
-#mnhzftouzy .gt_group_heading {
+#olocfxpgfy .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -378,7 +442,7 @@ What does each row/observation represent?
   text-align: left;
 }
 
-#mnhzftouzy .gt_empty_group_heading {
+#olocfxpgfy .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -393,15 +457,15 @@ What does each row/observation represent?
   vertical-align: middle;
 }
 
-#mnhzftouzy .gt_from_md > :first-child {
+#olocfxpgfy .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#mnhzftouzy .gt_from_md > :last-child {
+#olocfxpgfy .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#mnhzftouzy .gt_row {
+#olocfxpgfy .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -420,7 +484,7 @@ What does each row/observation represent?
   overflow-x: hidden;
 }
 
-#mnhzftouzy .gt_stub {
+#olocfxpgfy .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -433,7 +497,7 @@ What does each row/observation represent?
   padding-right: 5px;
 }
 
-#mnhzftouzy .gt_stub_row_group {
+#olocfxpgfy .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -447,11 +511,11 @@ What does each row/observation represent?
   vertical-align: top;
 }
 
-#mnhzftouzy .gt_row_group_first td {
+#olocfxpgfy .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#mnhzftouzy .gt_summary_row {
+#olocfxpgfy .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -461,16 +525,16 @@ What does each row/observation represent?
   padding-right: 5px;
 }
 
-#mnhzftouzy .gt_first_summary_row {
+#olocfxpgfy .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#mnhzftouzy .gt_first_summary_row.thick {
+#olocfxpgfy .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#mnhzftouzy .gt_last_summary_row {
+#olocfxpgfy .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -480,7 +544,7 @@ What does each row/observation represent?
   border-bottom-color: #D3D3D3;
 }
 
-#mnhzftouzy .gt_grand_summary_row {
+#olocfxpgfy .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -490,7 +554,7 @@ What does each row/observation represent?
   padding-right: 5px;
 }
 
-#mnhzftouzy .gt_first_grand_summary_row {
+#olocfxpgfy .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -500,11 +564,11 @@ What does each row/observation represent?
   border-top-color: #D3D3D3;
 }
 
-#mnhzftouzy .gt_striped {
+#olocfxpgfy .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#mnhzftouzy .gt_table_body {
+#olocfxpgfy .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -513,7 +577,7 @@ What does each row/observation represent?
   border-bottom-color: #D3D3D3;
 }
 
-#mnhzftouzy .gt_footnotes {
+#olocfxpgfy .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -527,7 +591,7 @@ What does each row/observation represent?
   border-right-color: #D3D3D3;
 }
 
-#mnhzftouzy .gt_footnote {
+#olocfxpgfy .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-left: 4px;
@@ -536,7 +600,7 @@ What does each row/observation represent?
   padding-right: 5px;
 }
 
-#mnhzftouzy .gt_sourcenotes {
+#olocfxpgfy .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -550,7 +614,7 @@ What does each row/observation represent?
   border-right-color: #D3D3D3;
 }
 
-#mnhzftouzy .gt_sourcenote {
+#olocfxpgfy .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -558,64 +622,64 @@ What does each row/observation represent?
   padding-right: 5px;
 }
 
-#mnhzftouzy .gt_left {
+#olocfxpgfy .gt_left {
   text-align: left;
 }
 
-#mnhzftouzy .gt_center {
+#olocfxpgfy .gt_center {
   text-align: center;
 }
 
-#mnhzftouzy .gt_right {
+#olocfxpgfy .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#mnhzftouzy .gt_font_normal {
+#olocfxpgfy .gt_font_normal {
   font-weight: normal;
 }
 
-#mnhzftouzy .gt_font_bold {
+#olocfxpgfy .gt_font_bold {
   font-weight: bold;
 }
 
-#mnhzftouzy .gt_font_italic {
+#olocfxpgfy .gt_font_italic {
   font-style: italic;
 }
 
-#mnhzftouzy .gt_super {
+#olocfxpgfy .gt_super {
   font-size: 65%;
 }
 
-#mnhzftouzy .gt_footnote_marks {
+#olocfxpgfy .gt_footnote_marks {
   font-style: italic;
   font-weight: normal;
   font-size: 75%;
   vertical-align: 0.4em;
 }
 
-#mnhzftouzy .gt_asterisk {
+#olocfxpgfy .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#mnhzftouzy .gt_indent_1 {
+#olocfxpgfy .gt_indent_1 {
   text-indent: 5px;
 }
 
-#mnhzftouzy .gt_indent_2 {
+#olocfxpgfy .gt_indent_2 {
   text-indent: 10px;
 }
 
-#mnhzftouzy .gt_indent_3 {
+#olocfxpgfy .gt_indent_3 {
   text-indent: 15px;
 }
 
-#mnhzftouzy .gt_indent_4 {
+#olocfxpgfy .gt_indent_4 {
   text-indent: 20px;
 }
 
-#mnhzftouzy .gt_indent_5 {
+#olocfxpgfy .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
@@ -664,97 +728,6 @@ What does each row/observation represent?
 </table>
 </div>
 
----
-# Understand the clustering nature
-
-Let's start with a single variable: Oregon districts' achievement score 
-
-Are we losing information by simply looking at district achievement across subject and grade?
-
-![add caption](EDUC645_nested_data_files/figure-html/unnamed-chunk-3-1.png)
-
-
-???
-Note that districts are "randomly" selected by course developer
-
----
-
-Does achievement differ by subject?
-
-![add caption](EDUC645_nested_data_files/figure-html/unnamed-chunk-4-1.png)
-
----
-
-Differ by grade?
-
-![add caption](EDUC645_nested_data_files/figure-html/unnamed-chunk-5-1.png)
-
----
-
-Differ by grade AND subject?
-
-![add caption](EDUC645_nested_data_files/figure-html/unnamed-chunk-6-1.png)
-
----
-
-Alternatively, 
-Can you describe the "clustering" nature of the data in more details now?
-
-IMPORTANTLY, should we keep in mind of this unique feature when we answering research questions, e.g., about relations between two variables?
-
-![add caption](EDUC645_nested_data_files/figure-html/unnamed-chunk-7-1.png)
-
----
-# Relationship across grade and subject:
-
-For example, let's look at relationship between percentage of ELL and achievement
-
-
-```
-## `geom_smooth()` using formula = 'y ~ x'
-```
-
-![add caption](EDUC645_nested_data_files/figure-html/unnamed-chunk-8-1.png)
-
----
-
-Does this relationship differ by subject?
-
-
-```
-## `geom_smooth()` using formula = 'y ~ x'
-```
-
-![add caption](EDUC645_nested_data_files/figure-html/unnamed-chunk-9-1.png)
-
----
-
-Does this relationship differ by subject AND grade?
-
-
-```
-## `geom_smooth()` using formula = 'y ~ x'
-```
-
-![add caption](EDUC645_nested_data_files/figure-html/unnamed-chunk-10-1.png)
-
-* What is your current understanding of clustered data? 
-* Is there a single answer to the relationship between percentage of ELL students and achievement? 
-
-???
-
-Expect students to realize that there is no universal answer; depends on what you look at, what cluster/clusters you want to include, and model specifications
-
----
-# Modeling the relationship between two variables
-
-**For this introductory course, we only focus on two-level clustered data.**
-
-From now on, we pull out the cluster of subject, and focus on math achievement only.
-
-**Overarching inquiry: What is the relationship between percentage of ELL students and math achievement in Oregon districts?**
-
-What model/models can we fit to answer the question? 
 
 
 
@@ -771,18 +744,14 @@ class: middle, inverse
 
 --
 
-
-```
-## `geom_smooth()` using formula = 'y ~ x'
-```
-
-![add caption](EDUC645_nested_data_files/figure-html/unnamed-chunk-12-1.png)
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="EDUC645_nested_data_files/figure-html/unnamed-chunk-12-1.png" alt="add caption"  /&gt;
+&lt;p class="caption"&gt;add caption&lt;/p&gt;
+&lt;/div&gt;
 
 ---
 
 # Fixed effects model
-
-How to interpret these parameters?
 
 
 ```r
@@ -791,24 +760,24 @@ summary(m1)
 ```
 
 ```
-## 
-## Call:
-## lm(formula = math ~ percent_ell, data = district)
-## 
-## Residuals:
-##     Min      1Q  Median      3Q     Max 
-## -3.3177 -1.2300  0.0205  1.0922  3.8539 
-## 
-## Coefficients:
-##             Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)   4.5048     0.1794  25.107  &lt; 2e-16 ***
-## percent_ell  -6.4669     1.5726  -4.112 6.03e-05 ***
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## Residual standard error: 1.577 on 174 degrees of freedom
-## Multiple R-squared:  0.08858,	Adjusted R-squared:  0.08334 
-## F-statistic: 16.91 on 1 and 174 DF,  p-value: 6.03e-05
+#&gt; 
+#&gt; Call:
+#&gt; lm(formula = math ~ percent_ell, data = district)
+#&gt; 
+#&gt; Residuals:
+#&gt;     Min      1Q  Median      3Q     Max 
+#&gt; -3.3177 -1.2300  0.0205  1.0922  3.8539 
+#&gt; 
+#&gt; Coefficients:
+#&gt;             Estimate Std. Error t value Pr(&gt;|t|)    
+#&gt; (Intercept)   4.5048     0.1794  25.107  &lt; 2e-16 ***
+#&gt; percent_ell  -6.4669     1.5726  -4.112 6.03e-05 ***
+#&gt; ---
+#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#&gt; 
+#&gt; Residual standard error: 1.577 on 174 degrees of freedom
+#&gt; Multiple R-squared:  0.08858,	Adjusted R-squared:  0.08334 
+#&gt; F-statistic: 16.91 on 1 and 174 DF,  p-value: 6.03e-05
 ```
 
 --
@@ -818,16 +787,14 @@ summary(m1)
 ---
 # Fixed effects model
 
-How to interpret these parameters?
-
 
 ```r
 coef(m1)
 ```
 
 ```
-## (Intercept) percent_ell 
-##    4.504827   -6.466889
+#&gt; (Intercept) percent_ell 
+#&gt;    4.504827   -6.466889
 ```
 
 --
@@ -837,32 +804,22 @@ coef(m1)
 ---
 # Random effects model
 
-* Allow the intercept to differ across grades
+Allowing the intercept to differ across grades:
 
-
-```
-## `geom_smooth()` using formula = 'y ~ x'
-```
-
-![](EDUC645_nested_data_files/figure-html/unnamed-chunk-15-1.png)&lt;!-- --&gt;
+&lt;img src="EDUC645_nested_data_files/figure-html/unnamed-chunk-15-1.png" style="display: block; margin: auto;" /&gt;
 
 -- 
-
-What parameters changed in the plot? 
-
--- 
-
+Note:
  - Intercept: each grade has a unique intercept
  - Slope: slope changes accordingly
 
-**In fact, mixed-effects models can do more!** 
+**mixed-effects models can do more!** 
 
 ???
 
 Another way to answer the question is allowing the intercept to differ across grades - a unique intercept for each grade.
 
 ---
-`lme4` package: `lmer` function models the data in R:
 
 Model 1. Simple linear regression model for comparison
 
@@ -873,10 +830,11 @@ coef(m1)
 ```
 
 ```
-## (Intercept) percent_ell 
-##    4.504827   -6.466889
+#&gt; (Intercept) percent_ell 
+#&gt;    4.504827   -6.466889
 ```
 
+---
 Model 2. Multilevel model with *random __intercepts__*
     - What parameter differs across grades? what parameter remains the same?
 
@@ -887,30 +845,30 @@ summary(m2)
 ```
 
 ```
-## Linear mixed model fit by REML ['lmerMod']
-## Formula: math ~ percent_ell + (1 | grade)
-##    Data: district
-## 
-## REML criterion at convergence: 495.2
-## 
-## Scaled residuals: 
-##     Min      1Q  Median      3Q     Max 
-## -2.4707 -0.6017 -0.1026  0.3954  3.2973 
-## 
-## Random effects:
-##  Groups   Name        Variance Std.Dev.
-##  grade    (Intercept) 2.0855   1.4441  
-##  Residual             0.9037   0.9506  
-## Number of obs: 176, groups:  grade, 4
-## 
-## Fixed effects:
-##             Estimate Std. Error t value
-## (Intercept)   4.5048     0.7301    6.17
-## percent_ell  -6.4669     0.9482   -6.82
-## 
-## Correlation of Fixed Effects:
-##             (Intr)
-## percent_ell -0.111
+#&gt; Linear mixed model fit by REML ['lmerMod']
+#&gt; Formula: math ~ percent_ell + (1 | grade)
+#&gt;    Data: district
+#&gt; 
+#&gt; REML criterion at convergence: 495.2
+#&gt; 
+#&gt; Scaled residuals: 
+#&gt;     Min      1Q  Median      3Q     Max 
+#&gt; -2.4707 -0.6017 -0.1026  0.3954  3.2973 
+#&gt; 
+#&gt; Random effects:
+#&gt;  Groups   Name        Variance Std.Dev.
+#&gt;  grade    (Intercept) 2.0855   1.4441  
+#&gt;  Residual             0.9037   0.9506  
+#&gt; Number of obs: 176, groups:  grade, 4
+#&gt; 
+#&gt; Fixed effects:
+#&gt;             Estimate Std. Error t value
+#&gt; (Intercept)   4.5048     0.7301    6.17
+#&gt; percent_ell  -6.4669     0.9482   -6.82
+#&gt; 
+#&gt; Correlation of Fixed Effects:
+#&gt;             (Intr)
+#&gt; percent_ell -0.111
 ```
 
 ```r
@@ -918,14 +876,15 @@ coef(m2)$grade
 ```
 
 ```
-##    (Intercept) percent_ell
-## G3    2.856961   -6.466889
-## G4    3.913716   -6.466889
-## G5    5.065668   -6.466889
-## G6    6.182964   -6.466889
+#&gt;    (Intercept) percent_ell
+#&gt; G3    2.856961   -6.466889
+#&gt; G4    3.913716   -6.466889
+#&gt; G5    5.065668   -6.466889
+#&gt; G6    6.182964   -6.466889
 ```
 
-*R Notes: starting the usage of {equatiomatic} package*
+---
+
 The notion being used through this unit:
 
 ```r
@@ -953,28 +912,28 @@ summary(m3)
 ```
 
 ```
-## Linear mixed model fit by REML. t-tests use Satterthwaite's method [
-## lmerModLmerTest]
-## Formula: math ~ 1 + (0 + percent_ell | grade)
-##    Data: district
-## 
-## REML criterion at convergence: 602.2
-## 
-## Scaled residuals: 
-##      Min       1Q   Median       3Q      Max 
-## -2.54361 -0.67403 -0.05695  0.64832  2.86774 
-## 
-## Random effects:
-##  Groups   Name        Variance Std.Dev.
-##  grade    percent_ell 103.371  10.167  
-##  Residual               1.642   1.281  
-## Number of obs: 176, groups:  grade, 4
-## 
-## Fixed effects:
-##             Estimate Std. Error       df t value Pr(&gt;|t|)    
-## (Intercept)   4.4720     0.1434 174.0856    31.2   &lt;2e-16 ***
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#&gt; Linear mixed model fit by REML. t-tests use Satterthwaite's method [
+#&gt; lmerModLmerTest]
+#&gt; Formula: math ~ 1 + (0 + percent_ell | grade)
+#&gt;    Data: district
+#&gt; 
+#&gt; REML criterion at convergence: 602.2
+#&gt; 
+#&gt; Scaled residuals: 
+#&gt;      Min       1Q   Median       3Q      Max 
+#&gt; -2.54361 -0.67403 -0.05695  0.64832  2.86774 
+#&gt; 
+#&gt; Random effects:
+#&gt;  Groups   Name        Variance Std.Dev.
+#&gt;  grade    percent_ell 103.371  10.167  
+#&gt;  Residual               1.642   1.281  
+#&gt; Number of obs: 176, groups:  grade, 4
+#&gt; 
+#&gt; Fixed effects:
+#&gt;             Estimate Std. Error       df t value Pr(&gt;|t|)    
+#&gt; (Intercept)   4.4720     0.1434 174.0856    31.2   &lt;2e-16 ***
+#&gt; ---
+#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ```
 
 ```r
@@ -982,11 +941,11 @@ coef(m3)$grade
 ```
 
 ```
-##    percent_ell (Intercept)
-## G3  -16.307389     4.47197
-## G4  -10.263599     4.47197
-## G5   -2.428400     4.47197
-## G6    4.669357     4.47197
+#&gt;    percent_ell (Intercept)
+#&gt; G3  -16.307389     4.47197
+#&gt; G4  -10.263599     4.47197
+#&gt; G5   -2.428400     4.47197
+#&gt; G6    4.669357     4.47197
 ```
 
 ```r
@@ -1007,34 +966,34 @@ summary(m4)
 ```
 
 ```
-## Linear mixed model fit by REML. t-tests use Satterthwaite's method [
-## lmerModLmerTest]
-## Formula: math ~ percent_ell + (1 + percent_ell | grade)
-##    Data: district
-## 
-## REML criterion at convergence: 495.2
-## 
-## Scaled residuals: 
-##     Min      1Q  Median      3Q     Max 
-## -2.5018 -0.6141 -0.1065  0.4072  3.3055 
-## 
-## Random effects:
-##  Groups   Name        Variance Std.Dev. Corr 
-##  grade    (Intercept) 2.16293  1.4707        
-##           percent_ell 0.09197  0.3033   -1.00
-##  Residual             0.90329  0.9504        
-## Number of obs: 176, groups:  grade, 4
-## 
-## Fixed effects:
-##             Estimate Std. Error      df t value Pr(&gt;|t|)    
-## (Intercept)   4.5048     0.7433  2.9972   6.061  0.00904 ** 
-## percent_ell  -6.4669     0.9600 45.4216  -6.736  2.4e-08 ***
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## Correlation of Fixed Effects:
-##             (Intr)
-## percent_ell -0.264
+#&gt; Linear mixed model fit by REML. t-tests use Satterthwaite's method [
+#&gt; lmerModLmerTest]
+#&gt; Formula: math ~ percent_ell + (1 + percent_ell | grade)
+#&gt;    Data: district
+#&gt; 
+#&gt; REML criterion at convergence: 495.2
+#&gt; 
+#&gt; Scaled residuals: 
+#&gt;     Min      1Q  Median      3Q     Max 
+#&gt; -2.5018 -0.6141 -0.1065  0.4072  3.3055 
+#&gt; 
+#&gt; Random effects:
+#&gt;  Groups   Name        Variance Std.Dev. Corr 
+#&gt;  grade    (Intercept) 2.16293  1.4707        
+#&gt;           percent_ell 0.09197  0.3033   -1.00
+#&gt;  Residual             0.90329  0.9504        
+#&gt; Number of obs: 176, groups:  grade, 4
+#&gt; 
+#&gt; Fixed effects:
+#&gt;             Estimate Std. Error      df t value Pr(&gt;|t|)    
+#&gt; (Intercept)   4.5048     0.7433  2.9972   6.061  0.00904 ** 
+#&gt; percent_ell  -6.4669     0.9600 45.4216  -6.736  2.4e-08 ***
+#&gt; ---
+#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#&gt; 
+#&gt; Correlation of Fixed Effects:
+#&gt;             (Intr)
+#&gt; percent_ell -0.264
 ```
 
 
@@ -1043,11 +1002,11 @@ coef(m4)$grade
 ```
 
 ```
-##    (Intercept) percent_ell
-## G3    2.826638   -6.120839
-## G4    3.904292   -6.343056
-## G5    5.075495   -6.584562
-## G6    6.212885   -6.819096
+#&gt;    (Intercept) percent_ell
+#&gt; G3    2.826638   -6.120839
+#&gt; G4    3.904292   -6.343056
+#&gt; G5    5.075495   -6.584562
+#&gt; G6    6.212885   -6.819096
 ```
 
 
@@ -1087,7 +1046,7 @@ $$
 \end{aligned}`
 $$
 
---
+---
 
 What did we learn so far? Describe the differences between model 1 (simple linear regression) and a model with
 * Random intercepts, model 2
@@ -1098,21 +1057,18 @@ What did we learn so far? Describe the differences between model 1 (simple linea
 # Fixed effects vs random effects
 
 If we put the two previous plots together:
-
-
-```
-## `geom_smooth()` using formula = 'y ~ x'
-## `geom_smooth()` using formula = 'y ~ x'
-```
-
-![add caption](EDUC645_nested_data_files/figure-html/unnamed-chunk-23-1.png)
-
 * what does the bright red line represent? 
 * what do the other four lines represent?
+
+&lt;img src="EDUC645_nested_data_files/figure-html/unnamed-chunk-23-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 
 Also a review of the relationship between fixed effect (model 1) and random effects (model 4) parameters:
+
+* **Fixed effect** represents the aggregation of the different intercepts and slopes by taking an average of varying intercept and slopes across clusters
+ 
+* **Random effects** represent the difference between cluster-specific intercept and slope and their averages across clusters
 
 
 ```r
@@ -1120,8 +1076,8 @@ coef(m1)[1]
 ```
 
 ```
-## (Intercept) 
-##    4.504827
+#&gt; (Intercept) 
+#&gt;    4.504827
 ```
 
 ```r
@@ -1129,7 +1085,7 @@ mean(unlist(coef(m4)$grade[1]))
 ```
 
 ```
-## [1] 4.504827
+#&gt; [1] 4.504827
 ```
 
 
@@ -1138,8 +1094,8 @@ coef(m1)[2]
 ```
 
 ```
-## percent_ell 
-##   -6.466889
+#&gt; percent_ell 
+#&gt;   -6.466889
 ```
 
 ```r
@@ -1147,15 +1103,10 @@ mean(unlist(coef(m4)$grade[2]))
 ```
 
 ```
-## [1] -6.466889
+#&gt; [1] -6.466889
 ```
 
 What might be the reason behind these?
-
-Summary:
-* **Fixed effect** represents the aggregation of the different intercepts and slopes by taking an average of varying intercept and slopes across clusters
- 
-* **Random effects** represent the difference between cluster-specific intercept and slope and their averages across clusters
 
 ---
 class: middle, inverse
@@ -1213,7 +1164,7 @@ The greater the ICC, the greater the reflection of inequality between groups.
 # When modeling random effects becomes necessary?
 ## Unconditional model and ICC
 
-We estimate a baseline model (model 0) to see how much variance in math is attributable to between-grade variation
+We estimate a baseline model ($model_0$) to see how much variance in math is attributable to between-grade variation
 
 
 ```r
@@ -1234,28 +1185,28 @@ summary(m0)
 ```
 
 ```
-## Linear mixed model fit by REML. t-tests use Satterthwaite's method [
-## lmerModLmerTest]
-## Formula: math ~ 1 + (1 | grade)
-##    Data: district
-## 
-## REML criterion at convergence: 538.4
-## 
-## Scaled residuals: 
-##     Min      1Q  Median      3Q     Max 
-## -2.1915 -0.6925 -0.1216  0.5393  3.3323 
-## 
-## Random effects:
-##  Groups   Name        Variance Std.Dev.
-##  grade    (Intercept) 2.080    1.442   
-##  Residual             1.143    1.069   
-## Number of obs: 176, groups:  grade, 4
-## 
-## Fixed effects:
-##             Estimate Std. Error     df t value Pr(&gt;|t|)  
-## (Intercept)   3.9520     0.7256 3.0000   5.446   0.0122 *
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#&gt; Linear mixed model fit by REML. t-tests use Satterthwaite's method [
+#&gt; lmerModLmerTest]
+#&gt; Formula: math ~ 1 + (1 | grade)
+#&gt;    Data: district
+#&gt; 
+#&gt; REML criterion at convergence: 538.4
+#&gt; 
+#&gt; Scaled residuals: 
+#&gt;     Min      1Q  Median      3Q     Max 
+#&gt; -2.1915 -0.6925 -0.1216  0.5393  3.3323 
+#&gt; 
+#&gt; Random effects:
+#&gt;  Groups   Name        Variance Std.Dev.
+#&gt;  grade    (Intercept) 2.080    1.442   
+#&gt;  Residual             1.143    1.069   
+#&gt; Number of obs: 176, groups:  grade, 4
+#&gt; 
+#&gt; Fixed effects:
+#&gt;             Estimate Std. Error     df t value Pr(&gt;|t|)  
+#&gt; (Intercept)   3.9520     0.7256 3.0000   5.446   0.0122 *
+#&gt; ---
+#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ```
 
 ---
@@ -1269,10 +1220,10 @@ performance::icc(m0)
 ```
 
 ```
-## # Intraclass Correlation Coefficient
-## 
-##     Adjusted ICC: 0.645
-##   Unadjusted ICC: 0.645
+#&gt; # Intraclass Correlation Coefficient
+#&gt; 
+#&gt;     Adjusted ICC: 0.645
+#&gt;   Unadjusted ICC: 0.645
 ```
 
 Interpretation: Approximately 64.5% of the variance in math achievement lies between grades. 
@@ -1383,7 +1334,7 @@ test_likelihoodratio(m2, m4) %&gt;%
 
 _**HOWEVER**_ model 4 doesn't perform much better than model 2 
 
-**Conclusion:** Choose model 2 for *parsimonious* reason.
+**Conclusion:** Choose model 2 for *parsimony*
 
 ???
 
@@ -1395,114 +1346,6 @@ Model 4 doesn't perform much better than model 2 (identical RMSE;
 
 # Model Building and Parsimony
 
-
-
----
-class: center, inverse
-
-# Nested Data Applied to Logistic Regression
-
----
-
-Binary independent variable/logistic regression
-
-**Dataset: portugal.csv**
-
-Statistics keep Portugal at Europe’s tail end due to its high student failure rates especially in core content areas such as math and the Portuguese language. Cortez and Silva (2008) collected student data from two Portuguese schools during the 2005- 2006 school year using school reports and student survey with a goal of developing models to predict student performance. The data include student grades, demographic, social, and school related features. Our goal here is to investigate the factors associated with student failure in Portuguese and the magnitudes of these associations. 
-
-Student Portuguese grade is measured on a 20-point scale with zero being the lowest and 20 being the perfect grade. The grade can be further measured by a five-level classification system, with 16-10 being excellent, 14-15 being good, 12-13 being satisfactory, 10-11 being sufficient, and 0-9 being fail (our primary interest).   
-
-The dataset contains 649 student observations and 18 variables
-
----
-# Research question
-
-What is the relationship between first period grade and failing at the end of the school year?
-
-
-```r
-por &lt;- rio::import(here::here("data", "portugal.csv")) %&gt;%
-  select(school, female, age, first = por1, fail = por3_fail) %&gt;% 
-  drop_na() %&gt;% 
-  filter(first != 0)
-
-head(por)
-```
-
-```
-##   school female age first fail
-## 1     GP      1  17     9    0
-## 2     GP      1  15    12    0
-## 3     GP      1  15    14    0
-## 4     GP      1  16    11    0
-## 5     GP      0  16    12    0
-## 6     GP      0  16    13    0
-```
-
----
-# Visualize the clustering nature of the data:
-
-Count of students who failed Portuguese
-
-
-```r
-por %&gt;% 
-  mutate(fail = factor(fail, levels = c(0,1), labels = c("No", "Yes"))) %&gt;% 
-  ggplot(aes(fail)) +
-  geom_bar(fill = "royalblue", width = 0.5, alpha = 0.8) +
-  labs(x = "Failing Portuguese",
-       y = "Number of Students")
-```
-
-![](EDUC645_nested_data_files/figure-html/unnamed-chunk-33-1.png)&lt;!-- --&gt;
-
----
-# Count of students who failed Portuguese within each school
-
-
-```r
-por %&gt;% 
-  mutate(fail = factor(fail, levels = c(0,1), labels = c("No", "Yes"))) %&gt;% 
-  ggplot(aes(fail, fill = school)) +
-  geom_bar(position = "dodge", width = 0.5, alpha = 0.8) +
-  labs(x = "Failing Portuguese",
-       y = "Number of Students")
-```
-
-![](EDUC645_nested_data_files/figure-html/unnamed-chunk-34-1.png)&lt;!-- --&gt;
-
----
-# Relationship between first period grade and fail
-
-
-```r
-por %&gt;% 
-  ggplot(aes(first, fail)) +
-  geom_point(color = "deeppink") +
-  geom_jitter(alpha = 0.4,
-              size = 0.5) +
-  labs(x = "First period grade",
-       y = "Failing Portuguese")
-```
-
-![](EDUC645_nested_data_files/figure-html/unnamed-chunk-35-1.png)&lt;!-- --&gt;
-
----
-
-# Relationship between first period and fail within each school
-
-
-```r
-por %&gt;% 
-  ggplot(aes(first, fail, color = school)) +
-  geom_point(color = "deeppink") + 
-  geom_jitter(alpha = 0.4,
-              size = 0.5) +
-  labs(x = "First period grade",
-       y = "Failing Portuguese")
-```
-
-![](EDUC645_nested_data_files/figure-html/unnamed-chunk-36-1.png)&lt;!-- --&gt;
 
 ---
 

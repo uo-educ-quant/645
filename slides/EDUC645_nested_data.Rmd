@@ -31,6 +31,16 @@ extra_css <- list(
 
 write_extra_css(css = extra_css, outfile = "my_custom.css")
 
+# Knitr options
+opts_chunk$set(
+  comment = "#>",
+  fig.align = "center",
+  fig.height = 5,
+  fig.width = 8,
+  warning = F,
+  message = F
+)
+
 ```
 
 # Roadmap
@@ -57,140 +67,23 @@ write_extra_css(css = extra_css, outfile = "my_custom.css")
 and how to use it to decide whether one needs to use multilevel modeling
 
 ---
-# What is Nested Data?
+# A Motivating Question
 
-levels of one factor vary only within the levels of another factor, that factor is said to be nested. 
-
-For example, when measuring the performance of workers at several job locations, if the workers only work at one site, then the workers are nested within site. If the workers work at more than one location, we would say that workers are crossed with site.
-
----
-# Where does it come from?
-### Why do we need to think hierarchically?
-1) Two realities exist within interventions:
-
-(a) Effect implies change in individuals over time,
-
-(b) Effect occurs in groups and organizational settings (e.g., dyads, groups, networks, neighborhoods, clinics, cities, countries).
-
---
-
-2) Factors are nested across multiple levels; influence the organization of behavior.
-
----
-# What happens if we ignore it?
-
-### What errors result if we ignore multilevel effects?
-#### Ecological Fallacy
-- Systematic underestimation of group effects
-- Inadequate intervention development and evaluation
-
-#### Aggregation bias
-- Attribute that an individual-level indicator is representative of the entire group
-
-#### Biased estimation of statistical associations
-- Misestimated standard errors
-- Homogeneity of regression slopes
-
----
-# Traditional Linear Regression Example
-* Unit of analysis: Individual
-* Examine between-individual variability
-* Intercept and slope are the same for all groups
-* Ignores inclusion of important group variables
-* Residual correlation
-
----
-class: middle, inverse
-
-# Multilevel Models (MLM)
-
----
-# Multilevel Models (MLM)
-
-* Units of analysis: Individual and Group
-* Examine between-individual and between-group variability
-* The intercept and slopes may be different for individuals within and across groups
-* These differences may be explained by cross-level interactions (differential effects due to individual and group-level characteristics)
-* Allows for the inclusion of important individual and group variables
-* No residual correlation
-
----
-# Sampling and Design Considerations
-
-### Formulating Research Questions
-
-#### Several questions may be proposed and result in different multilevel equations:
-- What is the association between UVI and number of partners among women in PR, after adjusting for clustering effects?
-- Is there an association between UVI and living in a city where female condoms (FCs) are free and accessible?
-- Do characteristics pertaining to a city modify the association between UVI and number of partners?
-
----
-# Sampling and Design Considerations
-### Design
-#### What constitutes a group-level variable?
-- Characteristic of
-  - individual (provider, partner)
-  - a setting (number of beds in hospital, allocated budget for HIV prevention in an agency)
-  - catchment areas (Census, DHS)
-- Policies (% of budget allocated to abstinence-only)
-
---
-
-#### How are group-level variables defined?
-- Aggregating individual-level characteristics into groups (school district SES)
-- Developing group-level measures (mental illness stigma in a school district)
-
----
-# Sampling and Design Considerations
-### Sampling
-#### Calculating Statistical Power is similar to “traditional” analyses
-- Formulate the hypotheses to be tested
-- Compute or Estimate the ICC
-- Determine the variable and outcome of interest
-- Determine the sample frame based on the I.V.(s)
-
---
-
-#### Sampling clusters or sampling individuals?
-- Determine the number of parameters in the model
-- Calculate the number of observations needed for each cluster
-
---
-
-#### Law of Diminishing Returns
-
----
-class: middle, inverse
-
-# Nested and crossed random effects in "lme4"
-
----
-# Nested and crossed random effects in "lme4"
-
-Packages particularly needed for this unit: `lme4`, `equatiomatic`, `performance`, `lmerTest`
-
----
-# The Data: Stanford Education Data Archive (SEDA)
-
-Launched in 2016 to provide nationally comparable, publicly available test score data for U.S. public school districts, allowing scientific inquiries on the relationships between educational conditions, contexts, and outcomes (especially student math/ELA achievements) at the district-level across the nation.
-
-Variable include measures of:
-- academic achievement 
-- achievement gaps for school districts and counties
-- district-level measures of racial and socioeconomic composition
-- racial and socioeconomic segregation patterns
-- other features of the schooling system
+The Data: Stanford Education Data Archive (SEDA), launched in 2016 to provide nationally comparable, publicly available test score data for U.S. public school districts, allowing scientific inquiries on the relationships between educational conditions, contexts, and outcomes (especially student math/ELA achievements) at the district-level across the nation.
 
 Data set:
 - district-level data for 103 Oregon school districts, year 2017-18 data
 - Observations with missing values on any of the key variables were deleted for simplification
 
+From now on, we pull out the cluster of subject, and focus on math achievement only.
+**Overarching inquiry: What is the relationship between percentage of ELL students and math achievement in Oregon districts?**
+
 ---
 # Inspect the data 
 
-What does each row/observation represent?
+each row/observation represents...
 
-```{r, echo = FALSE, fig.cap="add caption"}
+```{r, echo = FALSE}
 seda <- rio::import(here::here("data", "seda_oregon.csv")) %>%
   mutate(subject = recode(subject, 'mth' = "Math", 'rla' = "Reading"))
 
@@ -198,32 +91,12 @@ head(seda)
 ```
 
 ---
-
-# Descriptives
-```{r, echo = FALSE, fig.cap="add caption"}
-seda %>%
-  select(-district) %>% 
-  tbl_summary(
-    statistic = list(all_continuous() ~ "{mean} ({sd})",
-                               all_categorical() ~ "{n} / {N} ({p}%)"),
-    label = list(subject ~ "Subject",
-                 grade ~ "Grade",
-                 achievement ~ "Achievement",
-                 gap_gender ~ "Achievement Gender Gap",
-                 percent_ell ~ "ELL Percentage",
-                 percent_sped ~ "SPED Percentage",
-                 percent_frl ~ "FRL Percentage")) %>%
-  modify_header(label ~ "**Key Variables**")
-```
-
----
 # Understand the clustering nature
 
 Let's start with a single variable: Oregon districts' achievement score 
+We lose information by looking at district achievement across subject and grade alone.
 
-Are we losing information by simply looking at district achievement across subject and grade?
-
-```{r, echo = FALSE, fig.cap="add caption"}
+```{r, echo = FALSE}
 seda %>% 
   group_by(district) %>% 
   mutate(mean = mean(achievement)) %>%
@@ -235,15 +108,11 @@ seda %>%
        y = "Achievement")
 ```
 
-
-???
-Note that districts are "randomly" selected by course developer
-
 ---
 
-Does achievement differ by subject?
+Does achievement differ by subject
 
-```{r, echo = FALSE, fig.cap="add caption"}
+```{r, echo = FALSE}
 seda %>% 
   group_by(district, subject) %>% 
   mutate(mean = mean(achievement)) %>% 
@@ -259,7 +128,7 @@ seda %>%
 
 Differ by grade?
 
-```{r, echo = FALSE, fig.cap="add caption"}
+```{r, echo = FALSE}
 seda %>% 
   group_by(district, grade) %>% 
   mutate(mean = mean(achievement)) %>% 
@@ -275,7 +144,7 @@ seda %>%
 
 Differ by grade AND subject?
 
-```{r, echo = FALSE, fig.cap="add caption"}
+```{r, echo = FALSE}
 seda %>% 
   group_by(district, subject, grade) %>% 
   mutate(mean = mean(achievement)) %>% 
@@ -295,7 +164,7 @@ Can you describe the "clustering" nature of the data in more details now?
 
 IMPORTANTLY, should we keep in mind of this unique feature when we answering research questions, e.g., about relations between two variables?
 
-```{r, echo = FALSE, fig.cap="add caption"}
+```{r, echo = FALSE}
 seda %>% 
   mutate(grade = recode(grade, '3' = "G3", '4' = "G4", '5' = "G5", '6' = "G6")) %>% 
   group_by(district, subject, grade) %>% 
@@ -346,7 +215,7 @@ seda %>%
 
 Does this relationship differ by subject AND grade?
 
-```{r, echo = FALSE, fig.cap="add caption"}
+```{r, echo = FALSE}
 seda %>%
   mutate(grade = recode(grade, '3' = "G3", '4' = "G4", '5' = "G5", '6' = "G6")) %>% 
   group_by(district, subject, grade) %>% 
@@ -367,16 +236,139 @@ seda %>%
 
 Expect students to realize that there is no universal answer; depends on what you look at, what cluster/clusters you want to include, and model specifications
 
+
+---
+# What is Nested Data?
+
+Levels of one factor vary only within the levels of another factor, that factor is said to be nested. 
+For example, when measuring the performance of workers at several job locations, if the workers only work at one site, then the workers are nested within site. If the workers work at more than one location, we would say that workers are crossed with site.
+
+---
+# Where does it come from?
+### Why do we need to think hierarchically?
+1) Two realities exist within interventions:
+
+(a) Effect implies change in individuals over time,
+
+(b) Effect occurs in groups and organizational settings (e.g., dyads, groups, networks, neighborhoods, clinics, cities, countries).
+
+--
+
+2) Factors are nested across multiple levels; influence the organization of behavior.
+
+---
+# What happens if we ignore it?
+
+### What errors result if we ignore multilevel effects?
+#### Ecological Fallacy
+- Systematic underestimation of group effects
+- Inadequate intervention development and evaluation
+
+#### Aggregation bias
+- Attribute that an individual-level indicator is representative of the entire group
+
+#### Biased estimation of statistical associations
+- Misestimated standard errors
+- Homogeneity of regression slopes
+
+---
+# Traditional Linear Regression Example
+* Unit of analysis: Individual
+* Examine between-individual variability
+* Intercept and slope are the same for all groups
+* Ignores inclusion of important group variables
+* Residual correlation
+
+---
+class: middle, inverse
+
+# Multilevel Models
+
+---
+# Multilevel Models (MLM)
+
+* Units of analysis: Individual and Group
+* Examine between-individual and between-group variability
+* The intercept and slopes may be different for individuals within and across groups
+* These differences may be explained by cross-level interactions (differential effects due to individual and group-level characteristics)
+* Allows for the inclusion of important individual and group variables
+* No residual correlation
+
+---
+# Sampling and Design Considerations
+
+### Formulating Research Questions
+
+#### Several questions may be proposed and result in different multilevel equations:
+- What is the association between UVI and number of partners among women in PR, after adjusting for clustering effects?
+- Is there an association between UVI and living in a city where female condoms (FCs) are free and accessible?
+- Do characteristics pertaining to a city modify the association between UVI and number of partners?
+
+---
+# Design Considerations
+
+#### What constitutes a group-level variable?
+- Characteristic of
+  - individual (provider, partner)
+  - a setting (number of beds in hospital, allocated budget for HIV prevention in an agency)
+  - catchment areas (Census, DHS)
+- Policies (% of budget allocated to abstinence-only)
+
+--
+
+#### How are group-level variables defined?
+- Aggregating individual-level characteristics into groups (school district SES)
+- Developing group-level measures (mental illness stigma in a school district)
+
+---
+# Sampling Considerations
+
+#### Calculating Statistical Power is similar to “traditional” analyses
+- Formulate the hypotheses to be tested
+- Compute or Estimate the ICC
+- Determine the variable and outcome of interest
+- Determine the sample frame based on the I.V.(s)
+
+--
+
+#### Sampling clusters or sampling individuals?
+- Determine the number of parameters in the model
+- Calculate the number of observations needed for each cluster
+
+--
+
+#### Law of Diminishing Returns
+
+---
+class: middle, inverse
+
+# Nested and Crossed Random Effects
+
 ---
 # Modeling the relationship between two variables
-
 **For this introductory course, we only focus on two-level clustered data.**
-
-From now on, we pull out the cluster of subject, and focus on math achievement only.
 
 **Overarching inquiry: What is the relationship between percentage of ELL students and math achievement in Oregon districts?**
 
 What model/models can we fit to answer the question? 
+
+# Descriptives
+```{r, echo = FALSE}
+seda %>%
+  select(-district) %>% 
+  tbl_summary(
+    statistic = list(all_continuous() ~ "{mean} ({sd})",
+                               all_categorical() ~ "{n} / {N} ({p}%)"),
+    label = list(subject ~ "Subject",
+                 grade ~ "Grade",
+                 achievement ~ "Achievement",
+                 gap_gender ~ "Achievement Gender Gap",
+                 percent_ell ~ "ELL Percentage",
+                 percent_sped ~ "SPED Percentage",
+                 percent_frl ~ "FRL Percentage")) %>%
+  modify_header(label ~ "**Key Variables**")
+```
+
 
 ```{r, echo = FALSE}
 district <- seda %>%
@@ -412,8 +404,6 @@ district %>%
 
 # Fixed effects model
 
-How to interpret these parameters?
-
 ```{r, echo=T}
 m1 <- lm(math ~ percent_ell, district)
 summary(m1)
@@ -426,8 +416,6 @@ summary(m1)
 ---
 # Fixed effects model
 
-How to interpret these parameters?
-
 ```{r, echo=T}
 coef(m1)
 ```
@@ -439,7 +427,7 @@ coef(m1)
 ---
 # Random effects model
 
-* Allow the intercept to differ across grades
+Allowing the intercept to differ across grades:
 
 ```{r, echo = F}
 district %>% 
@@ -451,22 +439,17 @@ district %>%
 ```
 
 -- 
-
-What parameters changed in the plot? 
-
--- 
-
+Note:
  - Intercept: each grade has a unique intercept
  - Slope: slope changes accordingly
 
-**In fact, mixed-effects models can do more!** 
+**mixed-effects models can do more!** 
 
 ???
 
 Another way to answer the question is allowing the intercept to differ across grades - a unique intercept for each grade.
 
 ---
-`lme4` package: `lmer` function models the data in R:
 
 Model 1. Simple linear regression model for comparison
 
@@ -475,16 +458,18 @@ m1 <- lm(math ~ percent_ell, district)
 coef(m1)
 ```
 
+---
 Model 2. Multilevel model with *random __intercepts__*
     - What parameter differs across grades? what parameter remains the same?
 
-```{r, echo=TRUE}
+```{r}
 m2 <- lme4::lmer(math ~ percent_ell + (1|grade), district)
 summary(m2)
 coef(m2)$grade
 ```
 
-*R Notes: starting the usage of {equatiomatic} package*
+---
+
 The notion being used through this unit:
 ```{r}
 equatiomatic::extract_eq(m2)
@@ -496,7 +481,7 @@ equatiomatic::extract_eq(m2)
 * **Note**: this comparison is primarily for instructive purposes
 * How do you interpret the parameters now?
  
-```{r, echo=TRUE}
+```{r}
 m3 <- lmer(math ~ 1 + (0 + percent_ell|grade), district)
 summary(m3)
 coef(m3)$grade
@@ -509,7 +494,7 @@ Model 4. Multilevel model with *random __intercepts__ and __slopes__*
 * How about the parameters for this model specification?
 * Specify the relationship between percentage of ELL and math achievement for grades 3, 4 & 6
 
-```{r, echo=TRUE}
+```{r}
 m4 <- lmer(math ~ percent_ell + (1 + percent_ell|grade), district)
 
 summary(m4)
@@ -523,7 +508,7 @@ coef(m4)$grade
 extract_eq(m4)
 ```
 
---
+---
 
 What did we learn so far? Describe the differences between model 1 (simple linear regression) and a model with
 * Random intercepts, model 2
@@ -534,8 +519,10 @@ What did we learn so far? Describe the differences between model 1 (simple linea
 # Fixed effects vs random effects
 
 If we put the two previous plots together:
+* what does the bright red line represent? 
+* what do the other four lines represent?
 
-```{r, echo = FALSE, fig.cap="add caption"}
+```{r, echo = FALSE}
 district %>% 
   ggplot(aes(percent_ell, math)) +
   geom_smooth(method='lm', se = 0, color = "deeppink") +
@@ -547,12 +534,13 @@ district %>%
        y = "Math")
 ```
 
-* what does the bright red line represent? 
-* what do the other four lines represent?
-
 ---
 
 Also a review of the relationship between fixed effect (model 1) and random effects (model 4) parameters:
+
+* **Fixed effect** represents the aggregation of the different intercepts and slopes by taking an average of varying intercept and slopes across clusters
+ 
+* **Random effects** represent the difference between cluster-specific intercept and slope and their averages across clusters
 
 ```{r}
 coef(m1)[1]
@@ -565,11 +553,6 @@ mean(unlist(coef(m4)$grade[2]))
 ```
 
 What might be the reason behind these?
-
-Summary:
-* **Fixed effect** represents the aggregation of the different intercepts and slopes by taking an average of varying intercept and slopes across clusters
- 
-* **Random effects** represent the difference between cluster-specific intercept and slope and their averages across clusters
 
 ---
 class: middle, inverse
@@ -627,7 +610,7 @@ The greater the ICC, the greater the reflection of inequality between groups.
 # When modeling random effects becomes necessary?
 ## Unconditional model and ICC
 
-We estimate a baseline model (model 0) to see how much variance in math is attributable to between-grade variation
+We estimate a baseline model ($model_0$) to see how much variance in math is attributable to between-grade variation
 
 ```{r}
 m0 <- lmer(math ~ 1 + (1 | grade), district)
@@ -716,7 +699,7 @@ test_likelihoodratio(m2, m4) %>%
 
 _**HOWEVER**_ model 4 doesn't perform much better than model 2 
 
-**Conclusion:** Choose model 2 for *parsimonious* reason.
+**Conclusion:** Choose model 2 for *parsimony*
 
 ???
 
@@ -728,91 +711,6 @@ Model 4 doesn't perform much better than model 2 (identical RMSE;
 
 # Model Building and Parsimony
 
-
-
----
-class: center, inverse
-
-# Nested Data Applied to Logistic Regression
-
----
-
-Binary independent variable/logistic regression
-
-**Dataset: portugal.csv**
-
-Statistics keep Portugal at Europe’s tail end due to its high student failure rates especially in core content areas such as math and the Portuguese language. Cortez and Silva (2008) collected student data from two Portuguese schools during the 2005- 2006 school year using school reports and student survey with a goal of developing models to predict student performance. The data include student grades, demographic, social, and school related features. Our goal here is to investigate the factors associated with student failure in Portuguese and the magnitudes of these associations. 
-
-Student Portuguese grade is measured on a 20-point scale with zero being the lowest and 20 being the perfect grade. The grade can be further measured by a five-level classification system, with 16-10 being excellent, 14-15 being good, 12-13 being satisfactory, 10-11 being sufficient, and 0-9 being fail (our primary interest).   
-
-The dataset contains 649 student observations and 18 variables
-
----
-# Research question
-
-What is the relationship between first period grade and failing at the end of the school year?
-
-```{r}
-por <- rio::import(here::here("data", "portugal.csv")) %>%
-  select(school, female, age, first = por1, fail = por3_fail) %>% 
-  drop_na() %>% 
-  filter(first != 0)
-
-head(por)
-```
-
----
-# Visualize the clustering nature of the data:
-
-Count of students who failed Portuguese
-
-```{r}
-por %>% 
-  mutate(fail = factor(fail, levels = c(0,1), labels = c("No", "Yes"))) %>% 
-  ggplot(aes(fail)) +
-  geom_bar(fill = "royalblue", width = 0.5, alpha = 0.8) +
-  labs(x = "Failing Portuguese",
-       y = "Number of Students")
-```
-
----
-# Count of students who failed Portuguese within each school
-
-```{r}
-por %>% 
-  mutate(fail = factor(fail, levels = c(0,1), labels = c("No", "Yes"))) %>% 
-  ggplot(aes(fail, fill = school)) +
-  geom_bar(position = "dodge", width = 0.5, alpha = 0.8) +
-  labs(x = "Failing Portuguese",
-       y = "Number of Students")
-```
-
----
-# Relationship between first period grade and fail
-
-```{r}
-por %>% 
-  ggplot(aes(first, fail)) +
-  geom_point(color = "deeppink") +
-  geom_jitter(alpha = 0.4,
-              size = 0.5) +
-  labs(x = "First period grade",
-       y = "Failing Portuguese")
-```
-
----
-
-# Relationship between first period and fail within each school
-
-```{r}
-por %>% 
-  ggplot(aes(first, fail, color = school)) +
-  geom_point(color = "deeppink") + 
-  geom_jitter(alpha = 0.4,
-              size = 0.5) +
-  labs(x = "First period grade",
-       y = "Failing Portuguese")
-```
 
 ---
 

@@ -66,12 +66,15 @@ opts_chunk$set(
 • probit and differentiate from logit
 
 ---
-# Motivating Example: Logistic Regression
+# A Motivating Question
 
-Meta Krüger's (1994) 
-Study investigating gender differences in school leadership in Netherlands. 
+Study investigating gender differences in school leadership in Netherlands (Krüger, 1994 [insert article reference]). The study matched comparable schools (N=98) then surveyed the school principals, teachers, and students. 
 
-The study implemented a matching procedure to generate pairs of comparable schools (N=98) with the only difference being that one school principal was female and the other male, then surveyed the school principals, teachers, and students. Due to deletion of incomplete observations, our dataset is a bit smaller than the one used in the article, it contains 94 school principals and 800 students.
+We're interested in the association between school-level student-perceived *attention from principal* and *affective attitude toward principal*.
+
+---
+
+# Reviewing the data
 
 ```{r, echo = F}
 principal <- rio::import(here::here("data", "principal.csv")) %>%
@@ -86,29 +89,34 @@ head(principal)
 ```
 
 ---
-# The Variables
- - schid, school identification number
- - stuid, student identification number within each school
- - pfemale, coded one for female principals and zero for male principals
- - sfemale, coded one for female students and zero for male students
- - match, coded one if student and principal are the same gender
- - q1, students' rating on a survey item, "Sometimes the principal talks to me", on a 4-point likert scale, 1=low, 4=high
- - q2, students' rating on a survey item, "I think the principal knows who I am", on a 4-point likert scale, 1=low, 4=high
- - q3, students' rating on a survey item, "Principal knows how well I am doing", on a 4-point likert scale, 1=low, 4=high
- - q4, students' rating on a survey item, "The principal is nice", on a 4-point likert scale, 1=low, 4=high
+# Describe dichotomous outcome variable
+
+```{r, echo = F}
+principal %>% 
+  mutate(affective = recode(affective, '1' = "Yes", '0' = "No")) %>%
+  ggplot(aes(affective)) +
+  geom_bar(fill = "royalblue", width = 0.5, alpha = 0.8) +
+  labs(x = "Affective attitude towards principal",
+       y = "Number of Students")
+```
 
 ---
-For starters, some data management; we're interested in the association between student-perceived attention from principal and affective attitude toward principal, therefore we compute two variables of interest:
+# Describe affective on attention
 
- - attention: take the average score of attention items, q1, q2, and q3, then standardize it at school level to measure student-perceived attention
- - affective: recode q4 to be a binary variable coded one for students who rated 3 or 4 on this question ("the school principal is nice")
- 
+```{r, echo = F}
+principal %>% 
+  ggplot(aes(attention, affective)) +
+  geom_point(color = "royalblue") +
+  labs(y = "Affective attitude towards principal",
+       x = "Attention from principal")
+```
+
 ---
 # Visualizing the relationship
- 
+
 Plot outcome variable, affective, on predictor variable, attention. What patterns do you notice from the plots?
 
-```{r echo = FALSE, message = FALSE}
+```{r, echo = FALSE}
 principal %>% 
   ggplot(aes(attention, affective)) +
   geom_point(color = "royalblue") +
@@ -119,14 +127,63 @@ principal %>%
 ---
 # Modeling the relationship
 
-How to model these relationships in our analysis?
+Previously you have practiced modeling outcome variables with continuous (Gaussian) distributions, with various kinds of predictor variables. 
 
-Our inquiry: The associations between student self-perceived attention from principal and affective attitude towards principal.
+Our inquiry: The association between students among school's attention from principal and attitude towards principal.
 
-# show students what this would look like were one to estimate this relationship using OLS
+With the case of Krüger's data, we need to model the relationship between a dichotomous outcome variable in our analysis.
 
-What models should we use to fit the data when our outcome variable is a dichotomous variable?
+---
+# Binary Data
 
+- This is an instance many when we are interested in the probability of an outcome.
+    • Ex. probability of group given individual traits, probability of needs, etc.
+
+--
+
+- How is this different from if attitude towards a principal was a continuous scale, rather than binary/dichotomous?
+
+---
+
+# Other Common Forms of Non-Linear Analysis
+
+- Probit regression
+- Multinomial logistic regression
+- Ordinal logistic regression
+- Hazard ratio
+- Survival analysis
+
+---
+
+class: middle, inverse
+
+# GLM and Logistic Regression
+
+---
+
+# Revisiting the Generalized Linear Model (GLM)
+- A way in which to model a variety of different types of outcome variables
+
+$Y$ = the number scored out of $n$ penalty kicks. 
+The parameter, $p$, is the probability of a score on a single penalty kick. 
+
+Recall that the theory of GLMs is based on the unifying notion of the one-parameter exponential family form:
+
+$$f(y;\theta)=e^{[a(y)b(\theta)+c(\theta)+d(y)]}$$
+---
+# Binomial distribution and the Generalized Linear Model (GLM)
+
+How can we apply the general approach of GLMs to binomial responses
+- We first write an expression for the probability of a binomial response 
+  - Then use a little algebra to rewrite it until we can demonstrate that it, too, can be written in one-parameter exponential family form with $\theta = p$
+  - Provide a way in which to specify the (canonical) link and the form for the model
+
+--
+
+If $Y$ follows a binomial distribution with $n$ trials and probability of success $p$:
+
+$$P(Y=y) = \binom{n}{y}p^y(1-p)^{(n-y)} \\
+      =e^{y\log(p) + (n-y)\log(1-p) + \log\binom{n}{y}}$$
 ---
 # Logistic Regression
 
@@ -142,27 +199,276 @@ where the observed values $Y_i \sim$ binomial with $p=p_i$ for a given $x_i$ and
 
 The solid line is a linear regression fit with least squares to model the probability of a success (Y=1) for a given value of X.  With a binary response, the line doesn't fit the data well, and it produces predicted probabilities below 0 and above 1.  On the other hand, the logistic regression fit (dashed curve) with its typical "S" shape follows the data closely and always produces predicted probabilities between 0 and 1.  For these and several other reasons detailed in this chapter, we will focus on the following model for logistic regression with binary or binomial responses:
 
----
-
-o	show plots of the residuals, residual v. fitted plot, etc. to build intuition around some of emergent issues with using OLS
-  •	highlight that different approaches have different strengths/weaknesses:
-o	In instances where the goal is to estimate treatment effects, and the predicted probability does not fall close to 0/1, an LPM approach is probably superior (more consistent and easier to interpret)
-o	Estimates from logistic models with covariates are not comparable at different values of the covariates or across models
-o	Highlight more clearly that LPM generate predicted values for some value of the predictor exceeding 0/1
+•	Explicit that the logit function serves as a link between linear regression and logistic regression
+    o	directly connect these models parameter by parameter
 
 ---
-# Binary Data
+# Binomial distribution and the GLM: Linking the two
 
-- You've learned to model continuous outcomes with linear regression models BUT there are many instances when we are interested in the probability of an outcome. How do we handle these sort of data?
+## The missing link
+*However*, this probability mass function is not quite in one-parameter exponential family form. 
+- Note: there are two terms in the exponent which consist of a product of functions of $y$ and $p$. So more simplification is in order:
 
---
+$$P(Y=y) = e^{y\log\left(\frac{p}{1-p}\right) + n\log(1-p)+ \log\binom{n}{y}}$$
 
-- What about when you are interested in probability, an outcome related to binary data? (e.g., yes/no)  
-    • Ex. probability of group given individual traits, probability of needs, etc.
-    
---
+- The one-parameter exponential family form for binomial responses shows that the canonical link is $\log(\frac{p}{1-p})$. 
+- GLM theory suggests that constructing a model using the logit, the log odds of a score, as a linear function of covariates is a reasonable approach.   
 
-- How are they different? Why can't we apply the same method?
+---
+# Likelihood Models and Estimation
+
+Fitting simple linear models using OLS assumes that the mean value of a response, $Y$, is linearly related to some variable, X. 
+
+However, often responses are not normally distributed. 
+
+*binary response linearly represented*
+```{r}
+
+```
+
+
+---
+# Fitting logistic regression requires *likelihood methods*. 
+
+*Likelihood* function tells us how likely we are to observe our data for a given parameter value, pB. 
+- come into play is when data is produced from a complex structure which may imply correlation among outcomes (e.g., students' test scores taught by the same teacher)
+- provide flexibility in the types of models we can fit
+- provide ways in which to compare models
+
+For a single X which has a Y, GBB, the likelihood function looks like:
+[insert function]
+
+*Distribution of likelihood function pB*
+```{r, echo= F}
+set.seed(110951)
+x <- rgamma(1000, 6, 0.5)
+library(MASS)
+truehist(x, xlim = c(0, 35))
+xpts <- seq(from = 0, to = 35, length = 1000)
+lines(xpts, dgamma(xpts, 6, 0.5))
+```
+
+Note: we will not discuss MLE in the general form. Instead, we will consider a simple case of MLE that is relevant to the logistic regression.
+
+---
+# Maximum Likelihood Estimation
+
+*Maximum likelihood estimation (MLE)* is a general class of method in statistics that is used to estimate the model parameters
+
+[simple MLE estimation figure]
+```{r}
+
+```
+
+---
+# Maximum Likelihood Estimation
+
+MLE: is the optimal estimate of pB, the value where we are most likely to see our data from all possible values between 0 and 1.
+-  iterates over local maxima find the value of pB where the likelihood or log likelihood is a maximum.
+
+*Contour plot*
+```{r, echo = F}
+# Reference: https://rpubs.com/gill1109/contour
+fit <- fitdistr(x, "gamma")
+
+NxPts <- 100
+NyPts <- 100
+
+xGridPts <- seq(from = 5, to = 7, length = NxPts)
+yGridPts <- seq(from = 0.4, to = 0.6, length = NyPts)
+
+xypairs <- expand.grid(xGridPts, yGridPts) 
+       # coordinates of all gridpoints, rows of an N x 2 matrix
+       # N = NxPts * NyPts
+
+LogLikFun <- function(shape, rate) sum(dgamma(x, shape = shape, rate = rate, log = TRUE))
+
+LogLikOnGrid <- mapply(LogLikFun, xypairs[ , 1], xypairs[ ,2]) # another long vector
+
+## Can you understand the error message when you do
+##    LogLikOnGrid <- outer(xGridPts, yGridPts, LogLikFun)   ?
+## Why doesn't "outer" work here??
+## Can you come up with something better than my solution?
+## You'll also notice that "mapply" is rather slow ...
+## There is an explicit "for loop" going on inside of "mapply".
+## There ought to be a "vectorised" way to do this.
+
+dim(LogLikOnGrid) <- c(NxPts, NyPts) # convert to matrix
+
+## I'll subtract the maximum from the log likelihood function.
+## We are only interested in *differences*, not in its absolute
+## value. Now I know the maximum of the surface is at height z = 0.
+## Also I reshape as a matrix.
+
+MaxLogLik <- max(LogLikOnGrid)
+
+LogLikOnGrid <- matrix(LogLikOnGrid, NxPts, NyPts) - max(LogLikOnGrid)
+
+contour(x = xGridPts, y = yGridPts, z = LogLikOnGrid)
+
+contour(x = xGridPts, y = yGridPts, z = LogLikOnGrid, 
+        levels = c( (0:-8)*10), col = "blue", add = TRUE)
+
+contour(x = xGridPts, y = yGridPts, z = LogLikOnGrid, 
+        levels = - qchisq(0.95, 2)/2, col = "red", add = TRUE)
+```
+
+---
+# Same idea, different plot
+
+*Wire-frame plot*
+```{r, echo = F}
+persp(x = xGridPts, y = yGridPts, z = LogLikOnGrid)
+```
+
+---
+# MLE limitations
+
+- MLE is primarily a single point estimate solution and the information contained in a single value
+- Likelihoods will not necessarily be symmetrically dispersed around the point of maximum likelihood. 
+We may be interested in the full distribution of credible parameter values, so that we can perform sensitivity analyses and understand the possible outcomes or optimal decisions associated with particular credible intervals. 
+
+Bayesian methods can be applied to circumvent these limitations.
+
+---
+# Interpretation of Model Parameters
+
+$$\ln(\frac{p_i}{1-p_i})=\beta_0+\beta_1 X_i$$
+$\beta_1$: Change in log odds for 1 unit change in $X_i$
+
+[insert example]
+---
+
+# Linear probability model (LPM)
+Back to our example
+```{r}
+m1 <- lm(affective ~ attention, principal)
+summary(m1)
+```
+
+Does the regression coefficient of attention confirm your previous impression with the plot?
+
+---
+
+Visualize the coefficient/slope of the fitted line (basically, we force the relationship to be linear):
+
+```{r, echo = F}
+principal %>% 
+  ggplot(aes(attention, affective)) +
+  geom_point(alpha = 0.01) +
+  geom_smooth(method = "lm", se = FALSE, color = "royalblue") + 
+  labs(y = "Affective attitude towards principal",
+       x = "Self-perceived attention from principal")
+```
+
+
+Interpret the results (report regression coefficients **on a probability scale**) and the figure. 
+
+---
+# Visualize the coefficient on a log-odds scale
+
+Model the change in log-odds of affective in a linear function of attention:
+
+```{r, echo = F}
+tibble(attention = (-3):3) %>% 
+  mutate(pred = predict(m1, newdata = .)) %>% 
+  ggplot(aes(attention, pred)) +
+  geom_line(color = "royalblue") +
+  labs(y = "Affective attitude towards principal (LOG-ODDS)",
+       x = "Self-perceived attention from principal")
+```
+
+---
+# Coefficient on a probability scale (mapping the parameters to probability nonlinearly)
+
+```{r, echo = F}
+tibble(attention = (-3):3) %>% 
+  mutate(pred = predict(m1, newdata = ., type = "response")) %>% 
+  ggplot(aes(attention, pred)) +
+  geom_line(color = "royalblue") +
+  labs(y = "Affective attitude towards principal (PROBABILITY)",
+       x = "Self-perceived attention from principal")
+```
+
+???
+
+Note: in the data, "attention" ranges from -2.42 to 2.61, the plot is therefore limited to a fraction when the probability of "affective" approaching one but still below 0.5. Because we cannot easily guess the missing plot fraction (as appose to when the line is linear, we can tell where the line goes simply by looking at the slope), this plot is not telling us enough information about the population of interest:
+
+---
+
+Manipulate the X axis to show the nonlinear relationship in its full image:
+
+```{r, echo = F}
+tibble(attention = (-15):20) %>% 
+  mutate(pred = predict(m1, newdata = ., type = "response")) %>% 
+  ggplot(aes(attention, pred)) +
+  geom_line(color = "royalblue") +
+  labs(y = "Affective attitude towards principal (PROBABILITY)",
+       x = "Self-perceived attention from principal")
+```
+
+Interpret the results (report regression coefficients **on a log-odds scale**) and the two figures.
+
+---
+# Visualize the coefficient on a **log-odds** scale 
+### Model the change in log-odds of affective in a linear function of attention
+
+```{r, echo = F}
+tibble(attention = (-3):3) %>% 
+  mutate(pred = predict(m1, newdata = .)) %>% 
+  ggplot(aes(attention, pred)) +
+  geom_line(color = "brown") +
+  labs(y = "Affective attitude towards principal (LOG-ODDS)",
+       x = "Attention from principal")
+```
+
+---
+# Visualize the coefficient on a *probability* scale 
+### Mapping the parameters to probability nonlinearly
+
+```{r, echo = F}
+tibble(attention = (-3):3) %>% 
+  mutate(pred = predict(m1, newdata = ., type = "response")) %>% 
+  ggplot(aes(attention, pred)) +
+  geom_line(color = "brown") +
+  labs(y = "Affective attitude towards principal (PROBABILITY)",
+       x = "Attention from principal")
+```
+
+???
+
+Coder note: in the data, "attention" ranges from -2.42 to 2.61, the plot is therefore limited to a fraction when the probability of "affective" approaching one but still below 0.5. Because we cannot easily guess the missing plot fraction (as appose to when the line is linear, we can tell where the line goes simply by looking at the slope), this plot is not telling us enough information about the population of interest:
+
+---
+
+Manipulated X axis to show the nonlinear relationship in its full image:
+
+```{r, echo = F}
+tibble(attention = (-3):15) %>% 
+  mutate(pred = predict(m1, newdata = ., type = "response")) %>% 
+  ggplot(aes(attention, pred)) +
+  geom_line(color = "brown") +
+  labs(y = "Affective attitude towards principal (PROBABILITY)",
+       x = "Attention from principal")
+```
+
+
+---
+# Interpret the results
+
+report regression coefficients **on a log-odds scale**
+
+```{r, echo = F}
+tibble(attention = (-15):20) %>% 
+  mutate(pred = predict(m1, newdata = ., type = "response")) %>% 
+  ggplot(aes(attention, pred)) +
+  geom_line(color = "brown") +
+  labs(y = "Affective attitude towards principal (PROBABILITY)",
+       x = "Attention from principal")
+```
+
+---
+# Interpretation of Model Parameters
 
 ---
 # Binary Outcomes
@@ -242,168 +548,37 @@ $$Odds = \frac{\# \textrm{successes}}{\# \textrm{failures}}=
 ???
 
 In our example, it is also possible to estimate the probability of a goal, $p$, for either circumstance. When the goalkeeper's team is behind, the probability of a successful penalty kick is $p$ = 22/24 or 0.833. We can see that the ratio of the probability of a goal scored divided by the probability of no goal is $(22/24)/(2/24)=22/2$ or 11, the odds we had calculated above. The same calculation can be made when the goalkeeper's team is not behind.
----
-
-class: middle, inverse
-
-# GLM and Logistic Regression
 
 ---
-# Generalized linear models (GLMs)
-- are a way in which to model a variety of different types of responses.
-- we apply the general results of GLMs to the specific application of binomial responses. 
-
-$Y$ = the number scored out of $n$ penalty kicks. 
-The parameter, $p$, is the probability of a score on a single penalty kick. 
-
-Recall that the theory of GLMs is based on the unifying notion of the one-parameter exponential family form:
 
 
-$$f(y;\theta)=e^{[a(y)b(\theta)+c(\theta)+d(y)]}$$
+To get the odds ratio, we need to back transform and exponentiate the coefficient, $\beta_i$:
+
+$$\beta_1 = ln(\frac{odds|X=1}{odds|X=0})$$
+   $$= ln(OR_{X=1:X=0})$$
+
+$$OR = e^{ln(OR_{X=1:X=0})}$$
+  $$= e^{\beta_1}$$
+
 ---
-# Binomial distribution and the Generalized Linear Model (GLM)
-
-How can we apply the general approach of GLMs to binomial responses?
-- We first write an expression for the probability of a binomial response 
-  - Then use a little algebra to rewrite it until we can demonstrate that it, too, can be written in one-parameter exponential family form with $\theta = p$
-  - Provide a way in which to specify the (canonical) link and the form for the model
-  - Additional theory allows us to deduce the mean, standard deviation, and more
+# Practice calculating OR by hand
 
 --
 
-If $Y$ follows a binomial distribution with $n$ trials and probability of success $p$:
-
-$$P(Y=y) = \binom{n}{y}p^y(1-p)^{(n-y)} \\
-      =e^{y\log(p) + (n-y)\log(1-p) + \log\binom{n}{y}}$$
-      
----
-•	Explicit that the logit function serves as a link between linear regression and logistic regression
-    o	directly connect these models parameter by parameter
+[insert interpretation]
 
 ---
-# Binomial distribution and the GLM
 
-*However*, this probability mass function is not quite in one-parameter exponential family form. 
-- Note: there are two terms in the exponent which consist of a product of functions of $y$ and $p$. So more simplification is in order:
-
-$$P(Y=y) = e^{y\log\left(\frac{p}{1-p}\right) + n\log(1-p)+ \log\binom{n}{y}}$$
-
-- The one-parameter exponential family form for binomial responses shows that the canonical link is $\log(\frac{p}{1-p})$. 
-- GLM theory suggests that constructing a model using the logit, the log odds of a score, as a linear function of covariates is a reasonable approach.   
-
----
-# Likelihood Models and Estimation
-
-Fitting simple linear models using ordinary least squares (OLS) assumes that the mean value of a response, Y, is linearly related to some variable, X. However, often responses are not normally distributed. 
-
-*binary response linearly represented*
-```{r}
-
-```
-
-
----
-# Fitting logistic regression requires *likelihood methods*. 
-
-*Likelihood* function tells us how likely we are to observe our data for a given parameter value, pB. 
-- Likelihood methods come into play is when data is produced from a complex structure which may imply correlation among outcomes (e.g., students' test scores taught by the same teacher)
-- provide flexibility in the types of models we can fit
-- provide ways in which to compare models
-
-For a single X which has a Y, GBB, the likelihood function looks like:
-[insert function]
-
-*Distribution of likelihood function pB*
-```{r, echo= F}
-set.seed(110951)
-x <- rgamma(1000, 6, 0.5)
-library(MASS)
-truehist(x, xlim = c(0, 35))
-xpts <- seq(from = 0, to = 35, length = 1000)
-lines(xpts, dgamma(xpts, 6, 0.5))
-```
-
-Note: we will not discuss MLE in the general form. Instead, we will consider a simple case of MLE that is relevant to the logistic regression.
-
----
-# Maximum Likelihood Estimation
-
-*Maximum likelihood estimation (MLE)* is a general class of method in statistics that is used to estimate the model parameters
-
-[simple MLE estimation figure]
-```{r}
-
-```
-
-
----
-# Maximum Likelihood Estimation
-
-MLE: is the optimal estimate of pB, the value where we are most likely to see our data from all possible values between 0 and 1.
--  iterates over local maxima find the value of pB where the likelihood or log likelihood is a maximum.
-
-*Contour plot*
 ```{r, echo = F}
-# Reference: https://rpubs.com/gill1109/contour
-fit <- fitdistr(x, "gamma")
+probabilities <- predict(m1, type = "response")
 
-NxPts <- 100
-NyPts <- 100
+principal %>% 
+  mutate(logit_affective = log(probabilities/(1-probabilities))) %>% 
+      ggplot(aes(attention, logit_affective)) + 
+      geom_point (alpha = 0.5) +
+      geom_smooth(method = "loess", color = "brown") 
 
-xGridPts <- seq(from = 5, to = 7, length = NxPts)
-yGridPts <- seq(from = 0.4, to = 0.6, length = NyPts)
-
-xypairs <- expand.grid(xGridPts, yGridPts) 
-       # coordinates of all gridpoints, rows of an N x 2 matrix
-       # N = NxPts * NyPts
-
-LogLikFun <- function(shape, rate) sum(dgamma(x, shape = shape, rate = rate, log = TRUE))
-
-LogLikOnGrid <- mapply(LogLikFun, xypairs[ , 1], xypairs[ ,2]) # another long vector
-
-## Can you understand the error message when you do
-##    LogLikOnGrid <- outer(xGridPts, yGridPts, LogLikFun)   ?
-## Why doesn't "outer" work here??
-## Can you come up with something better than my solution?
-## You'll also notice that "mapply" is rather slow ...
-## There is an explicit "for loop" going on inside of "mapply".
-## There ought to be a "vectorised" way to do this.
-
-dim(LogLikOnGrid) <- c(NxPts, NyPts) # convert to matrix
-
-## I'll subtract the maximum from the log likelihood function.
-## We are only interested in *differences*, not in its absolute
-## value. Now I know the maximum of the surface is at height z = 0.
-## Also I reshape as a matrix.
-
-MaxLogLik <- max(LogLikOnGrid)
-
-LogLikOnGrid <- matrix(LogLikOnGrid, NxPts, NyPts) - max(LogLikOnGrid)
-
-contour(x = xGridPts, y = yGridPts, z = LogLikOnGrid)
-
-contour(x = xGridPts, y = yGridPts, z = LogLikOnGrid, 
-        levels = c( (0:-8)*10), col = "blue", add = TRUE)
-
-contour(x = xGridPts, y = yGridPts, z = LogLikOnGrid, 
-        levels = - qchisq(0.95, 2)/2, col = "red", add = TRUE)
 ```
-
----
-# Same idea, different plot
-
-*Wire-frame plot*
-```{r, echo = F}
-persp(x = xGridPts, y = yGridPts, z = LogLikOnGrid)
-```
----
-# MLE limitations
-
-MLE is primarily used as a point estimate solution and the information contained in a single value will always be limited. Likelihoods will not necessarily be symmetrically dispersed around the point of maximum likelihood. 
-
-We may be interested in the full distribution of credible parameter values, so that we can perform sensitivity analyses and understand the possible outcomes or optimal decisions associated with particular credible intervals. 
-
-Bayesian methods can be applied to circumvent these limitations.
 
 ---
 # Assumptions
@@ -417,149 +592,15 @@ Bayesian methods can be applied to circumvent these limitations.
   - No clustering of data into groups/contexts that would provide information about the values of other errors
 
 ---
-# Describe dichotomous outcome variable
+# Logistic Regression Assumptions
 
-```{r}
-principal %>% 
-  mutate(affective = recode(affective, '1' = "Yes", '0' = "No")) %>%
-  ggplot(aes(affective)) +
-  geom_bar(fill = "royalblue", width = 0.5, alpha = 0.8) +
-  labs(x = "Affective attitude towards principal",
-       y = "Number of Students")
-```
+1. Linearity assumption: the linear relationship between continuous predictor variable and the logit of the outcome variable
 
----
-# Describe dichotomous outcome variable
-Plot outcome variable, affective, on predictor variable, attention:
-
-```{r}
-principal %>% 
-  ggplot(aes(attention, affective)) +
-  geom_point(color = "royalblue") +
-  labs(y = "Affective attitude towards principal",
-       x = "Attention from principal")
-```
-
----
-# Interpretation of Model Parameters
-
-$$\ln(\frac{p_i}{1-p_i})=\beta_0+\beta_1 X_i$$
-
-$\beta_1$: Change in log odds for 1 unit change in $X_i$
-
-[insert example]
----
-
-# Linear probability model (LPM)
-Back to our example
-```{r}
-m1 <- lm(affective ~ attention, principal)
-summary(m1)
-```
-
-Does the regression coefficient of attention confirm your previous impression with the plot?
-
----
-
-Visualize the coefficient/slope of the fitted line (basically, we force the relationship to be linear):
-
-```{r}
-principal %>% 
-  ggplot(aes(attention, affective)) +
-  geom_point(alpha = 0.01) +
-  geom_smooth(method = "lm", se = FALSE, color = "royalblue") + 
-  labs(y = "Affective attitude towards principal",
-       x = "Self-perceived attention from principal")
-```
-
-
-Interpret the results (report regression coefficients **on a probability scale**) and the figure. 
-
-Will this be the model where you stop at?
-
----
-
-#### Binomial logistic regression
+2. Binomial logistic regression (logistic regression/logit model)
 
 ```{r}
 m2 <- lm(affective ~ attention + match, principal)
 
-m3 <- glm(affective ~ attention, principal, 
-          family = binomial(link = "logit"))
-
-m4 <- glm(affective ~ attention + match, principal,
-          family = binomial(link = "logit"))
-
-summary(m3)
-```
-
----
-# Visualize the coefficient on a log-odds scale
-
-Model the change in log-odds of affective in a linear function of attention:
-
-```{r}
-tibble(attention = (-3):3) %>% 
-  mutate(pred = predict(m3, newdata = .)) %>% 
-  ggplot(aes(attention, pred)) +
-  geom_line(color = "royalblue") +
-  labs(y = "Affective attitude towards principal (LOG-ODDS)",
-       x = "Self-perceived attention from principal")
-```
-
----
-# Coefficient on a probability scale (mapping the parameters to probability nonlinearly)
-
-```{r}
-tibble(attention = (-3):3) %>% 
-  mutate(pred = predict(m3, newdata = ., type = "response")) %>% 
-  ggplot(aes(attention, pred)) +
-  geom_line(color = "royalblue") +
-  labs(y = "Affective attitude towards principal (PROBABILITY)",
-       x = "Self-perceived attention from principal")
-```
-
-???
-
-Note: in the data, "attention" ranges from -2.42 to 2.61, the plot is therefore limited to a fraction when the probability of "affective" approaching one but still below 0.5. Because we cannot easily guess the missing plot fraction (as appose to when the line is linear, we can tell where the line goes simply by looking at the slope), this plot is not telling us enough information about the population of interest:
-
----
-
-Manipulate the X axis to show the nonlinear relationship in its full image:
-
-```{r}
-tibble(attention = (-15):20) %>% 
-  mutate(pred = predict(m3, newdata = ., type = "response")) %>% 
-  ggplot(aes(attention, pred)) +
-  geom_line(color = "royalblue") +
-  labs(y = "Affective attitude towards principal (PROBABILITY)",
-       x = "Self-perceived attention from principal")
-```
-
-Interpret the results (report regression coefficients **on a log-odds scale**) and the two figures.
-
-
----
-# Interpretation of Model Parameters
-To get the odds ratio, we need to back transform and exponentiate the coefficient, $\beta_i$:
-
-$$\beta_1 = ln(\frac{odds|X=1}{odds|X=0})$$
-   $$= ln(OR_{X=1:X=0})$$
-
-$$OR = e^{ln(OR_{X=1:X=0})}$$
-  $$= e^{\beta_1}$$
-
----
-
-•	Give students opportunities to practice calculating odds ratios by hand, and the interpreting them
-
----
-# Logistic Regression Assumptions
-
-Linearity assumption: the linear relationship between continuous predictor variable and the logit of the outcome variable
-2. Binomial logistic regression (logistic regression/logit model)
-
-```{r}
 m3 <- glm(affective ~ attention, principal, 
           family = binomial(link = "logit"))
 m4 <- glm(affective ~ attention + match, principal,
@@ -569,17 +610,6 @@ m4 <- glm(affective ~ attention + match, principal,
 Check for critical ASSUMPTIONS that unique to logistic regression:
 
  - linearity assumption/the linear relationship between continuous predictor variable and the logit of the outcome variable
-
-```{r}
-probabilities <- predict(m3, type = "response")
-
-#principal %>% 
-#  mutate(logit_affective = log(probabilities/(1-probabilities))) %>% 
-#      ggplot(aes(attention, logit_affective)) + 
-#      geom_point (alpha = 0.5) +
-#      geom_smooth(method = "loess", color = "brown") 
-
-```
 
 ---
 # Outliers: Cook's distance plot 
@@ -617,72 +647,13 @@ car::vif(m4)
 
 ---
 # Multicollinearity  
-The logit models are usually estimated by a maximum likelihood estimator/MLE.
 
 ```{r}
 summary(m3)
 summary(m4)
 ```
 
----
-# Visualize the coefficient on a **log-odds** scale 
-### Model the change in log-odds of affective in a linear function of attention
 
-```{r}
-tibble(attention = (-3):3) %>% 
-  mutate(pred = predict(m3, newdata = .)) %>% 
-  ggplot(aes(attention, pred)) +
-  geom_line(color = "brown") +
-  labs(y = "Affective attitude towards principal (LOG-ODDS)",
-       x = "Attention from principal")
-```
-
----
-# Visualize the coefficient on a *probability* scale 
-### Mapping the parameters to probability nonlinearly
-
-```{r}
-tibble(attention = (-3):3) %>% 
-  mutate(pred = predict(m3, newdata = ., type = "response")) %>% 
-  ggplot(aes(attention, pred)) +
-  geom_line(color = "brown") +
-  labs(y = "Affective attitude towards principal (PROBABILITY)",
-       x = "Attention from principal")
-```
-
-???
-
-Coder note: in the data, "attention" ranges from -2.42 to 2.61, the plot is therefore limited to a fraction when the probability of "affective" approaching one but still below 0.5. Because we cannot easily guess the missing plot fraction (as appose to when the line is linear, we can tell where the line goes simply by looking at the slope), this plot is not telling us enough information about the population of interest:
-
----
-
-Manipulated X axis to show the nonlinear relationship in its full image:
-
-```{r}
-tibble(attention = (-3):15) %>% 
-  mutate(pred = predict(m3, newdata = ., type = "response")) %>% 
-  ggplot(aes(attention, pred)) +
-  geom_line(color = "brown") +
-  labs(y = "Affective attitude towards principal (PROBABILITY)",
-       x = "Attention from principal")
-```
-
-
----
-# Interpret the results
-
-report regression coefficients **on a log-odds scale**
-
-```{r}
-tibble(attention = (-15):20) %>% 
-  mutate(pred = predict(m3, newdata = ., type = "response")) %>% 
-  ggplot(aes(attention, pred)) +
-  geom_line(color = "brown") +
-  labs(y = "Affective attitude towards principal (PROBABILITY)",
-       x = "Attention from principal")
-```
-
----
 # Comparing models 
 
 Putting models together and report them in a table:
@@ -736,13 +707,21 @@ $$ln({Y_{odds}}) = {\beta_0} + {\beta_1}X_1 + {\beta_2}X_2 + {\beta_3}(X_1*X_2)$
 ---
 # Confidence Intervals for Model Coefficients
 
+{NOTES FROM DL}
+o	show plots of the residuals, residual v. fitted plot, etc. to build intuition around some of emergent issues with using OLS
+  •	highlight that different approaches have different strengths/weaknesses:
+o	In instances where the goal is to estimate treatment effects, and the predicted probability does not fall close to 0/1, an LPM approach is probably superior (more consistent and easier to interpret)
+o	Estimates from logistic models with covariates are not comparable at different values of the covariates or across models
+o	Highlight more clearly that LPM generate predicted values for some value of the predictor exceeding 0/1
+
 
 ---
 class: middle, inverse
 
-# Diagnostics
+# Diagnostics, Predicted Values, and Limitations
 
 ---
+
 # Testing for Goodness-of-Fit
 
 ---
@@ -750,8 +729,6 @@ class: middle, inverse
 1. Compare the unadjusted regression coefficients to the adjusted regression coefficients (not the ORs) 
 - Calculating change in coefficient:
 $$100*\frac{\beta_{adjusted} - \beta_{unadjusted}} {\beta_{unadjusted}}$$
-2. If the change in coefficients > 10%, there is evidence for confounding by the variable in the adjusted model (aka, 10% confounding rule)
-
 ---
 
 # Influential Observations
@@ -774,11 +751,6 @@ $$100*\frac{\beta_{adjusted} - \beta_{unadjusted}} {\beta_{unadjusted}}$$
 - Obtain predicted probabilities for each person depending on their characteristics
 
 $$p = \frac{e^{(\beta_0 + \beta_1X)}}{1 + e^{{(\beta_0 + \beta_1X)}}}$$
----
-class: middle, inverse
-
-# Assessing Predicted Values
- 
 ---
 
 # Assessing Predicted Values
@@ -958,21 +930,92 @@ with(simp_roc, lines(1 - FPR, TPR, col="blue", lty=2))
   - AUC > .9 = Outstanding
 
 ---
+---
+class: center, inverse
 
-[shiny app for playing around with ROC and AUC:
-https://kennis-research.shinyapps.io/ROC-Curves/]
-
+# Nested Data Applied to Logistic Regression
 
 ---
-# Binomial and Beyond
-- Probit regression
-- Multinomial logistic regression
-- Ordinal regression
-- Count data
-- Hazard ratio
-- Survival analysis
+
+Binary independent variable/logistic regression
+
+**Dataset: portugal.csv**
+
+Statistics keep Portugal at Europe’s tail end due to its high student failure rates especially in core content areas such as math and the Portuguese language. Cortez and Silva (2008) collected student data from two Portuguese schools during the 2005- 2006 school year using school reports and student survey with a goal of developing models to predict student performance. The data include student grades, demographic, social, and school related features. Our goal here is to investigate the factors associated with student failure in Portuguese and the magnitudes of these associations. 
+
+Student Portuguese grade is measured on a 20-point scale with zero being the lowest and 20 being the perfect grade. The grade can be further measured by a five-level classification system, with 16-10 being excellent, 14-15 being good, 12-13 being satisfactory, 10-11 being sufficient, and 0-9 being fail (our primary interest).   
+
+The dataset contains 649 student observations and 18 variables
 
 ---
+# Research question
+
+What is the relationship between first period grade and failing at the end of the school year?
+
+```{r}
+por <- rio::import(here::here("data", "portugal.csv")) %>%
+  select(school, female, age, first = por1, fail = por3_fail) %>% 
+  drop_na() %>% 
+  filter(first != 0)
+
+head(por)
+```
+
+---
+# Visualize the clustering nature of the data:
+
+Count of students who failed Portuguese
+
+```{r}
+por %>% 
+  mutate(fail = factor(fail, levels = c(0,1), labels = c("No", "Yes"))) %>% 
+  ggplot(aes(fail)) +
+  geom_bar(fill = "royalblue", width = 0.5, alpha = 0.8) +
+  labs(x = "Failing Portuguese",
+       y = "Number of Students")
+```
+
+---
+# Count of students who failed Portuguese within each school
+
+```{r}
+por %>% 
+  mutate(fail = factor(fail, levels = c(0,1), labels = c("No", "Yes"))) %>% 
+  ggplot(aes(fail, fill = school)) +
+  geom_bar(position = "dodge", width = 0.5, alpha = 0.8) +
+  labs(x = "Failing Portuguese",
+       y = "Number of Students")
+```
+
+---
+# Relationship between first period grade and fail
+
+```{r}
+por %>% 
+  ggplot(aes(first, fail)) +
+  geom_point(color = "deeppink") +
+  geom_jitter(alpha = 0.4,
+              size = 0.5) +
+  labs(x = "First period grade",
+       y = "Failing Portuguese")
+```
+
+---
+
+# Relationship between first period and fail within each school
+
+```{r}
+por %>% 
+  ggplot(aes(first, fail, color = school)) +
+  geom_point(color = "deeppink") + 
+  geom_jitter(alpha = 0.4,
+              size = 0.5) +
+  labs(x = "First period grade",
+       y = "Failing Portuguese")
+```
+
+---
+
 # Logistic vs. OLS regression
 |                 | Linear Least Squares | Binomial Regression |
 |-----------------|----------------------|---------------------|
@@ -982,6 +1025,11 @@ https://kennis-research.shinyapps.io/ROC-Curves/]
 |EDA              | plot X vs. Y; add line | find log⁡(odds) for several subgroups; plot vs. X|
 |Comparing models | extra sum of squares F-tests; AIC/BIC | drop-in-deviance tests; AIC/BIC |
 |Interpreting coef| β1= change in mean response for unit change in X | eβ1= percent change in odds for unit change in X|
+
+---
+
+# Logistic regression assumptions
+
 
 ---
 # Key Takeaways
