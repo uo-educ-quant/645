@@ -25,15 +25,6 @@ theme_set(theme_classic())
 
 i_am("slides/EDUC645_poisson_regression.rmd")
 
-extra_css <- list(
-  ".red"   = list(color = "red"),
-  ".blue"  =list(color = "blue"),
-  ".green" = list(color = "#8bb174"),
-  ".purple" = list(color = "#6A5ACD"),
-  ".red-pink" = list(color= "#e64173"),
-  ".grey-light" = list(color= "grey70"),
-  ".slate" = list(color="#314f4f"),
-  ".small" = list("font-size" = "90%"))
 
 write_extra_css(css = extra_css, outfile = "my_custom.css")
 
@@ -78,6 +69,9 @@ This dataset was drawn from the China Education Panel Survey (CEPS), China’s f
 
 Research inquiry: relationship between class size and job satisfaction
 
+ - *njobsatis*, number of teachers who answered yes to the question of whether to choose being a teacher if given other job options
+ - *nschsatis*, number of teachers who answered yes to the question of whether to choose the current school if being allowed to move to other schools
+
 ---
 # The dataset 
 
@@ -90,15 +84,6 @@ ceps %>%
   filter(row_number() < 6) %>% 
   kable()
 ```
-
-
- - *schids*, school identifier
- - *njobsatis*, number of teachers who answered yes to the question of whether to choose being a teacher if given other job options
- - *nschsatis*, number of teachers who answered yes to the question of whether to choose the current school if being allowed to move to other schools
- - *rural*, categorical measure of proportion of rural students in school; 1=lower than 25%, 2=25% to 60%, 3=60% to 80%, 4=higher than 80%
- - *clsize*, average class size
- - *computer*, number of computers available to students
- - *ctyeduz*, neighborhood average years of education (standardized)
 
 ---
 # Summary statistics 
@@ -151,7 +136,6 @@ ceps %>%
        y = "Number of schools") + 
   scale_y_continuous(labels = label_number(accuracy = 1))
 ```
-Henceforce investigating job satisfaction (njobsatis). We may use job satisfaction (njobsatis) as outcome in the class and school satisfaction (nschsatis) in the lab or assignment.
 
 ---
 # Why simple linear regression may not be ideal for count data

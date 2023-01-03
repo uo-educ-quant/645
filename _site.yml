@@ -10,12 +10,12 @@ navbar:
     href: schedule.html
   - text: Lectures
     menu: 
-      - text: "Unit 1: Logistic Regression"
-        href: ./slides/EDUC645_log_regression.html
-      - text: "Unit 2: Poisson Regression"
-        href: ./slides/EDUC645_poisson_regression.html
-      - text: "Unit 3: Nested Data Structures"
+      - text: "Unit 1: Nested Data Structures"
         href: ./slides/EDUC645_nested_data.html
+      - text: "Unit 2: Logistic Regression"
+        href: ./slides/EDUC645_log_regression.html
+      - text: "Unit 3: Poisson Regression"
+        href: ./slides/EDUC645_poisson_regression.html
       - text: "Unit 4: Introduction to Measurement and Assessment"
         href: ./slides/EDUC645_measure_assess.html
       - text: "Unit 5: Cleaning Data & Missing Data"

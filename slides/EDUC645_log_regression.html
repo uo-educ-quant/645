@@ -57,7 +57,7 @@ class: center, middle, inverse, title-slide
 
 Study investigating gender differences in school leadership in Netherlands (Krüger, 1994 [insert article reference]). The study matched comparable schools (N=98) then surveyed the school principals, teachers, and students. 
 
-We're interested in the association between school-level student-perceived *attention from principal* and *affective attitude toward principal*.
+We're interested in the association between school-level student-perceived *attention from principal* and *affective attitude toward principal*(i.e., "the school principal is nice").
 
 ---
 
@@ -101,7 +101,7 @@ Plot outcome variable, affective, on predictor variable, attention. What pattern
 ---
 # Modeling the relationship
 
-Previously you have practiced modeling outcome variables with continuous (Gaussian) distributions, with various kinds of predictor variables. 
+Previously you have practiced modeling outcome variables with continuous distributions using various kinds of predictor variables. 
 
 Our inquiry: The association between students among school's attention from principal and attitude towards principal.
 
@@ -136,21 +136,32 @@ class: middle, inverse
 ---
 
 # Revisiting the Generalized Linear Model (GLM)
-- A way in which to model a variety of different types of outcome variables
-
-`\(Y\)` = the number scored out of `\(n\)` penalty kicks. 
-The parameter, `\(p\)`, is the probability of a score on a single penalty kick. 
 
 Recall that the theory of GLMs is based on the unifying notion of the one-parameter exponential family form:
 
-`$$f(y;\theta)=e^{[a(y)b(\theta)+c(\theta)+d(y)]}$$`
+Our full population regression model:
+
+`$$Y = \color{blue}{\beta_{0} + \beta_{1} X} + \color{green}{\varepsilon}$$`
+
+`\(Y\)`: our outcome
+`\(\color{blue}{\beta_{0}}\)` and `\(\color{blue}{\beta_{1}}\)`: our population parameters and regression coefficients to be estimated
+`\(\color{green}{\varepsilon}\)`: our error/residual ( `\(\varepsilon\)` is a fancy way of writing the Greek letter "epsilon")
+
+--
+
+Also written as:
+
+`$$Y_{i} = \beta_{0} + \beta_{1} X_{i} + \varepsilon_{i}$$`
+where we use the subscript `\(i\)` to emphasize that the model estimates the outcome for each of the `\(i\)` units (students, schools, patients, etc.).
+
+.footnote[[1] Sometimes also called deterministic and stochastic components.]
+
 ---
 # Binomial distribution and the Generalized Linear Model (GLM)
 
 How can we apply the general approach of GLMs to binomial responses
 - We first write an expression for the probability of a binomial response 
-  - Then use a little algebra to rewrite it until we can demonstrate that it, too, can be written in one-parameter exponential family form with `\(\theta = p\)`
-  - Provide a way in which to specify the (canonical) link and the form for the model
+  - Then Provide a way in which to specify the (canonical) link and the form for the model
 
 --
 
@@ -158,37 +169,83 @@ If `\(Y\)` follows a binomial distribution with `\(n\)` trials and probability o
 
 `$$P(Y=y) = \binom{n}{y}p^y(1-p)^{(n-y)} \\
       =e^{y\log(p) + (n-y)\log(1-p) + \log\binom{n}{y}}$$`
----
-# Logistic Regression
 
-Binary (0 or 1) response (Y) and a single continuous predictor (X).
+---
+# Binary Outcomes
+- Outcomes with a yes/no or 0/1 response
+
+--
+
+- Examples:  
+  - Depression or not?  
+  - Vaccinated or not?  
+
+--
+	
+- Proportion vs. Odds
+
+---
+# Proportion
+- Description 1:
+
+---
+# Odds
+
+Odds of an event: the probability of 'yes' divided by the probability of 'no'
+`$$Odds = \frac{p}{1(1-p)}$$`
+
+
+---
+# Odds and Probability
+
+As the probability of an event increases, so do the odds
+
+[insert data visualization comparing trajectories]
+
+???
+- As the probability of an event increases, so do the odds
+- Odds increase *almost* exponentially as the probability increases
+
+---
+# Binomial distribution and the GLM
+
+*However*, this probability mass function is not quite in one-parameter exponential family form. 
+
+## The missing link
+GLM theory suggests that constructing a model using the logit(the log odds of a score) as a linear function of covariates.
+
+The logit function serves as a link between linear regression and logistic regression; a one-parameter exponential family form for binomial responses shows that the canonical link is:
+`$$\log(\frac{p}{1-p})$$`
 
 ### Model for logistic regression with binary or binomial responses:
+`$$Y_i = \log(\frac{p_i}{1-p_i})$$`
+
+Where the observed values `\(Y_i \sim\)` binomial with `\(p=p_i\)` for a given `\(x_i\)` and `\(n=1\)` for binary responses.
+
+--
+
+We then insert the logit link function into our GLM model as follows:
+
+`$$Y=\beta_0+\beta_1 x_i$$`
+Becomes...
+--
 
 `$$\log(\frac{p_i}{1-p_i})=\beta_0+\beta_1 x_i$$`
 
-where the observed values `\(Y_i \sim\)` binomial with `\(p=p_i\)` for a given `\(x_i\)` and `\(n=1\)` for binary responses.
+In other words, `\(Y_i\)` = the number scored out of `\(n\)` penalty kicks. The parameter, `\(p\)`, is the probability of a score on a single penalty kick. 
+
+
+for binary responses:
+`\(p_i\)` 
+`\(x_i\)`
+`\(n=1\)`
 
 ???
 
 The solid line is a linear regression fit with least squares to model the probability of a success (Y=1) for a given value of X.  With a binary response, the line doesn't fit the data well, and it produces predicted probabilities below 0 and above 1.  On the other hand, the logistic regression fit (dashed curve) with its typical "S" shape follows the data closely and always produces predicted probabilities between 0 and 1.  For these and several other reasons detailed in this chapter, we will focus on the following model for logistic regression with binary or binomial responses:
 
-•	Explicit that the logit function serves as a link between linear regression and logistic regression
-    o	directly connect these models parameter by parameter
-
 ---
-# Binomial distribution and the GLM: Linking the two
 
-## The missing link
-*However*, this probability mass function is not quite in one-parameter exponential family form. 
-- Note: there are two terms in the exponent which consist of a product of functions of `\(y\)` and `\(p\)`. So more simplification is in order:
-
-`$$P(Y=y) = e^{y\log\left(\frac{p}{1-p}\right) + n\log(1-p)+ \log\binom{n}{y}}$$`
-
-- The one-parameter exponential family form for binomial responses shows that the canonical link is `\(\log(\frac{p}{1-p})\)`. 
-- GLM theory suggests that constructing a model using the logit, the log odds of a score, as a linear function of covariates is a reasonable approach.   
-
----
 # Likelihood Models and Estimation
 
 Fitting simple linear models using OLS assumes that the mean value of a response, `\(Y\)`, is linearly related to some variable, X. 
@@ -253,7 +310,17 @@ Bayesian methods can be applied to circumvent these limitations.
 `$$\ln(\frac{p_i}{1-p_i})=\beta_0+\beta_1 X_i$$`
 `\(\beta_1\)`: Change in log odds for 1 unit change in `\(X_i\)`
 
-[insert example]
+# Regression equation components
+
+`$$BMI = \color{orange}{(\beta_0)} + \color{purple}{(\beta_1)}(DietaryRestraint)$$`
+
+&lt;span style = "color:orange"&gt; Intercept `\((\beta_0)\)`: &lt;/span&gt; Predicted outcome when X is equal to 0.
+
+--
+
+&lt;span style = "color:purple"&gt; Slope `\((\beta_1)\)`: &lt;/span&gt; Predicted increase in the outcome for every one unit increase in X.
+
+
 ---
 
 # Linear probability model (LPM)
@@ -285,7 +352,7 @@ summary(m1)
 #&gt; F-statistic: 19.13 on 1 and 798 DF,  p-value: 1.381e-05
 ```
 
-Does the regression coefficient of attention confirm your previous impression with the plot?
+
 
 ---
 
@@ -334,7 +401,8 @@ Interpret the results (report regression coefficients **on a log-odds scale**) a
 
 ???
 
-Coder note: in the data, "attention" ranges from -2.42 to 2.61, the plot is therefore limited to a fraction when the probability of "affective" approaching one but still below 0.5. Because we cannot easily guess the missing plot fraction (as appose to when the line is linear, we can tell where the line goes simply by looking at the slope), this plot is not telling us enough information about the population of interest:
+Coder note: in the data, "attention" ranges from -2.42 to 2.61, the plot is therefore limited to a fraction when the probability of "affective" approaching one but still below 0.5. 
+Because we cannot easily guess the missing plot fraction (as appose to when the line is linear, we can tell where the line goes simply by looking at the slope), this plot is not telling us enough information about the population of interest:
 
 ---
 
@@ -346,57 +414,32 @@ Manipulated X axis to show the nonlinear relationship in its full image:
 ---
 # Interpret the results
 
-report regression coefficients **on a log-odds scale**
+Report regression coefficients **on a log-odds scale**
 
 &lt;img src="EDUC645_log_regression_files/figure-html/unnamed-chunk-18-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 # Interpretation of Model Parameters
 
----
-# Binary Outcomes
-- Outcomes with a yes/no or 0/1 response
-
---
-
-- Examples:  
-  - Depression or not?  
-  - Vaccinated or not?  
-
---
-	
-- Proportion vs. Odds
 
 ---
-# Proportion
-- Description 1:
+# Categorical/Nominal Predictor Variables
+
+We can test for an overall effect of rank using the Wald test. 
+
+The order in which the coefficients are given in the table of coefficients is the same as the order of the terms in the model.
+Wald test refers to the coefficients by their order in the model 
+- b supplies the coefficients
+- Sigma supplies the variance covariance matrix of the error terms
+Terms tells R which terms in the model are to be tested, in this case, terms 4, 5, and 6, are the three terms for the levels of rank.
+
+
+```r
+#wald.test(b = coef(m1), Sigma = vcov(m1), Terms = 4:6)
+```
 
 ---
-# Odds
 
-Odds of an event: the probability of 'yes' divided by the probability of 'no'
-`$$Odds = \frac{p}{1(1-p)}$$`
-
---
-
-What are the odds of getting Tails when tossing a fair coin?
-
---
-
-What are the odds of getting a 6 when tossing a fair dice?
-
----
-# Odds and Probability
-
-As the probability of an event increases, so do the odds
-
-[insert data visualization comparing trajectories]
-
-???
-- As the probability of an event increases, so do the odds
-- Odds increase *almost* exponentially as the probability increases
-
----
 # Binary Outcome and Binary Predictor
 - Measures of Association
 	• Difference in probabilities = p1-p2
@@ -417,7 +460,6 @@ As the probability of an event increases, so do the odds
 
 - One way to quantify a XX's performance. 
 Example 
-
 __odds ratio__ \index{odds ratio} (OR): 
 
 which tells us that the *odds* of a successful penalty kick are 3.05 times higher when the shooter's team is leading.
@@ -433,7 +475,7 @@ In general, we now have several ways of finding the odds of success under certai
 In our example, it is also possible to estimate the probability of a goal, `\(p\)`, for either circumstance. When the goalkeeper's team is behind, the probability of a successful penalty kick is `\(p\)` = 22/24 or 0.833. We can see that the ratio of the probability of a goal scored divided by the probability of no goal is `\((22/24)/(2/24)=22/2\)` or 11, the odds we had calculated above. The same calculation can be made when the goalkeeper's team is not behind.
 
 ---
-
+# Practice calculating OR
 
 To get the odds ratio, we need to back transform and exponentiate the coefficient, `\(\beta_i\)`:
 
@@ -452,7 +494,125 @@ To get the odds ratio, we need to back transform and exponentiate the coefficien
 
 ---
 
-&lt;img src="EDUC645_log_regression_files/figure-html/unnamed-chunk-19-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC645_log_regression_files/figure-html/unnamed-chunk-20-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+# Confidence Intervals
+
+We can also obtain confidence intervals (CIs)for the coefficient estimates. 
+
+For logistic models, CIs are based on the profiled log-likelihood function. 
+
+
+```r
+## CIs using profiled log-likelihood
+confint(m1)
+```
+
+```
+#&gt;                  2.5 %     97.5 %
+#&gt; (Intercept) 0.16069761 0.21430239
+#&gt; attention   0.03504475 0.09210663
+```
+
+We can also get CIs based on just the standard errors by using the default method.
+
+
+```r
+## CIs using standard errors
+confint.default(m1)
+```
+
+```
+#&gt;                  2.5 %     97.5 %
+#&gt; (Intercept) 0.16073827 0.21426173
+#&gt; attention   0.03508802 0.09206336
+```
+
+---
+# Odds Ratios
+
+You can also exponentiate the coefficients and interpret them as odds-ratios. 
+
+We can use the same logic to get odds ratios and their confidence intervals, by exponentiating the confidence intervals from before. 
+
+
+```r
+exp(coef(m1))
+```
+
+```
+#&gt; (Intercept)   attention 
+#&gt;     1.20623     1.06564
+```
+
+For a one unit increase in attention, the odds of being admitted to graduate school (versus not being admitted) increase by a factor of 1.07.
+
+
+```r
+## odds ratios and 95% CI
+exp(cbind(OR = coef(m1), confint(m1)))
+```
+
+```
+#&gt;                  OR    2.5 %   97.5 %
+#&gt; (Intercept) 1.20623 1.174330 1.238997
+#&gt; attention   1.06564 1.035666 1.096482
+```
+To put it all in one table, we use cbind to bind the coefficients and confidence intervals column-wise.
+
+Note: While R produces the odds ratio for the intercept, this OR is not generally interpreted.
+
+---
+class: middle, inverse
+
+# Interactions
+
+---
+# Assess Interactions
+
+- Assess effect modification by adding interaction term to the model
+
+Model *without* interaction term:
+
+`$$ln({Y_{odds}}) - {\beta_0} + {\beta_1}X_1 + {\beta_2}X_2$$`
+Model *with* interaction term:
+`$$ln({Y_{odds}}) = {\beta_0} + {\beta_1}X_1 + {\beta_2}X_2 + {\beta_3}(X_1*X_2)$$`
+---
+# Interaction - categorical X categorical
+
+---
+# Interaction - continous X categorical
+
+[Assess Interactions - example walkthrough]
+
+---
+# Interactions - centering variable
+
+---
+# Interaction - continous X continuous
+[Assess Interactions - example walkthrough]
+
+[interpretation of output, example write up]
+
+---
+# Tests for Significance of Model Coefficients
+
+---
+# Confidence Intervals for Model Coefficients
+
+{NOTES FROM DL}
+o	show plots of the residuals, residual v. fitted plot, etc. to build intuition around some of emergent issues with using OLS
+  •	highlight that different approaches have different strengths/weaknesses:
+o	In instances where the goal is to estimate treatment effects, and the predicted probability does not fall close to 0/1, an LPM approach is probably superior (more consistent and easier to interpret)
+o	Estimates from logistic models with covariates are not comparable at different values of the covariates or across models
+o	Highlight more clearly that LPM generate predicted values for some value of the predictor exceeding 0/1
+
+---
+
+class: middle, inverse
+
+# Assumptions and Diagnostics
 
 ---
 # Assumptions
@@ -494,7 +654,7 @@ Check for critical ASSUMPTIONS that unique to logistic regression:
 plot(m3, which = 4, id.n = 3)
 ```
 
-&lt;img src="EDUC645_log_regression_files/figure-html/unnamed-chunk-21-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC645_log_regression_files/figure-html/unnamed-chunk-26-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 # Outliers: Residual Errors 
@@ -510,7 +670,7 @@ principal_checked &lt;- broom::augment(m3) %&gt;%
 principal_checked %&gt;% top_n(3, .cooksd)
 ```
 
-<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:unnamed-chunk-22">
+<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:unnamed-chunk-27">
 <col><col><col><col><col><col><col><col><col><tr>
 <th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">affective</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">attention</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">.fitted</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">.resid</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">.std.resid</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">.hat</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">.sigma</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">.cooksd</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">index</th></tr>
 <tr>
@@ -529,7 +689,7 @@ principal_checked %&gt;%
   geom_point(aes(color = affective))
 ```
 
-&lt;img src="EDUC645_log_regression_files/figure-html/unnamed-chunk-22-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC645_log_regression_files/figure-html/unnamed-chunk-27-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 # Multicollinearity  
@@ -628,7 +788,7 @@ huxtable::huxreg(
 )
 ```
 
-<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:unnamed-chunk-25">
+<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:unnamed-chunk-30">
 <col><col><col><col><col><tr>
 <th style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;"></th><th style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">LPM</th><th style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">LPM</th><th style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">Logistic</th><th style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">Logistic</th></tr>
 <tr>
@@ -651,57 +811,6 @@ huxtable::huxreg(
 <th colspan="5" style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;"> *** p &lt; 0.001;  ** p &lt; 0.01;  * p &lt; 0.05.</th></tr>
 </table>
 
-
----
-class: middle, inverse
-
-# Interactions
-
----
-# Assess Interactions
-
-- Assess effect modification by adding interaction term to the model
-
-Model *without* interaction term:
-
-`$$ln({Y_{odds}}) - {\beta_0} + {\beta_1}X_1 + {\beta_2}X_2$$`
-Model *with* interaction term:
-`$$ln({Y_{odds}}) = {\beta_0} + {\beta_1}X_1 + {\beta_2}X_2 + {\beta_3}(X_1*X_2)$$`
----
-# Interaction - categorical X categorical
-
----
-# Interaction - continous X categorical
-
-[Assess Interactions - example walkthrough]
-
----
-# Interactions - centering variable
-
----
-# Interaction - continous X continuous
-[Assess Interactions - example walkthrough]
-
-[interpretation of output, example write up]
-
----
-# Tests for Significance of Model Coefficients
-
----
-# Confidence Intervals for Model Coefficients
-
-{NOTES FROM DL}
-o	show plots of the residuals, residual v. fitted plot, etc. to build intuition around some of emergent issues with using OLS
-  •	highlight that different approaches have different strengths/weaknesses:
-o	In instances where the goal is to estimate treatment effects, and the predicted probability does not fall close to 0/1, an LPM approach is probably superior (more consistent and easier to interpret)
-o	Estimates from logistic models with covariates are not comparable at different values of the covariates or across models
-o	Highlight more clearly that LPM generate predicted values for some value of the predictor exceeding 0/1
-
-
----
-class: middle, inverse
-
-# Diagnostics, Predicted Values, and Limitations
 
 ---
 
@@ -728,6 +837,10 @@ class: middle, inverse
 
 # Predicted Values: Probabilities
 - Coefficients tell us the *average* predicted probability for a person, but what if we want to know about more specific groups or contexts?
+
+You can also use predicted probabilities to help you understand the model. Predicted probabilities can be computed for both categorical and continuous predictor variables. In order to create predicted probabilities we first need to create a new data frame with the values we want the independent variables to take on to create our predictions.
+
+We will start by calculating the predicted probability of admission at each value of rank, holding gre and gpa at their means. First we create and view the data frame.
 
 --
 
@@ -826,7 +939,7 @@ test_set %&gt;%
   ggtitle("DV to X")
 ```
 
-&lt;img src="EDUC645_log_regression_files/figure-html/unnamed-chunk-27-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC645_log_regression_files/figure-html/unnamed-chunk-32-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 # Examining the ROC curve

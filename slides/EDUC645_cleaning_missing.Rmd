@@ -88,15 +88,6 @@ GALO data is originally described by Peschar (1975) and analyzed by Dronkers and
 Key variables.
 DV: score, student's achievement score on GALO test
 
-Covariates
- - schid: school identification number
- - female: coded one for female students and zero for male
- - advice: teacher’s advice on the student's secondary school choice; 0="no subsequent school", 1="lowest",..., 6="highest", 999="missing" 
- - medu: mother's highest education; 1="lowest",..., 9="highest", 999="missing"
- - fedu: father’s highest education; 1="lowest",..., 9="highest", 999="missing"
- - focc: father’s occupational status; 1="lowest",..., 6="highest", 9="missing"
-
-
 ---
 # Missing Data Diagnostics
 ## Inspect missing and imputed data before and after imputation

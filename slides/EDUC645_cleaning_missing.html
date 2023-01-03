@@ -68,15 +68,6 @@ GALO data is originally described by Peschar (1975) and analyzed by Dronkers and
 Key variables.
 DV: score, student's achievement score on GALO test
 
-Covariates
- - schid: school identification number
- - female: coded one for female students and zero for male
- - advice: teacher’s advice on the student's secondary school choice; 0="no subsequent school", 1="lowest",..., 6="highest", 999="missing" 
- - medu: mother's highest education; 1="lowest",..., 9="highest", 999="missing"
- - fedu: father’s highest education; 1="lowest",..., 9="highest", 999="missing"
- - focc: father’s occupational status; 1="lowest",..., 6="highest", 9="missing"
-
-
 ---
 # Missing Data Diagnostics
 ## Inspect missing and imputed data before and after imputation
@@ -339,11 +330,11 @@ Benefits of repeating the process, merging (averaging) each estimate of the miss
 * More precisely defines uncertainty in the data
 * Accounts for uncertainty from original data generation (e.g., measurement error) and of the imputation process
 
-<div class="DiagrammeR html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-9b58bfcdb9aa5afb553d" style="width:756px;height:486px;"></div>
+<div class="DiagrammeR html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-727fe458f7b3909277f6" style="width:756px;height:486px;"></div>
 <script>HTMLWidgets.pymChild = new pym.Child();HTMLWidgets.addPostRenderHandler(function(){
                                 setTimeout(function(){HTMLWidgets.pymChild.sendHeight();},100);
                             });</script>
-<script type="application/json" data-for="htmlwidget-9b58bfcdb9aa5afb553d">{"x":{"diagram":"\n                         graph LR\n                        A((d))-->B((m<sub>1<\/sub>))\n                       A((d))-->C((m<sub>2<\/sub>))\n                      A((d))-->D((m<sub>3<\/sub>))\n                         B((m<sub>1<\/sub>))-->E((a<sub>1<\/sub>)) \n                        C((m<sub>2<\/sub>))-->F((a<sub>2<\/sub>)) \n                         D((m<sub>3<\/sub>))-->G((a<sub>3<\/sub>))\n                         E((a<sub>1<\/sub>))-->H((r))\n                         F((a<sub>2<\/sub>))-->H((r)) \n                         G((a<sub>3<\/sub>))-->H((r))\n                       "},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-727fe458f7b3909277f6">{"x":{"diagram":"\n                         graph LR\n                        A((d))-->B((m<sub>1<\/sub>))\n                       A((d))-->C((m<sub>2<\/sub>))\n                      A((d))-->D((m<sub>3<\/sub>))\n                         B((m<sub>1<\/sub>))-->E((a<sub>1<\/sub>)) \n                        C((m<sub>2<\/sub>))-->F((a<sub>2<\/sub>)) \n                         D((m<sub>3<\/sub>))-->G((a<sub>3<\/sub>))\n                         E((a<sub>1<\/sub>))-->H((r))\n                         F((a<sub>2<\/sub>))-->H((r)) \n                         G((a<sub>3<\/sub>))-->H((r))\n                       "},"evals":[],"jsHooks":[]}</script>
 
 ---
 

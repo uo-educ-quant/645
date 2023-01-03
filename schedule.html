@@ -629,7 +629,7 @@ body {
   padding-top: 60px;
 }
 </style>
-<script src="site_libs/header-attrs-2.16/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.19/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
@@ -797,8 +797,8 @@ $(document).ready(function () {
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -806,16 +806,9 @@ $(document).ready(function () {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "&#xe258;";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
+  content: "\e258";
   font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
+  border: none;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -942,9 +935,9 @@ Lectures
 <span class="down-arrow">&#x25BE;</span>
 </button>
 <div class="nav-dropdown-content">
-<a href="./slides/EDUC645_log_regression.html">Unit 1: Logistic Regression</a>
-<a href="./slides/EDUC645_poisson_regression.html">Unit 2: Poisson Regression</a>
-<a href="./slides/EDUC645_nested_data.html">Unit 3: Nested Data Structures</a>
+<a href="./slides/EDUC645_nested_data.html">Unit 1: Nested Data Structures</a>
+<a href="./slides/EDUC645_log_regression.html">Unit 2: Logistic Regression</a>
+<a href="./slides/EDUC645_poisson_regression.html">Unit 3: Poisson Regression</a>
 <a href="./slides/EDUC645_measure_assess.html">Unit 4: Introduction to Measurement and Assessment</a>
 <a href="./slides/EDUC645_cleaning_missing.html">Unit 5: Cleaning Data &amp; Missing Data</a>
 </div>
@@ -988,13 +981,13 @@ Lectures
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="./slides/EDUC645_log_regression.html">Unit 1: Logistic Regression</a>
+      <a href="./slides/EDUC645_nested_data.html">Unit 1: Nested Data Structures</a>
     </li>
     <li>
-      <a href="./slides/EDUC645_poisson_regression.html">Unit 2: Poisson Regression</a>
+      <a href="./slides/EDUC645_log_regression.html">Unit 2: Logistic Regression</a>
     </li>
     <li>
-      <a href="./slides/EDUC645_nested_data.html">Unit 3: Nested Data Structures</a>
+      <a href="./slides/EDUC645_poisson_regression.html">Unit 3: Poisson Regression</a>
     </li>
     <li>
       <a href="./slides/EDUC645_measure_assess.html">Unit 4: Introduction to Measurement and Assessment</a>
@@ -1029,8 +1022,48 @@ Lectures
 </div>
 
 
-<div id="unit-1-dichotomous-outcomes" class="section level2">
-<h2>Unit 1: Dichotomous Outcomes</h2>
+<div id="unit-1-nested-data-structures" class="section level2">
+<h2>Unit 1: Nested Data Structures</h2>
+<p><strong>Learning Objectives:</strong></p>
+<ul>
+<li><p>Describe nested data structures (two-level, e.g., repeated
+measures within individuals, students within schools)</p></li>
+<li><p>Demonstrate how intercepts, slopes, and regression coefficients
+may vary across clusters</p></li>
+<li><p>Compare and contrast using fixed-effects and random-effects in
+regression models</p></li>
+<li><p>Explain the covariance matrix of random-effects and describe
+implications of ignoring random-effects in terms of the inference for
+fixed-effects and statistical power</p></li>
+<li><p>Measure within-cluster dependency using intra-class correlation,
+and describe how to evaluate whether multilevel modeling is
+appropriate</p></li>
+<li><p>Create fixed and random intercept-only models and interpret the
+model parameters using the R <code>lmer</code> package</p></li>
+<li><p><em>Time permitting</em>: Discuss alternatives to multilevel
+modeling of nested data</p></li>
+</ul>
+<p><strong>Readings</strong>:</p>
+<ul>
+<li>BMLR Chapter</li>
+</ul>
+<p><strong>Lecture</strong>:</p>
+<ul>
+<li>Lecture slides: <a
+href="./slides/EDUC645_nested_data.html">html</a></li>
+<li>Dataset: <a href="./data/seda.csv">seda.csv</a> and <a
+href="./data/portugal.csv">portugal.csv</a></li>
+</ul>
+<p><strong>Assignment</strong>:</p>
+<ul>
+<li>Assignment description: <a
+href="./assignments/assignment3.html">assignment3.html</a></li>
+<li>Dataset: <a href="./data/gpa.csv">gpa.csv</a> / <a
+href="./data/gpa_above.csv">gpa_above.csv</a></li>
+</ul>
+</div>
+<div id="unit-2-dichotomous-outcomes" class="section level2">
+<h2>Unit 2: Dichotomous Outcomes</h2>
 <p><strong>Learning Objectives:</strong></p>
 <ul>
 <li><p>Describe the linear probability model and discuss its
@@ -1045,9 +1078,10 @@ regression models</p></li>
 <p><strong>Readings</strong>:</p>
 <ul>
 <li>BMLR Chapter</li>
-<li>Fawcett, T. (2006). An introduction to ROC analysis. <em>Pattern
-Recognition Letters</em>, 27(8), 861-874.<a
-href="https://www.sciencedirect.com/science/article/abs/pii/S016786550500303X">https://doi.org/10.1016/j.patrec.2005.10.010</a></li>
+<li>Mood, C. (2010). Logistic regression: Why we cannot do what we think
+we can do, and what we can do about it. <em>European Sociological
+Review</em>, 26(1), 67-82. 861-874.<a
+href="https://www.jstor.org/stable/40602478">https://doi-org.libproxy.uoregon.edu/10.1093/esr/jcp006</a></li>
 </ul>
 <p><strong>Lecture</strong>:</p>
 <ul>
@@ -1062,8 +1096,8 @@ href="./assignments/assignment1.html">assignment1.html</a></li>
 <li>Dataset: <a href="./data/nscs.csv">nscs.csv</a></li>
 </ul>
 </div>
-<div id="unit-2-count-outcomes" class="section level2">
-<h2>Unit 2: Count Outcomes</h2>
+<div id="unit-3-count-outcomes" class="section level2">
+<h2>Unit 3: Count Outcomes</h2>
 <p><strong>Learning Objectives:</strong></p>
 <ul>
 <li><p>Apply regression models to analyze count and rates as outcome
@@ -1099,58 +1133,15 @@ href="./assignments/assignment2.html">assignment2.html</a></li>
 <li>Dataset: <a href="./data/ah_smoke.csv">ah_smoke.csv</a></li>
 </ul>
 </div>
-<div id="unit-3-nested-data-structures" class="section level2">
-<h2>Unit 3: Nested Data Structures</h2>
-<p><strong>Learning Objectives:</strong></p>
-<ul>
-<li><p>Describe nested data structures (two-level, e.g., repeated
-measures within individuals, students within schools)</p></li>
-<li><p>Demonstrate how intercepts, slopes, and regression coefficients
-may vary across clusters</p></li>
-<li><p>Compare and contrast using fixed-effects and random-effects in
-regression models</p></li>
-<li><p>Explain the covariance matrix of random-effects and describe
-implications of ignoring the variance of random-effects in terms of the
-inference for fixed-effects and statistical power</p></li>
-<li><p>Practice creating fixed and random intercept-only models, and
-interpreting the model parameters using the R <code>lmer</code>
-package</p></li>
-<li><p><em>Time permitting</em>: Discuss alternatives to multilevel
-modeling of nested data</p></li>
-</ul>
-<p><strong>Readings</strong>:</p>
-<ul>
-<li>BMLR Chapter</li>
-</ul>
-<p><strong>Lecture</strong>:</p>
-<ul>
-<li>Lecture slides: <a
-href="./slides/EDUC645_nested_data.html">html</a></li>
-<li>Dataset: <a href="./data/seda.csv">seda.csv</a> and <a
-href="./data/portugal.csv">portugal.csv</a></li>
-</ul>
-<p><strong>Assignment</strong>:</p>
-<ul>
-<li>Assignment description: <a
-href="./assignments/assignment3.html">assignment3.html</a></li>
-<li>Dataset: <a href="./data/gpa.csv">gpa.csv</a> / <a
-href="./data/gpa_above.csv">gpa_above.csv</a></li>
-</ul>
-</div>
 <div id="unit-4-measurement-and-assessment" class="section level2">
 <h2>Unit 4: Measurement and Assessment</h2>
 <p><strong>Learning Objectives:</strong></p>
 <ul>
-<li><p>Differentiate and define different aspects of
-measurement</p></li>
-<li><p>Articulate the assumption of underlying shared construct for a
-set of items in surveys with aggregated scores across items</p></li>
+<li><p>Differentiate and define different aspects of measurement and
+understand when they apply</p></li>
 <li><p>Demonstrate how to compute and interpret Cronbach’s
 alpha</p></li>
-<li><p>Measure within-cluster dependency using intra-class correlation,
-and describe how to evaluate whether one needs to use multilevel
-modeling</p></li>
-<li><p>Define assumptions and limitations for methods to assess
+<li><p>Define the assumptions and limitations for methods to assess
 reliability</p></li>
 </ul>
 <p><strong>Readings</strong>:</p>
@@ -1178,11 +1169,9 @@ href="./assignments/assignment4.html">assignment4.html</a></li>
 <li><p>Discuss the concept of model-based imputation in the context of
 linear regression, logistic regression, and Poisson regression
 models</p></li>
-<li><p>Identify and describe missing data mechanisms (MCAR, MAR,
-MNAR)</p></li>
-<li><p>Differentiate listwise deletion and pairwise deletion from
-single-imputation methods (mean, regression, and stochastic regression
-imputation)</p></li>
+<li><p>Identify and describe missing data mechanisms</p></li>
+<li><p>Differentiate listwise and pairwise deletion methods from
+single-imputation methods</p></li>
 <li><p>Describe the “missing-value-dummy” method (Cohen) and some issues
 with this approach</p></li>
 <li><p>Compare and contrast the conceptual steps for the
@@ -1194,10 +1183,6 @@ models for a data set with missing values</p></li>
 </ul>
 <p><strong>Readings</strong>:</p>
 <ul>
-<li>Raghunathan, T. E. (2004). What do we do with missing data? Some
-options for analysis of incomplete data. <em>Annual Review of Public
-Health</em>, 25(1), 99-117. <a
-href="https://pubmed.ncbi.nlm.nih.gov/15015914/">https://doi.org/10.1146/annurev.publhealth.25.102802.124410</a></li>
 <li>Baraldi, A. N., &amp; Enders, C. K. (2010). An introduction to
 modern missing data analyses. <em>Journal of School Psychology</em>,
 48(1), 5-37. <a
