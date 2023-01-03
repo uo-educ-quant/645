@@ -112,7 +112,6 @@ principal %>%
   geom_smooth(method = "loess", color = "purple") 
 ```
 
-
 ---
 # Modeling the relationship
 
@@ -121,69 +120,6 @@ Previously you have practiced modeling outcome variables with continuous distrib
 Our inquiry: The association between students among school's attention from principal and attitude towards principal.
 
 With the case of Krüger's data, we need to model the relationship between a dichotomous outcome variable in our analysis.
-
----
-# Binary Data
-
-- This is an instance many when we are interested in the probability of an outcome.
-    • Ex. probability of group given individual traits, probability of needs, etc.
-
---
-
-- How is this different from if attitude towards a principal was a continuous scale, rather than binary/dichotomous?
-
----
-
-# Other Common Forms of Non-Linear Analysis
-
-- Probit regression
-- Multinomial logistic regression
-- Ordinal logistic regression
-- Hazard ratio
-- Survival analysis
-
----
-
-class: middle, inverse
-
-# GLM and Logistic Regression
-
----
-
-# Revisiting the Generalized Linear Model (GLM)
-
-Recall that the theory of GLMs is based on the unifying notion of the one-parameter exponential family form:
-
-Our full population regression model:
-
-$$Y = \color{blue}{\beta_{0} + \beta_{1} X} + \color{green}{\varepsilon}$$
-
-$Y$: our outcome
-$\color{blue}{\beta_{0}}$ and $\color{blue}{\beta_{1}}$: our population parameters and regression coefficients to be estimated
-$\color{green}{\varepsilon}$: our error/residual ( $\varepsilon$ is a fancy way of writing the Greek letter "epsilon")
-
---
-
-Also written as:
-
-$$Y_{i} = \beta_{0} + \beta_{1} X_{i} + \varepsilon_{i}$$
-where we use the subscript $i$ to emphasize that the model estimates the outcome for each of the $i$ units (students, schools, patients, etc.).
-
-.footnote[[1] Sometimes also called deterministic and stochastic components.]
-
----
-# Binomial distribution and the Generalized Linear Model (GLM)
-
-How can we apply the general approach of GLMs to binomial responses
-- We first write an expression for the probability of a binomial response 
-  - Then Provide a way in which to specify the (canonical) link and the form for the model
-
---
-
-If $Y$ follows a binomial distribution with $n$ trials and probability of event $p$:
-
-$$P(Y=y) = \binom{n}{y}p^y(1-p)^{(n-y)} \\
-      =e^{y\log(p) + (n-y)\log(1-p) + \log\binom{n}{y}}$$
 
 ---
 # Binary Outcomes
@@ -212,6 +148,159 @@ $$Odds = \frac{p}{1(1-p)}$$
 - As the probability of an event increases, so do the odds
 
 - Odds increase *almost* exponentially as the probability increases
+
+---
+
+class: middle, inverse
+
+# GLM and Modeling Dichotomous Data
+
+---
+# Revisiting the GLM
+
+Recall that the theory of GLMs is based on the unifying notion of the one-parameter exponential family form:
+
+Our full population regression model:
+
+$$Y = \color{blue}{\beta_{0} + \beta_{1} X} + \color{green}{\varepsilon}$$
+
+$Y$: our outcome
+$\color{blue}{\beta_{0}}$ and $\color{blue}{\beta_{1}}$: our population parameters and regression coefficients to be estimated
+$\color{green}{\varepsilon}$: our error/residual ( $\varepsilon$ is a fancy way of writing the Greek letter "epsilon")
+
+--
+
+Also written as:
+
+$$Y_{i} = \beta_{0} + \beta_{1} X_{i} + \varepsilon_{i}$$
+where we use the subscript $i$ to emphasize that the model estimates the outcome for each of the $i$ units (students, schools, patients, etc.).
+
+.footnote[[1] Sometimes also called deterministic and stochastic components.]
+
+---
+
+# Linear Probability Model (LPM)
+
+Back to our example:
+
+One viable way to model our data is to treat it as though it *is* linear.
+
+Visualize the coefficient/slope of the fitted line (basically, we force the relationship to be linear):
+
+```{r, echo = F}
+principal %>% 
+  ggplot(aes(attention, affective)) +
+  geom_point(alpha = 0.05) +
+  geom_smooth(method = "lm", se = FALSE, color = "royalblue") + 
+  labs(y = "Affective attitude towards principal",
+       x = "Self-perceived attention from principal")
+```
+---
+
+# LPM model coefficient interpretation
+
+```{r}
+m1 <- lm(affective ~ attention, principal)
+summary(m1)
+```
+
+Interpret the results (report regression coefficients **on a probability scale**) and the figure. 
+
+---
+# Coefficient on a probability scale (mapping the parameters to probability nonlinearly)
+
+```{r, echo = F}
+tibble(attention = (-3):3) %>% 
+  mutate(pred = predict(m1, newdata = ., type = "response")) %>% 
+  ggplot(aes(attention, pred)) +
+  geom_line(color = "royalblue") +
+  labs(y = "Affective attitude towards principal (PROBABILITY)",
+       x = "Self-perceived attention from principal")
+```
+
+???
+
+Note: in the data, "attention" ranges from -2.42 to 2.61, the plot is therefore limited to a fraction when the probability of "affective" approaching one but still below 0.5. Because we cannot easily guess the missing plot fraction (as appose to when the line is linear, we can tell where the line goes simply by looking at the slope), this plot is not telling us enough information about the population of interest:
+
+---
+
+Manipulate the X axis to show the nonlinear relationship in its full image:
+
+```{r, echo = F}
+tibble(attention = (-15):20) %>% 
+  mutate(pred = predict(m1, newdata = ., type = "response")) %>% 
+  ggplot(aes(attention, pred)) +
+  geom_line(color = "royalblue") +
+  labs(y = "Affective attitude towards principal (PROBABILITY)",
+       x = "Self-perceived attention from principal")
+```
+
+Interpret the results (report regression coefficients **on a log-odds scale**) and the two figures.
+
+---
+# Visualize the coefficient on a **log-odds** scale 
+### Model the change in log-odds of affective in a linear function of attention
+
+Manipulated X axis to show the nonlinear relationship in its full image:
+
+```{r, echo = F}
+tibble(attention = (-3):15) %>% 
+  mutate(pred = predict(m1, newdata = ., type = "response")) %>% 
+  ggplot(aes(attention, pred)) +
+  geom_line(color = "brown") +
+  labs(y = "Affective attitude towards principal (PROBABILITY)",
+       x = "Attention from principal")
+```
+
+???
+
+Coder note: in the data, "attention" ranges from -2.42 to 2.61, the plot is therefore limited to a fraction when the probability of "affective" approaching one but still below 0.5. 
+
+Because we cannot easily guess the missing plot fraction (as appose to when the line is linear, we can tell where the line goes simply by looking at the slope), this plot is not telling us enough information about the population of interest:
+
+---
+
+# Interpret the results
+
+Report regression coefficients **on a log-odds scale**
+
+```{r, echo = F}
+tibble(attention = (-15):20) %>% 
+  mutate(pred = predict(m1, newdata = ., type = "response")) %>% 
+  ggplot(aes(attention, pred)) +
+  geom_line(color = "brown") +
+  labs(y = "Affective attitude towards principal (PROBABILITY)",
+       x = "Attention from principal")
+```
+
+---
+# Another Way to Model the Data
+
+LPM uses a linear approach
+
+--
+
+Logistic regression is another option.
+
+--
+
+Logistic regression has become the default approach to modeling binomial distributions, but there are cases in which LPM might be preferred.
+
+[insert pros/cons, comparison between the two approaches]
+
+---
+# Binomial distribution and the Generalized Linear Model (GLM)
+
+How can we apply the general approach of GLMs to binomial responses
+- We first write an expression for the probability of a binomial response 
+  - Then Provide a way in which to specify the (canonical) link and the form for the model
+
+--
+
+If $Y$ follows a binomial distribution with $n$ trials and probability of event $p$:
+
+$$P(Y=y) = \binom{n}{y}p^y(1-p)^{(n-y)} \\
+      =e^{y\log(p) + (n-y)\log(1-p) + \log\binom{n}{y}}$$
 
 ---
 # Binomial distribution and the GLM
@@ -395,115 +484,6 @@ $$BMI = \color{orange}{(\beta_0)} + \color{purple}{(\beta_1)}(DietaryRestraint)$
 <span style = "color:purple"> Slope $(\beta_1)$: </span> Predicted increase in the outcome for every one unit increase in X.
 
 ---
-
-# Linear probability model (LPM)
-Back to our example
-```{r}
-m1 <- lm(affective ~ attention, principal)
-summary(m1)
-```
-
----
-
-Visualize the coefficient/slope of the fitted line (basically, we force the relationship to be linear):
-
-```{r, echo = F}
-principal %>% 
-  ggplot(aes(attention, affective)) +
-  geom_point(alpha = 0.05) +
-  geom_smooth(method = "lm", se = FALSE, color = "royalblue") + 
-  labs(y = "Affective attitude towards principal",
-       x = "Self-perceived attention from principal")
-```
-
-Interpret the results (report regression coefficients **on a probability scale**) and the figure. 
-
----
-# Visualize the coefficient on a log-odds scale
-
-Model the change in log-odds of affective in a linear function of attention:
-
-```{r, echo = F}
-tibble(attention = (-3):3) %>% 
-  mutate(pred = predict(m1, newdata = .)) %>% 
-  ggplot(aes(attention, pred)) +
-  geom_line(color = "royalblue") +
-  labs(y = "Affective attitude towards principal (LOG-ODDS)",
-       x = "Self-perceived attention from principal")
-```
-
----
-# Coefficient on a probability scale (mapping the parameters to probability nonlinearly)
-
-```{r, echo = F}
-tibble(attention = (-3):3) %>% 
-  mutate(pred = predict(m1, newdata = ., type = "response")) %>% 
-  ggplot(aes(attention, pred)) +
-  geom_line(color = "royalblue") +
-  labs(y = "Affective attitude towards principal (PROBABILITY)",
-       x = "Self-perceived attention from principal") +
-  geom_hline(yintercept = 0, linetype="dotted", 
-                color = "red", size=1) +
-  geom_hline(yintercept = 1, linetype="dotted", 
-                color = "red", size=1)
-```
-
-???
-
-Note: in the data, "attention" ranges from -2.42 to 2.61, the plot is therefore limited to a fraction when the probability of "affective" approaching one but still below 0.5. Because we cannot easily guess the missing plot fraction (as appose to when the line is linear, we can tell where the line goes simply by looking at the slope), this plot is not telling us enough information about the population of interest:
-
----
-
-Manipulate the X axis to show the nonlinear relationship in its full image:
-
-```{r, echo = F}
-tibble(attention = (-15):20) %>% 
-  mutate(pred = predict(m1, newdata = ., type = "response")) %>% 
-  ggplot(aes(attention, pred)) +
-  geom_line(color = "royalblue") +
-  labs(y = "Affective attitude towards principal (PROBABILITY)",
-       x = "Self-perceived attention from principal")
-```
-
-Interpret the results (report regression coefficients **on a log-odds scale**) and the two figures.
-
----
-# Visualize the coefficient on a **log-odds** scale 
-### Model the change in log-odds of affective in a linear function of attention
-
-Manipulated X axis to show the nonlinear relationship in its full image:
-
-```{r, echo = F}
-tibble(attention = (-3):15) %>% 
-  mutate(pred = predict(m1, newdata = ., type = "response")) %>% 
-  ggplot(aes(attention, pred)) +
-  geom_line(color = "brown") +
-  labs(y = "Affective attitude towards principal (PROBABILITY)",
-       x = "Attention from principal")
-```
-
-???
-
-Coder note: in the data, "attention" ranges from -2.42 to 2.61, the plot is therefore limited to a fraction when the probability of "affective" approaching one but still below 0.5. 
-
-Because we cannot easily guess the missing plot fraction (as appose to when the line is linear, we can tell where the line goes simply by looking at the slope), this plot is not telling us enough information about the population of interest:
-
----
-
-# Interpret the results
-
-Report regression coefficients **on a log-odds scale**
-
-```{r, echo = F}
-tibble(attention = (-15):20) %>% 
-  mutate(pred = predict(m1, newdata = ., type = "response")) %>% 
-  ggplot(aes(attention, pred)) +
-  geom_line(color = "brown") +
-  labs(y = "Affective attitude towards principal (PROBABILITY)",
-       x = "Attention from principal")
-```
-
----
 # Categorical/Nominal Predictor Variables
 
 We can test for an overall effect of rank using the Wald test. 
@@ -633,11 +613,11 @@ class: middle, inverse
 ---
 # Assess Interactions
 
-- Assess effect modification by adding interaction term to the model
+Assess effect modification by adding interaction term to the model
 
 Model *without* interaction term:
 
-$$ln({Y_{odds}}) - {\beta_0} + {\beta_1}X_1 + {\beta_2}X_2$$
+$$ln({Y_{odds}}) = {\beta_0} + {\beta_1}X_1 + {\beta_2}X_2$$
 Model *with* interaction term:
 $$ln({Y_{odds}}) = {\beta_0} + {\beta_1}X_1 + {\beta_2}X_2 + {\beta_3}(X_1*X_2)$$
 ---
