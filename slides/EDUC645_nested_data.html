@@ -47,11 +47,9 @@ class: center, middle, inverse, title-slide
 - Discuss the implications of ignoring the variance of random-effects in terms of the inference for fixed-effects and statistical power
 
 - Introduce 
-	- Random intercept-only model
-	  - its estimation through the R lmer package, 
+	- Random intercept-only model estimation through the R lmer package, 
 		- interpret the model parameters and align them with the earlier discussion of fixed-effects and random-effects.
-	- Intra-class correlation as a measure of within-cluster dependency
-and how to use it to decide whether one needs to use multilevel modeling
+	- Intra-class correlation as a measure of within-cluster dependency and how to use it to decide whether one needs to use multilevel modeling
 
 ---
 # A Motivating Question
@@ -92,34 +90,31 @@ each row/observation represents...
 # Understand the clustering nature
 
 Let's start with a single variable: Oregon districts' achievement score 
-We lose information by looking at district achievement across subject and grade alone.
 
 &lt;img src="EDUC645_nested_data_files/figure-html/unnamed-chunk-2-1.png" style="display: block; margin: auto;" /&gt;
 
----
+We lose information by looking at district achievement across subject and grade alone.
 
-Does achievement differ by subject
+
+---
+# Achievement by Subject
 
 &lt;img src="EDUC645_nested_data_files/figure-html/unnamed-chunk-3-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
-
-Differ by grade?
+# Achievement by grade
 
 &lt;img src="EDUC645_nested_data_files/figure-html/unnamed-chunk-4-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
-
-Differ by grade AND subject?
+# Achievement by grade AND subject
 
 &lt;img src="EDUC645_nested_data_files/figure-html/unnamed-chunk-5-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
+# Examining Data Clustering
 
-Alternatively, 
-Can you describe the "clustering" nature of the data in more details now?
-
-IMPORTANTLY, should we keep in mind of this unique feature when we answering research questions, e.g., about relations between two variables?
+IMPORTANTLY, should we keep in mind of this unique feature when we answering research questions, e.g., about relations between two variables
 
 &lt;img src="EDUC645_nested_data_files/figure-html/unnamed-chunk-6-1.png" style="display: block; margin: auto;" /&gt;
 
@@ -134,8 +129,7 @@ For example, let's look at relationship between percentage of ELL and achievemen
 &lt;/div&gt;
 
 ---
-
-Does this relationship differ by subject?
+# Relationship by subject
 
 &lt;div class="figure" style="text-align: center"&gt;
 &lt;img src="EDUC645_nested_data_files/figure-html/unnamed-chunk-8-1.png" alt="add caption"  /&gt;
@@ -144,7 +138,7 @@ Does this relationship differ by subject?
 
 ---
 
-Does this relationship differ by subject AND grade?
+# Relationship by subject AND grade
 
 &lt;img src="EDUC645_nested_data_files/figure-html/unnamed-chunk-9-1.png" style="display: block; margin: auto;" /&gt;
 
@@ -272,12 +266,12 @@ class: middle, inverse
 What model/models can we fit to answer the question? 
 
 # Descriptives
-<div id="olocfxpgfy" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<div id="jfscxxvqrt" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#olocfxpgfy .gt_table {
+#jfscxxvqrt .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -302,7 +296,7 @@ What model/models can we fit to answer the question?
   border-left-color: #D3D3D3;
 }
 
-#olocfxpgfy .gt_heading {
+#jfscxxvqrt .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -314,12 +308,12 @@ What model/models can we fit to answer the question?
   border-right-color: #D3D3D3;
 }
 
-#olocfxpgfy .gt_caption {
+#jfscxxvqrt .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#olocfxpgfy .gt_title {
+#jfscxxvqrt .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -331,7 +325,7 @@ What model/models can we fit to answer the question?
   border-bottom-width: 0;
 }
 
-#olocfxpgfy .gt_subtitle {
+#jfscxxvqrt .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -343,13 +337,13 @@ What model/models can we fit to answer the question?
   border-top-width: 0;
 }
 
-#olocfxpgfy .gt_bottom_border {
+#jfscxxvqrt .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#olocfxpgfy .gt_col_headings {
+#jfscxxvqrt .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -364,7 +358,7 @@ What model/models can we fit to answer the question?
   border-right-color: #D3D3D3;
 }
 
-#olocfxpgfy .gt_col_heading {
+#jfscxxvqrt .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -384,7 +378,7 @@ What model/models can we fit to answer the question?
   overflow-x: hidden;
 }
 
-#olocfxpgfy .gt_column_spanner_outer {
+#jfscxxvqrt .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -396,15 +390,15 @@ What model/models can we fit to answer the question?
   padding-right: 4px;
 }
 
-#olocfxpgfy .gt_column_spanner_outer:first-child {
+#jfscxxvqrt .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#olocfxpgfy .gt_column_spanner_outer:last-child {
+#jfscxxvqrt .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#olocfxpgfy .gt_column_spanner {
+#jfscxxvqrt .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -416,7 +410,7 @@ What model/models can we fit to answer the question?
   width: 100%;
 }
 
-#olocfxpgfy .gt_group_heading {
+#jfscxxvqrt .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -442,7 +436,7 @@ What model/models can we fit to answer the question?
   text-align: left;
 }
 
-#olocfxpgfy .gt_empty_group_heading {
+#jfscxxvqrt .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -457,15 +451,15 @@ What model/models can we fit to answer the question?
   vertical-align: middle;
 }
 
-#olocfxpgfy .gt_from_md > :first-child {
+#jfscxxvqrt .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#olocfxpgfy .gt_from_md > :last-child {
+#jfscxxvqrt .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#olocfxpgfy .gt_row {
+#jfscxxvqrt .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -484,7 +478,7 @@ What model/models can we fit to answer the question?
   overflow-x: hidden;
 }
 
-#olocfxpgfy .gt_stub {
+#jfscxxvqrt .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -497,7 +491,7 @@ What model/models can we fit to answer the question?
   padding-right: 5px;
 }
 
-#olocfxpgfy .gt_stub_row_group {
+#jfscxxvqrt .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -511,11 +505,11 @@ What model/models can we fit to answer the question?
   vertical-align: top;
 }
 
-#olocfxpgfy .gt_row_group_first td {
+#jfscxxvqrt .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#olocfxpgfy .gt_summary_row {
+#jfscxxvqrt .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -525,16 +519,16 @@ What model/models can we fit to answer the question?
   padding-right: 5px;
 }
 
-#olocfxpgfy .gt_first_summary_row {
+#jfscxxvqrt .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#olocfxpgfy .gt_first_summary_row.thick {
+#jfscxxvqrt .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#olocfxpgfy .gt_last_summary_row {
+#jfscxxvqrt .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -544,7 +538,7 @@ What model/models can we fit to answer the question?
   border-bottom-color: #D3D3D3;
 }
 
-#olocfxpgfy .gt_grand_summary_row {
+#jfscxxvqrt .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -554,7 +548,7 @@ What model/models can we fit to answer the question?
   padding-right: 5px;
 }
 
-#olocfxpgfy .gt_first_grand_summary_row {
+#jfscxxvqrt .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -564,11 +558,11 @@ What model/models can we fit to answer the question?
   border-top-color: #D3D3D3;
 }
 
-#olocfxpgfy .gt_striped {
+#jfscxxvqrt .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#olocfxpgfy .gt_table_body {
+#jfscxxvqrt .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -577,7 +571,7 @@ What model/models can we fit to answer the question?
   border-bottom-color: #D3D3D3;
 }
 
-#olocfxpgfy .gt_footnotes {
+#jfscxxvqrt .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -591,7 +585,7 @@ What model/models can we fit to answer the question?
   border-right-color: #D3D3D3;
 }
 
-#olocfxpgfy .gt_footnote {
+#jfscxxvqrt .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-left: 4px;
@@ -600,7 +594,7 @@ What model/models can we fit to answer the question?
   padding-right: 5px;
 }
 
-#olocfxpgfy .gt_sourcenotes {
+#jfscxxvqrt .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -614,7 +608,7 @@ What model/models can we fit to answer the question?
   border-right-color: #D3D3D3;
 }
 
-#olocfxpgfy .gt_sourcenote {
+#jfscxxvqrt .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -622,64 +616,64 @@ What model/models can we fit to answer the question?
   padding-right: 5px;
 }
 
-#olocfxpgfy .gt_left {
+#jfscxxvqrt .gt_left {
   text-align: left;
 }
 
-#olocfxpgfy .gt_center {
+#jfscxxvqrt .gt_center {
   text-align: center;
 }
 
-#olocfxpgfy .gt_right {
+#jfscxxvqrt .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#olocfxpgfy .gt_font_normal {
+#jfscxxvqrt .gt_font_normal {
   font-weight: normal;
 }
 
-#olocfxpgfy .gt_font_bold {
+#jfscxxvqrt .gt_font_bold {
   font-weight: bold;
 }
 
-#olocfxpgfy .gt_font_italic {
+#jfscxxvqrt .gt_font_italic {
   font-style: italic;
 }
 
-#olocfxpgfy .gt_super {
+#jfscxxvqrt .gt_super {
   font-size: 65%;
 }
 
-#olocfxpgfy .gt_footnote_marks {
+#jfscxxvqrt .gt_footnote_marks {
   font-style: italic;
   font-weight: normal;
   font-size: 75%;
   vertical-align: 0.4em;
 }
 
-#olocfxpgfy .gt_asterisk {
+#jfscxxvqrt .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#olocfxpgfy .gt_indent_1 {
+#jfscxxvqrt .gt_indent_1 {
   text-indent: 5px;
 }
 
-#olocfxpgfy .gt_indent_2 {
+#jfscxxvqrt .gt_indent_2 {
   text-indent: 10px;
 }
 
-#olocfxpgfy .gt_indent_3 {
+#jfscxxvqrt .gt_indent_3 {
   text-indent: 15px;
 }
 
-#olocfxpgfy .gt_indent_4 {
+#jfscxxvqrt .gt_indent_4 {
   text-indent: 20px;
 }
 
-#olocfxpgfy .gt_indent_5 {
+#jfscxxvqrt .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
@@ -780,10 +774,6 @@ summary(m1)
 #&gt; F-statistic: 16.91 on 1 and 174 DF,  p-value: 6.03e-05
 ```
 
---
-
-[insert interpretation]
-
 ---
 # Fixed effects model
 
@@ -796,10 +786,6 @@ coef(m1)
 #&gt; (Intercept) percent_ell 
 #&gt;    4.504827   -6.466889
 ```
-
---
-
-[insert interpretation]
 
 ---
 # Random effects model
@@ -820,8 +806,8 @@ Note:
 Another way to answer the question is allowing the intercept to differ across grades - a unique intercept for each grade.
 
 ---
-
-Model 1. Simple linear regression model for comparison
+# Model 1. 
+## Simple linear regression model for comparison
 
 
 ```r
@@ -835,7 +821,8 @@ coef(m1)
 ```
 
 ---
-Model 2. Multilevel model with *random __intercepts__*
+# Model 2. 
+## Multilevel model with *random __intercepts__*
     - What parameter differs across grades? what parameter remains the same?
 
 
@@ -900,7 +887,8 @@ $$
 $$
 
 ---
-# Model 3. Multilevel model with *random __slopes__* 
+# Model 3. 
+## Multilevel model with *random __slopes__* 
 
 * **Note**: this comparison is primarily for instructive purposes
 * How do you interpret the parameters now?
@@ -953,7 +941,8 @@ coef(m3)$grade
 ```
 
 ---
-Model 4. Multilevel model with *random __intercepts__ and __slopes__*
+# Model 4. 
+## Multilevel model with *random __intercepts__ and __slopes__*
 
 * How about the parameters for this model specification?
 * Specify the relationship between percentage of ELL and math achievement for grades 3, 4 &amp; 6
@@ -1047,13 +1036,6 @@ $$
 $$
 
 ---
-
-What did we learn so far? Describe the differences between model 1 (simple linear regression) and a model with
-* Random intercepts, model 2
-* Random slopes, model 3
-* Random intercepts and slopes, model 4
-
----
 # Fixed effects vs random effects
 
 If we put the two previous plots together:
@@ -1063,8 +1045,7 @@ If we put the two previous plots together:
 &lt;img src="EDUC645_nested_data_files/figure-html/unnamed-chunk-23-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
-
-Also a review of the relationship between fixed effect (model 1) and random effects (model 4) parameters:
+# Fixed effect (model 1) vs. random effects (model 4) parameters
 
 * **Fixed effect** represents the aggregation of the different intercepts and slopes by taking an average of varying intercept and slopes across clusters
  
@@ -1106,7 +1087,6 @@ mean(unlist(coef(m4)$grade[2]))
 #&gt; [1] -6.466889
 ```
 
-What might be the reason behind these?
 
 ---
 class: middle, inverse
@@ -1267,8 +1247,7 @@ So far, we have one fixed effects model, but
 how do we know which one is preferred?
 
 ---
-
-Compare model 1 and model 4:
+# Compare model 1 and model 4:
 
 
 ```r
@@ -1356,6 +1335,27 @@ Model 4 doesn't perform much better than model 2 (identical RMSE;
 
 ### Multilevel Modeling may be appropriate if residual correlations exist due to violations of independence
 - Benefit of partitioning variance even when Level-1 or Level-2 variables will not be modeled
+
+---
+# Key Takeaways
+
+
+---
+class: middle, inverse
+# Synthesis and wrap-up
+
+---
+# Unit Goals
+
+---
+# To Dos
+
+### Reading
+-
+
+### Assignments
+- Assignment #X Due XX at 11:59PM
+- Quiz #X Due on X XX at 5PM
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

@@ -35,14 +35,15 @@ class: center, middle, inverse, title-slide
 ---
 # A Motivating Question
 
-This dataset was drawn from the China Education Panel Survey (CEPS), China’s first nationally representative, longitudinal survey of middle school students. CEPS first wave was conducted during school year 2013-2014 and a stratified, four-step random sampling procedure was implemented to draw a random sample of middle schools (N=112) from the nation and collect rich data from school administrators, teachers, students, and parents. This school-level dataset is limited to 45 schools that have eight teacher participants and no missing values on any key variables. Our primary goal with this dataset is to investigate the school-level factors associated with teacher job satisfaction that is measured by the count of teachers who feel satisfied with their job and their school. 
+Research inquiry: Our primary goal is to investigate the school-level factors associated with teacher job satisfaction that is measured by the count of teachers who feel satisfied with their job and their school.  
 
-Research inquiry: relationship between class size and job satisfaction
+The data: Drawn from the China Education Panel Survey (CEPS), China’s first nationally representative, longitudinal survey of middle school students. This school-level dataset includes 45 schools, each with eight teacher participants.
 
 ---
-# The dataset 
+# The Dataset 
 
-**Dataset: ceps_sch.csv**
+ - *njobsatis*, number of teachers who answered yes to the question of whether to choose being a teacher if given other job options
+ - *nschsatis*, number of teachers who answered yes to the question of whether to choose the current school if being allowed to move to other schools
 
 &lt;table&gt;
  &lt;thead&gt;
@@ -105,24 +106,15 @@ Research inquiry: relationship between class size and job satisfaction
 &lt;/tbody&gt;
 &lt;/table&gt;
 
-
- - *schids*, school identifier
- - *njobsatis*, number of teachers who answered yes to the question of whether to choose being a teacher if given other job options
- - *nschsatis*, number of teachers who answered yes to the question of whether to choose the current school if being allowed to move to other schools
- - *rural*, categorical measure of proportion of rural students in school; 1=lower than 25%, 2=25% to 60%, 3=60% to 80%, 4=higher than 80%
- - *clsize*, average class size
- - *computer*, number of computers available to students
- - *ctyeduz*, neighborhood average years of education (standardized)
-
 ---
 # Summary statistics 
 
-<div id="pnpwwiulpz" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<div id="sdyxldueru" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#pnpwwiulpz .gt_table {
+#sdyxldueru .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -147,7 +139,7 @@ Research inquiry: relationship between class size and job satisfaction
   border-left-color: #D3D3D3;
 }
 
-#pnpwwiulpz .gt_heading {
+#sdyxldueru .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -159,12 +151,12 @@ Research inquiry: relationship between class size and job satisfaction
   border-right-color: #D3D3D3;
 }
 
-#pnpwwiulpz .gt_caption {
+#sdyxldueru .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#pnpwwiulpz .gt_title {
+#sdyxldueru .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -176,7 +168,7 @@ Research inquiry: relationship between class size and job satisfaction
   border-bottom-width: 0;
 }
 
-#pnpwwiulpz .gt_subtitle {
+#sdyxldueru .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -188,13 +180,13 @@ Research inquiry: relationship between class size and job satisfaction
   border-top-width: 0;
 }
 
-#pnpwwiulpz .gt_bottom_border {
+#sdyxldueru .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#pnpwwiulpz .gt_col_headings {
+#sdyxldueru .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -209,7 +201,7 @@ Research inquiry: relationship between class size and job satisfaction
   border-right-color: #D3D3D3;
 }
 
-#pnpwwiulpz .gt_col_heading {
+#sdyxldueru .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -229,7 +221,7 @@ Research inquiry: relationship between class size and job satisfaction
   overflow-x: hidden;
 }
 
-#pnpwwiulpz .gt_column_spanner_outer {
+#sdyxldueru .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -241,15 +233,15 @@ Research inquiry: relationship between class size and job satisfaction
   padding-right: 4px;
 }
 
-#pnpwwiulpz .gt_column_spanner_outer:first-child {
+#sdyxldueru .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#pnpwwiulpz .gt_column_spanner_outer:last-child {
+#sdyxldueru .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#pnpwwiulpz .gt_column_spanner {
+#sdyxldueru .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -261,7 +253,7 @@ Research inquiry: relationship between class size and job satisfaction
   width: 100%;
 }
 
-#pnpwwiulpz .gt_group_heading {
+#sdyxldueru .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -287,7 +279,7 @@ Research inquiry: relationship between class size and job satisfaction
   text-align: left;
 }
 
-#pnpwwiulpz .gt_empty_group_heading {
+#sdyxldueru .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -302,15 +294,15 @@ Research inquiry: relationship between class size and job satisfaction
   vertical-align: middle;
 }
 
-#pnpwwiulpz .gt_from_md > :first-child {
+#sdyxldueru .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#pnpwwiulpz .gt_from_md > :last-child {
+#sdyxldueru .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#pnpwwiulpz .gt_row {
+#sdyxldueru .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -329,7 +321,7 @@ Research inquiry: relationship between class size and job satisfaction
   overflow-x: hidden;
 }
 
-#pnpwwiulpz .gt_stub {
+#sdyxldueru .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -342,7 +334,7 @@ Research inquiry: relationship between class size and job satisfaction
   padding-right: 5px;
 }
 
-#pnpwwiulpz .gt_stub_row_group {
+#sdyxldueru .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -356,11 +348,11 @@ Research inquiry: relationship between class size and job satisfaction
   vertical-align: top;
 }
 
-#pnpwwiulpz .gt_row_group_first td {
+#sdyxldueru .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#pnpwwiulpz .gt_summary_row {
+#sdyxldueru .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -370,16 +362,16 @@ Research inquiry: relationship between class size and job satisfaction
   padding-right: 5px;
 }
 
-#pnpwwiulpz .gt_first_summary_row {
+#sdyxldueru .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#pnpwwiulpz .gt_first_summary_row.thick {
+#sdyxldueru .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#pnpwwiulpz .gt_last_summary_row {
+#sdyxldueru .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -389,7 +381,7 @@ Research inquiry: relationship between class size and job satisfaction
   border-bottom-color: #D3D3D3;
 }
 
-#pnpwwiulpz .gt_grand_summary_row {
+#sdyxldueru .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -399,7 +391,7 @@ Research inquiry: relationship between class size and job satisfaction
   padding-right: 5px;
 }
 
-#pnpwwiulpz .gt_first_grand_summary_row {
+#sdyxldueru .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -409,11 +401,11 @@ Research inquiry: relationship between class size and job satisfaction
   border-top-color: #D3D3D3;
 }
 
-#pnpwwiulpz .gt_striped {
+#sdyxldueru .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#pnpwwiulpz .gt_table_body {
+#sdyxldueru .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -422,7 +414,7 @@ Research inquiry: relationship between class size and job satisfaction
   border-bottom-color: #D3D3D3;
 }
 
-#pnpwwiulpz .gt_footnotes {
+#sdyxldueru .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -436,7 +428,7 @@ Research inquiry: relationship between class size and job satisfaction
   border-right-color: #D3D3D3;
 }
 
-#pnpwwiulpz .gt_footnote {
+#sdyxldueru .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-left: 4px;
@@ -445,7 +437,7 @@ Research inquiry: relationship between class size and job satisfaction
   padding-right: 5px;
 }
 
-#pnpwwiulpz .gt_sourcenotes {
+#sdyxldueru .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -459,7 +451,7 @@ Research inquiry: relationship between class size and job satisfaction
   border-right-color: #D3D3D3;
 }
 
-#pnpwwiulpz .gt_sourcenote {
+#sdyxldueru .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -467,64 +459,64 @@ Research inquiry: relationship between class size and job satisfaction
   padding-right: 5px;
 }
 
-#pnpwwiulpz .gt_left {
+#sdyxldueru .gt_left {
   text-align: left;
 }
 
-#pnpwwiulpz .gt_center {
+#sdyxldueru .gt_center {
   text-align: center;
 }
 
-#pnpwwiulpz .gt_right {
+#sdyxldueru .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#pnpwwiulpz .gt_font_normal {
+#sdyxldueru .gt_font_normal {
   font-weight: normal;
 }
 
-#pnpwwiulpz .gt_font_bold {
+#sdyxldueru .gt_font_bold {
   font-weight: bold;
 }
 
-#pnpwwiulpz .gt_font_italic {
+#sdyxldueru .gt_font_italic {
   font-style: italic;
 }
 
-#pnpwwiulpz .gt_super {
+#sdyxldueru .gt_super {
   font-size: 65%;
 }
 
-#pnpwwiulpz .gt_footnote_marks {
+#sdyxldueru .gt_footnote_marks {
   font-style: italic;
   font-weight: normal;
   font-size: 75%;
   vertical-align: 0.4em;
 }
 
-#pnpwwiulpz .gt_asterisk {
+#sdyxldueru .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#pnpwwiulpz .gt_indent_1 {
+#sdyxldueru .gt_indent_1 {
   text-indent: 5px;
 }
 
-#pnpwwiulpz .gt_indent_2 {
+#sdyxldueru .gt_indent_2 {
   text-indent: 10px;
 }
 
-#pnpwwiulpz .gt_indent_3 {
+#sdyxldueru .gt_indent_3 {
   text-indent: 15px;
 }
 
-#pnpwwiulpz .gt_indent_4 {
+#sdyxldueru .gt_indent_4 {
   text-indent: 20px;
 }
 
-#pnpwwiulpz .gt_indent_5 {
+#sdyxldueru .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
@@ -616,34 +608,6 @@ Job satisfaction:
 Satisfaction towards school:
 
 &lt;img src="EDUC645_poisson_regression_files/figure-html/unnamed-chunk-4-1.png" style="display: block; margin: auto;" /&gt;
-Henceforce investigating job satisfaction (njobsatis). We may use job satisfaction (njobsatis) as outcome in the class and school satisfaction (nschsatis) in the lab or assignment.
-
----
-# Poisson regression
-
-## Why simple linear regression is not ideal for Poisson data
-
-Do you think a linear fitted line is a good way to describe the relationship between these two variables?
-
-&lt;img src="EDUC645_poisson_regression_files/figure-html/unnamed-chunk-5-1.png" style="display: block; margin: auto;" /&gt;
-
----
-
-An important reason why a linear least squares regression model doesn't work for Poisson data is the violation of equal variance assumption, see the plot below:
-
-&lt;img src="EDUC645_poisson_regression_files/figure-html/unnamed-chunk-6-1.png" style="display: block; margin: auto;" /&gt;
-
----
-
-
-```r
-# try to replicate Figure 4.1 in textbook (in progress)
-
-# get the residuals of linear regression
-ceps$residuals_ols &lt;- residuals(ols)
-# get the residuals of poisson regression
-ceps$residuals_glm &lt;- ceps$njobsatis - 0.1 * ceps$clsize
-```
 
 ---
 # Count Data
@@ -663,20 +627,48 @@ These kinds of questions draw from count data
 
 ---
 
-# Normal distribution vs. Poisson distribution
+# Normal distribution vs. Count data
 
 .pull-left[
-&lt;img src="EDUC645_poisson_regression_files/figure-html/unnamed-chunk-8-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC645_poisson_regression_files/figure-html/unnamed-chunk-5-1.png" style="display: block; margin: auto;" /&gt;
 ]
 
 --
 
 .pull-right[
-&lt;img src="EDUC645_poisson_regression_files/figure-html/unnamed-chunk-9-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC645_poisson_regression_files/figure-html/unnamed-chunk-6-1.png" style="display: block; margin: auto;" /&gt;
 ]
 
+---
+# Options for Analysing Count Data
+
+OLS regression: Count outcome variables are sometimes log-transformed and analyzed using OLS regression. 
+- Many issues arise with this approach, including loss of data due to undefined values generated by taking the log of zero (which is undefined) and biased estimates.
+
+Poisson regression: Often used for modeling count data. 
+
+Negative binomial regression: For over-dispersed count data, when the conditional variance exceeds the conditional mean. 
+- A generalization of Poisson regression with the same mean structure, but an extra parameter to model the over-dispersion. 
+- If the conditional distribution of the outcome variable is over-dispersed, the CIs for coefficients are likely to have a wider range a Poisson regression.
+
+Zero-inflated regression model: Attempt to account for excess zeros
+- When researcher suspects that there are two kinds of zeros in the data, *true* and *excess* zeros
+- Estimate two equations simultaneously, one for the count model (with *true* zeros) and one for the *excess* zeros
 
 ---
+# Why OLS may not be ideal for count data
+
+&lt;img src="EDUC645_poisson_regression_files/figure-html/unnamed-chunk-7-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+# Limitations to Applying OLS to Count Data
+
+An important reason why a linear least squares regression model may not be preferred for Poisson data is the violation of equal variance assumption:
+
+&lt;img src="EDUC645_poisson_regression_files/figure-html/unnamed-chunk-8-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
 # Poisson Distribution
 
 * A discrete probability distribution is used to describe the off occurrence of unlikely events in a large number of independent trials
@@ -689,11 +681,12 @@ Examine if we want to know "how many of X in what amount of time"
 ---
 # Poisson Distributions
 
-&lt;img src="EDUC645_poisson_regression_files/figure-html/unnamed-chunk-10-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC645_poisson_regression_files/figure-html/unnamed-chunk-9-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
+# Poisson Distributions
 
-&lt;img src="EDUC645_poisson_regression_files/figure-html/unnamed-chunk-11-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC645_poisson_regression_files/figure-html/unnamed-chunk-10-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 # Poisson Vs. Normal Distribution
@@ -703,10 +696,6 @@ Examine if we want to know "how many of X in what amount of time"
 |Used for count or rate data |	Used for continuous variables |
 |Skewed by values of lambda	 | Bell-shaped curve symmetric around the mean.|
 |Variance = Mean	| Variance and mean are different parameters; mean, median and mode are equal |
-
----
-# Poisson Distribution: Dispersion
-
 
 ---
 # Time
@@ -759,10 +748,6 @@ Typically organize information about counts and time in a table:
 * Get `\(p\)`-value
 * Get CI for RR
 *	Draw conclusions
-	
----
-
-# [insert examples]
 
 ---
 class: middle, inverse
@@ -803,26 +788,25 @@ Requires a unit of time:
 * E.g., number of accidents per day, number of exposed per year
 
 Count data can also be expressed as rate data
-* the number of times an event occurs within a timeframe can be expressed as:
+* the number of times an event occurs within a time frame can be expressed as:
   - raw count (i.e. “In a day, we eat three meals”)
   - rate (“We eat at a rate of 0.125 meals per hour”)
-
 
 ---
 # Poisson regression assumptions
 
-First, the number of teachers satisfied with their job still demonstrate Poisson distribution when grouped by class size:
+number of teachers satisfied with their job still demonstrate Poisson distribution when grouped by class size:
+
+&lt;img src="EDUC645_poisson_regression_files/figure-html/unnamed-chunk-11-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+# Poisson regression assumptions
 
 &lt;img src="EDUC645_poisson_regression_files/figure-html/unnamed-chunk-12-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 # Poisson regression assumptions
-
-&lt;img src="EDUC645_poisson_regression_files/figure-html/unnamed-chunk-13-1.png" style="display: block; margin: auto;" /&gt;
-
----
-# Poisson regression assumptions
-Second, the mean equals to variance assumption for Poisson random variables are largely met:
+Examine whether the mean is equal to variance assumption for Poisson random variables:
 
 &lt;table&gt;
  &lt;thead&gt;
@@ -858,6 +842,8 @@ Second, the mean equals to variance assumption for Poisson random variables are 
 ---
 # Poission regression assumptions
 
+Examine dispersion
+
 equidispersion in Poisson regressions against the alternative of overdispersion and/or underdispersion
 
 More formally, the dispersion test:
@@ -884,16 +870,58 @@ dispersiontest(glm(njobsatis ~ clsize, family = poisson, ceps))
 
 Third, check for the linearity assumption:
 
-&lt;img src="EDUC645_poisson_regression_files/figure-html/unnamed-chunk-16-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC645_poisson_regression_files/figure-html/unnamed-chunk-15-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
-# Poisson regression assumptions
+# Interpretation of Model Parameters
 
-#### Poisson regression estimator
+`$$\log(\lambda) = \beta_0 + \beta_1X$$`
+`\(\lambda\)`: Average number of occurrences per unit of time or space, as a function of one or more covariates
+
+`\(\beta_0\)`: log of the rate for the reference group
+
+`\(\beta_1\)`: log of the rate ratio between a given group and the reference group
+
+`\(X\)`:predictor variable
+
+---
+# Rates Accounting for other factor(s)
+Poisson regression allows us to study how rates of an even vary by characteristics of the groups of interest
+`$$\ln(Rate) = \beta_0 + \beta_1X$$`
+
+- `\(E[Y]\)`: expected number of events
+
+- `\(X\)`: predictor variable
+
+- `\(\beta_0\)`: natural log of the rate for the reference group
+
+- `\(\beta_1\)`: natural log of the rate ratio between a given group and the reference group
+	- Similar to the logistic regression where the coefficient was the natural log of the OR
+	- Represents the *change in response corresponding to a one unit difference in the corresponding predictor.* 
+
+
+--
+
+### alternatively written...
+
+`$$\ln(\frac{E[Y]}{Time}) = \beta_0 + \beta_1X$$`
+
+`$$\ln(E[Y]) - \ln(Time) = \beta_0 + \beta_1X$$`
+
+`$$\ln(E[Y]) = \beta_0 + \beta_1X + \ln(Time)$$`
+
+- `\(\ln(Time)\)`: *offset variable* takes into account the rate of change over time
+
+
+---
+# Poisson regression estimator
+
+Poisson regression allows us to study how rates of an even vary by characteristics of the groups of interest
+`$$\ln(Satifaction) = \beta_0 + \beta_1ClassSize$$`
 
 
 
-<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:unnamed-chunk-18">
+<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:unnamed-chunk-17">
 <col><col><col><tr>
 <th style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;"></th><th style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(1)</th><th style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(2)</th></tr>
 <tr>
@@ -928,6 +956,26 @@ Third, check for the linearity assumption:
 
 
 ---
+# Poisson regression  Model fit
+
+
+```r
+anova(m1, m2, test = "Chisq")
+```
+
+<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:unnamed-chunk-18">
+<col><col><col><col><col><tr>
+<th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">Resid. Df</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">Resid. Dev</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">Df</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">Deviance</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">Pr(&gt;Chi)</th></tr>
+<tr>
+<td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">43</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">76.2</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;"></td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">40</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">74.5</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">3</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">1.71</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.635</td></tr>
+</table>
+
+
+---
+# Diagnostics/Assessing Model Fit
+
 Compared to OLS estimators:
 
 <table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:unnamed-chunk-19">
@@ -962,89 +1010,6 @@ Compared to OLS estimators:
 </table>
 
 
----
-# Poisson regression assumptions
-
-#### Model fit
-
-
-```r
-anova(m1, m2, test = "Chisq")
-```
-
-<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:unnamed-chunk-20">
-<col><col><col><col><col><tr>
-<th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">Resid. Df</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">Resid. Dev</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">Df</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">Deviance</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">Pr(&gt;Chi)</th></tr>
-<tr>
-<td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">43</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">76.2</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;"></td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr>
-<td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">40</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">74.5</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">3</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">1.71</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.635</td></tr>
-</table>
-
-
----
-# Interpretation of Model Parameters
-
-`$$\log(\lambda) = \beta_0 + \beta_1X$$`
-`\(\lambda\)`: Average number of occurrences per unit of time or space, as a function of one or more covariates
-
-`\(\beta_0\)`: log of the rate for the reference group
-
-`\(\beta_1\)`: log of the rate ratio between a given group and the reference group
-
-`\(X\)`:predictor variable
-
----
-# Rates Accounting for other factor(s)
-Poisson regression allows us to study how rates of an even vary by characteristics of the groups of interest
-`$$\ln(Rate) = \beta_0 + \beta_1X$$`
-
-- `\(E[Y]\)`: expected number of events
-
-- `\(X\)`: predictor variable
-
-- `\(\beta_0\)`: natural log of the rate for the reference group
-
-- `\(\beta_1\)`: natural log of the rate ratio between a given group and the reference group
-	- Similar to the logistic regression where the coefficient was the natural log of the OR
-
---
-
-### alternatively written...
-
-`$$\ln(\frac{E[Y]}{Time}) = \beta_0 + \beta_1X$$`
-
-`$$\ln(E[Y]) - \ln(Time) = \beta_0 + \beta_1X$$`
-
-`$$\ln(E[Y]) = \beta_0 + \beta_1X + \ln(Time)$$`
-
-- `\(\ln(Time)\)`: *offset variable* takes into account the rate of change over time
-
----
-# Interpreting Coefficients
-Poisson regression coefficient represents the *change in response corresponding to a one unit difference in the corresponding predictor.* 
-
-[Make sure to devote substantial time to work on interpreting what the parameter estimates mean]
-
-???
-Like other regression coefficients, a Poisson regression coefficient represents the change in response corresponding to a one unit difference in the corresponding predictor. Here, the response is expected (natural) logged count.
-
----
-# Interpreting Coefficients
-
----
-# Interpreting Coefficients
-
-
----
-# Other fish in the sea: Alternative models for count data
-
-| Model Type        | Benefits                           |  Drawbacks                      |
-|-------------------|------------------------------------|---------------------------------|
-| Negative binomial | Accounts for overly-dispersed data |                                |
-| Zero-inflated models | Accounts for a large number of zero's (e.g., # of cigarettes smoked by general population)| |
-
-[and explain tradeoffs across approaches!]
 ---
 
 # OLS regression vs. Poisson regression

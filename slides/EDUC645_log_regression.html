@@ -34,28 +34,16 @@ class: center, middle, inverse, title-slide
 
 ---
 # Goals for the unit
-	• linear probability model and discuss the limitations
-	• Understand the different model assumptions of logistic regression vs. linear regression.
-	• concept of probability, odds, and logit (Distinguish between odds and probability.)
-	• logistic function and the logistic regression model 
-		○ continuous predictors
-			§ how to interpret the model parameters, 
-			§ inference for model parameters
-		○ categorical predictors 
-			§ how to interpret the model parameters, 
-			§ inference for model parameters
-		○ interaction between a continuous and categorical predictor, 
-			§ how to interpret the model parameters, 
-			§ inference for model parameters
-	• glm function in R to fit the logistic regression model
+• Differentiate between the linear probability model and the logistic regression model
+• Describe the concept of probability, odds, and logit function
+• Estimated a fitted regression line using Logistic regression
+• Interpret the model parameters for logistic function and logistic regression model using continuous predictors, categorical predictors, interaction between a continuous and categorical predictor
 • Discuss the predictive power, model fit, and diagnostics for a logistic regression model
-	• Evaluate models based on Area Under ROC Curve method.
-• probit and differentiate from logit
 
 ---
 # A Motivating Question
 
-Study investigating gender differences in school leadership in Netherlands (Krüger, 1994 [insert article reference]). The study matched comparable schools (N=98) then surveyed the school principals, teachers, and students. 
+Study investigating gender differences in school leadership in Netherlands (Krüger, 1994). The study matched comparable schools (N=98) then surveyed the school principals, teachers, and students. 
 
 We're interested in the association between school-level student-perceived *attention from principal* and *affective attitude toward principal*(i.e., "the school principal is nice").
 
@@ -81,6 +69,7 @@ We're interested in the association between school-level student-perceived *atte
 </table>
 
 
+
 ---
 # Describe dichotomous outcome variable
 
@@ -92,13 +81,6 @@ We're interested in the association between school-level student-perceived *atte
 &lt;img src="EDUC645_log_regression_files/figure-html/unnamed-chunk-3-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
-# Visualizing the relationship
-
-Plot outcome variable, affective, on predictor variable, attention. What patterns do you notice from the plots?
-
-&lt;img src="EDUC645_log_regression_files/figure-html/unnamed-chunk-4-1.png" style="display: block; margin: auto;" /&gt;
-
----
 # Modeling the relationship
 
 Previously you have practiced modeling outcome variables with continuous distributions using various kinds of predictor variables. 
@@ -108,34 +90,37 @@ Our inquiry: The association between students among school's attention from prin
 With the case of Krüger's data, we need to model the relationship between a dichotomous outcome variable in our analysis.
 
 ---
-# Binary Data
-
-- This is an instance many when we are interested in the probability of an outcome.
-    • Ex. probability of group given individual traits, probability of needs, etc.
+# Binary Outcomes
+- Outcomes with a yes/no or 0/1 response
 
 --
 
-- How is this different from if attitude towards a principal was a continuous scale, rather than binary/dichotomous?
+- Examples:  
+  - Depression or not?  
+  - Vaccinated or not?  
+
+--
+	
+- Proportion vs. Odds
 
 ---
+# Odds
 
-# Other Common Forms of Non-Linear Analysis
+Odds of an event: the probability of 'yes' divided by the probability of 'no'
+`$$Odds = \frac{p}{1(1-p)}$$`
 
-- Probit regression
-- Multinomial logistic regression
-- Ordinal logistic regression
-- Hazard ratio
-- Survival analysis
+- As the probability of an event increases, so do the odds
+
+- Odds increase *almost* exponentially as the probability increases
 
 ---
 
 class: middle, inverse
 
-# GLM and Logistic Regression
+# GLM and Modeling Dichotomous Data
 
 ---
-
-# Revisiting the Generalized Linear Model (GLM)
+# Revisiting the GLM
 
 Recall that the theory of GLMs is based on the unifying notion of the one-parameter exponential family form:
 
@@ -157,174 +142,20 @@ where we use the subscript `\(i\)` to emphasize that the model estimates the out
 .footnote[[1] Sometimes also called deterministic and stochastic components.]
 
 ---
-# Binomial distribution and the Generalized Linear Model (GLM)
 
-How can we apply the general approach of GLMs to binomial responses
-- We first write an expression for the probability of a binomial response 
-  - Then Provide a way in which to specify the (canonical) link and the form for the model
+# Linear Probability Model (LPM)
 
---
+Back to our example:
 
-If `\(Y\)` follows a binomial distribution with `\(n\)` trials and probability of success `\(p\)`:
+One viable way to model our data is to treat it as though it *is* linear.
 
-`$$P(Y=y) = \binom{n}{y}p^y(1-p)^{(n-y)} \\
-      =e^{y\log(p) + (n-y)\log(1-p) + \log\binom{n}{y}}$$`
+Visualize the coefficient/slope of the fitted line (basically, we force the relationship to be linear):
 
----
-# Binary Outcomes
-- Outcomes with a yes/no or 0/1 response
-
---
-
-- Examples:  
-  - Depression or not?  
-  - Vaccinated or not?  
-
---
-	
-- Proportion vs. Odds
-
----
-# Proportion
-- Description 1:
-
----
-# Odds
-
-Odds of an event: the probability of 'yes' divided by the probability of 'no'
-`$$Odds = \frac{p}{1(1-p)}$$`
-
-
----
-# Odds and Probability
-
-As the probability of an event increases, so do the odds
-
-[insert data visualization comparing trajectories]
-
-???
-- As the probability of an event increases, so do the odds
-- Odds increase *almost* exponentially as the probability increases
-
----
-# Binomial distribution and the GLM
-
-*However*, this probability mass function is not quite in one-parameter exponential family form. 
-
-## The missing link
-GLM theory suggests that constructing a model using the logit(the log odds of a score) as a linear function of covariates.
-
-The logit function serves as a link between linear regression and logistic regression; a one-parameter exponential family form for binomial responses shows that the canonical link is:
-`$$\log(\frac{p}{1-p})$$`
-
-### Model for logistic regression with binary or binomial responses:
-`$$Y_i = \log(\frac{p_i}{1-p_i})$$`
-
-Where the observed values `\(Y_i \sim\)` binomial with `\(p=p_i\)` for a given `\(x_i\)` and `\(n=1\)` for binary responses.
-
---
-
-We then insert the logit link function into our GLM model as follows:
-
-`$$Y=\beta_0+\beta_1 x_i$$`
-Becomes...
---
-
-`$$\log(\frac{p_i}{1-p_i})=\beta_0+\beta_1 x_i$$`
-
-In other words, `\(Y_i\)` = the number scored out of `\(n\)` penalty kicks. The parameter, `\(p\)`, is the probability of a score on a single penalty kick. 
-
-
-for binary responses:
-`\(p_i\)` 
-`\(x_i\)`
-`\(n=1\)`
-
-???
-
-The solid line is a linear regression fit with least squares to model the probability of a success (Y=1) for a given value of X.  With a binary response, the line doesn't fit the data well, and it produces predicted probabilities below 0 and above 1.  On the other hand, the logistic regression fit (dashed curve) with its typical "S" shape follows the data closely and always produces predicted probabilities between 0 and 1.  For these and several other reasons detailed in this chapter, we will focus on the following model for logistic regression with binary or binomial responses:
-
+&lt;img src="EDUC645_log_regression_files/figure-html/unnamed-chunk-4-1.png" style="display: block; margin: auto;" /&gt;
 ---
 
-# Likelihood Models and Estimation
+# LPM model coefficient interpretation
 
-Fitting simple linear models using OLS assumes that the mean value of a response, `\(Y\)`, is linearly related to some variable, X. 
-
-However, often responses are not normally distributed. 
-
-*binary response linearly represented*
-
-
-
----
-# Fitting logistic regression requires *likelihood methods*. 
-
-*Likelihood* function tells us how likely we are to observe our data for a given parameter value, pB. 
-- come into play is when data is produced from a complex structure which may imply correlation among outcomes (e.g., students' test scores taught by the same teacher)
-- provide flexibility in the types of models we can fit
-- provide ways in which to compare models
-
-For a single X which has a Y, GBB, the likelihood function looks like:
-[insert function]
-
-*Distribution of likelihood function pB*
-&lt;img src="EDUC645_log_regression_files/figure-html/unnamed-chunk-6-1.png" style="display: block; margin: auto;" /&gt;
-
-Note: we will not discuss MLE in the general form. Instead, we will consider a simple case of MLE that is relevant to the logistic regression.
-
----
-# Maximum Likelihood Estimation
-
-*Maximum likelihood estimation (MLE)* is a general class of method in statistics that is used to estimate the model parameters
-
-[simple MLE estimation figure]
-
-
----
-# Maximum Likelihood Estimation
-
-MLE: is the optimal estimate of pB, the value where we are most likely to see our data from all possible values between 0 and 1.
--  iterates over local maxima find the value of pB where the likelihood or log likelihood is a maximum.
-
-*Contour plot*
-&lt;img src="EDUC645_log_regression_files/figure-html/unnamed-chunk-8-1.png" style="display: block; margin: auto;" /&gt;
-
----
-# Same idea, different plot
-
-*Wire-frame plot*
-&lt;img src="EDUC645_log_regression_files/figure-html/unnamed-chunk-9-1.png" style="display: block; margin: auto;" /&gt;
-
----
-# MLE limitations
-
-- MLE is primarily a single point estimate solution and the information contained in a single value
-- Likelihoods will not necessarily be symmetrically dispersed around the point of maximum likelihood. 
-We may be interested in the full distribution of credible parameter values, so that we can perform sensitivity analyses and understand the possible outcomes or optimal decisions associated with particular credible intervals. 
-
-Bayesian methods can be applied to circumvent these limitations.
-
----
-# Interpretation of Model Parameters
-
-`$$\ln(\frac{p_i}{1-p_i})=\beta_0+\beta_1 X_i$$`
-`\(\beta_1\)`: Change in log odds for 1 unit change in `\(X_i\)`
-
-# Regression equation components
-
-`$$BMI = \color{orange}{(\beta_0)} + \color{purple}{(\beta_1)}(DietaryRestraint)$$`
-
-&lt;span style = "color:orange"&gt; Intercept `\((\beta_0)\)`: &lt;/span&gt; Predicted outcome when X is equal to 0.
-
---
-
-&lt;span style = "color:purple"&gt; Slope `\((\beta_1)\)`: &lt;/span&gt; Predicted increase in the outcome for every one unit increase in X.
-
-
----
-
-# Linear probability model (LPM)
-Back to our example
 
 ```r
 m1 &lt;- lm(affective ~ attention, principal)
@@ -352,28 +183,12 @@ summary(m1)
 #&gt; F-statistic: 19.13 on 1 and 798 DF,  p-value: 1.381e-05
 ```
 
-
-
----
-
-Visualize the coefficient/slope of the fitted line (basically, we force the relationship to be linear):
-
-&lt;img src="EDUC645_log_regression_files/figure-html/unnamed-chunk-11-1.png" style="display: block; margin: auto;" /&gt;
-
-
 Interpret the results (report regression coefficients **on a probability scale**) and the figure. 
-
----
-# Visualize the coefficient on a log-odds scale
-
-Model the change in log-odds of affective in a linear function of attention:
-
-&lt;img src="EDUC645_log_regression_files/figure-html/unnamed-chunk-12-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 # Coefficient on a probability scale (mapping the parameters to probability nonlinearly)
 
-&lt;img src="EDUC645_log_regression_files/figure-html/unnamed-chunk-13-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC645_log_regression_files/figure-html/unnamed-chunk-6-1.png" style="display: block; margin: auto;" /&gt;
 
 ???
 
@@ -383,7 +198,7 @@ Note: in the data, "attention" ranges from -2.42 to 2.61, the plot is therefore 
 
 Manipulate the X axis to show the nonlinear relationship in its full image:
 
-&lt;img src="EDUC645_log_regression_files/figure-html/unnamed-chunk-14-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC645_log_regression_files/figure-html/unnamed-chunk-7-1.png" style="display: block; margin: auto;" /&gt;
 
 Interpret the results (report regression coefficients **on a log-odds scale**) and the two figures.
 
@@ -391,35 +206,238 @@ Interpret the results (report regression coefficients **on a log-odds scale**) a
 # Visualize the coefficient on a **log-odds** scale 
 ### Model the change in log-odds of affective in a linear function of attention
 
-&lt;img src="EDUC645_log_regression_files/figure-html/unnamed-chunk-15-1.png" style="display: block; margin: auto;" /&gt;
+Manipulated X axis to show the nonlinear relationship in its full image:
 
----
-# Visualize the coefficient on a *probability* scale 
-### Mapping the parameters to probability nonlinearly
-
-&lt;img src="EDUC645_log_regression_files/figure-html/unnamed-chunk-16-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC645_log_regression_files/figure-html/unnamed-chunk-8-1.png" style="display: block; margin: auto;" /&gt;
 
 ???
 
 Coder note: in the data, "attention" ranges from -2.42 to 2.61, the plot is therefore limited to a fraction when the probability of "affective" approaching one but still below 0.5. 
+
 Because we cannot easily guess the missing plot fraction (as appose to when the line is linear, we can tell where the line goes simply by looking at the slope), this plot is not telling us enough information about the population of interest:
 
 ---
 
-Manipulated X axis to show the nonlinear relationship in its full image:
 
-&lt;img src="EDUC645_log_regression_files/figure-html/unnamed-chunk-17-1.png" style="display: block; margin: auto;" /&gt;
+```r
+plot(m1, 1)
+```
 
+&lt;img src="EDUC645_log_regression_files/figure-html/unnamed-chunk-9-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 # Interpret the results
 
 Report regression coefficients **on a log-odds scale**
 
-&lt;img src="EDUC645_log_regression_files/figure-html/unnamed-chunk-18-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC645_log_regression_files/figure-html/unnamed-chunk-10-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+# Another Way to Model the Data
+
+There are other options to modeling dichotomous data.
+
+--
+
+Logistic regression is another option.
+
+--
+
+Logistic regression has become the default approach to modeling binomial distributions, but there are cases in which LPM might be preferred.
+
+---
+# Binomial distribution and the Generalized Linear Model (GLM)
+
+How can we apply the general approach of GLMs to binomial responses
+- We first write an expression for the probability of a binomial response 
+  - Then Provide a way in which to specify the (canonical) link and the form for the model
+
+--
+
+If `\(Y\)` follows a binomial distribution with `\(n\)` trials and probability of event `\(p\)`:
+
+`$$P(Y=y) = \binom{n}{y}p^y(1-p)^{(n-y)} \\
+      =e^{y\log(p) + (n-y)\log(1-p) + \log\binom{n}{y}}$$`
+
+---
+# Binomial distribution and the GLM
+
+## The missing link
+GLM theory suggests that constructing a model using the logit(the log odds of a score) as a linear function of covariates.
+
+The logit function allows us to connect GLM linear regression with logistic regression.
+
+This 'link' function transforms the dependent binomial variable using a one-parameter exponential formula:
+`$$\log(\frac{p}{1-p})$$`
+
+`\(p = probability_{event}\)`: Probability of a given event
+
+---
+# Using Logit Link in Logistic Regression
+
+Where the observed values `\(Y_i \sim\)` binomial with `\(p=p_i\)` for a given `\(x_i\)` and `\(n=1\)` for binary responses, we can insert the logit link function into our GLM model as follows:
+
+`$$\color{green}{Y_i}=\beta_0 + \beta_1 x_i + \varepsilon_{i}$$`
+
+--
+
+`$$\color{green}{Y_i} = \color{blue}{\log(\frac{p_i}{1-p_i})}$$`
+
+Becomes...
+--
+
+`$$\color{blue}{\log(\frac{p_i}{1-p_i})}=\beta_0 + \beta_1 x_i +  \varepsilon_i$$`
+
+`\(Y_i\)` is the number events of `\(n\)` observations. 
+`\(p\)` is the probability of an event on a single observation. 
+
+---
+
+# Likelihood Models and Estimation
+
+Fitting simple linear models using OLS assumes that the mean value of a response, `\(Y\)`, is linearly related to some variable, X. 
+
+However, often responses are not normally distributed. 
+
+*binary response linearly represented*
+&lt;img src="EDUC645_log_regression_files/figure-html/unnamed-chunk-11-1.png" style="display: block; margin: auto;" /&gt;
+
+
+---
+# Fitting logistic regression requires *likelihood methods*. 
+
+*Likelihood* function tells us how likely we are to observe our data for a given parameter value, pB. 
+- come into play is when data is produced from a complex structure which may imply correlation among outcomes (e.g., students' test scores taught by the same teacher)
+- provide flexibility in the types of models we can fit
+- provide ways in which to compare models
+
+*Distribution of likelihood function pB*
+&lt;img src="EDUC645_log_regression_files/figure-html/unnamed-chunk-12-1.png" style="display: block; margin: auto;" /&gt;
+
+Note: we will not discuss MLE in the general form. Instead, we will consider a simple case of MLE that is relevant to the logistic regression.
+
+---
+# Maximum Likelihood Estimation
+
+*Maximum likelihood estimation (MLE)* is a general class of method in statistics that is used to estimate the model parameters
+
+---
+# Maximum Likelihood Estimation
+
+MLE: is the optimal estimate of pB, the value where we are most likely to see our data from all possible values between 0 and 1.
+-  iterates over local maxima find the value of pB where the likelihood or log likelihood is a maximum.
+
+*Contour plot*
+&lt;img src="EDUC645_log_regression_files/figure-html/unnamed-chunk-13-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+# Same idea, different plot
+
+*Wire-frame plot*
+&lt;img src="EDUC645_log_regression_files/figure-html/unnamed-chunk-14-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+# MLE limitations
+
+- MLE is primarily a single point estimate with the information contained in a single value
+- Likelihoods will not necessarily be symmetrically dispersed around the point of maximum likelihood. 
+- We may be interested in the full distribution of credible parameter values, so that we can perform sensitivity analyses and understand the possible outcomes or optimal decisions associated with particular credible intervals. 
+
+Bayesian methods can be applied to circumvent these limitations.
+
 
 ---
 # Interpretation of Model Parameters
+
+`$$\ln(\frac{p_i}{1-p_i})=\beta_0+\beta_1 X_i$$`
+`\(\beta_1\)`: Change in log odds for 1 unit change in `\(X_i\)`
+
+# Regression equation components
+
+`$$Affective = \color{orange}{(\beta_0)} + \color{green}{(\beta_1)}(Attention)$$`
+
+&lt;span style = "color:orange"&gt; Intercept `\((\beta_0)\)`: &lt;/span&gt; Predicted outcome when X is equal to 0.
+
+--
+
+&lt;span style = "color:green"&gt; Slope `\((\beta_1)\)`: &lt;/span&gt; Predicted increase in the outcome for every one unit increase in X.
+
+---
+
+# Logistic regression model estimates
+
+`family` refers to the type of distribution, where we have defined `binomial`, and the `link` asks for the link function that we want to use, which is the `logit` for a logistic regression
+
+
+```r
+m3 &lt;- glm(affective ~ attention, principal, 
+          family = binomial(link = "logit"))
+summary(m3)
+```
+
+```
+#&gt; 
+#&gt; Call:
+#&gt; glm(formula = affective ~ attention, family = binomial(link = "logit"), 
+#&gt;     data = principal)
+#&gt; 
+#&gt; Deviance Residuals: 
+#&gt;     Min       1Q   Median       3Q      Max  
+#&gt; -1.0231  -0.7025  -0.5764  -0.4744   2.2826  
+#&gt; 
+#&gt; Coefficients:
+#&gt;             Estimate Std. Error z value Pr(&gt;|z|)    
+#&gt; (Intercept) -1.51822    0.09474 -16.026  &lt; 2e-16 ***
+#&gt; attention    0.43823    0.10266   4.269 1.96e-05 ***
+#&gt; ---
+#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#&gt; 
+#&gt; (Dispersion parameter for binomial family taken to be 1)
+#&gt; 
+#&gt;     Null deviance: 772.12  on 799  degrees of freedom
+#&gt; Residual deviance: 752.86  on 798  degrees of freedom
+#&gt; AIC: 756.86
+#&gt; 
+#&gt; Number of Fisher Scoring iterations: 4
+```
+
+---
+
+# Logistic regression model estimates
+
+Adding a categorical variable
+
+```r
+m4 &lt;- glm(affective ~ match, principal,
+          family = binomial(link = "logit"))
+summary(m4)
+```
+
+```
+#&gt; 
+#&gt; Call:
+#&gt; glm(formula = affective ~ match, family = binomial(link = "logit"), 
+#&gt;     data = principal)
+#&gt; 
+#&gt; Deviance Residuals: 
+#&gt;     Min       1Q   Median       3Q      Max  
+#&gt; -0.6617  -0.6617  -0.6258  -0.6258   1.8584  
+#&gt; 
+#&gt; Coefficients:
+#&gt;             Estimate Std. Error z value Pr(&gt;|z|)    
+#&gt; (Intercept)  -1.5311     0.1328 -11.532   &lt;2e-16 ***
+#&gt; match         0.1234     0.1816   0.679    0.497    
+#&gt; ---
+#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#&gt; 
+#&gt; (Dispersion parameter for binomial family taken to be 1)
+#&gt; 
+#&gt;     Null deviance: 772.12  on 799  degrees of freedom
+#&gt; Residual deviance: 771.66  on 798  degrees of freedom
+#&gt; AIC: 775.66
+#&gt; 
+#&gt; Number of Fisher Scoring iterations: 4
+```
 
 
 ---
@@ -431,21 +449,45 @@ The order in which the coefficients are given in the table of coefficients is th
 Wald test refers to the coefficients by their order in the model 
 - b supplies the coefficients
 - Sigma supplies the variance covariance matrix of the error terms
-Terms tells R which terms in the model are to be tested, in this case, terms 4, 5, and 6, are the three terms for the levels of rank.
+
+Terms tells R which terms in the model are to be tested, in this case, terms 1 and 2, are the three terms for the levels of rank.
 
 
 ```r
-#wald.test(b = coef(m1), Sigma = vcov(m1), Terms = 4:6)
+wald.test(b = coef(m4), Sigma = vcov(m4), Terms = 1)
+```
+
+```
+#&gt; Wald test:
+#&gt; ----------
+#&gt; 
+#&gt; Chi-squared test:
+#&gt; X2 = 133.0, df = 1, P(&gt; X2) = 0.0
 ```
 
 ---
 
 # Binary Outcome and Binary Predictor
+
 - Measures of Association
 	• Difference in probabilities = p1-p2
 			- If difference in probabilities of the outcome across the categories is NOT 0, then predictor is associated with the outcome
 
---
+---
+# Odds
+
+- One way to quantify a predictor's effect.
+
+`$$Odds = \frac{\# \textrm{successes}}{\# \textrm{failures}}=
+\frac{\# \textrm{successes}/n}{\# \textrm{failures}/n}=
+\frac{p}{1-p}$$`
+
+`\(p\)` represents the probability of an event occuring
+
+---
+#Odds Ratio
+
+We can take our interpretation further by producing an odds ratio (OR)
 
 	• Odds ratio (OR) = odds on category of predictor/odds other category of predictor
 			- If OR is NOT 1, then predictor is associated with the outcome
@@ -454,25 +496,6 @@ Terms tells R which terms in the model are to be tested, in this case, terms 4, 
 - If the difference in probabilities of the outcome across the categories is NOT 0, there is an association between the outcome and the predictor
 
 - If the OR is NOT 1, then there is an association between the predictor and the outcome
-
----
-# Odds
-
-- One way to quantify a XX's performance. 
-Example 
-__odds ratio__ \index{odds ratio} (OR): 
-
-which tells us that the *odds* of a successful penalty kick are 3.05 times higher when the shooter's team is leading.
-
-In general, we now have several ways of finding the odds of success under certain circumstances:
-
-`$$Odds = \frac{\# \textrm{successes}}{\# \textrm{failures}}=
-\frac{\# \textrm{successes}/n}{\# \textrm{failures}/n}=
-\frac{p}{1-p}$$`
-
-???
-
-In our example, it is also possible to estimate the probability of a goal, `\(p\)`, for either circumstance. When the goalkeeper's team is behind, the probability of a successful penalty kick is `\(p\)` = 22/24 or 0.833. We can see that the ratio of the probability of a goal scored divided by the probability of no goal is `\((22/24)/(2/24)=22/2\)` or 11, the odds we had calculated above. The same calculation can be made when the goalkeeper's team is not behind.
 
 ---
 # Practice calculating OR
@@ -486,15 +509,8 @@ To get the odds ratio, we need to back transform and exponentiate the coefficien
   `$$= e^{\beta_1}$$`
 
 ---
-# Practice calculating OR by hand
 
---
-
-[insert interpretation]
-
----
-
-&lt;img src="EDUC645_log_regression_files/figure-html/unnamed-chunk-20-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC645_log_regression_files/figure-html/unnamed-chunk-18-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 # Confidence Intervals
@@ -506,13 +522,13 @@ For logistic models, CIs are based on the profiled log-likelihood function.
 
 ```r
 ## CIs using profiled log-likelihood
-confint(m1)
+confint(m3)
 ```
 
 ```
-#&gt;                  2.5 %     97.5 %
-#&gt; (Intercept) 0.16069761 0.21430239
-#&gt; attention   0.03504475 0.09210663
+#&gt;                  2.5 %    97.5 %
+#&gt; (Intercept) -1.7082680 -1.336493
+#&gt; attention    0.2398322  0.642828
 ```
 
 We can also get CIs based on just the standard errors by using the default method.
@@ -520,30 +536,30 @@ We can also get CIs based on just the standard errors by using the default metho
 
 ```r
 ## CIs using standard errors
-confint.default(m1)
+confint.default(m3)
 ```
 
 ```
 #&gt;                  2.5 %     97.5 %
-#&gt; (Intercept) 0.16073827 0.21426173
-#&gt; attention   0.03508802 0.09206336
+#&gt; (Intercept) -1.7039058 -1.3325409
+#&gt; attention    0.2370249  0.6394294
 ```
 
 ---
 # Odds Ratios
 
-You can also exponentiate the coefficients and interpret them as odds-ratios. 
+To obtain ORs, we exponentiate the coefficients. 
 
 We can use the same logic to get odds ratios and their confidence intervals, by exponentiating the confidence intervals from before. 
 
 
 ```r
-exp(coef(m1))
+exp(coef(m3))
 ```
 
 ```
 #&gt; (Intercept)   attention 
-#&gt;     1.20623     1.06564
+#&gt;   0.2191008   1.5499570
 ```
 
 For a one unit increase in attention, the odds of being admitted to graduate school (versus not being admitted) increase by a factor of 1.07.
@@ -551,13 +567,13 @@ For a one unit increase in attention, the odds of being admitted to graduate sch
 
 ```r
 ## odds ratios and 95% CI
-exp(cbind(OR = coef(m1), confint(m1)))
+exp(cbind(OR = coef(m3), confint(m3)))
 ```
 
 ```
-#&gt;                  OR    2.5 %   97.5 %
-#&gt; (Intercept) 1.20623 1.174330 1.238997
-#&gt; attention   1.06564 1.035666 1.096482
+#&gt;                    OR     2.5 %    97.5 %
+#&gt; (Intercept) 0.2191008 0.1811793 0.2627656
+#&gt; attention   1.5499570 1.2710359 1.9018517
 ```
 To put it all in one table, we use cbind to bind the coefficients and confidence intervals column-wise.
 
@@ -571,42 +587,129 @@ class: middle, inverse
 ---
 # Assess Interactions
 
-- Assess effect modification by adding interaction term to the model
+Assess effect modification by adding interaction term to the model
 
 Model *without* interaction term:
 
-`$$ln({Y_{odds}}) - {\beta_0} + {\beta_1}X_1 + {\beta_2}X_2$$`
+`$$ln({Y_{odds}}) = {\beta_0} + {\beta_1}X_1 + {\beta_2}X_2$$`
 Model *with* interaction term:
 `$$ln({Y_{odds}}) = {\beta_0} + {\beta_1}X_1 + {\beta_2}X_2 + {\beta_3}(X_1*X_2)$$`
 ---
 # Interaction - categorical X categorical
 
+
+```r
+summary(glm(affective ~ female*match, principal,
+          family = binomial(link = "logit")))
+```
+
+```
+#&gt; 
+#&gt; Call:
+#&gt; glm(formula = affective ~ female * match, family = binomial(link = "logit"), 
+#&gt;     data = principal)
+#&gt; 
+#&gt; Deviance Residuals: 
+#&gt;     Min       1Q   Median       3Q      Max  
+#&gt; -0.6809  -0.6705  -0.6564  -0.5915   1.9128  
+#&gt; 
+#&gt; Coefficients:
+#&gt;              Estimate Std. Error z value Pr(&gt;|z|)    
+#&gt; (Intercept)  -1.34373    0.20501  -6.554 5.58e-11 ***
+#&gt; female       -0.31082    0.26939  -1.154    0.249    
+#&gt; match        -0.08178    0.25853  -0.316    0.752    
+#&gt; female:match  0.35814    0.37117   0.965    0.335    
+#&gt; ---
+#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#&gt; 
+#&gt; (Dispersion parameter for binomial family taken to be 1)
+#&gt; 
+#&gt;     Null deviance: 772.12  on 799  degrees of freedom
+#&gt; Residual deviance: 770.31  on 796  degrees of freedom
+#&gt; AIC: 778.31
+#&gt; 
+#&gt; Number of Fisher Scoring iterations: 4
+```
+
 ---
 # Interaction - continous X categorical
 
-[Assess Interactions - example walkthrough]
 
----
-# Interactions - centering variable
+```r
+summary(glm(affective ~ attention*match, principal,
+          family = binomial(link = "logit")))
+```
+
+```
+#&gt; 
+#&gt; Call:
+#&gt; glm(formula = affective ~ attention * match, family = binomial(link = "logit"), 
+#&gt;     data = principal)
+#&gt; 
+#&gt; Deviance Residuals: 
+#&gt;     Min       1Q   Median       3Q      Max  
+#&gt; -1.1288  -0.6797  -0.5812  -0.4642   2.2873  
+#&gt; 
+#&gt; Coefficients:
+#&gt;                 Estimate Std. Error z value Pr(&gt;|z|)    
+#&gt; (Intercept)     -1.54840    0.13484 -11.483   &lt;2e-16 ***
+#&gt; attention        0.25795    0.14738   1.750   0.0801 .  
+#&gt; match            0.04541    0.19030   0.239   0.8114    
+#&gt; attention:match  0.33685    0.20539   1.640   0.1010    
+#&gt; ---
+#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#&gt; 
+#&gt; (Dispersion parameter for binomial family taken to be 1)
+#&gt; 
+#&gt;     Null deviance: 772.12  on 799  degrees of freedom
+#&gt; Residual deviance: 749.74  on 796  degrees of freedom
+#&gt; AIC: 757.74
+#&gt; 
+#&gt; Number of Fisher Scoring iterations: 4
+```
 
 ---
 # Interaction - continous X continuous
-[Assess Interactions - example walkthrough]
 
-[interpretation of output, example write up]
+
+```r
+summary(glm(affective ~ attention*match, principal,
+          family = binomial(link = "logit")))
+```
+
+```
+#&gt; 
+#&gt; Call:
+#&gt; glm(formula = affective ~ attention * match, family = binomial(link = "logit"), 
+#&gt;     data = principal)
+#&gt; 
+#&gt; Deviance Residuals: 
+#&gt;     Min       1Q   Median       3Q      Max  
+#&gt; -1.1288  -0.6797  -0.5812  -0.4642   2.2873  
+#&gt; 
+#&gt; Coefficients:
+#&gt;                 Estimate Std. Error z value Pr(&gt;|z|)    
+#&gt; (Intercept)     -1.54840    0.13484 -11.483   &lt;2e-16 ***
+#&gt; attention        0.25795    0.14738   1.750   0.0801 .  
+#&gt; match            0.04541    0.19030   0.239   0.8114    
+#&gt; attention:match  0.33685    0.20539   1.640   0.1010    
+#&gt; ---
+#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#&gt; 
+#&gt; (Dispersion parameter for binomial family taken to be 1)
+#&gt; 
+#&gt;     Null deviance: 772.12  on 799  degrees of freedom
+#&gt; Residual deviance: 749.74  on 796  degrees of freedom
+#&gt; AIC: 757.74
+#&gt; 
+#&gt; Number of Fisher Scoring iterations: 4
+```
 
 ---
 # Tests for Significance of Model Coefficients
 
 ---
 # Confidence Intervals for Model Coefficients
-
-{NOTES FROM DL}
-o	show plots of the residuals, residual v. fitted plot, etc. to build intuition around some of emergent issues with using OLS
-  •	highlight that different approaches have different strengths/weaknesses:
-o	In instances where the goal is to estimate treatment effects, and the predicted probability does not fall close to 0/1, an LPM approach is probably superior (more consistent and easier to interpret)
-o	Estimates from logistic models with covariates are not comparable at different values of the covariates or across models
-o	Highlight more clearly that LPM generate predicted values for some value of the predictor exceeding 0/1
 
 ---
 
@@ -635,11 +738,6 @@ class: middle, inverse
 
 ```r
 m2 &lt;- lm(affective ~ attention + match, principal)
-
-m3 &lt;- glm(affective ~ attention, principal, 
-          family = binomial(link = "logit"))
-m4 &lt;- glm(affective ~ attention + match, principal,
-          family = binomial(link = "logit"))
 ```
 
 Check for critical ASSUMPTIONS that unique to logistic regression:
@@ -649,12 +747,7 @@ Check for critical ASSUMPTIONS that unique to logistic regression:
 ---
 # Outliers: Cook's distance plot 
  
-
-```r
-plot(m3, which = 4, id.n = 3)
-```
-
-&lt;img src="EDUC645_log_regression_files/figure-html/unnamed-chunk-26-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC645_log_regression_files/figure-html/unnamed-chunk-27-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 # Outliers: Residual Errors 
@@ -670,7 +763,7 @@ principal_checked &lt;- broom::augment(m3) %&gt;%
 principal_checked %&gt;% top_n(3, .cooksd)
 ```
 
-<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:unnamed-chunk-27">
+<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:unnamed-chunk-28">
 <col><col><col><col><col><col><col><col><col><tr>
 <th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">affective</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">attention</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">.fitted</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">.resid</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">.std.resid</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">.hat</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">.sigma</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">.cooksd</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">index</th></tr>
 <tr>
@@ -689,21 +782,30 @@ principal_checked %&gt;%
   geom_point(aes(color = affective))
 ```
 
-&lt;img src="EDUC645_log_regression_files/figure-html/unnamed-chunk-27-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC645_log_regression_files/figure-html/unnamed-chunk-28-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Influential Observations
+
+- Are there observations that greatly change the estimated regression coefficients if they are removed from the dataset?
+- Same concept as with DFBetas from multiple linear regression
+
+&lt;img src="EDUC645_log_regression_files/figure-html/unnamed-chunk-29-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 # Multicollinearity  
 
-can add another predictor to see if there is collinearity existing (variance inflation factor exceeds 5) - we're good
+Can add another predictor to see if there is evidence of collinearity (i.e., if variance inflation factor &lt; 5)
 
 
 ```r
-car::vif(m4)
+car::vif(m2)
 ```
 
 ```
 #&gt; attention     match 
-#&gt;  1.000002  1.000002
+#&gt;  1.000024  1.000024
 ```
 
 ---
@@ -747,74 +849,58 @@ summary(m4)
 ```
 #&gt; 
 #&gt; Call:
-#&gt; glm(formula = affective ~ attention + match, family = binomial(link = "logit"), 
+#&gt; glm(formula = affective ~ match, family = binomial(link = "logit"), 
 #&gt;     data = principal)
 #&gt; 
 #&gt; Deviance Residuals: 
 #&gt;     Min       1Q   Median       3Q      Max  
-#&gt; -0.9976  -0.6999  -0.5789  -0.4735   2.3080  
+#&gt; -0.6617  -0.6617  -0.6258  -0.6258   1.8584  
 #&gt; 
 #&gt; Coefficients:
 #&gt;             Estimate Std. Error z value Pr(&gt;|z|)    
-#&gt; (Intercept)  -1.5817     0.1363 -11.602  &lt; 2e-16 ***
-#&gt; attention     0.4379     0.1026   4.266 1.99e-05 ***
-#&gt; match         0.1211     0.1838   0.659     0.51    
+#&gt; (Intercept)  -1.5311     0.1328 -11.532   &lt;2e-16 ***
+#&gt; match         0.1234     0.1816   0.679    0.497    
 #&gt; ---
 #&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #&gt; 
 #&gt; (Dispersion parameter for binomial family taken to be 1)
 #&gt; 
 #&gt;     Null deviance: 772.12  on 799  degrees of freedom
-#&gt; Residual deviance: 752.43  on 797  degrees of freedom
-#&gt; AIC: 758.43
+#&gt; Residual deviance: 771.66  on 798  degrees of freedom
+#&gt; AIC: 775.66
 #&gt; 
 #&gt; Number of Fisher Scoring iterations: 4
 ```
 
+---
 
 # Comparing models 
 
 Putting models together and report them in a table:
 
-
-```r
-huxtable::huxreg(
-  "LPM" = m1, 
-  "LPM" = m2,
-  "Logistic" = m3,
-  "Logistic" = m4,
-  coefs = c("Attention" = "attention",
-            "Matched gender" = "match")
-)
-```
-
-<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:unnamed-chunk-30">
+<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:unnamed-chunk-32">
 <col><col><col><col><col><tr>
 <th style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;"></th><th style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">LPM</th><th style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">LPM</th><th style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">Logistic</th><th style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">Logistic</th></tr>
 <tr>
-<th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">Attention</th><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.064 ***</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.064 ***</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.438 ***</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.438 ***</td></tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">Attention</th><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.064 ***</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.064 ***</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.438 ***</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
 <tr>
-<th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;"></th><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.015)&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.015)&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.103)&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.103)&nbsp;&nbsp;&nbsp;</td></tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;"></th><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.015)&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.015)&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.103)&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
 <tr>
-<th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">Matched gender</th><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.018&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.121&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">Matched gender</th><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.018&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.123&nbsp;</td></tr>
 <tr>
-<th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;"></th><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.027)&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.184)&nbsp;&nbsp;&nbsp;</td></tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;"></th><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.027)&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.182)</td></tr>
 <tr>
-<th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">N</th><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">800&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">800&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">800&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">800&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">N</th><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">800&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">800&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">800&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">800&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
 <tr>
-<th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">R2</th><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.023&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.024&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">R2</th><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.023&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.024&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
 <tr>
-<th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">logLik</th><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-373.028&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-372.806&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-376.432&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-376.215&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">logLik</th><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-373.028&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-372.806&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-376.432&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-385.831&nbsp;</td></tr>
 <tr>
-<th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">AIC</th><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">752.055&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">753.611&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">756.864&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">758.430&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">AIC</th><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">752.055&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">753.611&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">756.864&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">775.662&nbsp;</td></tr>
 <tr>
 <th colspan="5" style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;"> *** p &lt; 0.001;  ** p &lt; 0.01;  * p &lt; 0.05.</th></tr>
 </table>
 
-
----
-
-# Testing for Goodness-of-Fit
 
 ---
 # Assess Confounding
@@ -822,19 +908,6 @@ huxtable::huxreg(
 - Calculating change in coefficient:
 `$$100*\frac{\beta_{adjusted} - \beta_{unadjusted}} {\beta_{unadjusted}}$$`
 ---
-
-# Influential Observations
-
-- Are there observations that greatly change the estimated regression coefficients if they are removed from the dataset?
-- Same concept as with DFBetas from multiple linear regression
-
----
-# Influential Observations
-
-[insert Leverage plot]
-
----
-
 # Predicted Values: Probabilities
 - Coefficients tell us the *average* predicted probability for a person, but what if we want to know about more specific groups or contexts?
 
@@ -851,11 +924,11 @@ We will start by calculating the predicted probability of admission at each valu
 
 # Assessing Predicted Values
 
-* In MLR, `\(R^2\)` indicates good prediction
+* In MLR, `\(R^2\)` can be an indicator of good prediction for a model
 
 --
 
-* In logistic regression, use the *predicted probabilities* 
+* In logistic regression, the *predicted probabilities* can be referred to for good predictive power for a model
   - *predicted probabilities* classify people according to one of the two groups of the predictor variable.
 
 ---
@@ -887,134 +960,6 @@ _Positive predictive value (PPV)_ = `\(\frac{number of True +} {Total_{observed}
 * _Negative predictive value (NPV)_ = `\(\frac{number of True -} {Total_{observed} Y = 0}\)`
 
 ---
-# Specificity vs. Sensitivity
-[insert hypothetical figure 
-"Specificity and Sensitivity Change as the Probability Cutoff Changes"]
-
----
-class: center, inverse
-
-# Receiver Operating Characteristic (ROC) Curve
-
----
-# ROC Curve: Gauging Accuracy of Model
-* Plot of true positive rate against the false positive rate for the different possible cutoff points of a diagnostic test
-* Illustrates the trade off between *sensitivity* and *specificity*
-  - Increase in *sensitivity* will result in decrease in *specificity*, and vice versa
-* The __area under the curve (AUC)__ measures *accuracy*
-  - More accurate tests, the curve is closer to the left-hand border and the top border of the ROC
-
----
-# Area Under the (ROC) Curve
-
-
-```r
-simple_roc &lt;- function(labels, scores){
-  labels &lt;- labels[order(scores, decreasing=TRUE)]
-  data.frame(TPR=cumsum(labels)/sum(labels), FPR=cumsum(!labels)/sum(!labels), labels)
-}
-
-set.seed(1)
-sim_d &lt;- function(N, noise=100){
-  x &lt;- runif(N, min=0, max=100)
-  y &lt;- 122 - x/2 + rnorm(N, sd=noise)
-  dv &lt;- factor(y &gt; 100)
-  data.frame(x, y, dv)
-}
-dv_d &lt;- sim_d(500, 10)
-
-test_set_idx &lt;- sample(1:nrow(dv_d), size=floor(nrow(dv_d)/4))
-
-test_set &lt;- dv_d[test_set_idx,]
-training_set &lt;- dv_d[-test_set_idx,]
-```
-
-
-
-```r
-test_set %&gt;% 
-  ggplot(aes(x=x, y=y, col=dv)) + 
-  scale_color_manual(values=c("blue", "orange")) + 
-  geom_point() + 
-  ggtitle("DV to X")
-```
-
-&lt;img src="EDUC645_log_regression_files/figure-html/unnamed-chunk-32-1.png" style="display: block; margin: auto;" /&gt;
-
----
-# Examining the ROC curve
-
-* Two classifiers that put the labels in the same order will have exactly the same ROC curve regardless of the absolute values of the scores.
-
-* This is shown by comparing the ROC curve you get using either the ‘response’ or the ‘link’ predictions from a logistic regression model. 
-
-* The ‘response’ scores have been mapped into the range between 0 and 1 by a sigmoid function and the ‘link’ scores have not.
-
-
-```r
-fit_glm &lt;- glm(dv ~ x, training_set, family=binomial(link="logit"))
-
-glm_link_scores &lt;- predict(fit_glm, test_set, type="link")
-
-glm_response_scores &lt;- predict(fit_glm, test_set, type="response")
-
-score_data &lt;- data.frame(link=glm_link_scores, 
-                         response=glm_response_scores,
-                         dv=test_set$dv,
-                         stringsAsFactors=FALSE)
-```
-
----
-# Examining the ROC Curve
-
-&lt;div class="figure" style="text-align: center"&gt;
-&lt;img src="EDUC645_log_regression_files/figure-html/plot-first-1.png" alt="add caption"  /&gt;
-&lt;p class="caption"&gt;add caption&lt;/p&gt;
-&lt;/div&gt;
-
----
-# Plotting the ROC Curve
-
-&lt;img src="EDUC645_log_regression_files/figure-html/plot-second-1.png" style="display: block; margin: auto;" /&gt;
-
----
-# Obtaining the AUC
-
-.pull-left[
-&lt;img src="EDUC645_log_regression_files/figure-html/plot-third-1.png" style="display: block; margin: auto;" /&gt;
-]
-
-.pull-right[
-
-```r
-set.seed(1)
-N &lt;- 2000
-P &lt;- 0.01
-rare_success &lt;- sample(c(TRUE, FALSE), N, replace=TRUE, prob=c(P, 1-P))
-guess_not &lt;- rep(0, N)
-plot(roc(rare_success, guess_not), print.auc=TRUE)
-
-## Call:
-## roc.default(response = rare_success, predictor = guess_not)
-## 
-## Data: guess_not in 1978 controls (rare_success FALSE) &lt; 22 cases (rare_success TRUE).
-## Area under the curve: 0.5
-
-simp_roc &lt;- simple_roc(rare_success, guess_not)
-with(simp_roc, lines(1 - FPR, TPR, col="blue", lty=2))
-```
-]
-
----
-
-### AUC Guidelines:
-* Will vary depending on the outcome variable, but here are some general guidelines:
-  - AUC = 0.5 = Poor (equal to random chance)
-  - 0.7 &lt; AUC &lt; 0.8 = Acceptable
-  - 0.8 &lt; AUC &lt; 0.9 = Excellent
-  - AUC &gt; .9 = Outstanding
-
----
 
 # Logistic vs. OLS regression
 |                 | Linear Least Squares | Binomial Regression |
@@ -1025,11 +970,6 @@ with(simp_roc, lines(1 - FPR, TPR, col="blue", lty=2))
 |EDA              | plot X vs. Y; add line | find log⁡(odds) for several subgroups; plot vs. X|
 |Comparing models | extra sum of squares F-tests; AIC/BIC | drop-in-deviance tests; AIC/BIC |
 |Interpreting coef| β1= change in mean response for unit change in X | eβ1= percent change in odds for unit change in X|
-
----
-
-# Logistic regression assumptions
-
 
 ---
 # Key Takeaways

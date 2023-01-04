@@ -60,11 +60,9 @@ opts_chunk$set(
 - Discuss the implications of ignoring the variance of random-effects in terms of the inference for fixed-effects and statistical power
 
 - Introduce 
-	- Random intercept-only model
-	  - its estimation through the R lmer package, 
+	- Random intercept-only model estimation through the R lmer package, 
 		- interpret the model parameters and align them with the earlier discussion of fixed-effects and random-effects.
-	- Intra-class correlation as a measure of within-cluster dependency
-and how to use it to decide whether one needs to use multilevel modeling
+	- Intra-class correlation as a measure of within-cluster dependency and how to use it to decide whether one needs to use multilevel modeling
 
 ---
 # A Motivating Question
@@ -94,7 +92,6 @@ head(seda)
 # Understand the clustering nature
 
 Let's start with a single variable: Oregon districts' achievement score 
-We lose information by looking at district achievement across subject and grade alone.
 
 ```{r, echo = FALSE}
 seda %>% 
@@ -108,9 +105,11 @@ seda %>%
        y = "Achievement")
 ```
 
----
+We lose information by looking at district achievement across subject and grade alone.
 
-Does achievement differ by subject
+
+---
+# Achievement by Subject
 
 ```{r, echo = FALSE}
 seda %>% 
@@ -125,8 +124,7 @@ seda %>%
 ```
 
 ---
-
-Differ by grade?
+# Achievement by grade
 
 ```{r, echo = FALSE}
 seda %>% 
@@ -141,8 +139,7 @@ seda %>%
 ```
 
 ---
-
-Differ by grade AND subject?
+# Achievement by grade AND subject
 
 ```{r, echo = FALSE}
 seda %>% 
@@ -158,11 +155,9 @@ seda %>%
 ```
 
 ---
+# Examining Data Clustering
 
-Alternatively, 
-Can you describe the "clustering" nature of the data in more details now?
-
-IMPORTANTLY, should we keep in mind of this unique feature when we answering research questions, e.g., about relations between two variables?
+IMPORTANTLY, should we keep in mind of this unique feature when we answering research questions, e.g., about relations between two variables
 
 ```{r, echo = FALSE}
 seda %>% 
@@ -196,8 +191,7 @@ seda %>%
 ```
 
 ---
-
-Does this relationship differ by subject?
+# Relationship by subject
 
 ```{r, echo = FALSE, fig.cap="add caption"}
 seda %>%
@@ -213,7 +207,7 @@ seda %>%
 
 ---
 
-Does this relationship differ by subject AND grade?
+# Relationship by subject AND grade
 
 ```{r, echo = FALSE}
 seda %>%
@@ -409,20 +403,12 @@ m1 <- lm(math ~ percent_ell, district)
 summary(m1)
 ```
 
---
-
-[insert interpretation]
-
 ---
 # Fixed effects model
 
 ```{r, echo=T}
 coef(m1)
 ```
-
---
-
-[insert interpretation]
 
 ---
 # Random effects model
@@ -450,8 +436,8 @@ Note:
 Another way to answer the question is allowing the intercept to differ across grades - a unique intercept for each grade.
 
 ---
-
-Model 1. Simple linear regression model for comparison
+# Model 1. 
+## Simple linear regression model for comparison
 
 ```{r}
 m1 <- lm(math ~ percent_ell, district)
@@ -459,7 +445,8 @@ coef(m1)
 ```
 
 ---
-Model 2. Multilevel model with *random __intercepts__*
+# Model 2. 
+## Multilevel model with *random __intercepts__*
     - What parameter differs across grades? what parameter remains the same?
 
 ```{r}
@@ -476,7 +463,8 @@ equatiomatic::extract_eq(m2)
 ```
 
 ---
-# Model 3. Multilevel model with *random __slopes__* 
+# Model 3. 
+## Multilevel model with *random __slopes__* 
 
 * **Note**: this comparison is primarily for instructive purposes
 * How do you interpret the parameters now?
@@ -489,7 +477,8 @@ coef(m3)$grade
 ```
 
 ---
-Model 4. Multilevel model with *random __intercepts__ and __slopes__*
+# Model 4. 
+## Multilevel model with *random __intercepts__ and __slopes__*
 
 * How about the parameters for this model specification?
 * Specify the relationship between percentage of ELL and math achievement for grades 3, 4 & 6
@@ -507,13 +496,6 @@ coef(m4)$grade
 ```{r, echo=TRUE}
 extract_eq(m4)
 ```
-
----
-
-What did we learn so far? Describe the differences between model 1 (simple linear regression) and a model with
-* Random intercepts, model 2
-* Random slopes, model 3
-* Random intercepts and slopes, model 4
 
 ---
 # Fixed effects vs random effects
@@ -535,8 +517,7 @@ district %>%
 ```
 
 ---
-
-Also a review of the relationship between fixed effect (model 1) and random effects (model 4) parameters:
+# Fixed effect (model 1) vs. random effects (model 4) parameters
 
 * **Fixed effect** represents the aggregation of the different intercepts and slopes by taking an average of varying intercept and slopes across clusters
  
@@ -552,7 +533,6 @@ coef(m1)[2]
 mean(unlist(coef(m4)$grade[2]))
 ```
 
-What might be the reason behind these?
 
 ---
 class: middle, inverse
@@ -668,8 +648,7 @@ So far, we have one fixed effects model, but
 how do we know which one is preferred?
 
 ---
-
-Compare model 1 and model 4:
+# Compare model 1 and model 4:
 
 ```{r}
 performance::compare_performance(m1, m4) %>% 
@@ -721,3 +700,24 @@ Model 4 doesn't perform much better than model 2 (identical RMSE;
 
 ### Multilevel Modeling may be appropriate if residual correlations exist due to violations of independence
 - Benefit of partitioning variance even when Level-1 or Level-2 variables will not be modeled
+
+---
+# Key Takeaways
+
+
+---
+class: middle, inverse
+# Synthesis and wrap-up
+
+---
+# Unit Goals
+
+---
+# To Dos
+
+### Reading
+-
+
+### Assignments
+- Assignment #X Due XX at 11:59PM
+- Quiz #X Due on X XX at 5PM
