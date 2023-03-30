@@ -629,7 +629,7 @@ body {
   padding-top: 60px;
 }
 </style>
-<script src="site_libs/header-attrs-2.19/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.20/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
@@ -935,11 +935,16 @@ Lectures
 <span class="down-arrow">&#x25BE;</span>
 </button>
 <div class="nav-dropdown-content">
-<a href="./slides/EDUC645_nested_data.html">Unit 1: Nested Data Structures</a>
-<a href="./slides/EDUC645_log_regression.html">Unit 2: Logistic Regression</a>
-<a href="./slides/EDUC645_poisson_regression.html">Unit 3: Poisson Regression</a>
-<a href="./slides/EDUC645_measure_assess.html">Unit 4: Introduction to Measurement and Assessment</a>
-<a href="./slides/EDUC645_cleaning_missing.html">Unit 5: Cleaning Data &amp; Missing Data</a>
+<a href="./slides/EDUC645_1_Intro.html">1. Intro and Nested Data Structures pt. 1</a>
+<span class="nav-dropdown-header">2. Nested Data Structures pt. 2</span>
+<span class="nav-dropdown-header">3. Dichotomous Outcomes pt. 1</span>
+<span class="nav-dropdown-header">4. Dichotomous Outcomes pt. 2</span>
+<span class="nav-dropdown-header">5. Count Outcomes pt. 1</span>
+<span class="nav-dropdown-header">6. Count Outcomes pt. 2</span>
+<span class="nav-dropdown-header">7. Intro to Measurement and Assessment pt. 1</span>
+<span class="nav-dropdown-header">8. Intro to Measurement and Assessment pt. 2</span>
+<span class="nav-dropdown-header">9. Cleaning Data &amp; Missing Data pt. 1</span>
+<span class="nav-dropdown-header">10. Cleaning Data &amp; Missing Data pt. 2</span>
 </div>
 </div>
 <a href="workflow.html">R Project Workflow</a>
@@ -981,20 +986,17 @@ Lectures
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="./slides/EDUC645_nested_data.html">Unit 1: Nested Data Structures</a>
+      <a href="./slides/EDUC645_1_Intro.html">1. Intro and Nested Data Structures pt. 1</a>
     </li>
-    <li>
-      <a href="./slides/EDUC645_log_regression.html">Unit 2: Logistic Regression</a>
-    </li>
-    <li>
-      <a href="./slides/EDUC645_poisson_regression.html">Unit 3: Poisson Regression</a>
-    </li>
-    <li>
-      <a href="./slides/EDUC645_measure_assess.html">Unit 4: Introduction to Measurement and Assessment</a>
-    </li>
-    <li>
-      <a href="./slides/EDUC645_cleaning_missing.html">Unit 5: Cleaning Data &amp; Missing Data</a>
-    </li>
+    <li class="dropdown-header">2. Nested Data Structures pt. 2</li>
+    <li class="dropdown-header">3. Dichotomous Outcomes pt. 1</li>
+    <li class="dropdown-header">4. Dichotomous Outcomes pt. 2</li>
+    <li class="dropdown-header">5. Count Outcomes pt. 1</li>
+    <li class="dropdown-header">6. Count Outcomes pt. 2</li>
+    <li class="dropdown-header">7. Intro to Measurement and Assessment pt. 1</li>
+    <li class="dropdown-header">8. Intro to Measurement and Assessment pt. 2</li>
+    <li class="dropdown-header">9. Cleaning Data &amp; Missing Data pt. 1</li>
+    <li class="dropdown-header">10. Cleaning Data &amp; Missing Data pt. 2</li>
   </ul>
 </li>
 <li>
@@ -1037,12 +1039,12 @@ communities, at UO, and across the land we now refer to as Oregon.</p>
 {course subject code}, {CRN}</p>
 <p>3 Credits {Term and year}</p>
 <p>Tuesdays and Thursdays, 4:00pm–5:20pm {Classroom location}</p>
-<p>Instructor: {full name and pronouns}<br />
-Contact Information: {email, phone, office location, office hours,
+<p>Instructor: * Nicholas Parr {pronouns, email, phone, office location,
+office hours, preferred method of contact}<br />
+* Claire Zhang {pronouns, email, phone, office location, office hours,
 preferred method of contact}<br />
-GTF name: {full name and pronouns}<br />
-GTF Contact Information: {email, phone, office location, office hours,
-preferred method of contact}</p>
+* Havisha Khurana {pronouns, email, phone, office location, office
+hours, preferred method of contact}</p>
 </div>
 <div id="ii.-course-overview" class="section level1">
 <h1>II. Course Overview</h1>
@@ -1171,150 +1173,32 @@ class="section level1">
 <table>
 <colgroup>
 <col width="1%" />
-<col width="7%" />
+<col width="8%" />
 <col width="1%" />
 <col width="14%" />
+<col width="33%" />
 <col width="32%" />
-<col width="15%" />
-<col width="14%" />
-<col width="6%" />
-<col width="5%" />
+<col width="7%" />
 </colgroup>
 <thead>
 <tr class="header">
-<th align="right">Units</th>
-<th align="left">Unit Topics</th>
-<th align="left">Weeks</th>
+<th align="right">Unit</th>
+<th align="left">Unit Topic</th>
+<th align="left">Week</th>
 <th align="left">Lecture Topics</th>
 <th align="left">Lab Objectives</th>
-<th align="left">Required Readings</th>
-<th align="left">Recommended Readings</th>
-<th align="left">Assignments</th>
-<th align="left">Quizzes</th>
+<th align="left">Readings</th>
+<th align="left">Due</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td align="right">1</td>
-<td align="left">Logistic Regression</td>
-<td align="left">1</td>
-<td align="left">a. Review OLS</td>
-<td align="left">a. R basics and R packages</td>
-<td align="left">BMLR Ch. 2 (pp. 39-68), 6.1-6.4 (pp. 151-155)</td>
-<td align="left">BMLR 3.3 ‘Discrete Random Variables’ (pp. 72-79)</td>
-<td align="left"></td>
-<td align="left"></td>
-</tr>
-<tr class="even">
-<td align="right"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left">b. Dichotomous outcomes</td>
-<td align="left">b. Visualize/describe dichotomous data when explanatory
-variables are continuous, categorical, and interactions</td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-</tr>
-<tr class="odd">
-<td align="right"></td>
-<td align="left"></td>
-<td align="left">2</td>
-<td align="left">a. Interpreting logistic regression coefficients</td>
-<td align="left">a. Logistic regression programming in R</td>
-<td align="left">BMLR Ch. 6.5-6.7 (pp. 159-180)</td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-</tr>
-<tr class="even">
-<td align="right"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left">b. Significan testing and model fit</td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-</tr>
-<tr class="odd">
-<td align="right"></td>
-<td align="left"></td>
-<td align="left">3</td>
-<td align="left">a. Diagnostics</td>
-<td align="left">a. Logistic regression programming in R (cont’d)</td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-</tr>
-<tr class="even">
-<td align="right"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left">b. Classification and accuracy</td>
-<td align="left">b. Preview Unit 1 assignment/quiz</td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left">Assignment 1 (Due: TBD)</td>
-<td align="left">Quiz 1 (Due: TBD)</td>
-</tr>
-<tr class="odd">
-<td align="right">2</td>
-<td align="left">Poisson Regression</td>
-<td align="left">4</td>
-<td align="left">a. Count data and probability</td>
-<td align="left">a. Review Unit 1 assignment/quiz</td>
-<td align="left">BMLR Ch. 4.1-4.4 (pp. 93-112)</td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-</tr>
-<tr class="even">
-<td align="right"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left">b. Poisson regression analysis</td>
-<td align="left">b. Visualize/understand Poisson data</td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-</tr>
-<tr class="odd">
-<td align="right"></td>
-<td align="left"></td>
-<td align="left">5</td>
-<td align="left">a. Coefficient estimation and interpretation</td>
-<td align="left">a. Poisson regression programming in R</td>
-<td align="left">BMLR Ch. 4.5-4.10 (pp. 113-132), Ch. 5
-(pp. 145-148)</td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-</tr>
-<tr class="even">
-<td align="right"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left">b. Significance tests</td>
-<td align="left">b. Preview Unit 2 assignment/quiz</td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left">Assignment 2 (Due: TBD)</td>
-<td align="left">Quiz 2 (Due: TBD)</td>
-</tr>
-<tr class="odd">
-<td align="right">3</td>
 <td align="left">Nested Data</td>
-<td align="left">6</td>
+<td align="left">1</td>
 <td align="left">a. Clustering within datasets</td>
-<td align="left">a. Review Unit 2 assignment/quiz</td>
+<td align="left">a. R basics and R packages</td>
 <td align="left">BMLR Ch. 8.1-8.5 (pp. 211-231)</td>
-<td align="left"></td>
-<td align="left"></td>
 <td align="left"></td>
 </tr>
 <tr class="even">
@@ -1325,27 +1209,59 @@ variables are continuous, categorical, and interactions</td>
 <td align="left">b. Visualize/understand nested data</td>
 <td align="left"></td>
 <td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
 </tr>
 <tr class="odd">
 <td align="right"></td>
 <td align="left"></td>
-<td align="left">7</td>
+<td align="left">2</td>
 <td align="left"></td>
 <td align="left">a. Nested data and OLS estimator</td>
 <td align="left">BMLR Ch. 8.6-8.11 (pp. 234-251)</td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
+<td align="left">Quiz 1 (Due: TBD)</td>
 </tr>
 <tr class="even">
 <td align="right"></td>
 <td align="left"></td>
 <td align="left"></td>
 <td align="left"></td>
-<td align="left">b. Preview Unit 3 assignment/quiz</td>
+<td align="left">b. Preview Unit 2 assignment/quiz</td>
 <td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="right">2</td>
+<td align="left">Logistic Regression</td>
+<td align="left">3</td>
+<td align="left">a. Review OLS</td>
+<td align="left">a. Review Unit 1 assignment/quiz</td>
+<td align="left">BMLR Ch. 2 (pp. 39-68), 6.1-6.4 (pp. 151-155);
+Recommended: BMLR 3.3 ‘Discrete Random Variables’ (pp. 72-79)</td>
+<td align="left">Assignment 1 (Due: TBD)</td>
+</tr>
+<tr class="even">
+<td align="right"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">b. Dichotomous outcomes</td>
+<td align="left">b. Visualize/describe dichotomous data when explanatory
+variables are continuous, categorical, and interactions</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="right"></td>
+<td align="left"></td>
+<td align="left">4</td>
+<td align="left">a. Interpreting logistic regression coefficients</td>
+<td align="left">a. Logistic regression programming in R</td>
+<td align="left">BMLR Ch. 6.5-6.7 (pp. 159-180)</td>
+<td align="left">Quiz 2 (Due: TBD)</td>
+</tr>
+<tr class="even">
+<td align="right"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">b. Significance testing and model fit</td>
 <td align="left"></td>
 <td align="left"></td>
 <td align="left"></td>
@@ -1353,27 +1269,69 @@ variables are continuous, categorical, and interactions</td>
 <tr class="odd">
 <td align="right"></td>
 <td align="left"></td>
-<td align="left">8</td>
+<td align="left">5</td>
+<td align="left">a. Diagnostics</td>
+<td align="left">a. Logistic regression programming in R (cont’d)</td>
+<td align="left"></td>
+<td align="left">Assignment 2 (Due: TBD)</td>
+</tr>
+<tr class="even">
+<td align="right"></td>
+<td align="left"></td>
+<td align="left">6</td>
 <td align="left"></td>
 <td align="left">a. Nested data and Logistic regression</td>
 <td align="left">BMLR Ch. 9.1-9.7 (pp. 263-306), Ch. 11
 (pp. 373-398)</td>
+<td align="left">Quiz 3 (Due: TBD)</td>
+</tr>
+<tr class="odd">
+<td align="right"></td>
 <td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">b. Preview Unit 2 and final project</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="right">3</td>
+<td align="left">Poisson Regression</td>
+<td align="left">7</td>
+<td align="left">a. Count data and probability</td>
+<td align="left">a. Review Unit 2 assignment/quiz</td>
+<td align="left">BMLR Ch. 4.1-4.4 (pp. 93-112)</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="right"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">b. Poisson regression analysis</td>
+<td align="left">b. Visualize/understand Poisson data</td>
 <td align="left"></td>
 <td align="left"></td>
 </tr>
 <tr class="even">
 <td align="right"></td>
 <td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left">b. Preview and prepare for final project</td>
-<td align="left"></td>
-<td align="left"></td>
+<td align="left">8</td>
+<td align="left">a. Coefficient estimation and interpretation</td>
+<td align="left">a. Poisson regression programming in R</td>
+<td align="left">BMLR Ch. 4.5-4.10 (pp. 113-132), Ch. 5
+(pp. 145-148)</td>
 <td align="left">Assignment 3 (Due: TBD)</td>
-<td align="left">Quiz 3 (Due: TBD)</td>
 </tr>
 <tr class="odd">
+<td align="right"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">b. Significance tests</td>
+<td align="left">b. Preview Unit 4 assignment/quiz</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
 <td align="right">4</td>
 <td align="left">Measurement and Assessment</td>
 <td align="left">9</td>
@@ -1381,63 +1339,51 @@ variables are continuous, categorical, and interactions</td>
 <td align="left">a. Review Unit 3 assignment/quiz</td>
 <td align="left">BMLR 7.1-7.8 (pp. 193-206)</td>
 <td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="right"></td>
 <td align="left"></td>
 <td align="left"></td>
 <td align="left"></td>
 <td align="left">b. Measurement and assessment in R</td>
 <td align="left">IEPM Ch. 5 &amp; 6</td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
+<td align="left">Quiz 4 (Due: TBD)</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="right"></td>
 <td align="left"></td>
 <td align="left"></td>
 <td align="left"></td>
-<td align="left">c. Preview Unit 4 assignment/quiz</td>
+<td align="left">c. Preview Unit 5 assignment/quiz</td>
 <td align="left"></td>
 <td align="left"></td>
-<td align="left">Assignment 4 (Due: TBD)</td>
-<td align="left">Quiz 4 (Due: TBD)</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="right">5</td>
 <td align="left">Missing Data</td>
 <td align="left">10</td>
 <td align="left">Data cleaning and handling missing data</td>
 <td align="left">a. Review Unit 4 assignment/quiz</td>
 <td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
+<td align="left">Assignment 4 (Due: TBD)</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="right"></td>
 <td align="left"></td>
 <td align="left"></td>
 <td align="left"></td>
 <td align="left">b. Dealing with missing data in R</td>
 <td align="left"></td>
-<td align="left"></td>
-<td align="left">No assignment</td>
 <td align="left">Quiz 5 (Due: TBD)</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="right"></td>
 <td align="left">Final</td>
 <td align="left">11</td>
 <td align="left"></td>
 <td align="left"></td>
 <td align="left"></td>
-<td align="left"></td>
 <td align="left">Final Project</td>
-<td align="left"></td>
 </tr>
 </tbody>
 </table>
@@ -1574,18 +1520,8 @@ following activities:</p>
 </tr>
 <tr class="odd">
 <td>Homework Assignments</td>
-<td>20</td>
-<td>Five assignments taking 5 hours each (on avg.)</td>
-</tr>
-<tr class="even">
-<td>Quizzes</td>
-<td>5</td>
-<td>One hour per quiz (40 min preparation, 20 min completing quiz)</td>
-</tr>
-<tr class="odd">
-<td>Lab attendance</td>
-<td>10</td>
-<td>One hour-long lab per week over 10 weeks</td>
+<td>35</td>
+<td>Five assignments taking 7 hours each (on avg.)</td>
 </tr>
 <tr class="even">
 <td>Final project</td>

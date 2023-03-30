@@ -10,16 +10,26 @@ navbar:
     href: schedule.html
   - text: Lectures
     menu: 
-      - text: "Unit 1: Nested Data Structures"
-        href: ./slides/EDUC645_nested_data.html
-      - text: "Unit 2: Logistic Regression"
-        href: ./slides/EDUC645_log_regression.html
-      - text: "Unit 3: Poisson Regression"
-        href: ./slides/EDUC645_poisson_regression.html
-      - text: "Unit 4: Introduction to Measurement and Assessment"
-        href: ./slides/EDUC645_measure_assess.html
-      - text: "Unit 5: Cleaning Data & Missing Data"
-        href: ./slides/EDUC645_cleaning_missing.html
+      - text: "1. Intro and Nested Data Structures pt. 1"
+        href: ./slides/EDUC645_1_Intro.html
+      - text: "2. Nested Data Structures pt. 2"
+        #href: ./slides/EDUC645_nested_data.html
+      - text: "3. Dichotomous Outcomes pt. 1"
+        href: 
+      - text: "4. Dichotomous Outcomes pt. 2"
+        href: 
+      - text: "5. Count Outcomes pt. 1"
+        href: 
+      - text: "6. Count Outcomes pt. 2"
+        href:
+      - text: "7. Intro to Measurement and Assessment pt. 1"
+        href: 
+      - text: "8. Intro to Measurement and Assessment pt. 2"
+        href: 
+      - text: "9. Cleaning Data & Missing Data pt. 1"
+        href: 
+      - text: "10. Cleaning Data & Missing Data pt. 2"
+        href: 
   - text: R Project Workflow
     href: workflow.html
     
