@@ -1,0 +1,394 @@
+---
+title: "Introduction and nested data"
+subtitle: "EDUC 645: Unit 1"
+author: "TBD"
+#date: "`r format(Sys.time(), '%d %B %Y')`"
+output:
+  xaringan::moon_reader:
+    css: ['default', 'uo', 'ki-fonts', 'my_custom.css', 'xaringanthemer.css']
+    # self_contained: true
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+editor_options: 
+  
+  chunk_output_type: console
+---
+
+```{R, setup, include = F}
+library(pacman)
+p_load(here, tidyverse, xaringan, knitr, kableExtra, haven, broom, xaringanthemer)
+i_am("slides/EDUC645_1_intro.rmd")
+red_pink <- "#e64173"
+turquoise = "#20B2AA"
+orange = "#FFA500"
+red = "#fb6107"
+blue = "#3b3b9a"
+green = "#004F39"
+grey_light = "#B3B3B3"
+grey_mid = "#7F7F7F"
+grey_dark = "grey20"
+purple = "#6A5ACD"
+slate = "#314f4f"
+extra_css <- list(
+  ".red"   = list(color = "red"),
+  ".blue"  =list(color = "blue"),
+  ".red-pink" = list(color= "#e64173"),
+  ".green" = list(color = "#004F39"),
+  ".gray" = list(color= "#B3B3B3"),
+  ".purple" = list(color = "purple"),
+  ".small" = list("font-size" = "90%"),
+  ".large" = list("font-size" = "120%"),
+  ".tiny" = list("font-size" = "70%"),
+  ".tiny2" = list("font-size" = "50%"))
+write_extra_css(css = extra_css, outfile = "my_custom.css")
+# Knitr options
+opts_chunk$set(
+  comment = "#>",
+  fig.align = "center",
+  fig.height = 6.75,
+  fig.width = 10.5,
+  warning = F,
+  message = F
+)
+opts_chunk$set(dev = "svg")
+options(device = function(file, width, height) {
+  svg(tempfile(), width = width, height = height)
+})
+options(knitr.table.format = "html")
+hook_output <- knit_hooks$get("output")
+knit_hooks$set(output = function(x, options) {
+  lines <- options$output.lines
+  if (is.null(lines)) {
+    return(hook_output(x, options))  # pass to default hook
+  }
+  x <- unlist(strsplit(x, "\n"))
+  more <- "..."
+  if (length(lines)==1) {        # first n lines
+    if (length(x) > lines) {
+      # truncate the output, but add ....
+      x <- c(head(x, lines), more)
+    }
+  } else {
+    x <- c(more, x[lines], more)
+  }
+  # paste these lines together
+  x <- paste(c(x, ""), collapse = "\n")
+  hook_output(x, options)
+})
+```
+
+# Roadmap
+
+---
+## Goals of EDUC quant sequence
+
+- Develop the basic quantitative skills necessary to conduct applied data analysis
+ + The full-year sequence (EDUC 641 $\rightarrow$ EDUC 643 $\rightarrow$ **EDUC 645**) prepares you to make valuable contributions to a research team
+ + Not all the skills you will need (and not the only courses you should take), particularly for those interested in analysis-heavy positions, or becoming an applied quantitative doctoral-level researcher
+ + Foundations of statistics, methods and data science
+
+- Understand the (in)appropriate application of those skills
+ + "Building a toolbox, not a cookbook"
+ + Evaluate the credibility of published research
+ + Understand the affordances, limitations and dangers of quantitative analysis
+
+--
+
+.small[.blue[This is an entirely re-designed and modernized quantitative sequence for the COE. We welcome your feedback! Given the new-ness of these three courses, there are likely to be shortcomings. We are committed to solving them as they arise, but we ask for your grace in allowing us to do so. In the end, we think this will be a better experience for you and your future program-mates.]]
+
+---
+# EDUC pedagogical orientation
+
+
+- Analysis follows research design that emerges from substantive questions
+- Students learn statistical analysis by doing statistical analysis
+- Create an inclusive, supportive environment in which we learn from each other
+- Balance support and academic stretch across a variety of levels of prior experience and comfort with quantitative analysis
+- *We started with an assumption of no prior background in mathematics, programming, statistics or research*
+
+
+--
+
+We assume that you enter this course (EDUC 645) with the ability to:
+- Create an RStudio project, read in a dataset in csv format, filter rows, select columns, understand structure of data, recode variables, assess missingness, and calculate summary statistics for continuous and categorical variables in the R programming language
+- Create simple visualizations describing categorical and continuous variables, and their relationships with each other in R
+- State a quantitative research question and its corresponding null hypothesis
+- Articulate the conceptual basis for a null-hypothesis significance test
+- Conduct a one-sample $t$-test and fit a bivariate Ordinary Least Squares regression
+
+--
+- See [EDUC 641 data management guide](https://daviddliebowitz.github.io/EDUC641_22F/data_management.html) for data management pointers
+
+
+---
+# Goals of EDUC 645
+
+.small[In this intermediate course, we will focus on applying the General Linear Model to Ordinary Least Squares regression analysis. Students will progress from bivariate to multiple regression, developing an understanding of the associated assumptions of these models and tools to solve instances in which those assumptions are unmet. The course seeks to blend a conceptual, mathematical and applied understanding of basic statistical concepts.]
+
+.small[
+Concrete learning objectives:
+1. Articulate the framework of the General Linear Model as a method to describe relationships between quantitative variables
+2. Distinguish between research designs and analyses that permit different forms of inferences (e.g., relational or causal, inferential or descriptive)
+3. Conduct and interpret (orally and in writing) least-squares regression analyses with continuous outcomes and predictors
+4. Describe the assumptions of least-squares regression analysis and test analytic models for the extent to which they satisfy these assumptions
+5. Generalize the least-squares regression model (conceptually and in practice) to predictors that are categorical, interacted and non-linear
+6. Build taxonomies of sensible regression models in response to independently developed research questions
+7. Use an open-source, object-oriented statistical programming language to conduct all such analyses
+]
+
+---
+# Roadmap of EDUC 645
+
+| Unit  | Week(s) | Topic
+|----------------------------------------------------
+| 1     | 1-2     | Nested data and GLM
+| 2     | 3-4     | Dichotomous outcomes
+| 3     | 5-6     | Count outcomes
+| 4     | 7-8     | Measurement and assessment
+| 5     | 9-10    | Cleaning and missing data
+
+
+---
+# Weekly schedule of activities
+
+1. Two 1.5-hour lectures will introduce concepts in interactive lectures, discussion and activities
+2. Readings are intended to supplement material from lectures (these can be completed after the first class of the unit)
+3. Two *OPTIONAL, UNGRADED* weekly lab meetings intended to provide support for R programming tasks. Each lab will cover identical material.
+4. Five (5) take-home quizzes worth trivial amount of points each (2% of grade)
+5. Four (4) data analytic assignments (15% each) + final project (30% of grade)
+
+--
+
+<br>
+Course website is (we hope!) a valuable resource. Let's check it out!
+
+---
+# Roadmap
+
+---
+class: middle, inverse
+
+# Multilevel Models
+
+
+---
+# Goals for the unit
+- Understand nesting/clustering means (two-level, repeated measures within individuals)
+- Demonstrate varying intercepts and slopes across clusters
+- Understand what it means for intercepts and slopes to vary across clusters
+- Explain the difference between fixed-effects and random effects
+- Discuss the implications of ignoring the variance of random-effects in terms of the inference for fixed-effects and statistical power
+
+---
+# A Motivating Question
+
+**The Data:** Stanford Education Data Archive (SEDA), launched in 2016 to provide nationally comparable, publicly available test score data for U.S. public school districts, allowing scientific inquiries on the relationships between educational conditions, contexts, and outcomes (especially student math/ELA achievements) at the district-level across the nation.
+
+**Data set**
+- District-level data for 103 Oregon school districts, year 2017-18 data
+- Observations with missing values on any of the key variables were deleted for simplification
+
+From now on, we pull out the cluster of subject, and focus on math achievement only.
+**Overarching inquiry: What is the relationship between percentage of ELL students and math achievement in Oregon districts?**
+
+---
+# Inspect the data 
+
+each row/observation represents...
+
+```{r, echo = FALSE}
+seda <- rio::import(here::here("data", "seda_oregon.csv"))
+
+seda <- seda  %>%
+  mutate(subject = recode(subject, 'mth' = "Math", 'rla' = "Reading"))
+
+head(seda)
+```
+
+---
+# Understand the clustering nature
+
+Let's start with a single variable: Oregon districts' achievement score 
+
+```{r, echo = FALSE}
+seda %>% 
+  group_by(district) %>% 
+  mutate(mean = mean(achievement)) %>%
+  ungroup() %>% 
+  select(district, mean) %>%
+  ggplot(aes(district, mean)) +
+  geom_point() +
+  labs(x = "District",
+       y = "Achievement")
+```
+
+We lose information by looking at district achievement across subject and grade alone.
+
+
+---
+# Achievement by Subject
+
+```{r, echo = FALSE}
+seda %>% 
+  group_by(district, subject) %>% 
+  mutate(mean = mean(achievement)) %>% 
+  ungroup() %>% 
+  select(district, subject, mean) %>%
+  ggplot(aes(district, mean, color = subject)) +
+  geom_point() +
+  labs(x = "District",
+       y = "Achievement")
+```
+
+---
+# Achievement by grade
+
+```{r, echo = FALSE}
+seda %>% 
+  group_by(district, grade) %>% 
+  mutate(mean = mean(achievement)) %>% 
+  ungroup() %>% 
+  select(district, grade, mean) %>%
+  ggplot(aes(district, mean, color = grade)) +
+  geom_point() +
+  labs(x = "District",
+       y = "Achievement")
+```
+
+---
+# Achievement by grade AND subject
+
+```{r, echo = FALSE}
+seda %>% 
+  group_by(district, subject, grade) %>% 
+  mutate(mean = mean(achievement)) %>% 
+  ungroup() %>% 
+  select(district, subject, grade, mean) %>%
+  ggplot(aes(district, mean, color = grade)) +
+  facet_wrap(vars(subject)) +
+  geom_point() +
+  labs(x = "District",
+       y = "Achievement")
+```
+
+---
+# Examining Data Clustering
+
+IMPORTANTLY, should we keep in mind of this unique feature when we answering research questions, e.g., about relations between two variables
+
+```{r, echo = FALSE}
+seda %>% 
+  mutate(grade = recode(grade, '3' = "G3", '4' = "G4", '5' = "G5", '6' = "G6")) %>% 
+  group_by(district, subject, grade) %>% 
+  mutate(mean = mean(achievement)) %>% 
+  ungroup() %>% 
+  select(district, subject, grade, mean) %>%
+  ggplot(aes(district, mean, color = subject)) +
+  facet_wrap(vars(grade)) +
+  geom_point() +
+  labs(x = "District",
+       y = "Achievement")
+```
+
+---
+# Relationship across grade and subject:
+
+For example, let's look at relationship between percentage of ELL and achievement
+
+```{r, echo = FALSE, fig.cap="add caption"}
+seda %>%
+  group_by(district) %>% 
+  mutate(achievement = mean(achievement)) %>% 
+  ungroup() %>% 
+  ggplot(aes(percent_ell, achievement)) +
+  geom_smooth(method='lm', se = 0) +
+  geom_point(alpha = 0.1) + 
+  labs(x = "ELL Percentage",
+       y = "Achievement")
+```
+
+---
+# Relationship by subject
+
+```{r, echo = FALSE, fig.cap="add caption"}
+seda %>%
+  group_by(district, subject) %>% 
+  mutate(achievement = mean(achievement)) %>% 
+  ungroup() %>% 
+  ggplot(aes(percent_ell, achievement, color = subject)) +
+  geom_smooth(method='lm', se = 0) +
+  geom_point(alpha = 0.1) +
+  labs(x = "ELL Percentage",
+       y = "Achievement")
+```
+
+---
+
+# Relationship by subject AND grade
+
+```{r, echo = FALSE}
+seda %>%
+  mutate(grade = recode(grade, '3' = "G3", '4' = "G4", '5' = "G5", '6' = "G6")) %>% 
+  group_by(district, subject, grade) %>% 
+  mutate(achievement = mean(achievement)) %>% 
+  ungroup() %>% 
+  ggplot(aes(percent_ell, achievement, color = subject)) +
+  facet_wrap(vars(grade)) +
+  geom_smooth(method='lm', se = 0) +
+  geom_point(alpha = 0.1) +
+  labs(x = "ELL Percentage",
+       y = "Achievement")
+```
+
+* What is your current understanding of clustered data? 
+* Is there a single answer to the relationship between percentage of ELL students and achievement? 
+
+???
+
+Expect students to realize that there is no universal answer; depends on what you look at, what cluster/clusters you want to include, and model specifications
+
+
+---
+# What is Nested Data?
+
+Levels of one factor vary only within the levels of another factor, that factor is said to be nested. 
+For example, when measuring the performance of workers at several job locations, if the workers only work at one site, then the workers are nested within site. If the workers work at more than one location, we would say that workers are crossed with site.
+
+---
+# Where does it come from?
+### Why do we need to think hierarchically?
+1) Two realities exist within interventions:
+
+(a) Effect implies change in individuals over time,
+
+(b) Effect occurs in groups and organizational settings (e.g., dyads, groups, networks, neighborhoods, clinics, cities, countries).
+
+--
+
+2) Factors are nested across multiple levels; influence the organization of behavior.
+
+---
+# What happens if we ignore it?
+
+### What errors result if we ignore multilevel effects?
+#### Ecological Fallacy
+- Systematic underestimation of group effects
+- Inadequate intervention development and evaluation
+
+#### Aggregation bias
+- Attribute that an individual-level indicator is representative of the entire group
+
+#### Biased estimation of statistical associations
+- Misestimated standard errors
+- Homogeneity of regression slopes
+
+---
+# Traditional Linear Regression Example
+* Unit of analysis: Individual
+* Examine between-individual variability
+* Intercept and slope are the same for all groups
+* Ignores inclusion of important group variables
+* Residual correlation
+

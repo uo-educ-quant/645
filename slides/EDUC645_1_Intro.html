@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Introduction and nested data</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="TBD" />
+    <script src="EDUC645_1_Intro_files/header-attrs-2.20/header-attrs.js"></script>
+    <link href="EDUC645_1_Intro_files/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="EDUC645_1_Intro_files/remark-css-0.0.1/uo.css" rel="stylesheet" />
+    <link href="EDUC645_1_Intro_files/remark-css-0.0.1/ki-fonts.css" rel="stylesheet" />
+    <link rel="stylesheet" href="my_custom.css" type="text/css" />
+    <link rel="stylesheet" href="xaringanthemer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Introduction and nested data
+]
+.subtitle[
+## EDUC 645: Unit 1
+]
+.author[
+### TBD
+]
+
+---
+
+
+
+
+# Roadmap
+
+---
+## Goals of EDUC quant sequence
+
+- Develop the basic quantitative skills necessary to conduct applied data analysis
+ + The full-year sequence (EDUC 641 `\(\rightarrow\)` EDUC 643 `\(\rightarrow\)` **EDUC 645**) prepares you to make valuable contributions to a research team
+ + Not all the skills you will need (and not the only courses you should take), particularly for those interested in analysis-heavy positions, or becoming an applied quantitative doctoral-level researcher
+ + Foundations of statistics, methods and data science
+
+- Understand the (in)appropriate application of those skills
+ + "Building a toolbox, not a cookbook"
+ + Evaluate the credibility of published research
+ + Understand the affordances, limitations and dangers of quantitative analysis
+
+--
+
+.small[.blue[This is an entirely re-designed and modernized quantitative sequence for the COE. We welcome your feedback! Given the new-ness of these three courses, there are likely to be shortcomings. We are committed to solving them as they arise, but we ask for your grace in allowing us to do so. In the end, we think this will be a better experience for you and your future program-mates.]]
+
+---
+# EDUC pedagogical orientation
+
+
+- Analysis follows research design that emerges from substantive questions
+- Students learn statistical analysis by doing statistical analysis
+- Create an inclusive, supportive environment in which we learn from each other
+- Balance support and academic stretch across a variety of levels of prior experience and comfort with quantitative analysis
+- *We started with an assumption of no prior background in mathematics, programming, statistics or research*
+
+
+--
+
+We assume that you enter this course (EDUC 645) with the ability to:
+- Create an RStudio project, read in a dataset in csv format, filter rows, select columns, understand structure of data, recode variables, assess missingness, and calculate summary statistics for continuous and categorical variables in the R programming language
+- Create simple visualizations describing categorical and continuous variables, and their relationships with each other in R
+- State a quantitative research question and its corresponding null hypothesis
+- Articulate the conceptual basis for a null-hypothesis significance test
+- Conduct a one-sample `\(t\)`-test and fit a bivariate Ordinary Least Squares regression
+
+--
+- See [EDUC 641 data management guide](https://daviddliebowitz.github.io/EDUC641_22F/data_management.html) for data management pointers
+
+
+---
+# Goals of EDUC 645
+
+.small[In this intermediate course, we will focus on applying the General Linear Model to Ordinary Least Squares regression analysis. Students will progress from bivariate to multiple regression, developing an understanding of the associated assumptions of these models and tools to solve instances in which those assumptions are unmet. The course seeks to blend a conceptual, mathematical and applied understanding of basic statistical concepts.]
+
+.small[
+Concrete learning objectives:
+1. Articulate the framework of the General Linear Model as a method to describe relationships between quantitative variables
+2. Distinguish between research designs and analyses that permit different forms of inferences (e.g., relational or causal, inferential or descriptive)
+3. Conduct and interpret (orally and in writing) least-squares regression analyses with continuous outcomes and predictors
+4. Describe the assumptions of least-squares regression analysis and test analytic models for the extent to which they satisfy these assumptions
+5. Generalize the least-squares regression model (conceptually and in practice) to predictors that are categorical, interacted and non-linear
+6. Build taxonomies of sensible regression models in response to independently developed research questions
+7. Use an open-source, object-oriented statistical programming language to conduct all such analyses
+]
+
+---
+# Roadmap of EDUC 645
+
+| Unit  | Week(s) | Topic
+|----------------------------------------------------
+| 1     | 1-2     | Nested data and GLM
+| 2     | 3-4     | Dichotomous outcomes
+| 3     | 5-6     | Count outcomes
+| 4     | 7-8     | Measurement and assessment
+| 5     | 9-10    | Cleaning and missing data
+
+
+---
+# Weekly schedule of activities
+
+1. Two 1.5-hour lectures will introduce concepts in interactive lectures, discussion and activities
+2. Readings are intended to supplement material from lectures (these can be completed after the first class of the unit)
+3. Two *OPTIONAL, UNGRADED* weekly lab meetings intended to provide support for R programming tasks. Each lab will cover identical material.
+4. Five (5) take-home quizzes worth trivial amount of points each (2% of grade)
+5. Four (4) data analytic assignments (15% each) + final project (30% of grade)
+
+--
+
+&lt;br&gt;
+Course website is (we hope!) a valuable resource. Let's check it out!
+
+---
+# Roadmap
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
