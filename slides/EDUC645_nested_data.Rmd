@@ -46,34 +46,15 @@ opts_chunk$set(
 # Roadmap
 
 ---
-# Goals for the unit
-- Introduce nested data structure (two-level, e.g., repeated measures within individuals, students within schools)
-- Understand nesting/clustering means
-- Demonstrate varying intercepts and slopes across clusters
-- Practice fitting the same regression model independently for each cluster and create a table of intercepts and slopes across clusters
-- Understand what it means for intercepts and slopes to vary across clusters
-- Discuss the notion that regression coefficients may vary across different clusters
-- Develop the concept of:
-  - Fixed-effects as the aggregation of the different intercepts and slopes by taking an average of varying intercept and slopes across clusters
-	- Random effects as the difference between cluster-specific intercept and slope and their averages across clusters
-	- Covariance matrix of random-effects
-- Discuss the implications of ignoring the variance of random-effects in terms of the inference for fixed-effects and statistical power
-
-- Introduce 
-	- Random intercept-only model estimation through the R lmer package, 
-		- interpret the model parameters and align them with the earlier discussion of fixed-effects and random-effects.
-	- Intra-class correlation as a measure of within-cluster dependency and how to use it to decide whether one needs to use multilevel modeling
-
----
 # A Motivating Question
 
-The Data: Stanford Education Data Archive (SEDA), launched in 2016 to provide nationally comparable, publicly available test score data for U.S. public school districts, allowing scientific inquiries on the relationships between educational conditions, contexts, and outcomes (especially student math/ELA achievements) at the district-level across the nation.
+**The Data** 
+Stanford Education Data Archive (SEDA; 2016) to provide nationally comparable, publicly available test score data for U.S. public school districts, allowing scientific inquiries on the relationships between educational conditions, contexts, and outcomes (especially student math/ELA achievements) at the district-level across the nation.
 
-Data set:
-- district-level data for 103 Oregon school districts, year 2017-18 data
+**Data set**
+- District-level data for 103 Oregon school districts, year 2017-18 data
 - Observations with missing values on any of the key variables were deleted for simplification
 
-From now on, we pull out the cluster of subject, and focus on math achievement only.
 **Overarching inquiry: What is the relationship between percentage of ELL students and math achievement in Oregon districts?**
 
 ---
@@ -82,14 +63,14 @@ class: middle, inverse
 # Multilevel Models
 
 ---
-# Multilevel Models (MLM)
-
-* Units of analysis: Individual and Group
-* Examine between-individual and between-group variability
-* The intercept and slopes may be different for individuals within and across groups
-* These differences may be explained by cross-level interactions (differential effects due to individual and group-level characteristics)
-* Allows for the inclusion of important individual and group variables
-* No residual correlation
+# Traditional Linear Regression vs. Multilevel Model
+|Model attribute                 | Linear Regression   | Multilevel Model 
+|--------------------------------|---------------------|------------------
+|1. Unit of analysis             | Individual          | Individual and Group
+|2. Examines variability         | between-individuals | between-individual and group
+|3. Intercept & slope            | same for all groups | may differ for individuals within and across groups
+|4. Individual & group variables | Ignores group       | Includes individual and group variables
+|5. Residual correlation         | Yes                 | No 
 
 ---
 # Sampling and Design Considerations
@@ -140,6 +121,22 @@ class: middle, inverse
 class: middle, inverse
 
 # Nested and Crossed Random Effects
+
+---
+
+# Inspect the data 
+
+each row/observation represents...
+
+```{r, echo = FALSE}
+seda <- rio::import(here::here("data", "seda_oregon.csv"))
+
+seda <- seda  %>%
+  mutate(subject = recode(subject, 'mth' = "Math", 'rla' = "Reading"))
+
+head(seda)
+```
+
 
 ---
 # Modeling the relationship between two variables

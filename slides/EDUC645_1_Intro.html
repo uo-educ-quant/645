@@ -4,7 +4,7 @@
     <title>Introduction and nested data</title>
     <meta charset="utf-8" />
     <meta name="author" content="TBD" />
-    <script src="EDUC645_1_Intro_files/header-attrs-2.20/header-attrs.js"></script>
+    <script src="EDUC645_1_Intro_files/header-attrs-2.21/header-attrs.js"></script>
     <link href="EDUC645_1_Intro_files/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="EDUC645_1_Intro_files/remark-css-0.0.1/uo.css" rel="stylesheet" />
     <link href="EDUC645_1_Intro_files/remark-css-0.0.1/ki-fonts.css" rel="stylesheet" />
@@ -117,6 +117,157 @@ Course website is (we hope!) a valuable resource. Let's check it out!
 
 ---
 # Roadmap
+
+---
+class: middle, inverse
+
+# Multilevel Models
+
+
+---
+# Goals for the unit
+- Understand nesting/clustering means (two-level, repeated measures within individuals)
+- Demonstrate varying intercepts and slopes across clusters
+- Understand what it means for intercepts and slopes to vary across clusters
+- Explain the difference between fixed-effects and random effects
+- Discuss the implications of ignoring the variance of random-effects in terms of the inference for fixed-effects and statistical power
+
+---
+# A Motivating Question
+
+**The Data:** Stanford Education Data Archive (SEDA), launched in 2016 to provide nationally comparable, publicly available test score data for U.S. public school districts, allowing scientific inquiries on the relationships between educational conditions, contexts, and outcomes (especially student math/ELA achievements) at the district-level across the nation.
+
+**Data set**
+- District-level data for 103 Oregon school districts, year 2017-18 data
+- Observations with missing values on any of the key variables were deleted for simplification
+
+From now on, we pull out the cluster of subject, and focus on math achievement only.  
+
+**Overarching inquiry: What is the relationship between percentage of ELL students and math achievement in Oregon districts?**
+
+---
+# Inspect the data 
+
+each row/observation represents...
+
+
+```
+#&gt;     district subject grade achievement gap_gender percent_ell percent_sped
+#&gt; 1 VALE SD 84    Math     3    2.539072  0.9736566  0.04923414    0.1280088
+#&gt; 2 VALE SD 84 Reading     3    3.229844  0.3761424  0.04923414    0.1280088
+#&gt; 3 VALE SD 84    Math     4    3.089542 -0.7882404  0.04923414    0.1280088
+#&gt; 4 VALE SD 84 Reading     4    4.362786 -1.8302576  0.04923414    0.1280088
+#&gt; 5 VALE SD 84    Math     5    4.574462  0.8356159  0.04923414    0.1280088
+#&gt; 6 VALE SD 84 Reading     5    4.778020  0.3570311  0.04923414    0.1280088
+#&gt;   percent_frl
+#&gt; 1   0.6216102
+#&gt; 2   0.6216102
+#&gt; 3   0.6216102
+#&gt; 4   0.6216102
+#&gt; 5   0.6216102
+#&gt; 6   0.6216102
+```
+
+---
+# Understand clustered data
+
+Let's start with a single variable: Oregon districts' achievement score 
+
+&lt;img src="EDUC645_1_Intro_files/figure-html/unnamed-chunk-2-1.png" style="display: block; margin: auto;" /&gt;
+
+
+---
+# Achievement by Subject
+
+We gain more information looking at district achievement across subject and grade.
+
+&lt;img src="EDUC645_1_Intro_files/figure-html/unnamed-chunk-3-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+# Achievement by grade
+
+&lt;img src="EDUC645_1_Intro_files/figure-html/unnamed-chunk-4-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+# Achievement by grade AND subject
+
+&lt;img src="EDUC645_1_Intro_files/figure-html/unnamed-chunk-5-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+# Examining Data Clustering
+
+IMPORTANTLY, keep in mind of this unique feature when we answering research questions, e.g., about relations between two variables
+
+&lt;img src="EDUC645_1_Intro_files/figure-html/unnamed-chunk-6-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+# Across grade and subject
+
+For example, let's look at relationship between percentage of ELL and achievement
+
+&lt;img src="EDUC645_1_Intro_files/figure-html/unnamed-chunk-7-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+# Relationship by subject
+
+&lt;img src="EDUC645_1_Intro_files/figure-html/unnamed-chunk-8-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# By subject AND grade
+
+&lt;img src="EDUC645_1_Intro_files/figure-html/unnamed-chunk-9-1.png" style="display: block; margin: auto;" /&gt;
+
+* What is your current understanding of clustered data? 
+* Is there a single answer to the relationship between percentage of ELL students and achievement? 
+
+???
+
+Expect students to realize that there is no universal answer; depends on what you look at, what cluster/clusters you want to include, and model specifications
+
+
+---
+# What is Nested Data?
+
+Levels of one factor vary only within the levels of another factor, that factor is said to be nested. 
+For example, when measuring the performance of workers at several job locations, if the workers only work at one site, then the workers are nested within site. If the workers work at more than one location, we would say that workers are crossed with site.
+
+---
+# Where does it come from?
+### Why do we need to think hierarchically?
+1) Two realities exist within interventions:
+
+(a) Effect implies change in individuals over time,
+
+(b) Effect occurs in groups and organizational settings (e.g., dyads, groups, networks, neighborhoods, clinics, cities, countries).
+
+--
+
+2) Factors are nested across multiple levels; influence the organization of behavior.
+
+---
+# What happens if we ignore it?
+
+### What errors result if we ignore multilevel effects?
+#### Ecological Fallacy
+- Systematic underestimation of group effects
+- Inadequate intervention development and evaluation
+
+#### Aggregation bias
+- Attribute that an individual-level indicator is representative of the entire group
+
+#### Biased estimation of statistical associations
+- Misestimate standard errors
+- Homogeneity of regression slopes
+
+---
+# Traditional Linear Regression Example
+* Unit of analysis: Individual
+* Examine between-individual variability
+* Intercept and slope are the same for all groups
+* Ignores inclusion of important group variables
+* Residual correlation
+
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

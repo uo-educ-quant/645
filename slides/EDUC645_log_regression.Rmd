@@ -35,8 +35,8 @@ write_extra_css(css = extra_css, outfile = "my_custom.css")
 opts_chunk$set(
   comment = "#>",
   fig.align = "center",
-  fig.height = 6.75,
-  fig.width = 10.5,
+  fig.height = 5,
+  fig.width = 8,
   warning = F,
   message = F
 )
@@ -47,11 +47,11 @@ opts_chunk$set(
 
 ---
 # Goals for the unit
-• Differentiate between the linear probability model and the logistic regression model
-• Describe the concept of probability, odds, and logit function
-• Estimated a fitted regression line using Logistic regression
-• Interpret the model parameters for logistic function and logistic regression model using continuous predictors, categorical predictors, interaction between a continuous and categorical predictor
-• Discuss the predictive power, model fit, and diagnostics for a logistic regression model
+- Differentiate between the linear probability model and the logistic regression model  
+- Describe the concept of probability, odds, and logit function  
+- Estimated a fitted regression line using Logistic regression  
+- Interpret the model parameters for logistic function and logistic regression model using continuous   predictors, categorical predictors, interaction between a continuous and categorical predictor  
+- Discuss the predictive power, model fit, and diagnostics for a logistic regression model  
 
 ---
 # A Motivating Question
@@ -66,9 +66,7 @@ We're interested in the association between school-level student-perceived *atte
 
 ```{r, echo = F}
 principal <- rio::import(here::here("data", "principal.csv")) %>%
-  mutate(attention = (q1+q2+q3)/3,
-         affective = ifelse(q4 >= 3, 1, 0)) %>% 
-  select(schid, stuid, female, stufemale, match, attention, affective) %>% 
+  select(schid, stuid, pfemale, sfemale, match, attention, affective, page) %>% 
   group_by(schid) %>% 
   mutate(attention = (attention-mean(attention))/sd(attention)) %>% 
   ungroup() 
@@ -192,7 +190,8 @@ summary(m1)
 Interpret the results (report regression coefficients **on a probability scale**) and the figure. 
 
 ---
-# Coefficient on a probability scale (mapping the parameters to probability nonlinearly)
+# Probability scale 
+Coefficient on a probability scale: Mapping the parameters to probability nonlinearly
 
 ```{r, echo = F}
 tibble(attention = (-3):3) %>% 
@@ -223,9 +222,9 @@ tibble(attention = (-15):20) %>%
 Interpret the results (report regression coefficients **on a log-odds scale**) and the two figures.
 
 ---
-# Visualize the coefficient on a **log-odds** scale 
-### Model the change in log-odds of affective in a linear function of attention
-
+# **Log-odds** scale 
+### Visualizing the coefficient on a **log-odds** scale 
+Models the change in log-odds of affective in a linear function of attention
 Manipulated X axis to show the nonlinear relationship in its full image:
 
 ```{r, echo = F}
@@ -294,8 +293,7 @@ $$P(Y=y) = \binom{n}{y}p^y(1-p)^{(n-y)} \\
 
 ---
 # Binomial distribution and the GLM
-
-## The missing link
+### The missing link
 GLM theory suggests that constructing a model using the logit(the log odds of a score) as a linear function of covariates.
 
 The logit function allows us to connect GLM linear regression with logistic regression.
@@ -303,7 +301,7 @@ The logit function allows us to connect GLM linear regression with logistic regr
 This 'link' function transforms the dependent binomial variable using a one-parameter exponential formula:
 $$\log(\frac{p}{1-p})$$
 
-$p = probability_{event}$: Probability of a given event
+$p$: Probability of a given event
 
 ---
 # Using Logit Link in Logistic Regression
@@ -343,14 +341,17 @@ principal %>%
 
 
 ---
-# Fitting logistic regression requires *likelihood methods*. 
+# Likelihood methods
 
-*Likelihood* function tells us how likely we are to observe our data for a given parameter value, pB. 
-- come into play is when data is produced from a complex structure which may imply correlation among outcomes (e.g., students' test scores taught by the same teacher)
+### Fitting logistic regression requires estimation using likelihood methods:
+
+*Likelihood* function tells us how likely we are to observe our data for a given parameter value, $p{\beta}$. 
+- come into play is when data is produced from a complex structure that could imply correlation between outcomes (e.g., students' test scores taught by the same teacher)
 - provide flexibility in the types of models we can fit
 - provide ways in which to compare models
 
-*Distribution of likelihood function pB*
+---
+# Distribution of likelihood function $p{\beta}$
 ```{r, echo= F}
 set.seed(110951)
 x <- rgamma(1000, 6, 0.5)
@@ -530,11 +531,13 @@ $$OR = e^{ln(OR_{X=1:X=0})}$$
 ```{r, echo = F}
 probabilities <- predict(m3, type = "response")
 
-principal %>% 
-  mutate(logit_affective = log(probabilities/(1-probabilities))) %>% 
-      ggplot(aes(attention, logit_affective)) + 
-      geom_point (alpha = 0.5) +
-      geom_smooth(method = "loess", color = "brown") 
+principal <- principal %>%
+  mutate(logit_affect = log((probabilities/(1-probabilities)))) 
+
+principal%>% 
+      ggplot(aes(attention, logit_affect)) + 
+          geom_point(alpha = 0.5) +
+          geom_smooth(method = "loess", color = "red") 
 
 ```
 
@@ -597,7 +600,8 @@ $$ln({Y_{odds}}) = {\beta_0} + {\beta_1}X_1 + {\beta_2}X_2 + {\beta_3}(X_1*X_2)$
 # Interaction - categorical X categorical
 
 ```{r}
-summary(glm(affective ~ female*match, principal,
+summary(glm(affective ~ pfemale*sfemale
+             principal,
           family = binomial(link = "logit")))
 ```
 
@@ -613,7 +617,7 @@ summary(glm(affective ~ attention*match, principal,
 # Interaction - continous X continuous
 
 ```{r}
-summary(glm(affective ~ attention*match, principal,
+summary(glm(affective ~ attention*page, principal,
           family = binomial(link = "logit")))
 ```
 

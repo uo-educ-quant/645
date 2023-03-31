@@ -18,7 +18,8 @@ editor_options:
 
 ```{R, setup, include = F}
 library(pacman)
-p_load(here, tidyverse, xaringan, knitr, kableExtra, haven, broom, xaringanthemer)
+p_load(here, tidyverse, xaringan, knitr, kableExtra, haven, broom, xaringanthemer, foreign)
+
 i_am("slides/EDUC645_1_intro.rmd")
 red_pink <- "#e64173"
 turquoise = "#20B2AA"
@@ -43,40 +44,16 @@ extra_css <- list(
   ".tiny" = list("font-size" = "70%"),
   ".tiny2" = list("font-size" = "50%"))
 write_extra_css(css = extra_css, outfile = "my_custom.css")
+
 # Knitr options
 opts_chunk$set(
   comment = "#>",
   fig.align = "center",
-  fig.height = 6.75,
-  fig.width = 10.5,
+  fig.height = 5,
+  fig.width = 8,
   warning = F,
   message = F
 )
-opts_chunk$set(dev = "svg")
-options(device = function(file, width, height) {
-  svg(tempfile(), width = width, height = height)
-})
-options(knitr.table.format = "html")
-hook_output <- knit_hooks$get("output")
-knit_hooks$set(output = function(x, options) {
-  lines <- options$output.lines
-  if (is.null(lines)) {
-    return(hook_output(x, options))  # pass to default hook
-  }
-  x <- unlist(strsplit(x, "\n"))
-  more <- "..."
-  if (length(lines)==1) {        # first n lines
-    if (length(x) > lines) {
-      # truncate the output, but add ....
-      x <- c(head(x, lines), more)
-    }
-  } else {
-    x <- c(more, x[lines], more)
-  }
-  # paste these lines together
-  x <- paste(c(x, ""), collapse = "\n")
-  hook_output(x, options)
-})
 ```
 
 # Roadmap
@@ -190,7 +167,6 @@ class: middle, inverse
 - District-level data for 103 Oregon school districts, year 2017-18 data
 - Observations with missing values on any of the key variables were deleted for simplification
 
-From now on, we pull out the cluster of subject, and focus on math achievement only.
 **Overarching inquiry: What is the relationship between percentage of ELL students and math achievement in Oregon districts?**
 
 ---
@@ -208,7 +184,7 @@ head(seda)
 ```
 
 ---
-# Understand the clustering nature
+# Understand clustered data
 
 Let's start with a single variable: Oregon districts' achievement score 
 
@@ -224,11 +200,11 @@ seda %>%
        y = "Achievement")
 ```
 
-We lose information by looking at district achievement across subject and grade alone.
-
 
 ---
 # Achievement by Subject
+
+We gain more information looking at district achievement across subject and grade.
 
 ```{r, echo = FALSE}
 seda %>% 
@@ -276,7 +252,7 @@ seda %>%
 ---
 # Examining Data Clustering
 
-IMPORTANTLY, should we keep in mind of this unique feature when we answering research questions, e.g., about relations between two variables
+IMPORTANTLY, keep in mind of this unique feature when we answering research questions, e.g., about relations between two variables
 
 ```{r, echo = FALSE}
 seda %>% 
@@ -293,11 +269,11 @@ seda %>%
 ```
 
 ---
-# Relationship across grade and subject:
+# Across grade and subject
 
 For example, let's look at relationship between percentage of ELL and achievement
 
-```{r, echo = FALSE, fig.cap="add caption"}
+```{r, echo = FALSE}
 seda %>%
   group_by(district) %>% 
   mutate(achievement = mean(achievement)) %>% 
@@ -312,7 +288,7 @@ seda %>%
 ---
 # Relationship by subject
 
-```{r, echo = FALSE, fig.cap="add caption"}
+```{r, echo = FALSE}
 seda %>%
   group_by(district, subject) %>% 
   mutate(achievement = mean(achievement)) %>% 
@@ -326,7 +302,7 @@ seda %>%
 
 ---
 
-# Relationship by subject AND grade
+# By subject AND grade
 
 ```{r, echo = FALSE}
 seda %>%
@@ -381,7 +357,7 @@ For example, when measuring the performance of workers at several job locations,
 - Attribute that an individual-level indicator is representative of the entire group
 
 #### Biased estimation of statistical associations
-- Misestimated standard errors
+- Misestimate standard errors
 - Homogeneity of regression slopes
 
 ---
