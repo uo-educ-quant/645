@@ -18,13 +18,20 @@ knitr::opts_chunk$set(echo = FALSE)
 
 # Course Overview
 
-This course is the third and last in the EDUC quantitative method sequence, which is intended to provide a toolkit of statistical concepts, methods, and their implementations to producers of applied research in education and other social sciences.
+This course is the third in a sequence intended to provide a toolkit of statistical concepts, methods, and their implementation to producers of applied research in education, human services, and other social sciences. The course is organized around the principle that research design depends in part on researchers’ substantive questions and their quantitative data available to address these questions. In this upper-level introductory course, students will learn about and practice using analytic models and strategies that are suitable for examining data that have (a) a dichotomous outcome variable, (b) a count outcome variable, (c) a nested structure, and/or (d) missing values; students will also learn about when and how to estimate (e) internal consistency and interrater reliability for research purposes. The course seeks to blend a conceptual, mathematical, and applied understanding of introductory statistical concepts. At the core of our pedagogical approach is the belief that students learn statistical analysis by doing statistical analysis. 
 
-**Pre-requisite: EDUC 641 and EDUC 643. Also a familiarity with at least one statistical programming language - preferably R language - is required.**
+*EDUC 643 (or a similar intermediate statistics course) is a pre-requisite as is a basic familiarity with a statistical programming language (preferably R).*  
 
 # Meeting Time and Location
-TBD
+Tuesdays and Thursdays, 5:00pm–6:20pm
+HEDCO 146
 
-# Instructors 
-TBD
+# Instructor and GTFs
+Instructor: Nicholas J. Parr, PhD, MPH (he/him/his) 
+Contact Information: email: nparr2@uoregon.edu; preferred method of contact: email; office hour: by appointment)
 
+GTF name: Claire Zhang (she/her/hers) 
+GTF Contact Information: email: congliz@uoregon.edu; office: Lokey Ed 102J; preferred method of contact: email; office hour: by appointment
+
+GTF name: Havisha (Havi) Khurana (she/her/hers) 
+GTF Contact Information: email: havishak@uoregon.edu; office: Lokey Ed 111; preferred method of contact: email; office hour: by appointment
