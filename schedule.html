@@ -358,8 +358,8 @@ d-title {
 </style>
 
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
-<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet"/>
-<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet"/>
+<link href="site_libs/font-awesome-6.2.1/css/all.min.css" rel="stylesheet"/>
+<link href="site_libs/font-awesome-6.2.1/css/v4-shims.min.css" rel="stylesheet"/>
 <script src="site_libs/headroom-0.9.4/headroom.min.js"></script>
 <script src="site_libs/autocomplete-0.37.1/autocomplete.min.js"></script>
 <script src="site_libs/fuse-6.4.1/fuse.min.js"></script>
@@ -629,7 +629,7 @@ body {
   padding-top: 60px;
 }
 </style>
-<script src="site_libs/header-attrs-2.19/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.21/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
@@ -935,11 +935,16 @@ Lectures
 <span class="down-arrow">&#x25BE;</span>
 </button>
 <div class="nav-dropdown-content">
-<a href="./slides/EDUC645_nested_data.html">Unit 1: Nested Data Structures</a>
-<a href="./slides/EDUC645_log_regression.html">Unit 2: Logistic Regression</a>
-<a href="./slides/EDUC645_poisson_regression.html">Unit 3: Poisson Regression</a>
-<a href="./slides/EDUC645_measure_assess.html">Unit 4: Introduction to Measurement and Assessment</a>
-<a href="./slides/EDUC645_cleaning_missing.html">Unit 5: Cleaning Data &amp; Missing Data</a>
+<a href="./slides/EDUC645_1_Intro.html">1. Intro and Nested Data Structures pt. 1</a>
+<span class="nav-dropdown-header">2. Nested Data Structures pt. 2</span>
+<span class="nav-dropdown-header">3. Dichotomous Outcomes pt. 1</span>
+<span class="nav-dropdown-header">4. Dichotomous Outcomes pt. 2</span>
+<span class="nav-dropdown-header">5. Count Outcomes pt. 1</span>
+<span class="nav-dropdown-header">6. Count Outcomes pt. 2</span>
+<span class="nav-dropdown-header">7. Intro to Measurement and Assessment pt. 1</span>
+<span class="nav-dropdown-header">8. Intro to Measurement and Assessment pt. 2</span>
+<span class="nav-dropdown-header">9. Cleaning Data &amp; Missing Data pt. 1</span>
+<span class="nav-dropdown-header">10. Cleaning Data &amp; Missing Data pt. 2</span>
 </div>
 </div>
 <a href="workflow.html">R Project Workflow</a>
@@ -981,20 +986,17 @@ Lectures
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="./slides/EDUC645_nested_data.html">Unit 1: Nested Data Structures</a>
+      <a href="./slides/EDUC645_1_Intro.html">1. Intro and Nested Data Structures pt. 1</a>
     </li>
-    <li>
-      <a href="./slides/EDUC645_log_regression.html">Unit 2: Logistic Regression</a>
-    </li>
-    <li>
-      <a href="./slides/EDUC645_poisson_regression.html">Unit 3: Poisson Regression</a>
-    </li>
-    <li>
-      <a href="./slides/EDUC645_measure_assess.html">Unit 4: Introduction to Measurement and Assessment</a>
-    </li>
-    <li>
-      <a href="./slides/EDUC645_cleaning_missing.html">Unit 5: Cleaning Data &amp; Missing Data</a>
-    </li>
+    <li class="dropdown-header">2. Nested Data Structures pt. 2</li>
+    <li class="dropdown-header">3. Dichotomous Outcomes pt. 1</li>
+    <li class="dropdown-header">4. Dichotomous Outcomes pt. 2</li>
+    <li class="dropdown-header">5. Count Outcomes pt. 1</li>
+    <li class="dropdown-header">6. Count Outcomes pt. 2</li>
+    <li class="dropdown-header">7. Intro to Measurement and Assessment pt. 1</li>
+    <li class="dropdown-header">8. Intro to Measurement and Assessment pt. 2</li>
+    <li class="dropdown-header">9. Cleaning Data &amp; Missing Data pt. 1</li>
+    <li class="dropdown-header">10. Cleaning Data &amp; Missing Data pt. 2</li>
   </ul>
 </li>
 <li>
@@ -1022,9 +1024,83 @@ Lectures
 </div>
 
 
-<div id="unit-1-nested-data-structures" class="section level2">
-<h2>Unit 1: Nested Data Structures</h2>
-<p><strong>Learning Objectives:</strong></p>
+<div id="unit-1-logistic-regression" class="section level2">
+<h2>Unit 1: Logistic Regression</h2>
+<p><strong>Learning Objectives</strong>:</p>
+<ul>
+<li><p>Describe the linear probability model and discuss its
+limitations</p></li>
+<li><p>Differentiate between the concepts of probability, odds, and
+logit</p></li>
+<li><p>Estimate and interpret model parameters logistic regression model
+with continuous and categorical predictors</p></li>
+<li><p>Discuss predictive power, model fit, and diagnostics for logistic
+regression models</p></li>
+</ul>
+<p><strong>Readings</strong>:</p>
+<ul>
+<li>Complete prior to April 6 meeting: BMLR Ch. 2 (pp. 39-68), 6.1-6.4
+(pp. 151-155)</li>
+<li>Complete prior to April 11 meeting: BMLR Ch. 6.5-6.7
+(pp. 159-180)</li>
+<li><em>Recommended</em>: BMLR 3.3 ‘Discrete Random Variables’
+(pp. 72-79)</li>
+</ul>
+<p><strong>Lecture</strong>:</p>
+<ul>
+<li>Lecture slides: <a
+href="./slides/EDUC645_log_regression.html">html</a></li>
+<li>Dataset: <a href="./data/principal.csv">principal.csv</a></li>
+</ul>
+<p><strong>Assignment</strong>:</p>
+<ul>
+<li>Due: April 25</li>
+<li>Assignment description: <a
+href="./assignments/assignment1.html">assignment1.html</a></li>
+<li>Dataset: <a href="./data/nscs.csv">nscs.csv</a></li>
+</ul>
+<p><strong>Unit Quiz</strong>: April 18</p>
+</div>
+<div id="unit-2-poisson-regression" class="section level2">
+<h2>Unit 2: Poisson Regression</h2>
+<p><strong>Learning Objectives</strong>:</p>
+<ul>
+<li><p>Apply regression models to analyze count and rates as outcome
+variables</p></li>
+<li><p>Describe situations which merit the use of Poisson
+regression</p></li>
+<li><p>State the assumptions about rates in Poisson regression</p></li>
+<li><p>Use Poisson regression model with continuous and categorical
+predictors, and interpret the model parameters and inference for model
+parameters</p></li>
+<li><p>Evaluate dispersion of the outcome variable, model fit, and
+diagnostics for a Poisson regression model</p></li>
+</ul>
+<p><strong>Readings</strong>:</p>
+<ul>
+<li>Complete prior to April 25 meeting: BMLR Ch. 4.1-4.4
+(pp. 93-112)</li>
+<li>Complete prior to May 2 meeting: BMLR Ch. 4.5-4.10 (pp. 113-132),
+Ch. 5 (pp. 145-148)</li>
+</ul>
+<p><strong>Lecture</strong>:</p>
+<ul>
+<li>Lecture slides: <a
+href="./slides/EDUC645_poisson_regression.html">html</a></li>
+<li>Dataset: <a href="./data/ceps_sch.csv">ceps_sch.csv</a></li>
+</ul>
+<p><strong>Assignment</strong>:</p>
+<ul>
+<li>Due: May 9</li>
+<li>Assignment description: <a
+href="./assignments/assignment2.html">assignment2.html</a></li>
+<li>Dataset: <a href="./data/ah_smoke.csv">ah_smoke.csv</a></li>
+</ul>
+<p><strong>Unit Quiz</strong>: May 2</p>
+</div>
+<div id="unit-3-nested-data" class="section level2">
+<h2>Unit 3: Nested Data</h2>
+<p><strong>Learning Objectives</strong>:</p>
 <ul>
 <li><p>Describe nested data structures (two-level, e.g., repeated
 measures within individuals, students within schools)</p></li>
@@ -1045,7 +1121,11 @@ modeling of nested data</p></li>
 </ul>
 <p><strong>Readings</strong>:</p>
 <ul>
-<li>BMLR Chapter</li>
+<li>Complete prior to May 9 meeting: BMLR Ch. 8.1-8.5 (pp. 211-231)</li>
+<li>Complete prior to May 16 meeting: BMLR Ch. 8.6-8.11
+(pp. 234-251)</li>
+<li>Complete prior to May 23 meeting: BMLR Ch. 9.1-9.7 (pp. 263-306),
+Ch. 11 (pp. 373-398)</li>
 </ul>
 <p><strong>Lecture</strong>:</p>
 <ul>
@@ -1056,111 +1136,44 @@ href="./data/portugal.csv">portugal.csv</a></li>
 </ul>
 <p><strong>Assignment</strong>:</p>
 <ul>
+<li>Due: May 30</li>
 <li>Assignment description: <a
 href="./assignments/assignment3.html">assignment3.html</a></li>
 <li>Dataset: <a href="./data/gpa.csv">gpa.csv</a> / <a
 href="./data/gpa_above.csv">gpa_above.csv</a></li>
 </ul>
+<p><strong>Unit Quiz</strong>: May 23</p>
 </div>
-<div id="unit-2-dichotomous-outcomes" class="section level2">
-<h2>Unit 2: Dichotomous Outcomes</h2>
-<p><strong>Learning Objectives:</strong></p>
-<ul>
-<li><p>Describe the linear probability model and discuss its
-limitations</p></li>
-<li><p>Differentiate between the concepts of probability, odds, and
-logit</p></li>
-<li><p>Estimate and interpret model parameters logistic regression model
-with continuous and categorical predictors</p></li>
-<li><p>Discuss predictive power, model fit, and diagnostics for logistic
-regression models</p></li>
-</ul>
-<p><strong>Readings</strong>:</p>
-<ul>
-<li>BMLR Chapter</li>
-<li>Mood, C. (2010). Logistic regression: Why we cannot do what we think
-we can do, and what we can do about it. <em>European Sociological
-Review</em>, 26(1), 67-82. 861-874.<a
-href="https://www.jstor.org/stable/40602478">https://doi-org.libproxy.uoregon.edu/10.1093/esr/jcp006</a></li>
-</ul>
-<p><strong>Lecture</strong>:</p>
-<ul>
-<li>Lecture slides: <a
-href="./slides/EDUC645_log_regression.html">html</a></li>
-<li>Dataset: <a href="./data/principal.csv">principal.csv</a></li>
-</ul>
-<p><strong>Assignment</strong>:</p>
-<ul>
-<li>Assignment description: <a
-href="./assignments/assignment1.html">assignment1.html</a></li>
-<li>Dataset: <a href="./data/nscs.csv">nscs.csv</a></li>
-</ul>
-</div>
-<div id="unit-3-count-outcomes" class="section level2">
-<h2>Unit 3: Count Outcomes</h2>
-<p><strong>Learning Objectives:</strong></p>
-<ul>
-<li><p>Apply regression models to analyze count and rates as outcome
-variables</p></li>
-<li><p>Describe situations which merit the use of Poisson
-regression</p></li>
-<li><p>State the assumptions about rates in Poisson regression</p></li>
-<li><p>Use Poisson regression model with continuous and categorical
-predictors, and interpret the model parameters and inference for model
-parameters</p></li>
-<li><p>Evaluate dispersion of the outcome variable, model fit, and
-diagnostics for a Poisson regression model</p></li>
-</ul>
-<p><strong>Readings</strong>:</p>
-<ul>
-<li>BMLR Chapter</li>
-<li>Coxe, S., West, S. G., &amp; Aiken, L. S. (2009). The analysis of
-count data: A gentle introduction to Poisson regression and its
-alternatives. <em>Journal of Personality Assessment</em>, 91(2),
-121-136. <a
-href="https://doi-org.libproxy.uoregon.edu/10.1080/00223890802634175">https://doi.org/10.1080/00223890802634175</a></li>
-</ul>
-<p><strong>Lecture</strong>:</p>
-<ul>
-<li>Lecture slides: <a
-href="./slides/EDUC645_poisson_regression.html">html</a></li>
-<li>Dataset: <a href="./data/ceps_sch.csv">ceps_sch.csv</a></li>
-</ul>
-<p><strong>Assignment</strong>:</p>
-<ul>
-<li>Assignment description: <a
-href="./assignments/assignment2.html">assignment2.html</a></li>
-<li>Dataset: <a href="./data/ah_smoke.csv">ah_smoke.csv</a></li>
-</ul>
-</div>
-<div id="unit-4-measurement-and-assessment" class="section level2">
-<h2>Unit 4: Measurement and Assessment</h2>
-<p><strong>Learning Objectives:</strong></p>
+<div id="unit-4-reliability-in-measurement" class="section level2">
+<h2>Unit 4: Reliability in Measurement</h2>
+<p><strong>Learning Objectives</strong>:</p>
 <ul>
 <li><p>Differentiate and define different aspects of measurement and
 understand when they apply</p></li>
-<li><p>Demonstrate how to compute and interpret Cronbach’s
-alpha</p></li>
+<li><p>Demonstrate how to compute and interpret coefficients alpha and
+omega</p></li>
 <li><p>Define the assumptions and limitations for methods to assess
 reliability</p></li>
 </ul>
 <p><strong>Readings</strong>:</p>
 <ul>
-<li>BMLR Chapter</li>
-<li>IEPM Chapter</li>
+<li>Complete prior to May 30 meeting: Dunn et al 2014; Hallgren
+2012</li>
 </ul>
 <p><strong>Lecture</strong>:</p>
 <ul>
 <li>Lecture slides: <a
 href="./slides/EDUC645_measure_assess.html">html</a></li>
-<li>Dataset:</li>
+<li>Dataset: TBD</li>
 </ul>
 <p><strong>Assignment</strong>:</p>
 <ul>
+<li>Due: June 6</li>
 <li>Assignment description: <a
 href="./assignments/assignment4.html">assignment4.html</a></li>
-<li>Dataset:</li>
+<li>Dataset: TBD</li>
 </ul>
+<p><strong>Unit Quiz</strong>: June 1</p>
 </div>
 <div id="unit-5-missing-data" class="section level2">
 <h2>Unit 5: Missing Data</h2>
@@ -1170,23 +1183,16 @@ href="./assignments/assignment4.html">assignment4.html</a></li>
 linear regression, logistic regression, and Poisson regression
 models</p></li>
 <li><p>Identify and describe missing data mechanisms</p></li>
-<li><p>Differentiate listwise and pairwise deletion methods from
-single-imputation methods</p></li>
-<li><p>Describe the “missing-value-dummy” method (Cohen) and some issues
-with this approach</p></li>
-<li><p>Compare and contrast the conceptual steps for the
-multiple-imputation with using full-information maximum likelihood
-estimators to account for missing data</p></li>
+<li><p>Explain the applications and limitations of different methods for
+handling missing data</p></li>
+<li><p>Assess missing data characteristics</p></li>
 <li><p>Using the R <code>mice</code> package to practice applying
-multiple-imputation to fit linear, logistic, and Poisson regression
+multiple imputation to fit linear, logistic, and Poisson regression
 models for a data set with missing values</p></li>
 </ul>
 <p><strong>Readings</strong>:</p>
 <ul>
-<li>Baraldi, A. N., &amp; Enders, C. K. (2010). An introduction to
-modern missing data analyses. <em>Journal of School Psychology</em>,
-48(1), 5-37. <a
-href="https://pubmed.ncbi.nlm.nih.gov/20006986/">https://doi.org/10.1016/j.jsp.2009.10.001</a></li>
+<li>Complete prior to June 6 meeting: Little et al 2013</li>
 </ul>
 <p><strong>Lecture</strong>:</p>
 <ul>
@@ -1196,11 +1202,13 @@ href="./slides/EDUC645_cleaning_missing.html">html</a></li>
 </ul>
 <p><strong>Assignment</strong>:</p>
 <p>No assignment for this unit.</p>
+<p><strong>Unit Quiz</strong>: June 8</p>
 <p><strong>Final Project</strong>:</p>
 <ul>
+<li>Due: June 16</li>
 <li>Final project description: <a
 href="./assignments/final.html">final.html</a></li>
-<li>Dataset:</li>
+<li>Dataset: TBD</li>
 </ul>
 </div>
 

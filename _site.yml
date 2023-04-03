@@ -10,25 +10,26 @@ navbar:
     href: schedule.html
   - text: Lectures
     menu: 
-      - text: "1. Intro and Nested Data Structures pt. 1"
-        href: ./slides/EDUC645_1_Intro.html
-      - text: "2. Nested Data Structures pt. 2"
-        #href: ./slides/EDUC645_nested_data.html
-      - text: "3. Dichotomous Outcomes pt. 1"
+
+      - text: "1. Course Overview and Dichotomous Outcomes pt. 1"
         href: 
-      - text: "4. Dichotomous Outcomes pt. 2"
+      - text: "2. Dichotomous Outcomes pt. 2"
         href: 
-      - text: "5. Count Outcomes pt. 1"
+      - text: "3. Dichotomous Outcomes pt. 2"
         href: 
-      - text: "6. Count Outcomes pt. 2"
+      - text: "4. Count Outcomes pt. 1"
+        href: 
+      - text: "5. Count Outcomes pt. 2"
         href:
-      - text: "7. Intro to Measurement and Assessment pt. 1"
+      - text: "6. Nested Data Structures pt. 1"
+        #href: ./slides/EDUC645_1_Intro.html
+      - text: "7. Nested Data Structures pt. 2"
+        #href: ./slides/EDUC645_nested_data.html
+      - text: "8. Nested Data Structures pt. 3"
         href: 
-      - text: "8. Intro to Measurement and Assessment pt. 2"
+      - text: "9. Reliability in Measurement"
         href: 
-      - text: "9. Cleaning Data & Missing Data pt. 1"
-        href: 
-      - text: "10. Cleaning Data & Missing Data pt. 2"
+      - text: "10. Missing Data"
         href: 
   - text: R Project Workflow
     href: workflow.html

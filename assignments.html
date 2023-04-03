@@ -358,8 +358,8 @@ d-title {
 </style>
 
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
-<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet"/>
-<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet"/>
+<link href="site_libs/font-awesome-6.2.1/css/all.min.css" rel="stylesheet"/>
+<link href="site_libs/font-awesome-6.2.1/css/v4-shims.min.css" rel="stylesheet"/>
 <script src="site_libs/headroom-0.9.4/headroom.min.js"></script>
 <script src="site_libs/autocomplete-0.37.1/autocomplete.min.js"></script>
 <script src="site_libs/fuse-6.4.1/fuse.min.js"></script>
@@ -629,7 +629,7 @@ body {
   padding-top: 60px;
 }
 </style>
-<script src="site_libs/header-attrs-2.16/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.21/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
@@ -797,8 +797,8 @@ $(document).ready(function () {
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -806,16 +806,9 @@ $(document).ready(function () {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "&#xe258;";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
+  content: "\e258";
   font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
+  border: none;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -942,11 +935,16 @@ Lectures
 <span class="down-arrow">&#x25BE;</span>
 </button>
 <div class="nav-dropdown-content">
-<a href="./slides/EDUC645_log_regression.html">Unit 1: Logistic Regression</a>
-<a href="./slides/EDUC645_poisson_regression.html">Unit 2: Poisson Regression</a>
-<a href="./slides/EDUC645_nested_data.html">Unit 3: Nested Data Structures</a>
-<a href="./slides/EDUC645_measure_assess.html">Unit 4: Introduction to Measurement and Assessment</a>
-<a href="./slides/EDUC645_cleaning_missing.html">Unit 5: Cleaning Data &amp; Missing Data</a>
+<a href="./slides/EDUC645_1_Intro.html">1. Intro and Nested Data Structures pt. 1</a>
+<span class="nav-dropdown-header">2. Nested Data Structures pt. 2</span>
+<span class="nav-dropdown-header">3. Dichotomous Outcomes pt. 1</span>
+<span class="nav-dropdown-header">4. Dichotomous Outcomes pt. 2</span>
+<span class="nav-dropdown-header">5. Count Outcomes pt. 1</span>
+<span class="nav-dropdown-header">6. Count Outcomes pt. 2</span>
+<span class="nav-dropdown-header">7. Intro to Measurement and Assessment pt. 1</span>
+<span class="nav-dropdown-header">8. Intro to Measurement and Assessment pt. 2</span>
+<span class="nav-dropdown-header">9. Cleaning Data &amp; Missing Data pt. 1</span>
+<span class="nav-dropdown-header">10. Cleaning Data &amp; Missing Data pt. 2</span>
 </div>
 </div>
 <a href="workflow.html">R Project Workflow</a>
@@ -988,20 +986,17 @@ Lectures
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="./slides/EDUC645_log_regression.html">Unit 1: Logistic Regression</a>
+      <a href="./slides/EDUC645_1_Intro.html">1. Intro and Nested Data Structures pt. 1</a>
     </li>
-    <li>
-      <a href="./slides/EDUC645_poisson_regression.html">Unit 2: Poisson Regression</a>
-    </li>
-    <li>
-      <a href="./slides/EDUC645_nested_data.html">Unit 3: Nested Data Structures</a>
-    </li>
-    <li>
-      <a href="./slides/EDUC645_measure_assess.html">Unit 4: Introduction to Measurement and Assessment</a>
-    </li>
-    <li>
-      <a href="./slides/EDUC645_cleaning_missing.html">Unit 5: Cleaning Data &amp; Missing Data</a>
-    </li>
+    <li class="dropdown-header">2. Nested Data Structures pt. 2</li>
+    <li class="dropdown-header">3. Dichotomous Outcomes pt. 1</li>
+    <li class="dropdown-header">4. Dichotomous Outcomes pt. 2</li>
+    <li class="dropdown-header">5. Count Outcomes pt. 1</li>
+    <li class="dropdown-header">6. Count Outcomes pt. 2</li>
+    <li class="dropdown-header">7. Intro to Measurement and Assessment pt. 1</li>
+    <li class="dropdown-header">8. Intro to Measurement and Assessment pt. 2</li>
+    <li class="dropdown-header">9. Cleaning Data &amp; Missing Data pt. 1</li>
+    <li class="dropdown-header">10. Cleaning Data &amp; Missing Data pt. 2</li>
   </ul>
 </li>
 <li>
@@ -1040,10 +1035,9 @@ do collaborate, you should plan, execute and write-up your analyses
 together, not simply divide the work. Please make sure to indicate
 clearly when your work is joint and any other individual or resource
 (outside of class material) you consulted in your responses.</p>
-<p>(Here we need to add more details about global expectations and
-requirements for all the assignments, grading and points distribution
-for participation, assignments, and/or final project/exam, late
-submission policy, etc. from syllabus.)</p>
+<p>Requirements for all assignments, grading and points distribution for
+participation, assignments, and/or final project/exam, and the late
+submission policy are discussed in the syllabus.</p>
 </div>
 <div id="submission-format" class="section level2">
 <h2>2. Submission format</h2>

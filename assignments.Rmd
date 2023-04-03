@@ -17,7 +17,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 The goal of the assignments is to practice the concepts and vocabulary we have been modeling in class and implement some of the techniques we have learned. You may work on your own or collaborate with one (1) partner. Please make sure that you engage in a a full, fair and mutually-agreeable collaboration if you do choose to collaborate. If you do collaborate, you should plan, execute and write-up your analyses together, not simply divide the work. Please make sure to indicate clearly when your work is joint and any other individual or resource (outside of class material) you consulted in your responses.
 
-(Here we need to add more details about global expectations and requirements for all the assignments, grading and points distribution for participation, assignments, and/or final project/exam, late submission policy, etc. from syllabus.)
+Requirements for all assignments, grading and points distribution for participation, assignments, and/or final project/exam, and the late submission policy are discussed in the syllabus.
 
 ## 2. Submission format
 
