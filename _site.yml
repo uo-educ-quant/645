@@ -11,20 +11,22 @@ navbar:
   - text: Lectures
     menu: 
 
-      - text: "1. Course Overview and Dichotomous Outcomes pt. 1"
+      - text: "Course Overview"
+        href: ./slides/EDUC645_1_Intro.html
+      - text: "1. Dichotomous Outcomes pt. 1"
         href: 
       - text: "2. Dichotomous Outcomes pt. 2"
         href: 
-      - text: "3. Dichotomous Outcomes pt. 2"
+      - text: "3. Dichotomous Outcomes pt. 3"
         href: 
       - text: "4. Count Outcomes pt. 1"
         href: 
       - text: "5. Count Outcomes pt. 2"
-        href:
+        href: 
       - text: "6. Nested Data Structures pt. 1"
-        #href: ./slides/EDUC645_1_Intro.html
-      - text: "7. Nested Data Structures pt. 2"
         #href: ./slides/EDUC645_nested_data.html
+      - text: "7. Nested Data Structures pt. 2"
+        href:
       - text: "8. Nested Data Structures pt. 3"
         href: 
       - text: "9. Reliability in Measurement"

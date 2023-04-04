@@ -1,7 +1,6 @@
 ---
-title: "Introduction and nested data"
-subtitle: "EDUC 645: Unit 1"
-author: "TBD"
+title: "Course Overview"
+subtitle: "EDUC 645"
 #date: "`r format(Sys.time(), '%d %B %Y')`"
 output:
   xaringan::moon_reader:
@@ -56,315 +55,200 @@ opts_chunk$set(
 )
 ```
 
-# Roadmap
-
----
-## Goals of EDUC quant sequence
+# Goals of EDUC quant sequence
 
 - Develop the basic quantitative skills necessary to conduct applied data analysis
+
+
+--
  + The full-year sequence (EDUC 641 $\rightarrow$ EDUC 643 $\rightarrow$ **EDUC 645**) prepares you to make valuable contributions to a research team
  + Not all the skills you will need (and not the only courses you should take), particularly for those interested in analysis-heavy positions, or becoming an applied quantitative doctoral-level researcher
- + Foundations of statistics, methods and data science
+ + Foundations of statistics, methods, and data science
 
+
+--
 - Understand the (in)appropriate application of those skills
+
+
+--
  + "Building a toolbox, not a cookbook"
  + Evaluate the credibility of published research
- + Understand the affordances, limitations and dangers of quantitative analysis
+ + Understand the capabilities, limitations, and misuses of quantitative analysis
+
 
 --
-
-.small[.blue[This is an entirely re-designed and modernized quantitative sequence for the COE. We welcome your feedback! Given the new-ness of these three courses, there are likely to be shortcomings. We are committed to solving them as they arise, but we ask for your grace in allowing us to do so. In the end, we think this will be a better experience for you and your future program-mates.]]
+.small[.blue[This is an entirely re-designed and modernized quantitative sequence for the COE. We welcome your feedback! Given the newness of these three courses, there are likely to be shortcomings. We are committed to solving them as they arise, but we ask for your grace in allowing us to do so. In the end, we think this will be a better experience for you and your future program-mates.]]
 
 ---
-# EDUC pedagogical orientation
+# EDUC sequence principles
 
+Courses in the EDUC methods sequence share the following principles:
 
-- Analysis follows research design that emerges from substantive questions
+- Analysis follows research design, which emerges from substantive questions
+
 - Students learn statistical analysis by doing statistical analysis
+
 - Create an inclusive, supportive environment in which we learn from each other
+
 - Balance support and academic stretch across a variety of levels of prior experience and comfort with quantitative analysis
-- *We started with an assumption of no prior background in mathematics, programming, statistics or research*
 
 
 --
+**.small[.blue[We started with an assumption of no prior background in mathematics, programming, statistics or research]]**
+
+
+---
+# EDUC sequence assumptions
 
 We assume that you enter this course (EDUC 645) with the ability to:
-- Create an RStudio project, read in a dataset in csv format, filter rows, select columns, understand structure of data, recode variables, assess missingness, and calculate summary statistics for continuous and categorical variables in the R programming language
-- Create simple visualizations describing categorical and continuous variables, and their relationships with each other in R
-- State a quantitative research question and its corresponding null hypothesis
-- Articulate the conceptual basis for a null-hypothesis significance test
-- Conduct a one-sample $t$-test and fit a bivariate Ordinary Least Squares regression
+
 
 --
-- See [EDUC 641 data management guide](https://daviddliebowitz.github.io/EDUC641_22F/data_management.html) for data management pointers
+- Create an RStudio project, read in a dataset in csv format, filter rows, select columns, understand structure of data, recode variables, assess missingness, and calculate summary statistics for continuous and categorical variables in the R programming language
+
+
+--
+- Create simple visualizations describing categorical and continuous variables, and their relationships with each other in R
+
+
+--
+- State a quantitative research question and its corresponding null hypothesis
+
+
+--
+- Articulate the conceptual basis for a null-hypothesis significance test
+
+
+--
+- Conduct a one-sample $t$-test and fit a bivariate Ordinary Least Squares (OLS) regression
+
+
+
+--
+See [EDUC 641 data management guide](https://daviddliebowitz.github.io/EDUC641_22F/data_management.html) for data management pointers
 
 
 ---
 # Goals of EDUC 645
 
-.small[In this intermediate course, we will focus on applying the General Linear Model to Ordinary Least Squares regression analysis. Students will progress from bivariate to multiple regression, developing an understanding of the associated assumptions of these models and tools to solve instances in which those assumptions are unmet. The course seeks to blend a conceptual, mathematical and applied understanding of basic statistical concepts.]
+In this intermediate course, we will focus on using analytic models and strategies for examining data that have: 
 
-.small[
-Concrete learning objectives:
-1. Articulate the framework of the General Linear Model as a method to describe relationships between quantitative variables
-2. Distinguish between research designs and analyses that permit different forms of inferences (e.g., relational or causal, inferential or descriptive)
-3. Conduct and interpret (orally and in writing) least-squares regression analyses with continuous outcomes and predictors
-4. Describe the assumptions of least-squares regression analysis and test analytic models for the extent to which they satisfy these assumptions
-5. Generalize the least-squares regression model (conceptually and in practice) to predictors that are categorical, interacted and non-linear
-6. Build taxonomies of sensible regression models in response to independently developed research questions
-7. Use an open-source, object-oriented statistical programming language to conduct all such analyses
-]
+- a dichotomous outcome
+- a count outcome
+- a nested structure
+
+
+--
+We will also discuss when and how to estimate the consistency of participants' responses to outcome measures (or researchers' ratings of participant characteristics), and methods for understanding and addressing missing data.
+
+
+--
+**.blue[But what's the real-world applicability of these methods?]**
+
+---
+# Applications
+
+- Sometimes the outcomes we're interested in don't describe a range or degree of something, like severity of depression symptoms or extent of classroom engagement. 
+
+
+--
+- Instead, an outcome might be the presence or the absence of a characteristic, or correspond to a state of being.
+
+
+--
+  + Does depression severity predict whether a student is *present* or *absent* from class?
+
+
+--
+- Alternatively, the outcome may be a count of events over a period of time, which can also be described as a *rate*.
+
+
+--
+  + Does depression severity predict the *number of days* a student is absent from class?
+
+
+--
+**.blue[Can you think of other examples of these kinds of outcomes?]**
+
+
+---
+# Applications, cont.
+
+- For either of the questions on the last slide, we would expect students to differ from one another in number of absences. But, what if the classroom that students are assigned to also makes a difference in absences? 
+
+
+--
+  + Perhaps some teachers are more likable than others, or students in some classes, on average, have less parental support and engagement. 
+
+
+--
+  + Classrooms could also differ in the number of abscences simply because of chance
+
+
+--
+- In this situation, variation in absences occurs at two levels: students vary in absences, and the average number of absences in each classroom also varies. In other words, students' variation in the outcome is *nested* within variation in the outcome across classrooms. 
+
+
+--
+**.blue[Imagine we ran an analysis to address the question *Does depression severity predict the number of days a student is absent from class?*]**
+
+
+--
+**.blue[In our data, absences varied among students and also widely between classrooms, but we used an analysis that didn't differentiate those 2 levels of variation (i.e., it attributed all the variation to students). Would our results give an accurate picture of the relationship between depression and absences?]**
 
 ---
 # Roadmap of EDUC 645
 
+- Toward the end of the course, we'll also talk about tools that give us information about how consistently the assessment tools we use are measuring our outcome. 
+
+
+--
+  + Are students with the same depression severity responding similarly to our depression scale?
+
+
+--
+- We'll also discuss concepts and methods related to missing data.
+
+
+--
+
 | Unit  | Week(s) | Topic
 |----------------------------------------------------
-| 1     | 1-2     | Nested data and GLM
-| 2     | 3-4     | Dichotomous outcomes
-| 3     | 5-6     | Count outcomes
-| 4     | 7-8     | Measurement and assessment
-| 5     | 9-10    | Cleaning and missing data
+| 1     | 1-3     | Dichotomous outcomes
+| 2     | 4-5     | Count outcomes
+| 3     | 6-8     | Nested data
+| 4     | 9       | Reliability in measurement
+| 5     | 10      | Missing data
 
 
 ---
 # Weekly schedule of activities
 
 1. Two 1.5-hour lectures will introduce concepts in interactive lectures, discussion and activities
+
 2. Readings are intended to supplement material from lectures (these can be completed after the first class of the unit)
+
 3. Two *OPTIONAL, UNGRADED* weekly lab meetings intended to provide support for R programming tasks. Each lab will cover identical material.
-4. Five (5) take-home quizzes worth trivial amount of points each (2% of grade)
-5. Four (4) data analytic assignments (15% each) + final project (30% of grade)
+
+4. Five (5) take-home quizzes worth trivial amount of points each (4% of grade)
+
+5. Four (4) data analytic assignments (15% each) + final project (20% of grade)
 
 --
 
 <br>
-Course website is (we hope!) a valuable resource. Let's check it out!
+[Course website](https://uo-educ-quant.github.io/645/index.html) is (we hope!) a valuable resource. 
 
 ---
-# Roadmap
-
----
-class: middle, inverse
-
-# Multilevel Models
-
-
----
-# Goals for the unit
-- Understand nesting/clustering means (two-level, repeated measures within individuals)
-- Demonstrate varying intercepts and slopes across clusters
-- Understand what it means for intercepts and slopes to vary across clusters
-- Explain the difference between fixed-effects and random effects
-- Discuss the implications of ignoring the variance of random-effects in terms of the inference for fixed-effects and statistical power
-
----
-# A Motivating Question
-
-**The Data:** Stanford Education Data Archive (SEDA), launched in 2016 to provide nationally comparable, publicly available test score data for U.S. public school districts, allowing scientific inquiries on the relationships between educational conditions, contexts, and outcomes (especially student math/ELA achievements) at the district-level across the nation.
-
-**Data set**
-- District-level data for 103 Oregon school districts, year 2017-18 data
-- Observations with missing values on any of the key variables were deleted for simplification
-
-**Overarching inquiry: What is the relationship between percentage of ELL students and math achievement in Oregon districts?**
-
----
-# Inspect the data 
-
-each row/observation represents...
-
-```{r, echo = FALSE}
-seda <- rio::import(here::here("data", "seda_oregon.csv"))
-
-seda <- seda  %>%
-  mutate(subject = recode(subject, 'mth' = "Math", 'rla' = "Reading"))
-
-head(seda)
-```
-
----
-# Understand clustered data
-
-Let's start with a single variable: Oregon districts' achievement score 
-
-```{r, echo = FALSE}
-seda %>% 
-  group_by(district) %>% 
-  mutate(mean = mean(achievement)) %>%
-  ungroup() %>% 
-  select(district, mean) %>%
-  ggplot(aes(district, mean)) +
-  geom_point() +
-  labs(x = "District",
-       y = "Achievement")
-```
-
-
----
-# Achievement by Subject
-
-We gain more information looking at district achievement across subject and grade.
-
-```{r, echo = FALSE}
-seda %>% 
-  group_by(district, subject) %>% 
-  mutate(mean = mean(achievement)) %>% 
-  ungroup() %>% 
-  select(district, subject, mean) %>%
-  ggplot(aes(district, mean, color = subject)) +
-  geom_point() +
-  labs(x = "District",
-       y = "Achievement")
-```
-
----
-# Achievement by grade
-
-```{r, echo = FALSE}
-seda %>% 
-  group_by(district, grade) %>% 
-  mutate(mean = mean(achievement)) %>% 
-  ungroup() %>% 
-  select(district, grade, mean) %>%
-  ggplot(aes(district, mean, color = grade)) +
-  geom_point() +
-  labs(x = "District",
-       y = "Achievement")
-```
-
----
-# Achievement by grade AND subject
-
-```{r, echo = FALSE}
-seda %>% 
-  group_by(district, subject, grade) %>% 
-  mutate(mean = mean(achievement)) %>% 
-  ungroup() %>% 
-  select(district, subject, grade, mean) %>%
-  ggplot(aes(district, mean, color = grade)) +
-  facet_wrap(vars(subject)) +
-  geom_point() +
-  labs(x = "District",
-       y = "Achievement")
-```
-
----
-# Examining Data Clustering
-
-IMPORTANTLY, keep in mind of this unique feature when we answering research questions, e.g., about relations between two variables
-
-```{r, echo = FALSE}
-seda %>% 
-  mutate(grade = recode(grade, '3' = "G3", '4' = "G4", '5' = "G5", '6' = "G6")) %>% 
-  group_by(district, subject, grade) %>% 
-  mutate(mean = mean(achievement)) %>% 
-  ungroup() %>% 
-  select(district, subject, grade, mean) %>%
-  ggplot(aes(district, mean, color = subject)) +
-  facet_wrap(vars(grade)) +
-  geom_point() +
-  labs(x = "District",
-       y = "Achievement")
-```
-
----
-# Across grade and subject
-
-For example, let's look at relationship between percentage of ELL and achievement
-
-```{r, echo = FALSE}
-seda %>%
-  group_by(district) %>% 
-  mutate(achievement = mean(achievement)) %>% 
-  ungroup() %>% 
-  ggplot(aes(percent_ell, achievement)) +
-  geom_smooth(method='lm', se = 0) +
-  geom_point(alpha = 0.1) + 
-  labs(x = "ELL Percentage",
-       y = "Achievement")
-```
-
----
-# Relationship by subject
-
-```{r, echo = FALSE}
-seda %>%
-  group_by(district, subject) %>% 
-  mutate(achievement = mean(achievement)) %>% 
-  ungroup() %>% 
-  ggplot(aes(percent_ell, achievement, color = subject)) +
-  geom_smooth(method='lm', se = 0) +
-  geom_point(alpha = 0.1) +
-  labs(x = "ELL Percentage",
-       y = "Achievement")
-```
-
----
-
-# By subject AND grade
-
-```{r, echo = FALSE}
-seda %>%
-  mutate(grade = recode(grade, '3' = "G3", '4' = "G4", '5' = "G5", '6' = "G6")) %>% 
-  group_by(district, subject, grade) %>% 
-  mutate(achievement = mean(achievement)) %>% 
-  ungroup() %>% 
-  ggplot(aes(percent_ell, achievement, color = subject)) +
-  facet_wrap(vars(grade)) +
-  geom_smooth(method='lm', se = 0) +
-  geom_point(alpha = 0.1) +
-  labs(x = "ELL Percentage",
-       y = "Achievement")
-```
-
-* What is your current understanding of clustered data? 
-* Is there a single answer to the relationship between percentage of ELL students and achievement? 
-
-???
-
-Expect students to realize that there is no universal answer; depends on what you look at, what cluster/clusters you want to include, and model specifications
-
-
----
-# What is Nested Data?
-
-Levels of one factor vary only within the levels of another factor, that factor is said to be nested. 
-For example, when measuring the performance of workers at several job locations, if the workers only work at one site, then the workers are nested within site. If the workers work at more than one location, we would say that workers are crossed with site.
-
----
-# Where does it come from?
-### Why do we need to think hierarchically?
-1) Two realities exist within interventions:
-
-(a) Effect implies change in individuals over time,
-
-(b) Effect occurs in groups and organizational settings (e.g., dyads, groups, networks, neighborhoods, clinics, cities, countries).
+# Concluding discussion
 
 --
+- What learning goals do you have coming into the course?
 
-2) Factors are nested across multiple levels; influence the organization of behavior.
 
----
-# What happens if we ignore it?
+--
+- Are there topics from the previous 2 courses in this sequence that still feel unclear or uncertain?
 
-### What errors result if we ignore multilevel effects?
-#### Ecological Fallacy
-- Systematic underestimation of group effects
-- Inadequate intervention development and evaluation
 
-#### Aggregation bias
-- Attribute that an individual-level indicator is representative of the entire group
-
-#### Biased estimation of statistical associations
-- Misestimate standard errors
-- Homogeneity of regression slopes
-
----
-# Traditional Linear Regression Example
-* Unit of analysis: Individual
-* Examine between-individual variability
-* Intercept and slope are the same for all groups
-* Ignores inclusion of important group variables
-* Residual correlation
-
+--
+- What was effective or ineffective about the *structure* or *approach* of the previous courses?
