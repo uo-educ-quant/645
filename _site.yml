@@ -13,11 +13,11 @@ navbar:
 
       - text: "Course Overview"
         href: ./slides/EDUC645_1_Intro.html
-      - text: "1. Dichotomous Outcomes pt. 1"
+      - text: "1. Dichotomous Outcomes"
+        href: ./slides/EDUC645_dichotomous_outcomes.html
+      - text: "2. Logistic Regression pt. 1"
         href: 
-      - text: "2. Dichotomous Outcomes pt. 2"
-        href: 
-      - text: "3. Dichotomous Outcomes pt. 3"
+      - text: "3. Logistic Regression pt. 2"
         href: 
       - text: "4. Count Outcomes pt. 1"
         href: 
