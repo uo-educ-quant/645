@@ -33,14 +33,14 @@ knitr::opts_chunk$set(echo = TRUE)
 
 **Lecture**:
 
- * Lecture slides: [html](./slides/EDUC645_log_regression.html)
- * Dataset: [principal.csv](./data/principal.csv)
+ * Lecture slides: [html](./slides/EDUC645_log_regression_1.html)
+ * Dataset:
 
 **Assignment**:
 
  * Due: April 25
- * Assignment description: [assignment1.html](./assignments/assignment1.html)
- * Dataset: [nscs.csv](./data/nscs.csv)
+ * Assignment description: 
+ * Dataset: 
  
 **Unit Quiz**: April 18
 
@@ -65,14 +65,14 @@ knitr::opts_chunk$set(echo = TRUE)
  
 **Lecture**:
 
- * Lecture slides: [html](./slides/EDUC645_poisson_regression.html)
- * Dataset: [ceps_sch.csv](./data/ceps_sch.csv)
+ * Lecture slides:
+ * Dataset:
 
 **Assignment**:
 
  * Due: May 9
- * Assignment description: [assignment2.html](./assignments/assignment2.html)
- * Dataset: [ah_smoke.csv](./data/ah_smoke.csv)
+ * Assignment description:
+ * Dataset:
  
 **Unit Quiz**: May 2
 
@@ -102,14 +102,14 @@ knitr::opts_chunk$set(echo = TRUE)
  
 **Lecture**:
 
- * Lecture slides: [html](./slides/EDUC645_nested_data.html)
- * Dataset: [seda.csv](./data/seda.csv) and [portugal.csv](./data/portugal.csv)
+ * Lecture slides:
+ * Dataset: 
 
 **Assignment**:
 
  * Due: May 30
- * Assignment description: [assignment3.html](./assignments/assignment3.html)
- * Dataset: [gpa.csv](./data/gpa.csv) / [gpa_above.csv](./data/gpa_above.csv)
+ * Assignment description:
+ * Dataset:
  
 **Unit Quiz**: May 23
 
@@ -129,13 +129,13 @@ knitr::opts_chunk$set(echo = TRUE)
 
 **Lecture**:
 
- * Lecture slides: [html](./slides/EDUC645_measure_assess.html)
+ * Lecture slides: 
  * Dataset: TBD
  
 **Assignment**:
 
  * Due: June 6
- * Assignment description: [assignment4.html](./assignments/assignment4.html)
+ * Assignment description:
  * Dataset: TBD
  
 **Unit Quiz**: June 1
@@ -160,8 +160,8 @@ knitr::opts_chunk$set(echo = TRUE)
 
 **Lecture**:
 
- * Lecture slides: [html](./slides/EDUC645_cleaning_missing.html)
- * Dataset: [galo.csv](./data/galo.csv)
+ * Lecture slides: 
+ * Dataset:
  
 **Assignment**:
 
@@ -172,5 +172,5 @@ No assignment for this unit.
 **Final Project**:
 
  * Due: June 16
- * Final project description: [final.html](./assignments/final.html)
+ * Final project description:
  * Dataset: TBD

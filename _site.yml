@@ -16,7 +16,7 @@ navbar:
       - text: "1. Dichotomous Outcomes"
         href: ./slides/EDUC645_dichotomous_outcomes.html
       - text: "2. Logistic Regression pt. 1"
-        href: 
+        href: ./slides/EDUC645_log_regression_1.html
       - text: "3. Logistic Regression pt. 2"
         href: 
       - text: "4. Count Outcomes pt. 1"
