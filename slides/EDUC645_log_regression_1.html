@@ -63,7 +63,7 @@ Then we divided these to get the odds ratio:
 
 
 
-Instead of doing this, let's just divide the *probability* of having diabetes in each activity group. This will give us a `\(\color{blue}{\text{risk ratio}}\)` or `\(\color{blue}{\text{relative risk}}\)` (RR). It can be similar in magnitude to an odds ratio, especially when the probability of the outcome is small (just like how odds and probability can be similar). But, the RR has a somewhat different intepretation.
+Instead of doing this, let's just divide the *probability* of having diabetes in each activity group. This will give us a `\(\color{blue}{\text{risk ratio}}\)` or `\(\color{blue}{\text{relative risk}}\)` (RR). It can be similar in magnitude to an odds ratio, especially when the probability of the outcome is small (just like how odds and probability can be similar). But, the RR has a somewhat different interpretation.
 
 `$$\ RR = \frac{Probability\ of\ Being\ Inactive\ and\ Having\ Diabetes}{Probability\ of\ Being\ Active\ and\ Having\ Diabetes} = \frac{0.13}{0.06} = 2.17$$`
 
@@ -72,7 +72,7 @@ Instead of doing this, let's just divide the *probability* of having diabetes in
 
 To summarize:
 
-`$$\ OR = \frac{\frac{Probability\ of\ Being\ Inactive\ and\ Having\ Diabetes}{Probability\ of\ Being\ Inactive\ and\ Not\ Having\ Diabetes}}{\frac{Probability\ of\ Being\ Active\ and\ Having\ Diabetes}{Probability\ of\ Being\ Active\ and\ Having\ Diabetes}} = 2.5$$`
+`$$\ OR = \frac{\frac{Probability\ of\ Being\ Inactive\ and\ Having\ Diabetes}{Probability\ of\ Being\ Inactive\ and\ Not\ Having\ Diabetes}}{\frac{Probability\ of\ Being\ Active\ and\ Having\ Diabetes}{Probability\ of\ Being\ Active\ and\ Not\ Having\ Diabetes}} = 2.5$$`
 
 - Inactive participants had a higher odds of having diabetes than active participants. Participants who were inactive had 2.5 times the odds of diabetes than participants who were active.
 
@@ -83,16 +83,19 @@ To summarize:
   + If we're communicating *more than* or *less than*, and a ratio of 1 means "no difference", then here the amount of "more than" is 2.5 - 1, which is 1.5 or 150%. "2.5 times" is equivalent, because 1 x 1 = 1.   
 
 
+--
+- If we flipped the ratio so that odds of diabetes in the active group were the numerator, the odds ratio would be O.40 (0.06/0.15). This could be interpreted as "Being active is associated with a 60% reduction in odds of diabetes compared with being inactive."
+
 ---
 # An alternative to odds ratio?
 
 To summarize:
 
-`$$\ RR = \frac{\frac{Probability\ of\ Being\ Inactive\ and\ Having\ Diabetes}{\color{gray}{Probability\ of\ Being\ Inactive\ and\ Not\ Having\ Diabetes}}}{\frac{Probability\ of\ Being\ Active\ and\ Having\ Diabetes}{\color{gray}{Probability\ of\ Being\ Active\ and\ Having\ Diabetes}}} = 2.17$$`
+`$$\ RR = \frac{\frac{Probability\ of\ Being\ Inactive\ and\ Having\ Diabetes}{\color{gray}{Probability\ of\ Being\ Inactive\ and\ Not\ Having\ Diabetes}}}{\frac{Probability\ of\ Being\ Active\ and\ Having\ Diabetes}{\color{gray}{Probability\ of\ Being\ Active\ and\ Not\ Having\ Diabetes}}} = 2.17$$`
 
-- Inactive participants had a higher risk of having diabetes than active participants. Participants who were inactive were 2.5 times more likely to have diabetes than participants who were active.
+- Inactive participants had a higher risk of having diabetes than active participants. Participants who were inactive were 2.17 times more likely to have diabetes than participants who were active.
 
-- Compared with being active, being inactive is associated with greater risk of diabetes. Inactive participants had 150% greater risk of having diabetes than active participants. 
+- Compared with being active, being inactive is associated with greater risk of diabetes. Inactive participants had 117% greater risk of having diabetes than active participants. 
 
 
 --
@@ -148,7 +151,7 @@ So, active and inactive participants significantly differ in the proportion of p
 ---
 # So, why use odds?
 
-This seems simple enough, but what happens if we want to look at the relationship between a *continous* independent variable, like `age`, and a dichotomous outcome like `diabetes`. 
+This seems simple enough, but what happens if we want to look at the relationship between a *continuous* independent variable, like `age`, and a dichotomous outcome like `diabetes`. 
 
 --
   + **This implies that there is contingency table for each value of the independent value (i.e., for each year of age ranging from 13 to 80):**
@@ -227,7 +230,7 @@ We talked earlier about how the most intuitive way to describe a relationship be
 
 
 --
-Despite having a more straighforward interpretation, probability does not behavior linearly (like a number line): It ranges only from 0 to 1. And, changes in the independent variable don't necessarily result in consistent changes in probability. 
+Despite having a more straightforward interpretation, probability does not behavior linearly (like a number line): It ranges only from 0 to 1. And, changes in the independent variable don't necessarily result in consistent changes in probability. 
 
 --
   + Odds  have the same behavior, and they also don't range in value like a number line (remember, odds can't be less than 0).
@@ -241,7 +244,7 @@ So, if we want to be able to apply the same basic linear regression approach to 
 Here is where *odds* (and therefore the odds ratio) becomes important. It turns out they have a very handy feature: Taking the `\(\color{blue}{\text{logarithm}}\)` of odds *makes them behave linearly*
 
 ???
-Sometimes a standard linear regression model is used for dichotomous outcomes. This is called a linear probability model (LPM), and some argue it has a more straightforward interepretation than logistic regression. However, modeling dichotomous outcomes as a continuous range from 0 to 1 is conceptually problematic and violates several key assumptions of linear regression.
+Sometimes a standard linear regression model is used for dichotomous outcomes. This is called a linear probability model (LPM), and some argue it has a more straightforward interpretation than logistic regression. However, modeling dichotomous outcomes as a continuous range from 0 to 1 is conceptually problematic and violates several key assumptions of linear regression.
 
 ---
 # Relationship between probability, odds, and log odds
