@@ -1,0 +1,229 @@
+---
+title: "Logistic Regression Part 1: Probability and Odds"
+subtitle: "EDUC 645"
+#date: "`r format(Sys.time(), '%d %B %Y')`"
+output:
+  xaringan::moon_reader:
+    css: ['default', 'uo', 'ki-fonts', 'my_custom.css', 'xaringanthemer.css']
+    # self_contained: true
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{R, setup, include = F}
+library(pacman)
+library(easystats)
+p_load(NHANES, pander, here, tidyverse, ggplot2, xaringan, knitr, kableExtra, foreign, broom, xaringanthemer, reshape2, lfe, arsenal, ggpubr, stargazer, fixest, gtsummary, huxtable, aod)
+
+i_am("slides/EDUC645_log_regression_1.rmd")
+
+extra_css <- list(
+  ".red"   = list(color = "red"),
+  ".blue"  =list(color = "blue"),
+  ".green" = list(color = "#8bb174"),
+  ".purple" = list(color = "#6A5ACD"),
+  ".red-pink" = list(color= "#e64173"),
+  ".grey-light" = list(color= "grey70"),
+  ".slate" = list(color="#314f4f"),
+  ".small" = list("font-size" = "90%"))
+
+write_extra_css(css = extra_css, outfile = "my_custom.css")
+
+# Knitr options
+opts_chunk$set(
+  comment = "#>",
+  fig.align = "center",
+  fig.height = 5,
+  fig.width = 8,
+  warning = F,
+  message = F
+)
+
+NHANES_data <- NHANES::NHANES %>%
+  select(ID, SurveyYr, Gender, Age, AgeDecade, Race3, Education, Poverty, Diabetes, DaysMentHlthBad, Depressed, PhysActive, PhysActiveDays) %>% 
+  filter(SurveyYr == "2011_12", Age > 12) %>% 
+  mutate(Race_Eth = as_factor(case_when(Race3 == "Mexican" | Race3 == "Hispanic" ~ "Hispanic/Latino",
+                                    TRUE ~ Race3))) %>% 
+  rename(Depress_Freq = Depressed, Sex = Gender, DaysMHBad = DaysMentHlthBad) %>% 
+  select(ID, Age, Sex, Race_Eth, Diabetes, Depress_Freq, PhysActive, PhysActiveDays)
+
+```
+
+
+---
+# Revisiting the GLM
+
+Recall that our generalized linear regression model is written as:
+
+$$Y_{i} = \color{blue}{\beta_{0} + \beta_{1} X} + \color{green}{\varepsilon_{i}}$$
+
+ + $Y_{i}$: Our outcome, with the subscript $i$ to emphasize that the model estimates the outcome for each of the $i$ units (students, schools, patients, etc.)
+
+ + $\color{blue}{\beta_{0}}$ and $\color{blue}{\beta_{1}}$: Our population parameters and regression coefficients to be estimated
+
+ + $\color{green}{\varepsilon_{i}}$: Our error/residual
+
+
+--
+The $\color{blue}{\text{logit link}}$ allows us to connect GLM linear regression with logistic regression. 
+
+$$\log(\frac{p}{1-p})$$
+
+ + $p$: Probability of a given event
+
+---
+# Using Logit Link in Logistic Regression
+
+When we have an outcome variable that follows the binomial distribution, as does a dichotomous variable, we can insert the logit link function into our GLM model:
+
+
+--
+$$\color{green}{Y_i}=\beta_0 + \beta_1 x_i + \varepsilon_{i}$$
+
+
+--
+$$\color{green}{Y_i} = \color{blue}{\log(\frac{p_i}{1-p_i})}$$
+
+Becomes...
+
+--
+$$\color{blue}{\log(\frac{p_i}{1-p_i})}=\beta_0 + \beta_1 x_i +  \varepsilon_i$$
+
+ + $Y_i$ is the number events of $n$ observations. 
+ + $p_i$ is the probability of an event on a single observation. 
+
+---
+# Likelihood methods
+
+Fitting logistic regression requires estimation using likelihood methods:
+
+- *Likelihood* function tells us how likely we are to observe our data for a given parameter value, $p{\beta}$. 
+
+- Come into play is when data is produced from a complex structure that could imply correlation between outcomes (e.g., students' test scores taught by the same teacher)
+
+- Provide flexibility in the types of models we can fit
+
+- Provide ways in which to compare models
+
+- *Maximum likelihood estimation (MLE)* is a general class of method in statistics that is used to estimate the model parameters
+
+---
+
+class: middle, inverse
+
+# Setting Up the Model
+
+---
+
+# Data check
+
+Before setting up the model, we should check that our variables are the correct types. Dichotomous variables should be *factors*, and continuous variables should be *numeric* (num) or *integers* (int).
+
+```{r}
+str(NHANES_data)
+```
+  
+---
+# Regression equation components
+
+$$Diabetes = \color{orange}{(\beta_0)} + \color{green}{(\beta_1)}(Age)$$
+
+$\beta_1$: Change in *log odds* for 1 unit change in $X_i$
+
+<span style = "color:orange"> Intercept $(\beta_0)$: </span> Predicted outcome when X is equal to 0.
+
+<span style = "color:green"> Slope $(\beta_1)$: </span> Predicted increase in the outcome for every one unit increase in X.
+
+---
+# Logistic regression model estimates
+
+`family` refers to the type of distribution, where we have defined `binomial`, and the `link` asks for the link function that we want to use, which is the `logit` for a logistic regression.
+
+We'll start with a continuous independent variable `Age`. Example question: Is increased age associated with greater odds of diabetes? 
+
+---
+# Logistic regression model estimates
+
+```{r}
+mod_1 <- glm(Diabetes ~ Age, data = NHANES_data,
+                 family = binomial(link = "logit"))
+summary(mod_1)
+```
+
+---
+# Logistic regression model estimates
+
+Or, our question could be: Do inactive participants have greater odds of diabetes than active participants, controlling for age? 
+
+We can add our categorical activity variable `PhysActive`:
+
+---
+# Logistic regression model estimates
+
+```{r}
+mod_2 <- glm(Diabetes ~ PhysActive + Age, data = NHANES_data,
+                 family = binomial(link = "logit"))
+summary(mod_2)
+```
+
+---
+# Output
+
+- Rememeber that the quantities the model is working in are *log odds*, but we want to be working in *odds* and *odds ratios*. To do this, we need to exponentiate our model parameters.
+
+
+--
+- The default output also doesn't provide us confidence intervals, which we need for interpreting how precise are results are. 
+
+
+--
+  + For logistic models, we use what are called *profiled* confidence intervals. The standard CI you learned about last term (the Wald CI) is strongly dependent on the assumption of normality. The profiled CI is less sensitive to this assumption, and takes advantage of the same likelihood methods we use to estimate the model. 
+
+
+---
+# Output
+
+```{r}
+mod_2 %>% 
+      broom::tidy(exponentiate = TRUE, conf.int = TRUE)
+```
+
+---
+# Assumptions and Diagnostics
+
+- Outcome (Y) is discrete binomial variable (0/1 variable)
+
+- Must be enough responses in every category
+
+- Linearity in the logit scale 
+  - X's must be linearly related to logit(Y)
+  
+- Absence of multicollinearity
+
+- No outliers
+
+- Independence of (X,Y)'s 
+  + No clustering of data into groups/contexts that would provide information about the values of other errors
+
+---
+# Assumptions and Diagnostics
+
+```{r}
+check_model(mod_2) # From the easystats package
+```
+
+---
+# To Dos
+
+### Assignments
+- Assignment 1 is due April 25 at 11:59PM
+
+  + Available on Canvas on Monday April 17
+  
+- Quiz 1 is due April 18 at 11:59PM
+
+  + Available on Canvas on Friday April 14
+  
+  

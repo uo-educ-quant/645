@@ -18,7 +18,7 @@ navbar:
       - text: "2. Logistic Regression pt. 1"
         href: ./slides/EDUC645_log_regression_1.html
       - text: "3. Logistic Regression pt. 2"
-        href: 
+        href: ./slides/EDUC645_log_regression_2.html
       - text: "4. Count Outcomes pt. 1"
         href: 
       - text: "5. Count Outcomes pt. 2"
