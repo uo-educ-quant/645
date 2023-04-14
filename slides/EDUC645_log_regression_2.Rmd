@@ -1,5 +1,5 @@
 ---
-title: "Logistic Regression Part 1: Probability and Odds"
+title: "Logistic Regression Part 2: Model Fitting / Diagnostics"
 subtitle: "EDUC 645"
 #date: "`r format(Sys.time(), '%d %B %Y')`"
 output:
@@ -17,7 +17,7 @@ library(pacman)
 library(easystats)
 p_load(NHANES, pander, here, tidyverse, ggplot2, xaringan, knitr, kableExtra, foreign, broom, xaringanthemer, reshape2, lfe, arsenal, ggpubr, stargazer, fixest, gtsummary, huxtable, aod)
 
-i_am("slides/EDUC645_log_regression_1.rmd")
+i_am("slides/EDUC645_log_regression_2.rmd")
 
 extra_css <- list(
   ".red"   = list(color = "red"),
