@@ -21,7 +21,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 - Differentiate between the concepts of probability, odds, and logit
 
-- Estimate and interpret model parameters logistic regression model with continuous and categorical predictors
+- Estimate and interpret model parameters of logistic regression model with continuous and categorical predictors
 
 - Discuss predictive power, model fit, and diagnostics for logistic regression models
 
@@ -33,16 +33,15 @@ knitr::opts_chunk$set(echo = TRUE)
 
 **Lecture**:
 
- * Lecture slides: [html](./slides/EDUC645_log_regression_1.html)
- * Dataset:
+ * [Lecture slides](./slides/EDUC645_log_regression_1.html)
+ * [Dataset](./data/NHANES_data1011.RData)
 
 **Assignment**:
 
- * Due: April 25
- * Assignment description: 
- * Dataset: 
+ * Due April 26
+ * [Assignment details](./assignments/assignment01_Sp23.RData)
  
-**Unit Quiz**: April 18
+**Unit Quiz**: Due April 18
 
 ## Unit 2: Poisson Regression
 
@@ -50,7 +49,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 - Apply regression models to analyze count and rates as outcome variables
 
--	Describe situations which merit the use of Poisson regression
+-	Describe situations which merit the use of Poisson regression and related models
 
 -	State the assumptions about rates in Poisson regression
 
@@ -65,16 +64,15 @@ knitr::opts_chunk$set(echo = TRUE)
  
 **Lecture**:
 
- * Lecture slides:
- * Dataset:
+ * Lecture slides
+ * Dataset
 
-**Assignment**:
+**Assignment**
 
- * Due: May 9
- * Assignment description:
- * Dataset:
+ * Due May 9
+ * Assignment details
  
-**Unit Quiz**: May 2
+**Unit Quiz**: Due May 2
 
 ## Unit 3: Nested Data
 
@@ -102,22 +100,21 @@ knitr::opts_chunk$set(echo = TRUE)
  
 **Lecture**:
 
- * Lecture slides:
- * Dataset: 
+ * Lecture slides
+ * Dataset 
 
 **Assignment**:
 
- * Due: May 30
- * Assignment description:
- * Dataset:
+ * Due May 30
+ * Assignment details
  
-**Unit Quiz**: May 23
+**Unit Quiz**: Due May 23
 
 ## Unit 4: Reliability in Measurement
 
 **Learning Objectives**: 
 
-- Differentiate and define different aspects of measurement and understand when they apply
+- Differentiate and define aspects of measurement and understand when they apply
 
 - Demonstrate how to compute and interpret coefficients alpha and omega
 
@@ -129,16 +126,15 @@ knitr::opts_chunk$set(echo = TRUE)
 
 **Lecture**:
 
- * Lecture slides: 
- * Dataset: TBD
+ * Lecture slides 
+ * Dataset
  
 **Assignment**:
 
- * Due: June 6
- * Assignment description:
- * Dataset: TBD
+ * Due June 6
+ * Assignment details
  
-**Unit Quiz**: June 1
+**Unit Quiz**: Due June 1
 
 ## Unit 5: Missing Data
 
@@ -160,17 +156,16 @@ knitr::opts_chunk$set(echo = TRUE)
 
 **Lecture**:
 
- * Lecture slides: 
- * Dataset:
+ * Lecture slides 
+ * Dataset
  
 **Assignment**:
 
 No assignment for this unit.
 
-**Unit Quiz**: June 8
+**Unit Quiz**: Due June 8
 
 **Final Project**:
 
- * Due: June 16
- * Final project description:
- * Dataset: TBD
+ * Due June 16
+ * Final project details

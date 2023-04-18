@@ -15,38 +15,35 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## 1. General Guidelines
 
-The goal of the assignments is to practice the concepts and vocabulary we have been modeling in class and implement some of the techniques we have discussed.
+The goal of the assignments is to practice the concepts and vocabulary we have been modeling in class and implement some of the techniques we have discussed. Full requirements for assignments, information on grading, and the late submission policy are discussed in the syllabus.
 
-You may work on your own or collaborate with 1 or 2 partners (maximum of 3 per group). Please make sure that you engage in a full, fair and mutually-agreeable collaboration if you do choose to collaborate. If you do collaborate, you should plan, execute, and write-up your analyses together, not simply divide the work. Please make sure to indicate clearly when your work is joint and any other individual or resource (outside of class material) you consulted in your responses. Full requirements for  assignments, information on grading, and the late submission policy are discussed in the syllabus.
+You may work on your own or with up to two (2) partners. If you choose to work with others, please make sure that you engage in a full, fair, and mutually-agreeable collaboration. Plan, execute, and write-up your analyses together; do not simply divide up the work. 
+
+**Every person should submit the 2 files described below.** If you worked collaboratively, each person can submit the same documents, but each person's submission should include 1) their own name, 2) an indication that the work is joint and the names of your other collaborators, and 3) information on any other individual or resource (outside of class material) you consulted in your responses. 
 
 ## 2. Submission format
 
-For each of the 4 assignments and the final project, you are required to submit 2 files:  
+For each of the 4 assignments and the final project, you are required to submit the following files:  
 
- * .doc, .html, or .pdf file with your typed responses to the problems and any tables and figures you produce. 
+ - .doc, .html, or .pdf file with your typed responses to the problems and any tables and figures you produce. 
    
- * The .Rmd or .R file that you used to render the tables and figures in the above doc/html/pdf file. 
+ - If you used R to create tables and/or figures in the above doc/html/pdf file, you must also submit the .Rmd or .R file you used to render the tables/figures. 
 
-## 3. Assignments details
+## 3. Assignments
 
-### 3.1. Assignment 1 (Logistic regression)
+### 3.1. Assignment 1 (Dichotmous Outcomes and Logistic Regression)
 
-*To be added*
+Objectives:
 
-<!-- Objectives: -->
+ - Examining dichotomous outcome data
+ - Using a logistic regression model to estimate a relationship where the dependent variable is dichotomous
+ - Describe, interpret, and draw inferences from the model results
 
-<!--  - Using Logistic regression model to estimate a relationship where the dependent variable is dichotomous -->
-<!--  - Interpret and report the results and make statistic inference from the estimated parameters -->
+Due: April 26
 
-<!-- Deadline: TBD -->
+**[Assignment details](./assignments/assignment01_Sp23.html)**
 
-<!-- Assignment description: [assignment1.html](./assignments/assignment01.html) -->
-
-<!-- Dataset: [nscs.csv](./data/nscs.csv) -->
-
-<!-- Key: [doc file]; [R script] -->
-
-### 3.2. Assignment 2 (Poisson regression)
+### 3.2. Assignment 2 (Count Outcomes)
 
 *To be added*
 
@@ -63,7 +60,7 @@ For each of the 4 assignments and the final project, you are required to submit 
 
 <!-- Key: [doc file]; [R script] -->
 
-### 3.3. Assignment 3 (Nested data)
+### 3.3. Assignment 3 (Nested Data)
 
 *To be added*
 
@@ -80,7 +77,7 @@ For each of the 4 assignments and the final project, you are required to submit 
 
 <!-- Key: [doc file]; [R script] -->
 
-### 3.4. Assignment 4 (Reliability in measurement)
+### 3.4. Assignment 4 (Reliability in easurement)
 
 *To be added*
 
