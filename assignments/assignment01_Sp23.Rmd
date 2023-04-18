@@ -1,0 +1,65 @@
+---
+title: "EDUC 645 Assignment 1"
+subtitle: "Unit 1: Dichotomous Outcomes and Logistic Regression"
+output: html_document
+---
+
+#### Submission Deadline
+
+April 26 (11:59 PM)
+
+#### Submission Format
+
+You are required to submit the following files:  
+
+ * .doc, .html, or .pdf file with your typed responses to the problems and any tables and figures you produce. 
+ * If you used R to create tables and/or figures in the above doc/html/pdf file, you must also submit the .Rmd or .R file you used to render the tables and figures. 
+ 
+#### Background and Dataset
+
+Available evidence suggests that regular exercise can help to improve depression symptoms (see literature reviews [here](https://doi.org/10.1186/s12889-020-09323-y) and [here](./articles/Kandola 2019.pdf)). In general, randomized controlled trials (RCTs) provide the strongest evidence about whether an intervention is effective. Once RCTs show that an intervention is effective, however, large and well-conducted observational studies can provide insights into the generalizability of RCT findings. In other words, if a rigorously conducted survey study in the population of interest demonstrates an association between exercise and depression symptoms that is consistent with the findings of earlier RCTs, then this suggests the RCT findings may have broad applicability. 
+
+The National Health and Nutrition Examination Survey (NHANES) is an annual household survey and health examination of about 5,000 participants across the US. NHANES uses a sophisticated methodology to produce a sample that provides information about the full US population, including historically underrepresented populations like racial and ethnic minorities. 
+
+Download the assignment dataset [here](./data/NHANES_data_Assign1.RData). These data are from the 2009-10 NHANES survey. For our purposes, we will use a simplified version of the dataset (N = 4,136) that can be treated like a simple random sample of the US population. The following variables are of interest:
+
+ * `Age`: Age in years at screening of study participant.
+ * `Sex`: Assigned sex of study participant (Male or Female).
+ * `PhysActive`: Indicates whether participant does moderate or vigorous-intensity sports, fitness, or recreational activities (Yes or No).
+ * `DepressionSymp`: Indicates whether participants reported experiencing depression symptoms several or more days per month (Yes or No). This outcome is reported only for participants who are 18 years or older.
+
+#### Assignment Requirements
+
+The goal of this assignment is to examine whether an association between physical activity and depression symptom frequency exists among NHANES participants, and if so, whether the direction of the association is consistent with prior research. 
+
+**Your submission should include the following elements (% weight for grading):**
+
+1. Research significance (10%) 
+    + Read over the literature reviews linked in the background section, and other relevant studies you might identify, and provide a 1-2 paragraph summary of existing evidence on the relationship between physical activity and depression symptoms. 
+    + After reviewing the available evidence, restate the research question in your own words. 
+
+2. Analytic sample summary statistics (10%)
+    + Load the dataset and perform basic data management.
+      + Because depression was only assessed in adult participants, delete observations from participants under 18 at the time of the assessment.  
+      + Check whether the variables are the right class: dichotomous variables should be *factors*, and continuous variables should be *numeric* (num) or *integers* (int). If not, convert them to the right type. Also check that factor levels are in the correct order for analysis. 
+    + Produce a summary statistics table (Table 1), including median participant age, proportion of the sample that is female, proportion reporting physical activity, and proportion reporting depression symptoms.
+    + Write a short paragraph describing the sample, key variables, and the summary statistics.
+ 
+3. Methods and analysis (50%)
+    + Model the relationship between physical activity and depression symptoms using a logistic regression model.
+      + Fit alternative models with age, and age and sex, included as control variables (covariates), and compare model fit to determine the best fitting model.
+      + Check for critical assumptions and outliers of the best-fitting model.
+    + Write a paragraph describing your model selection process and diagnostics results.
+    + Write a paragraph stating the results of your best-fitting model.
+    + Produce a results table that includes the model results and model fit statistics.
+
+
+4. Discussions and conclusions (20%)
+    + Write 1-2 paragraphs summarizing your results, describing whether (and to what extent) the results address your research question, and relating your findings back to the broader evidence base. 
+
+
+5. References, tables, and figures (10%)
+    + Must include references, Table 1, and Table 2.
+    + Other tables and figures you think are helpful.
+
+

@@ -14,8 +14,7 @@ output:
 
 ```{R, setup, include = F}
 library(pacman)
-library(easystats)
-p_load(NHANES, pander, here, tidyverse, ggplot2, xaringan, knitr, kableExtra, foreign, broom, xaringanthemer, reshape2, lfe, arsenal, ggpubr, stargazer, fixest, gtsummary, huxtable, aod)
+p_load(NHANES, performance, DHARMa, pander, here, tidyverse, ggplot2, xaringan, knitr, kableExtra, foreign, broom, xaringanthemer, reshape2, lfe, arsenal, ggpubr, stargazer, fixest, gtsummary, huxtable, aod)
 
 i_am("slides/EDUC645_log_regression_2.rmd")
 
@@ -124,7 +123,11 @@ Before setting up the model, we should check that our variables are the correct 
 ```{r}
 str(NHANES_data)
 ```
-  
+
+- Also check the *order* of factor levels (e.g., "No", "Yes"):
+  + For factors to be used as **independent variables**, the second level should be the desired "target" level (the state we want to focus our interpretation on, e.g., "Yes" indicating being physically active). The first level will be the reference level. 
+  + For **dependent variables**, the second level should be the outcome of interest (e.g., "Yes" indicating having diabetes). 
+
 ---
 # Regression equation components
 
@@ -173,6 +176,8 @@ summary(mod_2)
 
 - Remember that the quantities the model is working in are *log odds*, but we want to be working in *odds* and *odds ratios*. To do this, we need to exponentiate our model parameters.
 
+  + *Note:* An odds ratio from a multiple logistic regression model is referred to as an *adjusted odds ratio* (aOR).
+
 
 --
 - The default output also doesn't provide us confidence intervals, which we need for interpreting how precise are results are. 
@@ -191,7 +196,91 @@ mod_2 %>%
 ```
 
 ---
+# Recoding levels of independent variable
+
+We can make `PhysActiveYes` the reference level, so that our interpretation focuses on inactive participants ("Compared with active participants, inactive participants had...).
+
+
+```{r}
+NHANES_data <- NHANES_data %>% 
+  mutate(PhysActive = factor(PhysActive, levels = c("Yes", "No")))
+
+mod_3 <- glm(Diabetes ~ PhysActive + Age, data = NHANES_data,
+             family = binomial(link = "logit"))
+
+mod_3 %>% 
+      broom::tidy(exponentiate = TRUE, conf.int = TRUE)
+```
+
+
+---
+# Model Comparison
+
+- We can use a few approaches to identify a comparatively well-fitting model. As with linear regression, we consider a null model (a model with no independent variables) to be the simplest possible model. 
+
+
+--
+- Ideally, the independent variables to be added to the model should be selected with theoretical justification. After demonstrating improved fit with the added variables, it can be appropriate to modify the model to improve fit further (e.g., through including interactions or transformations of variables like squaring or cubing)
+
+
+--
+- Often adding more variables improves the fit of a model, so we must be cautious about overcomplicating the model or improving fit just for fit's sake. 
+
+
+--
+- In linear regression, you learned about $R^2$ as one tool for model comparison. A similar concept in logistic regression is *deviance*, which is a measure of the goodness of model fit. By comparing deviance across models, we can gauge whether fit is improving with additional independent variables or other changes. 
+  + Among models compared, the one with the lowest deviance is likely to be the best model for the given dataset. We can test the significance of the difference in deviance across models, so long as the models use exactly the same data.
+  + A conceptually similar metric is AIC: Among models compared, the one with the lowest AIC is likely to be the best model for the given dataset.
+
+---
+# Model Comparison
+
+**Before comparing models, ensure there is no missingness on all independent variables.**
+
+Comparing deviance between null model and model with just `PhysActive`:
+
+```{r}
+mod_1b <- glm(Diabetes ~ PhysActive, data = NHANES_data,
+             family = binomial(link = "logit"))
+
+print(anova(mod_1b, test ="Chisq"))
+```
+
+---
+# Model Comparison
+
+Comparing deviance between model with just `PhysActive` and model with both `PhysActive` and `Age`:
+
+```{r}
+print(anova(mod_1b, mod_2, test ="Chisq"))
+```
+
+---
+# Model Comparison
+
+We can make similar comparisons with AIC:
+
+```{r}
+mod_0 <- glm(Diabetes ~ 1, data = NHANES_data,
+             family = binomial(link = "logit"))
+mod_0$aic 
+```
+
+```{r}
+mod_1b$aic 
+```
+
+
+```{r}
+mod_2$aic 
+```
+
+**It's best to corroborate model fit using several approaches!**
+
+---
 # Assumptions and Diagnostics
+
+After selecting a best-fitting model, then we assess whether there are major violations of logistic regression assumptions. 
 
 - Outcome (Y) is discrete binomial variable (0/1 variable)
 
@@ -210,20 +299,46 @@ mod_2 %>%
 ---
 # Assumptions and Diagnostics
 
+We can check outliers and multicollinearity visually using the `check_model()` function from the *performance* package.
+
 ```{r}
-check_model(mod_2) # From the easystats package
+check_model(mod_3, check = c("outliers", "vif"))
 ```
+
+---
+# Assumptions and Diagnostics
+
+In generalized linear models like logistic regression, checking the normality of residuals can be challenging.
+
+  + In linear regression, we anticipate that residuals will follow the normal distribution. In logistic regression, however, remember that we are dealing with probability (the probability of having the outcome (1) or not (0)). 
+  
+  + Probability doesn't follow a normal distribution, so residuals from logistic and similar models may appear non-normal even when the model is actually well-fitting. 
+
+
+--
+One solution is to "standardize" the residuals so that they behave like residuals from a typical linear regression model. We can do this using the *DHARMa* package. 
+
+```{r}
+# After loading the DHARMa package, 
+# create an object containing the standardized residuals:
+mod_3_residuals <- simulateResiduals(mod_3)
+```
+
+---
+# Assumptions and Diagnostics
+
+```{r}
+# Then plot the residuals:
+plot(mod_3_residuals)
+```
+
 
 ---
 # To Dos
 
 ### Assignments
-- Assignment 1 is due April 25 at 11:59PM
+- Assignment 1 is due April 26 at 11:59PM
 
-  + Available on Canvas on Monday April 17
-  
-- Quiz 1 is due April 18 at 11:59PM
-
-  + Available on Canvas on Friday April 14
+  + Available on the course website today.
   
   

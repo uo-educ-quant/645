@@ -43,6 +43,229 @@ opts_chunk$set(
 
 ```
 
+---
+class: middle, inverse
+
+# Multilevel Models
+
+---
+# Goals for the unit
+- Understand nesting/clustering means (two-level, repeated measures within individuals)
+- Demonstrate varying intercepts and slopes across clusters
+- Understand what it means for intercepts and slopes to vary across clusters
+- Explain the difference between fixed-effects and random effects
+- Discuss the implications of ignoring the variance of random-effects in terms of the inference for fixed-effects and statistical power
+
+---
+# A Motivating Question
+
+**The Data:** Stanford Education Data Archive (SEDA), launched in 2016 to provide nationally comparable, publicly available test score data for U.S. public school districts, allowing scientific inquiries on the relationships between educational conditions, contexts, and outcomes (especially student math/ELA achievements) at the district-level across the nation.
+
+**Data set**
+- District-level data for 103 Oregon school districts, year 2017-18 data
+- Observations with missing values on any of the key variables were deleted for simplification
+
+**Overarching inquiry: What is the relationship between percentage of ELL students and math achievement in Oregon districts?**
+
+---
+# Inspect the data 
+
+each row/observation represents...
+
+```{r, echo = FALSE}
+seda <- rio::import(here::here("data", "seda_oregon.csv"))
+
+seda <- seda  %>%
+  mutate(subject = recode(subject, 'mth' = "Math", 'rla' = "Reading"))
+
+head(seda)
+```
+
+---
+# Understand clustered data
+
+Let's start with a single variable: Oregon districts' achievement score 
+
+```{r, echo = FALSE}
+seda %>% 
+  group_by(district) %>% 
+  mutate(mean = mean(achievement)) %>%
+  ungroup() %>% 
+  select(district, mean) %>%
+  ggplot(aes(district, mean)) +
+  geom_point() +
+  labs(x = "District",
+       y = "Achievement")
+```
+
+
+---
+# Achievement by Subject
+
+We gain more information looking at district achievement across subject and grade.
+
+```{r, echo = FALSE}
+seda %>% 
+  group_by(district, subject) %>% 
+  mutate(mean = mean(achievement)) %>% 
+  ungroup() %>% 
+  select(district, subject, mean) %>%
+  ggplot(aes(district, mean, color = subject)) +
+  geom_point() +
+  labs(x = "District",
+       y = "Achievement")
+```
+
+---
+# Achievement by grade
+
+```{r, echo = FALSE}
+seda %>% 
+  group_by(district, grade) %>% 
+  mutate(mean = mean(achievement)) %>% 
+  ungroup() %>% 
+  select(district, grade, mean) %>%
+  ggplot(aes(district, mean, color = grade)) +
+  geom_point() +
+  labs(x = "District",
+       y = "Achievement")
+```
+
+---
+# Achievement by grade AND subject
+
+```{r, echo = FALSE}
+seda %>% 
+  group_by(district, subject, grade) %>% 
+  mutate(mean = mean(achievement)) %>% 
+  ungroup() %>% 
+  select(district, subject, grade, mean) %>%
+  ggplot(aes(district, mean, color = grade)) +
+  facet_wrap(vars(subject)) +
+  geom_point() +
+  labs(x = "District",
+       y = "Achievement")
+```
+
+---
+# Examining Data Clustering
+
+IMPORTANTLY, keep in mind of this unique feature when we answering research questions, e.g., about relations between two variables
+
+```{r, echo = FALSE}
+seda %>% 
+  mutate(grade = recode(grade, '3' = "G3", '4' = "G4", '5' = "G5", '6' = "G6")) %>% 
+  group_by(district, subject, grade) %>% 
+  mutate(mean = mean(achievement)) %>% 
+  ungroup() %>% 
+  select(district, subject, grade, mean) %>%
+  ggplot(aes(district, mean, color = subject)) +
+  facet_wrap(vars(grade)) +
+  geom_point() +
+  labs(x = "District",
+       y = "Achievement")
+```
+
+---
+# Across grade and subject
+
+For example, let's look at relationship between percentage of ELL and achievement
+
+```{r, echo = FALSE}
+seda %>%
+  group_by(district) %>% 
+  mutate(achievement = mean(achievement)) %>% 
+  ungroup() %>% 
+  ggplot(aes(percent_ell, achievement)) +
+  geom_smooth(method='lm', se = 0) +
+  geom_point(alpha = 0.1) + 
+  labs(x = "ELL Percentage",
+       y = "Achievement")
+```
+
+---
+# Relationship by subject
+
+```{r, echo = FALSE}
+seda %>%
+  group_by(district, subject) %>% 
+  mutate(achievement = mean(achievement)) %>% 
+  ungroup() %>% 
+  ggplot(aes(percent_ell, achievement, color = subject)) +
+  geom_smooth(method='lm', se = 0) +
+  geom_point(alpha = 0.1) +
+  labs(x = "ELL Percentage",
+       y = "Achievement")
+```
+
+---
+
+# By subject AND grade
+
+```{r, echo = FALSE}
+seda %>%
+  mutate(grade = recode(grade, '3' = "G3", '4' = "G4", '5' = "G5", '6' = "G6")) %>% 
+  group_by(district, subject, grade) %>% 
+  mutate(achievement = mean(achievement)) %>% 
+  ungroup() %>% 
+  ggplot(aes(percent_ell, achievement, color = subject)) +
+  facet_wrap(vars(grade)) +
+  geom_smooth(method='lm', se = 0) +
+  geom_point(alpha = 0.1) +
+  labs(x = "ELL Percentage",
+       y = "Achievement")
+```
+
+* What is your current understanding of clustered data? 
+* Is there a single answer to the relationship between percentage of ELL students and achievement? 
+
+???
+
+Expect students to realize that there is no universal answer; depends on what you look at, what cluster/clusters you want to include, and model specifications
+
+
+---
+# What is Nested Data?
+
+Levels of one factor vary only within the levels of another factor, that factor is said to be nested. 
+For example, when measuring the performance of workers at several job locations, if the workers only work at one site, then the workers are nested within site. If the workers work at more than one location, we would say that workers are crossed with site.
+
+---
+# Where does it come from?
+### Why do we need to think hierarchically?
+1) Two realities exist within interventions:
+
+(a) Effect implies change in individuals over time,
+
+(b) Effect occurs in groups and organizational settings (e.g., dyads, groups, networks, neighborhoods, clinics, cities, countries).
+
+--
+
+2) Factors are nested across multiple levels; influence the organization of behavior.
+
+---
+# What happens if we ignore it?
+
+### What errors result if we ignore multilevel effects?
+#### Ecological Fallacy
+- Systematic underestimation of group effects
+- Inadequate intervention development and evaluation
+
+#### Aggregation bias
+- Attribute that an individual-level indicator is representative of the entire group
+
+#### Biased estimation of statistical associations
+- Misestimate standard errors
+- Homogeneity of regression slopes
+
+---
+# Traditional Linear Regression Example
+* Unit of analysis: Individual
+* Examine between-individual variability
+* Intercept and slope are the same for all groups
+* Ignores inclusion of important group variables
+* Residual correlation
+
 # Roadmap
 
 ---
