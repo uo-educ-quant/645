@@ -1,1 +1,2 @@
 load("/Users/nicholasjparr/Desktop/EDUC 645/data/NHANES_data1011.RData")
+load("/Users/nicholasjparr/Desktop/EDUC 645/data/NHANES_data_Assign1.Rdata")

@@ -13,25 +13,15 @@ navbar:
 
       - text: "Course Overview"
         href: ./slides/EDUC645_1_Intro.html
-      - text: "1. Dichotomous Outcomes"
-        href: ./slides/EDUC645_dichotomous_outcomes.html
-      - text: "2. Logistic Regression pt. 1"
-        href: ./slides/EDUC645_log_regression_1.html
-      - text: "3. Logistic Regression pt. 2"
-        href: ./slides/EDUC645_log_regression_2.html
-      - text: "4. Count Outcomes pt. 1"
+      - text: "Dichotomous Outcomes and Logistic Regression"
+        href: ./slides/EDUC645_logistic_regression_Sp23.html
+      - text: "Count Outcomes and Poisson Regression"
         href: 
-      - text: "5. Count Outcomes pt. 2"
-        href: 
-      - text: "6. Nested Data Structures pt. 1"
+      - text: "Nested Data"
         #href: ./slides/EDUC645_nested_data.html
-      - text: "7. Nested Data Structures pt. 2"
-        href:
-      - text: "8. Nested Data Structures pt. 3"
+      - text: "Reliability in Measurement"
         href: 
-      - text: "9. Reliability in Measurement"
-        href: 
-      - text: "10. Missing Data"
+      - text: "Missing Data"
         href: 
   - text: R Project Workflow
     href: workflow.html

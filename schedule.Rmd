@@ -33,8 +33,8 @@ knitr::opts_chunk$set(echo = TRUE)
 
 **Lecture**:
 
- * [Lecture slides](./slides/EDUC645_log_regression_1.html)
- * [Dataset](./data/NHANES_data1011.RData)
+ * [Lecture slides](./slides/EDUC645_logistic_regression_Sp23.html)
+ * [Dataset](./data/NHANES_data1112.RData)
 
 **Assignment**:
 
