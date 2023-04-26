@@ -1244,7 +1244,7 @@ mod_3$aic
 ---
 class: middle, inverse
 
-# Model Estimation and the Relationship Between Variable Selection, Fit, and Significance
+# Model Estimation, Fit, and Significance
 
 ---
 # Model estimation
@@ -1271,35 +1271,20 @@ For example, we have a large dataset in which diabetes is more common in inactiv
 
 
 --
-So, parameter estimates that are likeliest to reproduce our data are those that correspond to an odds ratio showing *inactive* participants have *greater* odds of diabetes, accompanied by a fairly small amount of error/imprecision (i.e., a narrow confidence interval). 
+So, parameter estimates that are likeliest to reproduce our data are those that correspond to an odds ratio indicating *inactive* participants have *greater* odds of diabetes, accompanied by a fairly small amount of error/imprecision (i.e., a narrow confidence interval). 
 
 
 --
 By the same logic, parameter estimates that correspond to an odds ratio that indicates the opposite (*active* participants have greater odds of diabetes) and a large amount of error (wide confidence interval) are clearly not good matches to our data. They are *unlikely* solutions for our model. 
 
 
----
-# Does this relate to model fit?
-
-MLE is using the information we put into the model (the independent and dependent variables) to try to reproduce our data from a range of possible parameter estimates. 
-
-
 --
-- In other words, if we recreated our data only from the odds ratio and standard error, would we get data that look similar to what we have? What we mean here is not similar individual observations, but similar parameter estimates, like mean, probabilities, errors, etc.
-
-
---
-If we put variables into the model that don't provide much information about the outcome then MLE has little to work with and can't find any parameter values that reproduce the data well - and this is just another way of saying *poor model fit*. 
-
-
---
-**Are fit and significance related?** Non-significance is not necessarily the same as poor model fit, and a well-fitting model can result in a nonsignificant findings. 
-
+MLE is using the information we put into the model (the independent and dependent variables) to try to reproduce our data from a range of possible parameter estimates. If we put variables into the model that don't relate to variability in the outcome, it is difficult to identify parameter values that reproduce the data well.
 
 ---
 # Significance and fit
 
-Think of the example of a well-fitting model that conclusively shows that an intervention is *ineffective.* This model includes an independent variable that corresponds to whether a participant was exposed to the intervention or not, and several other sociodemographic variables we want to control for. 
+**Are fit and significance related?** Think of the example of a well-fitting model that conclusively shows that an intervention is *ineffective.* This model includes an independent variable that corresponds to whether a participant was exposed to the intervention or not, and several other sociodemographic variables we want to control for. 
 
 
 --
@@ -1311,12 +1296,7 @@ What would you expect the results of this model to look like (value of OR, width
 
 
 --
-In other words, exposure to the intervention results in two groups that have about the same odds of the outcome. This is very informative! It's only because of what we understand the exposure variable to *mean* (a measure of the effectiveness of an intervention) that it carries a negative connotation (ineffectiveness). 
-
-
---
-A model could be exactly as well-fitting if the exposure to the intervention resulted in one group with greater odds of the outcome. Again, because of the meaning we give to the variable, we understand this scenario to correspond to *effectiveness.* 
-
+In other words, exposure to the intervention results in two groups that have about the same odds of the outcome. This is very informative! A model could be exactly as well-fitting if the exposure to the intervention resulted in one group with greater odds of the outcome. 
 
 ---
 # Significance and fit
@@ -1333,14 +1313,13 @@ Explaining the variability in the outcome by intervention exposure is the main "
 
 
 --
-- This idea is especially important when we appear to **have** an intervention effect, and we want to rule out other possible reasons why the outcome may vary. If there are other factors producing variation in the outcome (i.e., confounders), a better fitting model would be the model that includes those variables. 
+- This is especially important when we appear to **have** an intervention effect, and we want to rule out other possible reasons why the outcome may vary. If there are other factors producing variation in the outcome (i.e., confounders), a better fitting model would be the model that includes those variables. 
 
 
 ---
 # Bringing it together
 
-
-If we bring all of this together, we get a few general scenarios for better and worse model fit:
+So, poor model fit does not necessarily equate to non-significance, and a well-fitting model can result in nonsignificant findings. If we bring all of these ideas together, we get a few general scenarios for better and worse model fit:
 
 
 --
@@ -1352,7 +1331,7 @@ If we bring all of this together, we get a few general scenarios for better and 
 
 
 --
-3. utcome variation mostly results from observable sources and we've not measured/included many of these sources, or most variability is from *unobservable* sources...Worse fit
+3. Outcome variation mostly results from observable sources and we've not measured/included many of these sources, or most variability is from *unobservable* sources...Worse fit
 
 
 --
