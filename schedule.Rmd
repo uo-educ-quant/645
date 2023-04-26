@@ -59,7 +59,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 **Readings**: 
 
- * Complete prior to April 25 meeting: BMLR Ch. 4.1-4.4 (pp. 93-112)
+ * Complete prior to April 27 meeting: BMLR Ch. 4.1-4.4 (pp. 93-112)
  * Complete prior to May 2 meeting: BMLR Ch. 4.5-4.10 (pp. 113-132), Ch. 5 (pp. 145-148)
  
 **Lecture**:
