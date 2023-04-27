@@ -16,7 +16,7 @@ navbar:
       - text: "Dichotomous Outcomes and Logistic Regression"
         href: ./slides/EDUC645_logistic_regression_Sp23.html
       - text: "Count Outcomes and Poisson Regression"
-        href: 
+        href: ./slides/EDUC645_poisson_regression_Sp23.html
       - text: "Nested Data"
         #href: ./slides/EDUC645_nested_data.html
       - text: "Reliability in Measurement"

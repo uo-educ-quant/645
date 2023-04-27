@@ -1063,13 +1063,119 @@ mod_3_residuals <- simulateResiduals(mod_3)
 plot(mod_3_residuals)
 ```
 
+---
+# Assumptions and Diagnostics
+
+For linearity, we are especially interested in whether the relationship between each *continuous* independent variable and the *log odds* of our outcome is linear. If not, we might try transforming the variable (e.g., squaring it), among other approaches. 
+
+```{r, eval=FALSE}
+NHANES_data1112 %>%
+  group_by(Age) %>%    
+  count(Diabetes) %>%
+  mutate(prop = n/sum(n)) %>%
+  filter(Diabetes == "Yes") %>%
+  summarise(log_odds = log(prop/(1 - prop))) %>%
+  ggplot(aes(x = Age, y = log_odds)) +
+  geom_point() +
+  ylab("Log odds of diabetes")
+```
+
+
+---
+# Assumptions and Diagnostics
+
+For linearity, we are especially interested in whether the relationship between each *continuous* independent variable and the *log odds* of our outcome is linear. If not, we might try transforming the variable (e.g., squaring it), among other approaches. 
+
+```{r, echo=FALSE}
+NHANES_data1112 %>%
+  group_by(Age) %>%    
+  count(Diabetes) %>%
+  mutate(prop = n/sum(n)) %>%
+  filter(Diabetes == "Yes") %>%
+  summarise(log_odds = log(prop/(1 - prop))) %>%
+  ggplot(aes(x = Age, y = log_odds)) +
+  geom_point() +
+  ylab("Log odds of diabetes")
+```
+
+---
+# Assumptions and Diagnostics
+
+We can add a "local" (or loess) regression line that will show the most detail about linearity (or lack of).
+
+```{r, eval=FALSE}
+NHANES_data1112 %>%
+  group_by(Age) %>%    
+  count(Diabetes) %>%
+  mutate(prop = n/sum(n)) %>%
+  filter(Diabetes == "Yes") %>%
+  summarise(log_odds = log(prop/(1 - prop))) %>%
+  ggplot(aes(x = Age, y = log_odds)) +
+  geom_point() +
+  ylab("Log odds of diabetes") +
+  geom_smooth(method = "loess") # Adds a loess regression line
+```
+
+---
+# Assumptions and Diagnostics
+
+We can add a "local" (or loess) regression line that will show the most detail about linearity (or lack of).
+
+```{r, echo=FALSE}
+NHANES_data1112 %>%
+  group_by(Age) %>%    
+  count(Diabetes) %>%
+  mutate(prop = n/sum(n)) %>%
+  filter(Diabetes == "Yes") %>%
+  summarise(log_odds = log(prop/(1 - prop))) %>%
+  ggplot(aes(x = Age, y = log_odds)) +
+  geom_point() +
+  ylab("Log odds of diabetes") +
+  geom_smooth(method = "loess") # Adds a loess regression line
+```
+
+---
+# Assumptions and Diagnostics
+
+Or, we can add a linear regression line that will give us an overall sense of linearity. 
+
+```{r, eval=FALSE}
+NHANES_data1112 %>%
+  group_by(Age) %>%    
+  count(Diabetes) %>%
+  mutate(prop = n/sum(n)) %>%
+  filter(Diabetes == "Yes") %>%
+  summarise(log_odds = log(prop/(1 - prop))) %>%
+  ggplot(aes(x = Age, y = log_odds)) +
+  geom_point() +
+  ylab("Log odds of diabetes") +
+  geom_smooth(method = "lm") # Adds a linear regression line
+```
+
+---
+# Assumptions and Diagnostics
+
+Or, we can add a linear regression line that will give us an overall sense of linearity. 
+
+```{r, echo=FALSE}
+NHANES_data1112 %>%
+  group_by(Age) %>%    
+  count(Diabetes) %>%
+  mutate(prop = n/sum(n)) %>%
+  filter(Diabetes == "Yes") %>%
+  summarise(log_odds = log(prop/(1 - prop))) %>%
+  ggplot(aes(x = Age, y = log_odds)) +
+  geom_point() +
+  ylab("Log odds of diabetes") +
+  geom_smooth(method = "lm") # Adds a linear regression line
+```
 
 ---
 # To Dos
 
 ### Assignments
 
-- Assignment 1 is due **tomorrow** April 26 at 11:59PM
+- Assignment 1 is due April 26 at 11:59PM
 
 ### Readings
 

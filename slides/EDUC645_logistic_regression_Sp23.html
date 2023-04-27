@@ -1409,13 +1409,90 @@ plot(mod_3_residuals)
 
 &lt;img src="EDUC645_logistic_regression_Sp23_files/figure-html/unnamed-chunk-32-1.png" style="display: block; margin: auto;" /&gt;
 
+---
+# Assumptions and Diagnostics
+
+For linearity, we are especially interested in whether the relationship between each *continuous* independent variable and the *log odds* of our outcome is linear. If not, we might try transforming the variable (e.g., squaring it), among other approaches. 
+
+
+```r
+NHANES_data1112 %&gt;%
+  group_by(Age) %&gt;%    
+  count(Diabetes) %&gt;%
+  mutate(prop = n/sum(n)) %&gt;%
+  filter(Diabetes == "Yes") %&gt;%
+  summarise(log_odds = log(prop/(1 - prop))) %&gt;%
+  ggplot(aes(x = Age, y = log_odds)) +
+  geom_point() +
+  ylab("Log odds of diabetes")
+```
+
+
+---
+# Assumptions and Diagnostics
+
+For linearity, we are especially interested in whether the relationship between each *continuous* independent variable and the *log odds* of our outcome is linear. If not, we might try transforming the variable (e.g., squaring it), among other approaches. 
+
+&lt;img src="EDUC645_logistic_regression_Sp23_files/figure-html/unnamed-chunk-34-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+# Assumptions and Diagnostics
+
+We can add a "local" (or loess) regression line that will show the most detail about linearity (or lack of).
+
+
+```r
+NHANES_data1112 %&gt;%
+  group_by(Age) %&gt;%    
+  count(Diabetes) %&gt;%
+  mutate(prop = n/sum(n)) %&gt;%
+  filter(Diabetes == "Yes") %&gt;%
+  summarise(log_odds = log(prop/(1 - prop))) %&gt;%
+  ggplot(aes(x = Age, y = log_odds)) +
+  geom_point() +
+  ylab("Log odds of diabetes") +
+  geom_smooth(method = "loess") # Adds a loess regression line
+```
+
+---
+# Assumptions and Diagnostics
+
+We can add a "local" (or loess) regression line that will show the most detail about linearity (or lack of).
+
+&lt;img src="EDUC645_logistic_regression_Sp23_files/figure-html/unnamed-chunk-36-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+# Assumptions and Diagnostics
+
+Or, we can add a linear regression line that will give us an overall sense of linearity. 
+
+
+```r
+NHANES_data1112 %&gt;%
+  group_by(Age) %&gt;%    
+  count(Diabetes) %&gt;%
+  mutate(prop = n/sum(n)) %&gt;%
+  filter(Diabetes == "Yes") %&gt;%
+  summarise(log_odds = log(prop/(1 - prop))) %&gt;%
+  ggplot(aes(x = Age, y = log_odds)) +
+  geom_point() +
+  ylab("Log odds of diabetes") +
+  geom_smooth(method = "lm") # Adds a linear regression line
+```
+
+---
+# Assumptions and Diagnostics
+
+Or, we can add a linear regression line that will give us an overall sense of linearity. 
+
+&lt;img src="EDUC645_logistic_regression_Sp23_files/figure-html/unnamed-chunk-38-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 # To Dos
 
 ### Assignments
 
-- Assignment 1 is due **tomorrow** April 26 at 11:59PM
+- Assignment 1 is due April 26 at 11:59PM
 
 ### Readings
 

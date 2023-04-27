@@ -64,7 +64,7 @@ knitr::opts_chunk$set(echo = TRUE)
  
 **Lecture**:
 
- * Lecture slides
+ * [Lecture slides](./slides/EDUC645_poisson_regression_Sp23.html)
  * Dataset
 
 **Assignment**
@@ -72,7 +72,7 @@ knitr::opts_chunk$set(echo = TRUE)
  * Due May 9
  * Assignment details
  
-**Unit Quiz**: Due May 2
+**Unit Quiz**: Due May 5
 
 ## Unit 3: Nested Data
 
