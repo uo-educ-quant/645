@@ -45,7 +45,7 @@ opts_chunk$set(
 )
 
 NHANES_data1112 <- NHANES::NHANES %>% 
-  select(ID, SurveyYr, Gender, Age, AgeDecade, Race3, Education, Poverty, Diabetes, DaysMentHlthBad, Depressed, PhysActive) %>% 
+  select(ID, SurveyYr, Gender, Age, AgeDecade, Race3, Education, Poverty, Diabetes, DaysMentHlthBad, Depressed, PhysActive, SleepTrouble) %>% 
   mutate(Race_Eth = as_factor(case_when(Race3 == "Mexican" | Race3 == "Hispanic" ~ "Hispanic/Latino",
                                         TRUE ~ Race3)),
          PhysActive = as_factor(case_when(PhysActive == "No" ~ "Inactive",
@@ -54,8 +54,9 @@ NHANES_data1112 <- NHANES::NHANES %>%
          DaysMHBad_most = as_factor(case_when(DaysMentHlthBad < 10 ~ "No",
                                               DaysMentHlthBad >= 10 ~ "Yes")),
          DaysMHBad_most = factor(DaysMHBad_most, levels = c("No", "Yes"))) %>% 
-  rename(Depress_Freq = Depressed, Sex = Gender, DaysMHBad_count = DaysMentHlthBad) %>% 
-  select(ID, SurveyYr, Age, Sex, Race_Eth, Diabetes, Depress_Freq, PhysActive, DaysMHBad_count, DaysMHBad_most) %>%   filter(SurveyYr == "2011_12", Age > 12) %>% 
+  rename(Depress_Freq = Depressed, Sex = Gender, DaysMHBad_count = DaysMentHlthBad, Sleep_Trouble = SleepTrouble) %>% 
+  select(ID, SurveyYr, Age, Sex, Race_Eth, Diabetes, Depress_Freq, PhysActive, DaysMHBad_count, DaysMHBad_most, Sleep_Trouble) %>%   
+  filter(SurveyYr == "2011_12", Age > 12) %>% 
   filter(if_all(everything(), ~!is.na(.))) %>% 
   select(-SurveyYr)
 ```
@@ -72,15 +73,19 @@ Count outcomes describe how many of an outcome are present, or how often an outc
 
 
 --
-Counts are numeric like continuous outcomes, but a distribution of counts:
+Counts are numeric like continuous outcomes, but always have a **positive** value. 
 
 
 --
-- Is usually **skewed**, meaning that some values are much more common than others.
+In addition, a distribution of counts is:
 
 
 --
-- Is often **overdispersed**, which means the counts vary more than would be expected.
+- Usually **skewed**, meaning that some values are much more common than others.
+
+
+--
+- Often **overdispersed**, which means the counts vary more than would be expected.
 
 
 --
@@ -103,7 +108,7 @@ NHANES_data1112 %>%
 ---
 # Closer-to-normally-distributed data
 
-Contrast with the self-reported number of hours of sleep a participant usually gets, `SleepHrsNight`.
+Contrast with `SleepHrsNight`, the self-reported number of hours of sleep a participant usually gets.
 
 
 --
@@ -115,7 +120,7 @@ NHANESraw %>%
 
 
 ---
-# Options for Analysing Count Data
+# Options for analysing count data
 
 
 --
@@ -123,7 +128,7 @@ NHANESraw %>%
 
 
 --
-- Many issues in addition to violating model assumptions, including loss of data because it necessary to take the log of zero (which is undefined) and biased estimates.
+- Many issues in addition to violating model assumptions, including biased estimates and loss of data because it is necessary to take the log of zero (which is undefined).
 
 
 --
@@ -135,17 +140,17 @@ NHANESraw %>%
 
 
 --
-*Zero-inflated regression model:* Used to account for excess zeros.
+*Zero-inflated regression model:* Used to account for excess zeros produced by a different process from "true" zeros. 
 
 ---
 class: middle, inverse
 
-# Analyzing Count Data
+# Analyzing count data
 
 ---
 # Distributions for counts
 
-Both logistic and Poisson regression are forms of the binomial distribution, which is the probability distribution of one or more "trials" that can result in one of two outcomes. 
+When analyzing dichotomous outcomes and count outcomes, we use forms of the binomial distribution, which is the probability distribution of one or more "trials" that can result in one of two outcomes. 
 
 
 --
@@ -171,7 +176,11 @@ One way of thinking of this difference is it shifts the focus from the outcome o
 
 
 --
-When might this difference apply to the research setting? Perhaps we're not interested in the relationship between an independent variable and *having* the outcome, but instead its relationship with **how many times** the outcome occurs in a certain population, or over a certain timeframe.
+When might this difference apply to the research setting? 
+
+
+--
+Perhaps we're not interested in the relationship between an independent variable and *having* the outcome, but instead its relationship with **how many times** the outcome occurs in a certain population, or over a certain timeframe.
 
 
 ---
@@ -185,7 +194,7 @@ In research where the outcome is how many or how often an outcome occurs, the re
 
 
 --
-- Number of hospitalization in a year (most people will not have been hospitalized)
+- Number of hospitalizations in a year (most people will not have been hospitalized)
 
 
 --
@@ -193,7 +202,7 @@ In research where the outcome is how many or how often an outcome occurs, the re
 
 
 --
-The resulting distribution of counts is skewed toward 0, and one probability distribution we can use in this situation is the Poisson. 
+The resulting distribution of counts is skewed toward 0, and one probability distribution we can use in this situation is the Poisson distribution. 
 
 
 ---
@@ -202,7 +211,7 @@ The Poisson distribution is a special case of the binomial distribution, where w
 
 
 --
-- Poisson assumes the average number of counts is equal to how much variability there is in the counts. In practice, count data are often overdispersed, meaning there is a greater amount of variability than the mean. This can bias standard errors, and therefore p-values and confidence intervals.
+- Poisson assumes the average (mean) number of counts is equal to how much variability there is in the counts. In practice, count data are often overdispersed, meaning there is a greater amount of variability than the mean. This can bias standard errors, and therefore p-values and confidence intervals.
 
 
 --
@@ -223,65 +232,76 @@ NHANES_data1112 %>%
 ---
 # Assessing variability
 
-We could see it's very skewed, but is it overdispersed too?
+We could see it's very skewed, but is it overdispersed too? Here we'll limit the data to participants 16 or older because the independent variable we'll look at shortly was not measured in participants under 16.
 
 
 --
 ```{r}
 NHANES_data1112 %>% 
+  filter(Age >= 16) %>% 
   summarize(mean = mean(DaysMHBad_count),
             variance = var(DaysMHBad_count))
 ```
 
 
 --
-The variance of the counts far exceeds the mean, which means we very likely have overdispersion.
+The variance of the counts far exceeds the mean, which indicates overdispersion.
+
+
+--
+In this situation, we should proceed with a negative binomial model. We use the `glm.nb` function from the MASS package (included with R).
 
 ---
 # Fitting a model
 
-Now that we know the data are likely overdispersed, we should proceed with a negative binomial model. We use the `glm.nb` function from the MASS package (built into R). 
-
+Here, we'll look at whether there is a relationship between participants' self-reported sleep quality (`Sleep_Trouble`) and the number of days per month they have poor mental health (`DaysMHBad_count`).
 
 --
 ```{r}
 library(MASS)
-mod_1 <- glm.nb(DaysMHBad_count ~ PhysActive, data = NHANES_data1112)
+mod_1 <- glm.nb(DaysMHBad_count ~ Sleep_Trouble, data = NHANES_data1112)
 ```
 
 
 --
-We already know the data likely violate the Poisson assumption of mean = variance, but let's compare this model to a Poisson model to illustrate the impact on fit: 
-
-
---
-**Deviance:**
+We already know the data likely violate the Poisson assumption of mean = variance, but let's compare this model to a Poisson model to illustrate the impact on fit. 
 
 ```{r}
-mod_1b <- glm(DaysMHBad_count ~ PhysActive, family = "poisson",
+mod_1b <- glm(DaysMHBad_count ~ Sleep_Trouble, family = "poisson",
               data = NHANES_data1112)
-
-mod_1b$null.deviance
-mod_1$null.deviance
 ```
 
 ---
 # Fitting a model
 
+--
+.pull-left[
+**Deviance:**
+
+```{r}
+mod_1b$null.deviance # Poisson
+mod_1$null.deviance # Neg Binom
+```
+]
+
+
+--
+.pull-right[
 **AIC:**
 
 ```{r}
-mod_1b$aic
-mod_1$aic
+mod_1b$aic # Poisson
+mod_1$aic # Neg Binom
 ```
+]
 
 
 --
 And most critically, we can see that the Poisson gave us much smaller standard errors, which would produce artificially narrow confidence intervals. 
 
 ```{r}
-summary(mod_1b)$coefficients[2, "Std. Error"]
-summary(mod_1)$coefficients[2, "Std. Error"]
+summary(mod_1b)$coefficients[2, "Std. Error"] # Poisson
+summary(mod_1)$coefficients[2, "Std. Error"] # Neg Binom
 ```
 
 
@@ -290,9 +310,12 @@ summary(mod_1)$coefficients[2, "Std. Error"]
 
 We can also look at whether the negative binomial model better accounts for overdispersion. We'll use the DHARMa package again. 
 
+
+--
 ```{r}
 mod_1_residuals <- simulateResiduals(mod_1)
-testDispersion(mod_1_residuals, alternative = "greater", plot = F)
+testDispersion(mod_1_residuals, 
+               alternative = "greater", plot = F)
 ```
 
 
@@ -301,7 +324,8 @@ Compared with the Poisson:
 
 ```{r, echo=FALSE, include=FALSE}
 mod_1b_residuals <- simulateResiduals(mod_1b)
-mod_1b_residuals_p <- testDispersion(mod_1b_residuals, alternative = "greater", plot = F)
+mod_1b_residuals_p <- testDispersion(mod_1b_residuals, 
+                                     alternative = "greater", plot = F)
 ```
 
 ```{r}
@@ -311,7 +335,7 @@ mod_1b_residuals_p$p.value
 ---
 # Basic interpretaton 
 
-Like logistic regression, we have to exponentiate the model coefficients to interpret the results.
+Like logistic regression, we have to exponentiate the model coefficients to interpret the results. Why do you think we used the log(counts) in our analyses?
 
 
 --
@@ -322,16 +346,157 @@ mod_1 %>%
 
 
 --
-With counts, the exponentiated coefficient is a **rate ratio**. 
+With counts, the exponentiated coefficient is a **rate ratio**. Here, it tells us that:
 
 
 --
-- Here, it tells us that compared with active participants, inactive participants experienced 1.5 times as many days per month with poor mental health. 
+- Compared with participants who do not have trouble sleeping, participants who have trouble sleeping on average experience 2.13 times as many days per month with poor mental health. 
 
-- Inactive participants experienced 50% more poor mental health days per month than active participants.
+
+--
+- On average, participants who have trouble sleeping experience 113% more poor mental health days each month than participants who do not have trouble sleeping.
 
 ---
-# To Dos
+class: middle, inverse
+
+# From here, we proceed like logistic regression...
+
+
+---
+# Adding covariates
+
+Adding `Age` as a covariate:
+
+```{r}
+mod_2 <- glm.nb(DaysMHBad_count ~ Sleep_Trouble + Age, 
+                data = NHANES_data1112)
+anova(mod_1, mod_2, test ="Chisq")
+```
+
+
+--
+```{r}
+mod_1$aic
+mod_2$aic
+```
+
+---
+# Adding covariates
+
+Adding `Sex` as a covariate:
+
+```{r}
+mod_3 <- glm.nb(DaysMHBad_count ~ Sleep_Trouble + Age + Sex, 
+                data = NHANES_data1112)
+anova(mod_2, mod_3, test ="Chisq")
+```
+
+
+--
+```{r}
+mod_2$aic
+mod_3$aic
+```
+
+---
+# Adding an interaction
+
+```{r}
+mod_3_int <- glm.nb(DaysMHBad_count ~ Sleep_Trouble + Age + Sex + 
+                      Sleep_Trouble:Sex, data = NHANES_data1112)
+```
+
+
+--
+```{r}
+mod_3_int %>% 
+  broom::tidy() # Just evaluating significance of the interaction
+```
+
+---
+# Interpreting an interaction
+
+We can interpret the interaction using predicted *counts*, just like we used predicted probabilities in logistic regression.
+
+
+--
+```{r}
+# using the ggeffects package
+mod_3_int_probs <- ggeffect(mod_3_int,
+                            type = "fe",
+                            terms = c("Sleep_Trouble", "Sex"))
+```
+
+---
+# Interpreting an interaction
+
+We can interpret the interaction using predicted *counts*, just like we used predicted probabilities in logistic regression.
+
+```{r}
+print(mod_3_int_probs)
+```
+
+---
+# Interpreting an interaction
+
+```{r}
+plot(mod_3_int_probs)
+```
+
+---
+# Interpreting an interaction
+
+Female and male participants with sleeping trouble would be expected to have a similar number of poor mental health days each month. 
+
+
+--
+In contrast, among participants who did not report sleeping trouble, female participants would be expected to have significantly more poor mental health days each month than male participants.
+
+
+--
+This suggests that other factors aside from sleep quality may contribute to the number of poor mental health days participants experience each month, particularly for female participants.
+
+---
+# Assumptions and diagnostics
+
+We can use the same tools to assess model assumptions as we used in logistic regression.  
+
+--
+```{r}
+mod_3_int_residuals <- simulateResiduals(mod_3_int) # From DHARMa
+plot(mod_3_int_residuals)
+```
+
+---
+# Assumptions and diagnostics
+
+We can also formally test for zero inflation, again using DHARMa:
+
+```{r}
+testZeroInflation(mod_3_int_residuals, plot = FALSE)
+```
+
+---
+# Assumptions and diagnostics
+
+Checking outliers and multicollinearity visually using the `check_model()` function from the *performance* package.
+
+```{r}
+performance::check_model(mod_3_int, check = c("outliers", "vif"))
+```
+
+---
+# To do's
 
 ### Assignments
-- Quiz 2 due May 5 (available tomorrow morning)
+
+- Quiz 2 due Friday - Available tomorrow (Wed) morning.
+
+- Assignment 2 due May 11 (previously May 9) - Available after class Thursday.
+
+
+
+
+
+
+

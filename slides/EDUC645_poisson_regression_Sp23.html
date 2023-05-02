@@ -38,15 +38,19 @@ Count outcomes describe how many of an outcome are present, or how often an outc
 
 
 --
-Counts are numeric like continuous outcomes, but a distribution of counts:
+Counts are numeric like continuous outcomes, but always have a **positive** value. 
 
 
 --
-- Is usually **skewed**, meaning that some values are much more common than others.
+In addition, a distribution of counts is:
 
 
 --
-- Is often **overdispersed**, which means the counts vary more than would be expected.
+- Usually **skewed**, meaning that some values are much more common than others.
+
+
+--
+- Often **overdispersed**, which means the counts vary more than would be expected.
 
 
 --
@@ -65,7 +69,7 @@ Let's look at `DaysMHBad_count`, the number of days per month a participant repo
 ---
 # Closer-to-normally-distributed data
 
-Contrast with the self-reported number of hours of sleep a participant usually gets, `SleepHrsNight`.
+Contrast with `SleepHrsNight`, the self-reported number of hours of sleep a participant usually gets.
 
 
 --
@@ -73,7 +77,7 @@ Contrast with the self-reported number of hours of sleep a participant usually g
 
 
 ---
-# Options for Analysing Count Data
+# Options for analysing count data
 
 
 --
@@ -81,7 +85,7 @@ Contrast with the self-reported number of hours of sleep a participant usually g
 
 
 --
-- Many issues in addition to violating model assumptions, including loss of data because it necessary to take the log of zero (which is undefined) and biased estimates.
+- Many issues in addition to violating model assumptions, including biased estimates and loss of data because it is necessary to take the log of zero (which is undefined).
 
 
 --
@@ -93,17 +97,17 @@ Contrast with the self-reported number of hours of sleep a participant usually g
 
 
 --
-*Zero-inflated regression model:* Used to account for excess zeros.
+*Zero-inflated regression model:* Used to account for excess zeros produced by a different process from "true" zeros. 
 
 ---
 class: middle, inverse
 
-# Analyzing Count Data
+# Analyzing count data
 
 ---
 # Distributions for counts
 
-Both logistic and Poisson regression are forms of the binomial distribution, which is the probability distribution of one or more "trials" that can result in one of two outcomes. 
+When analyzing dichotomous outcomes and count outcomes, we use forms of the binomial distribution, which is the probability distribution of one or more "trials" that can result in one of two outcomes. 
 
 
 --
@@ -129,7 +133,11 @@ One way of thinking of this difference is it shifts the focus from the outcome o
 
 
 --
-When might this difference apply to the research setting? Perhaps we're not interested in the relationship between an independent variable and *having* the outcome, but instead its relationship with **how many times** the outcome occurs in a certain population, or over a certain timeframe.
+When might this difference apply to the research setting? 
+
+
+--
+Perhaps we're not interested in the relationship between an independent variable and *having* the outcome, but instead its relationship with **how many times** the outcome occurs in a certain population, or over a certain timeframe.
 
 
 ---
@@ -143,7 +151,7 @@ In research where the outcome is how many or how often an outcome occurs, the re
 
 
 --
-- Number of hospitalization in a year (most people will not have been hospitalized)
+- Number of hospitalizations in a year (most people will not have been hospitalized)
 
 
 --
@@ -151,7 +159,7 @@ In research where the outcome is how many or how often an outcome occurs, the re
 
 
 --
-The resulting distribution of counts is skewed toward 0, and one probability distribution we can use in this situation is the Poisson. 
+The resulting distribution of counts is skewed toward 0, and one probability distribution we can use in this situation is the Poisson distribution. 
 
 
 ---
@@ -160,7 +168,7 @@ The Poisson distribution is a special case of the binomial distribution, where w
 
 
 --
-- Poisson assumes the average number of counts is equal to how much variability there is in the counts. In practice, count data are often overdispersed, meaning there is a greater amount of variability than the mean. This can bias standard errors, and therefore p-values and confidence intervals.
+- Poisson assumes the average (mean) number of counts is equal to how much variability there is in the counts. In practice, count data are often overdispersed, meaning there is a greater amount of variability than the mean. This can bias standard errors, and therefore p-values and confidence intervals.
 
 
 --
@@ -177,13 +185,14 @@ Let's compare the mean and variance of the `DaysMHBad_count` variable we looked 
 ---
 # Assessing variability
 
-We could see it's very skewed, but is it overdispersed too?
+We could see it's very skewed, but is it overdispersed too? Here we'll limit the data to participants 16 or older because the independent variable we'll look at shortly was not measured in participants under 16.
 
 
 --
 
 ```r
 NHANES_data1112 %&gt;% 
+  filter(Age &gt;= 16) %&gt;% 
   summarize(mean = mean(DaysMHBad_count),
             variance = var(DaysMHBad_count))
 ```
@@ -198,35 +207,44 @@ NHANES_data1112 %&gt;%
 
 
 --
-The variance of the counts far exceeds the mean, which means we very likely have overdispersion.
+The variance of the counts far exceeds the mean, which indicates overdispersion.
+
+
+--
+In this situation, we should proceed with a negative binomial model. We use the `glm.nb` function from the MASS package (included with R).
 
 ---
 # Fitting a model
 
-Now that we know the data are likely overdispersed, we should proceed with a negative binomial model. We use the `glm.nb` function from the MASS package (built into R). 
-
+Here, we'll look at whether there is a relationship between participants' self-reported sleep quality (`Sleep_Trouble`) and the number of days per month they have poor mental health (`DaysMHBad_count`).
 
 --
 
 ```r
 library(MASS)
-mod_1 &lt;- glm.nb(DaysMHBad_count ~ PhysActive, data = NHANES_data1112)
+mod_1 &lt;- glm.nb(DaysMHBad_count ~ Sleep_Trouble, data = NHANES_data1112)
 ```
 
 
 --
-We already know the data likely violate the Poisson assumption of mean = variance, but let's compare this model to a Poisson model to illustrate the impact on fit: 
+We already know the data likely violate the Poisson assumption of mean = variance, but let's compare this model to a Poisson model to illustrate the impact on fit. 
 
+
+```r
+mod_1b &lt;- glm(DaysMHBad_count ~ Sleep_Trouble, family = "poisson",
+              data = NHANES_data1112)
+```
+
+---
+# Fitting a model
 
 --
+.pull-left[
 **Deviance:**
 
 
 ```r
-mod_1b &lt;- glm(DaysMHBad_count ~ PhysActive, family = "poisson",
-              data = NHANES_data1112)
-
-mod_1b$null.deviance
+mod_1b$null.deviance # Poisson
 ```
 
 ```
@@ -234,34 +252,36 @@ mod_1b$null.deviance
 ```
 
 ```r
-mod_1$null.deviance
+mod_1$null.deviance # Neg Binom
 ```
 
 ```
-#&gt; [1] 2677.782
+#&gt; [1] 2733.545
 ```
+]
 
----
-# Fitting a model
 
+--
+.pull-right[
 **AIC:**
 
 
 ```r
-mod_1b$aic
+mod_1b$aic # Poisson
 ```
 
 ```
-#&gt; [1] 39421.75
+#&gt; [1] 38192.01
 ```
 
 ```r
-mod_1$aic
+mod_1$aic # Neg Binom
 ```
 
 ```
-#&gt; [1] 13292.91
+#&gt; [1] 13244.62
 ```
+]
 
 
 --
@@ -269,19 +289,19 @@ And most critically, we can see that the Poisson gave us much smaller standard e
 
 
 ```r
-summary(mod_1b)$coefficients[2, "Std. Error"]
+summary(mod_1b)$coefficients[2, "Std. Error"] # Poisson
 ```
 
 ```
-#&gt; [1] 0.01762778
+#&gt; [1] 0.01765014
 ```
 
 ```r
-summary(mod_1)$coefficients[2, "Std. Error"]
+summary(mod_1)$coefficients[2, "Std. Error"] # Neg Binom
 ```
 
 ```
-#&gt; [1] 0.08484463
+#&gt; [1] 0.09352141
 ```
 
 
@@ -291,9 +311,12 @@ summary(mod_1)$coefficients[2, "Std. Error"]
 We can also look at whether the negative binomial model better accounts for overdispersion. We'll use the DHARMa package again. 
 
 
+--
+
 ```r
 mod_1_residuals &lt;- simulateResiduals(mod_1)
-testDispersion(mod_1_residuals, alternative = "greater", plot = F)
+testDispersion(mod_1_residuals, 
+               alternative = "greater", plot = F)
 ```
 
 ```
@@ -302,7 +325,7 @@ testDispersion(mod_1_residuals, alternative = "greater", plot = F)
 #&gt; 	simulated
 #&gt; 
 #&gt; data:  simulationOutput
-#&gt; dispersion = 0.63292, p-value = 1
+#&gt; dispersion = 0.57202, p-value = 1
 #&gt; alternative hypothesis: greater
 ```
 
@@ -324,7 +347,7 @@ mod_1b_residuals_p$p.value
 ---
 # Basic interpretaton 
 
-Like logistic regression, we have to exponentiate the model coefficients to interpret the results.
+Like logistic regression, we have to exponentiate the model coefficients to interpret the results. Why do you think we used the log(counts) in our analyses?
 
 
 --
@@ -334,31 +357,276 @@ mod_1 %&gt;%
   broom::tidy(exponentiate = TRUE, conf.int = TRUE)
 ```
 
-<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:unnamed-chunk-12">
+<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:unnamed-chunk-13">
 <col><col><col><col><col><col><col><tr>
 <th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">term</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">estimate</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">std.error</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">statistic</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">p.value</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">conf.low</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">conf.high</th></tr>
 <tr>
-<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">(Intercept)</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">3.19</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">0.0575</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">20.2&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">8.63e-91</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">2.86</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">3.58</td></tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">(Intercept)</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">2.99</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">0.0491</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">22.3</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">2.31e-110</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">2.72</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">3.3&nbsp;</td></tr>
 <tr>
-<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">PhysActiveInactive</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">1.49</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.0848</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">4.71</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">2.48e-06</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">1.26</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">1.76</td></tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">Sleep_TroubleYes</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">2.13</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.0935</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">8.1</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">5.62e-16&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">1.78</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">2.57</td></tr>
 </table>
 
 
 
 --
-With counts, the exponentiated coefficient is a **rate ratio**. 
+With counts, the exponentiated coefficient is a **rate ratio**. Here, it tells us that:
 
 
 --
-- Here, it tells us that compared with active participants, inactive participants experienced 1.5 times as many days per month with poor mental health. 
+- Compared with participants who do not have trouble sleeping, participants who have trouble sleeping on average experience 2.13 times as many days per month with poor mental health. 
 
-- Inactive participants experienced 50% more poor mental health days per month than active participants.
+
+--
+- On average, participants who have trouble sleeping experience 113% more poor mental health days each month than participants who do not have trouble sleeping.
 
 ---
-# To Dos
+class: middle, inverse
+
+# From here, we proceed like logistic regression...
+
+
+---
+# Adding covariates
+
+Adding `Age` as a covariate:
+
+
+```r
+mod_2 &lt;- glm.nb(DaysMHBad_count ~ Sleep_Trouble + Age, 
+                data = NHANES_data1112)
+anova(mod_1, mod_2, test ="Chisq")
+```
+
+<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:unnamed-chunk-14">
+<col><col><col><col><col><col><col><col><tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">Model</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">theta</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">Resid. df</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">   2 x log-lik.</th><th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">Test</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">   df</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">LR stat.</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">Pr(Chi)</th></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">Sleep_Trouble</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">0.181</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">3332</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">-1.32e+04</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;"></td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;"></td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">Sleep_Trouble + Age</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.181</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">3331</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-1.32e+04</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">1 vs 2</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">1</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">6.73</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.00947</td></tr>
+</table>
+
+
+
+--
+
+```r
+mod_1$aic
+```
+
+```
+#&gt; [1] 13244.62
+```
+
+```r
+mod_2$aic
+```
+
+```
+#&gt; [1] 13239.89
+```
+
+---
+# Adding covariates
+
+Adding `Sex` as a covariate:
+
+
+```r
+mod_3 &lt;- glm.nb(DaysMHBad_count ~ Sleep_Trouble + Age + Sex, 
+                data = NHANES_data1112)
+anova(mod_2, mod_3, test ="Chisq")
+```
+
+<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:unnamed-chunk-16">
+<col><col><col><col><col><col><col><col><tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">Model</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">theta</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">Resid. df</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">   2 x log-lik.</th><th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">Test</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">   df</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">LR stat.</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">Pr(Chi)</th></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">Sleep_Trouble + Age</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">0.181</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">3331</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">-1.32e+04</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;"></td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;"></td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">Sleep_Trouble + Age + Sex</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.182</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">3330</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-1.32e+04</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">1 vs 2</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">1</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">5.08</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.0242</td></tr>
+</table>
+
+
+
+--
+
+```r
+mod_2$aic
+```
+
+```
+#&gt; [1] 13239.89
+```
+
+```r
+mod_3$aic
+```
+
+```
+#&gt; [1] 13236.81
+```
+
+---
+# Adding an interaction
+
+
+```r
+mod_3_int &lt;- glm.nb(DaysMHBad_count ~ Sleep_Trouble + Age + Sex + 
+                      Sleep_Trouble:Sex, data = NHANES_data1112)
+```
+
+
+--
+
+```r
+mod_3_int %&gt;% 
+  broom::tidy() # Just evaluating significance of the interaction
+```
+
+<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:unnamed-chunk-19">
+<col><col><col><col><col><tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">term</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">estimate</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">std.error</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">statistic</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">p.value</th></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">(Intercept)</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">1.52&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">0.131&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">11.6&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">4.64e-31</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">Sleep_TroubleYes</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.519&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.128&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">4.07</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">4.68e-05</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">Age</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">-0.00575</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">0.00239</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">-2.41</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">0.0159&nbsp;&nbsp;</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">Sexmale</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-0.336&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.0981&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-3.43</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.000605</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">Sleep_TroubleYes:Sexmale</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">0.537&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">0.188&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">2.86</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">0.00419&nbsp;</td></tr>
+</table>
+
+
+---
+# Interpreting an interaction
+
+We can interpret the interaction using predicted *counts*, just like we used predicted probabilities in logistic regression.
+
+
+--
+
+```r
+# using the ggeffects package
+mod_3_int_probs &lt;- ggeffect(mod_3_int,
+                            type = "fe",
+                            terms = c("Sleep_Trouble", "Sex"))
+```
+
+---
+# Interpreting an interaction
+
+We can interpret the interaction using predicted *counts*, just like we used predicted probabilities in logistic regression.
+
+
+```r
+print(mod_3_int_probs)
+```
+
+```
+#&gt; # Predicted counts of DaysMHBad_count
+#&gt; 
+#&gt; # Sex = female
+#&gt; 
+#&gt; Sleep_Trouble | Predicted |       95% CI
+#&gt; ----------------------------------------
+#&gt; No            |      3.50 | [3.04, 4.03]
+#&gt; Yes           |      5.88 | [4.79, 7.23]
+#&gt; 
+#&gt; # Sex = male
+#&gt; 
+#&gt; Sleep_Trouble | Predicted |       95% CI
+#&gt; ----------------------------------------
+#&gt; No            |      2.50 | [2.19, 2.85]
+#&gt; Yes           |      7.19 | [5.67, 9.12]
+```
+
+---
+# Interpreting an interaction
+
+
+```r
+plot(mod_3_int_probs)
+```
+
+&lt;img src="EDUC645_poisson_regression_Sp23_files/figure-html/unnamed-chunk-22-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+# Interpreting an interaction
+
+Female and male participants with sleeping trouble would be expected to have a similar number of poor mental health days each month. 
+
+
+--
+In contrast, among participants who did not report sleeping trouble, female participants would be expected to have significantly more poor mental health days each month than male participants.
+
+
+--
+This suggests that other factors aside from sleep quality may contribute to the number of poor mental health days participants experience each month, particularly for female participants.
+
+---
+# Assumptions and diagnostics
+
+We can use the same tools to assess model assumptions as we used in logistic regression.  
+
+--
+
+```r
+mod_3_int_residuals &lt;- simulateResiduals(mod_3_int) # From DHARMa
+plot(mod_3_int_residuals)
+```
+
+&lt;img src="EDUC645_poisson_regression_Sp23_files/figure-html/unnamed-chunk-23-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+# Assumptions and diagnostics
+
+We can also formally test for zero inflation, again using DHARMa:
+
+
+```r
+testZeroInflation(mod_3_int_residuals, plot = FALSE)
+```
+
+```
+#&gt; 
+#&gt; 	DHARMa zero-inflation test via comparison to expected zeros with
+#&gt; 	simulation under H0 = fitted model
+#&gt; 
+#&gt; data:  simulationOutput
+#&gt; ratioObsSim = 1.0263, p-value = 0.088
+#&gt; alternative hypothesis: two.sided
+```
+
+---
+# Assumptions and diagnostics
+
+Checking outliers and multicollinearity visually using the `check_model()` function from the *performance* package.
+
+
+```r
+performance::check_model(mod_3_int, check = c("outliers", "vif"))
+```
+
+&lt;img src="EDUC645_poisson_regression_Sp23_files/figure-html/unnamed-chunk-25-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+# To do's
 
 ### Assignments
-- Quiz 2 due May 5 (available tomorrow morning)
+
+- Quiz 2 due Friday - Available tomorrow (Wed) morning.
+
+- Assignment 2 due May 11 (previously May 9) - Available after class Thursday.
+
+
+
+
+
+
+
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
