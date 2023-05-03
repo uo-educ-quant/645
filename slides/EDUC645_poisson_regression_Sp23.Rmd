@@ -207,32 +207,30 @@ The resulting distribution of counts is skewed toward 0, and one probability dis
 
 ---
 # Distributions for counts
+
 The Poisson distribution is a special case of the binomial distribution, where we have a large number of trials but the outcome of interest occurs infrequently. Another option is the negative binomial distribution. What's the difference? 
 
 
 --
-- Poisson assumes the average (mean) number of counts is equal to how much variability there is in the counts. In practice, count data are often overdispersed, meaning there is a greater amount of variability than the mean. This can bias standard errors, and therefore p-values and confidence intervals.
+Poisson assumes the average (mean) number of counts is equal to how much variability there is in the counts. In practice, count data are often overdispersed, meaning there is a greater amount of variability than the mean. 
 
 
 --
-- Negative binomial does not make this assumption. Instead, it aims to model and account for dispersion, potentially making it more versatile. 
+- If there is actually much more variation than what is expected given the Poisson distribution, then we end up with an underestimate of the amount of variation in our model. This results in biased standard errors, and therefore biased p-values and confidence intervals.
+
+
+--
+Negative binomial regression includes a parameter to model the amount of dispersion, which can then be used to adjust error estimates. 
+
+
+--
+Because we're especially concerned about the impact of overdispersion on the amount of error, we will want to examine whether overdispersion is present in the model residuals. This is similar to linear regression, where our main concern is whether the residuals are normally distributed.  
 
 
 ---
 # Assessing variability
 
-Let's compare the mean and variance of the `DaysMHBad_count` variable we looked at earlier. This was its distribution: 
-
-```{r, warning=FALSE, echo=FALSE}
-NHANES_data1112 %>% 
-  ggplot(aes(DaysMHBad_count)) +
-  geom_histogram(binwidth = 1)
-```
-
----
-# Assessing variability
-
-We could see it's very skewed, but is it overdispersed too? Here we'll limit the data to participants 16 or older because the independent variable we'll look at shortly was not measured in participants under 16.
+We can get a preliminary sense of whether overdispersion is present by comparing the mean and variance of the `DaysMHBad_count` variable we looked at earlier. Here we'll limit the data to participants 16 or older because the independent variable we'll look at shortly was not measured in participants under 16.
 
 
 --
@@ -245,16 +243,16 @@ NHANES_data1112 %>%
 
 
 --
-The variance of the counts far exceeds the mean, which indicates overdispersion.
+The variance of the counts far exceeds the mean, suggesting overdispersion. We'll formally assess overdispersion of model *residuals* once we've fitted our models. 
 
 
 --
-In this situation, we should proceed with a negative binomial model. We use the `glm.nb` function from the MASS package (included with R).
+This said, these values are a good indication that we should go with negative binomial regression, but we'll compare it against a Poisson regression model to confirm. 
 
 ---
 # Fitting a model
 
-Here, we'll look at whether there is a relationship between participants' self-reported sleep quality (`Sleep_Trouble`) and the number of days per month they have poor mental health (`DaysMHBad_count`).
+Here, we'll look at whether there is a relationship between participants' self-reported sleep quality (`Sleep_Trouble`) and the number of days per month they have poor mental health (`DaysMHBad_count`). To fit a negative binomial model we'll use the `glm.nb` function from the MASS package (included with R).
 
 --
 ```{r}
@@ -264,7 +262,7 @@ mod_1 <- glm.nb(DaysMHBad_count ~ Sleep_Trouble, data = NHANES_data1112)
 
 
 --
-We already know the data likely violate the Poisson assumption of mean = variance, but let's compare this model to a Poisson model to illustrate the impact on fit. 
+Fitting a comparable Poisson model for a comparison of fit. 
 
 ```{r}
 mod_1b <- glm(DaysMHBad_count ~ Sleep_Trouble, family = "poisson",
@@ -279,8 +277,8 @@ mod_1b <- glm(DaysMHBad_count ~ Sleep_Trouble, family = "poisson",
 **Deviance:**
 
 ```{r}
-mod_1b$null.deviance # Poisson
-mod_1$null.deviance # Neg Binom
+mod_1b$deviance # Poisson
+mod_1$deviance # Neg Binom
 ```
 ]
 
@@ -328,14 +326,26 @@ mod_1b_residuals_p <- testDispersion(mod_1b_residuals,
                                      alternative = "greater", plot = F)
 ```
 
+
+--
+.pull-left[
+```{r}
+mod_1b_residuals_p$statistic
+```
+]
+
+
+--
+.pull-right[
 ```{r}
 mod_1b_residuals_p$p.value
 ```
+]
 
 ---
 # Basic interpretaton 
 
-Like logistic regression, we have to exponentiate the model coefficients to interpret the results. Why do you think we used the log(counts) in our analyses?
+Like logistic regression, we have to exponentiate the model coefficients to interpret the results.
 
 
 --

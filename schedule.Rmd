@@ -65,7 +65,7 @@ knitr::opts_chunk$set(echo = TRUE)
 **Lecture**:
 
  * [Lecture slides](./slides/EDUC645_poisson_regression_Sp23.html)
- * Dataset
+ * [Dataset](./data/NHANES_data1112.RData)
 
 **Assignment**
 
