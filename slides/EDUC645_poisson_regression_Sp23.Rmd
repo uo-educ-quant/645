@@ -257,7 +257,8 @@ Here, we'll look at whether there is a relationship between participants' self-r
 --
 ```{r}
 library(MASS)
-mod_1 <- glm.nb(DaysMHBad_count ~ Sleep_Trouble, data = NHANES_data1112)
+mod_1 <- glm.nb(DaysMHBad_count ~ Sleep_Trouble, 
+                data = NHANES_data1112)
 ```
 
 
@@ -345,7 +346,7 @@ mod_1b_residuals_p$p.value
 ---
 # Basic interpretaton 
 
-Like logistic regression, we have to exponentiate the model coefficients to interpret the results.
+Like logistic regression, we have to exponentiate the model coefficients to interpret the results. With counts, the exponentiated coefficient is a **rate ratio**.
 
 
 --
@@ -356,27 +357,49 @@ mod_1 %>%
 
 
 --
-With counts, the exponentiated coefficient is a **rate ratio**. Here, it tells us that:
+- Compared with participants who do not have trouble sleeping, participants who have trouble sleeping on average experience 2.13 times as many days per month with poor mental health (95% CI [1.78, 2.57]). 
 
 
 --
-- Compared with participants who do not have trouble sleeping, participants who have trouble sleeping on average experience 2.13 times as many days per month with poor mental health. 
-
-
---
-- On average, participants who have trouble sleeping experience 113% more poor mental health days each month than participants who do not have trouble sleeping.
+- On average, participants who have trouble sleeping experience 113% more poor mental health days each month (95% CI [1.78, 2.57]) than participants who do not have trouble sleeping.
 
 ---
 class: middle, inverse
 
 # From here, we proceed like logistic regression...
 
+---
+# First we fit a null model
+
+```{r}
+mod_0 <- glm.nb(DaysMHBad_count ~ 1, 
+                data = NHANES_data1112)
+```
+
+
+---
+# Adding independent variable
+
+We fit the next model (with the `Sleep_Trouble` independent variable) on an earlier slide. Unsurprisingly, it fits better than the null model:
+
+--
+```{r}
+anova(mod_0, mod_1, test ="Chisq")
+```
+
+--
+```{r}
+mod_0$aic
+mod_1$aic
+```
 
 ---
 # Adding covariates
 
 Adding `Age` as a covariate:
 
+
+--
 ```{r}
 mod_2 <- glm.nb(DaysMHBad_count ~ Sleep_Trouble + Age, 
                 data = NHANES_data1112)
@@ -395,6 +418,8 @@ mod_2$aic
 
 Adding `Sex` as a covariate:
 
+
+--
 ```{r}
 mod_3 <- glm.nb(DaysMHBad_count ~ Sleep_Trouble + Age + Sex, 
                 data = NHANES_data1112)
@@ -416,17 +441,91 @@ mod_3_int <- glm.nb(DaysMHBad_count ~ Sleep_Trouble + Age + Sex +
                       Sleep_Trouble:Sex, data = NHANES_data1112)
 ```
 
+--
+Evaluate the significance of the interaction (no need to exponentiate):
+
+```{r}
+mod_3_int %>% 
+  broom::tidy() 
+```
+
+
+---
+# Assumptions and diagnostics
+
+Since the interaction term was significant, we'll check fit and assumptions before proceeding to interpretation.
+
+```{r}
+anova(mod_3, mod_3_int, test ="Chisq")
+```
+
 
 --
 ```{r}
-mod_3_int %>% 
-  broom::tidy() # Just evaluating significance of the interaction
+mod_3$aic
+mod_3_int$aic
 ```
+
+
+---
+# Assumptions and diagnostics
+
+We can then use the same tools to assess model assumptions as we used in logistic regression. For large datasets like ours, an outlier test can be oversensitive (it may be significant when there are actually not concerning outliers). Increasing the number of simulations in the DHARMa function helps to address this issue (type 1 error).
+
+--
+```{r}
+mod_3_int_residuals <- simulateResiduals(mod_3_int, n = 1000) 
+plot(mod_3_int_residuals)
+```
+
+
+---
+# Assumptions and diagnostics
+
+The two-sided dispersion test in the plot was significant, but remember we are mainly interested in overdispersion. So we can specify a one-sided test for overdispersion using the same function as we used several slides ago. 
+
+--
+```{r}
+testDispersion(mod_3_int_residuals, alternative = "greater", plot = F)
+```
+
+                                     
+---
+# Assumptions and diagnostics
+
+We can also formally test for zero inflation, again using DHARMa:
+
+```{r}
+testZeroInflation(mod_3_int_residuals, plot = FALSE)
+```
+
+
+--
+Even if the test had been significant, is our outcome one where there could be plausible mechanisms for excess zeros?
+
+---
+# Assumptions and diagnostics
+
+Checking multicollinearity visually using the `check_model()` function from the *performance* package.
+
+```{r}
+performance::check_model(mod_3_int, check = c("vif"))
+```
+
+---
+# Assumptions and diagnostics
+
+Checking multicollinearity using the `vif()` function from the *car* package. 
+
+```{r, warning=FALSE}
+car::vif(mod_3_int, type = "predictor")
+```
+
 
 ---
 # Interpreting an interaction
 
-We can interpret the interaction using predicted *counts*, just like we used predicted probabilities in logistic regression.
+Finally, we can interpret the interaction using predicted *counts*, just like we used predicted probabilities in logistic regression.
 
 
 --
@@ -439,8 +538,6 @@ mod_3_int_probs <- ggeffect(mod_3_int,
 
 ---
 # Interpreting an interaction
-
-We can interpret the interaction using predicted *counts*, just like we used predicted probabilities in logistic regression.
 
 ```{r}
 print(mod_3_int_probs)
@@ -456,7 +553,9 @@ plot(mod_3_int_probs)
 ---
 # Interpreting an interaction
 
-Female and male participants with sleeping trouble would be expected to have a similar number of poor mental health days each month. 
+
+--
+Participants with trouble sleeping would be expected to have significantly more poor mental health days each month than participants without sleeping trouble, regardless of participant sex.
 
 
 --
@@ -466,43 +565,15 @@ In contrast, among participants who did not report sleeping trouble, female part
 --
 This suggests that other factors aside from sleep quality may contribute to the number of poor mental health days participants experience each month, particularly for female participants.
 
----
-# Assumptions and diagnostics
-
-We can use the same tools to assess model assumptions as we used in logistic regression.  
-
---
-```{r}
-mod_3_int_residuals <- simulateResiduals(mod_3_int) # From DHARMa
-plot(mod_3_int_residuals)
-```
-
----
-# Assumptions and diagnostics
-
-We can also formally test for zero inflation, again using DHARMa:
-
-```{r}
-testZeroInflation(mod_3_int_residuals, plot = FALSE)
-```
-
----
-# Assumptions and diagnostics
-
-Checking outliers and multicollinearity visually using the `check_model()` function from the *performance* package.
-
-```{r}
-performance::check_model(mod_3_int, check = c("outliers", "vif"))
-```
 
 ---
 # To do's
 
 ### Assignments
 
-- Quiz 2 due Friday - Available tomorrow (Wed) morning.
+- Quiz 2 due Friday.
 
-- Assignment 2 due May 11 (previously May 9) - Available after class Thursday.
+- Assignment 2 due May 11 (previously May 9) - Available after class today.
 
 
 
