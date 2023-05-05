@@ -49,9 +49,9 @@ The goal of this assignment is to examine whether an association between educati
  
 3. Methods and analysis (50%)
     + Model the relationship between education level and the number of days that participants drank alcohol in the preceding year.
-      + Compare Poisson and negative binomial models (with `Education_level` as the only independent variable) and select the best-fitting model. 
-      + Fit and compare alternative models with age, and age and sex, included as covariates. 
-      + Then, explore an interaction between sex and education level, given prior research suggesting differences in alcohol use and related outcomes by sex and other characteristics. 
+      + Compare Poisson and negative binomial models (with `Education_level` as the only independent variable) and select the best-fitting model type. 
+      + Once you have selected a model type, fit and compare alternative models with age, and age and sex, included as covariates. 
+      + Then, explore an interaction between sex and education level, given research that suggests alcohol use and related outcomes can differ by sex. 
       + Check for critical assumptions and outliers of the best-fitting model.
     + Write a paragraph describing your model selection process and diagnostics results.
     + Write a paragraph stating the results of your best-fitting model (including predicted counts).
