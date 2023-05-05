@@ -35,8 +35,8 @@ For each of the 4 assignments and the final project, you are required to submit 
 
 Objectives:
 
- - Examining dichotomous outcome data
- - Using a logistic regression model to estimate a relationship where the dependent variable is dichotomous
+ - Examine dichotomous outcome data
+ - Use logistic regression to estimate a relationship where the dependent variable is dichotomous
  - Describe, interpret, and draw inferences from the model results
 
 Due: April 26
@@ -45,20 +45,15 @@ Due: April 26
 
 ### 3.2. Assignment 2 (Count Outcomes)
 
-*To be added*
+Objectives:
 
-<!-- Objectives: -->
+ - Examine count outcome data
+ - Use the appropriate regression model to estimate a relationship where the dependent variable is a count
+ - Describe, interpret, and draw inferences from the model results
 
-<!--  - Using Poisson regression model to estimate a relationship where the dependent variable is a Poisson random variable -->
-<!--  - Interpret and report the results and make statistic inference from the estimated parameters -->
+Due: May 12
 
-<!-- Deadline: TBD -->
-
-<!-- Assignment description: [assignment2.html](./assignments/assignment02.html) -->
-
-<!-- Dataset: [ah_smoke.csv](./data/ah_smoke.csv); [fsi.csv](./data/fsi.csv) -->
-
-<!-- Key: [doc file]; [R script] -->
+**[Assignment details](./assignments/assignment02_Sp23.html)**
 
 ### 3.3. Assignment 3 (Nested Data)
 

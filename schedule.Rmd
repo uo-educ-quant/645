@@ -13,7 +13,7 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Unit 1: Logistic Regression
+## Unit 1: Dichotomous Outcomes and Logistic Regression
 
 **Learning Objectives**: 
 
@@ -43,7 +43,7 @@ knitr::opts_chunk$set(echo = TRUE)
  
 **Unit Quiz**: Due April 18
 
-## Unit 2: Poisson Regression
+## Unit 2: Count Outcomes
 
 **Learning Objectives**: 
 
@@ -51,11 +51,11 @@ knitr::opts_chunk$set(echo = TRUE)
 
 -	Describe situations which merit the use of Poisson regression and related models
 
--	State the assumptions about rates in Poisson regression
+-	State the assumptions of Poisson regression
 
 - Use Poisson regression model with continuous and categorical predictors, and interpret the model parameters and inference for model parameters
 
-- Evaluate dispersion of the outcome variable, model fit, and diagnostics for a Poisson regression model
+- Evaluate dispersion of the outcome variable, model fit, and diagnostics
 
 **Readings**: 
 
@@ -70,7 +70,7 @@ knitr::opts_chunk$set(echo = TRUE)
 **Assignment**
 
  * Due May 12
- * Assignment details
+ * [Assignment details](./assignments/assignment02_Sp23.html)
  
 **Unit Quiz**: Due May 5
 
