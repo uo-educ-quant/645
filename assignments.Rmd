@@ -13,7 +13,7 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## 1. General Guidelines
+## General Guidelines
 
 The goal of the assignments is to practice the concepts and vocabulary we have been modeling in class and implement some of the techniques we have discussed. Full requirements for assignments, information on grading, and the late submission policy are discussed in the syllabus.
 
@@ -21,17 +21,17 @@ You may work on your own or with up to two (2) partners. If you choose to work w
 
 **Every person should submit the 2 files described below.** If you worked collaboratively, each person can submit the same documents, but each person's submission should include 1) their own name, 2) an indication that the work is joint and the names of your other collaborators, and 3) information on any other individual or resource (outside of class material) you consulted in your responses. 
 
-## 2. Submission format
+## Submission format
 
-For each of the 4 assignments and the final project, you are required to submit the following files:  
+For each of the 3 assignments and the final project, you are required to submit the following files:  
 
  - .doc, .html, or .pdf file with your typed responses to the problems and any tables and figures you produce. 
    
  - If you used R to create tables and/or figures in the above doc/html/pdf file, you must also submit the .Rmd or .R file you used to render the tables/figures. 
 
-## 3. Assignments
+## Assignments
 
-### 3.1. Assignment 1 (Dichotmous Outcomes and Logistic Regression)
+#### **Assignment 1 (Dichotmous Outcomes and Logistic Regression)**
 
 Objectives:
 
@@ -43,7 +43,7 @@ Due: April 26
 
 **[Assignment details](./assignments/assignment01_Sp23.html)**
 
-### 3.2. Assignment 2 (Count Outcomes)
+#### **Assignment 2 (Count Outcomes)**
 
 Objectives:
 
@@ -55,16 +55,16 @@ Due: May 12
 
 **[Assignment details](./assignments/assignment02_Sp23.html)**
 
-### 3.3. Assignment 3 (Nested Data)
+#### **Assignment 3 (Nested Data)**
 
-*To be added*
+*Details to be added*
 
 <!-- Objectives: -->
 
 <!--  - Using mixed-effects model to estimate a relationship when the clustering nature of data needs to be addressed -->
 <!--  - Interpret and report the results and make statistic inference from the estimated parameters -->
 
-<!-- Deadline: TBD -->
+Due: May 31
 
 <!-- Assignment description: [assignment3.html](./assignments/assignment03.html) -->
 
@@ -72,31 +72,16 @@ Due: May 12
 
 <!-- Key: [doc file]; [R script] -->
 
-### 3.4. Assignment 4 (Reliability in easurement)
+#### **Final Project**
 
-*To be added*
-
-<!-- Objectives: -->
-
-<!--  -  -->
-<!--  -  -->
-
-<!-- Deadline: TBD -->
-
-<!-- Assignment description:  -->
-
-<!-- Dataset: [fsi.csv](./data/fsi.csv) -->
-
-<!-- Key: [doc file]; [R script] -->
-
-<!-- ### 3.5. Final Project -->
+*Details to be added*
 
 <!-- Objectives: -->
 
 <!--  -  -->
 <!--  -  -->
 
-<!-- Deadline: TBD -->
+Due: June 13
 
 <!-- Assignment description: [final.html](./assignments/final.html) -->
 

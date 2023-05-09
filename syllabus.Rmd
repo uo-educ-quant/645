@@ -100,8 +100,8 @@ The due dates for course assignments and the final are posted [here](./assignmen
 Final grades will be based on the following components:
 
 - Quizzes: 20% (5 quizzes 4% each)
-- Assignments: 60% (4 assignments, 15% each)
-- Final: 20%
+- Assignments: 60% (3 assignments, 20% each)
+- Final Project: 20%
 
 | Grade | Percentage   | Grade | Percentage   |
 |-------|--------------|-------|--------------|
@@ -136,10 +136,10 @@ Graduate students are expected to perform work of high quality and quantity, typ
 |------------------------|---------|---------------------------------
 | Class attendance       | 30      | Three hours per week over 10 weeks
 | Class reading and prep | 30      | Includes reading and review of slides
-| Homework Assignments   | 20      | Five assignments taking 5 hours each (on avg.)
-| Quizzes                | 5       | One hour per quiz (40 min preparation, 20 min completing quiz)
+| Assignments            | 24      | Three assignments taking 8 hours each (on avg.)
+| Quizzes                | 5       | 1 hour per quiz (40 min preparation, 20 min completing quiz)
 | Lab attendance         | 10      | One hour-long lab per week over 10 weeks    
-| Final project          | 25      | Includes familiarization with data, data analysis, preparation of displays and writing
+| Final project          | 21      | Includes familiarization with data, data analysis, preparation of graphics and writing
 | **Total hours**        | **120** | 
 
 # IX. Attendance and Absence Guidelines 

@@ -90,7 +90,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 - Create fixed and random intercept-only models and interpret the model parameters using the R `lmer` package
 
-- *Time permitting*: Discuss alternatives to multilevel modeling of nested data
+- Discuss alternatives to multilevel modeling of nested data
 
 **Readings**: 
  
@@ -100,15 +100,15 @@ knitr::opts_chunk$set(echo = TRUE)
  
 **Lecture**:
 
- * Lecture slides
- * Dataset 
+ * [Lecture slides](./slides/EDUC645_nested_data_Sp23.html)
+ * Dataset (to be added)
 
 **Assignment**:
 
- * Due May 30
- * Assignment details
+ * Due May 31
+ * Assignment details (to be added)
  
-**Unit Quiz**: Due May 23
+**Unit Quiz**: Due May 19
 
 ## Unit 4: Reliability in Measurement
 
@@ -126,15 +126,14 @@ knitr::opts_chunk$set(echo = TRUE)
 
 **Lecture**:
 
- * Lecture slides 
- * Dataset
+ * Lecture slides (to be added)
+ * Dataset (to be added)
  
 **Assignment**:
 
- * Due June 6
- * Assignment details
+No assignment for this unit.
  
-**Unit Quiz**: Due June 1
+**Unit Quiz**: Due June 2
 
 ## Unit 5: Missing Data
 
@@ -156,16 +155,16 @@ knitr::opts_chunk$set(echo = TRUE)
 
 **Lecture**:
 
- * Lecture slides 
- * Dataset
+ * Lecture slides (to be added)
+ * Dataset (to be added)
  
 **Assignment**:
 
 No assignment for this unit.
 
-**Unit Quiz**: Due June 8
+**Unit Quiz**: Due June 9
 
 **Final Project**:
 
- * Due June 16
- * Final project details
+ * Due June 13
+ * Final project details (to be added)
