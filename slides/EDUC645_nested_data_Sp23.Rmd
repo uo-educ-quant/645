@@ -1,0 +1,156 @@
+---
+title: "Nested Data"
+subtitle: "EDUC 645 (Spring 2023)"
+#author: "TBD"
+#date: "`r format(Sys.time(), '%d %B %Y')`"
+output:
+  xaringan::moon_reader:
+    css: ['default', 'uo', 'ki-fonts', 'my_custom.css', 'xaringanthemer.css']
+    # self_contained: true
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{R, setup, include = F}
+library(pacman)
+p_load(easystats, emmeans, DHARMa, ggeffects,
+       here, tidyverse, ggplot2, xaringan, knitr, kableExtra, foreign, broom, xaringanthemer, reshape2, DiagrammeR, lme4,
+       equatiomatic, performance, lmerTest, gtsummary)
+
+i_am("slides/EDUC645_nested_data_Sp23.rmd")
+
+extra_css <- list(
+  ".red"   = list(color = "red"),
+  ".blue"  =list(color = "blue"),
+  ".green" = list(color = "#8bb174"),
+  ".purple" = list(color = "#6A5ACD"),
+  ".red-pink" = list(color= "#e64173"),
+  ".grey-light" = list(color= "grey70"),
+  ".slate" = list(color="#314f4f"),
+  ".small" = list("font-size" = "90%"))
+
+write_extra_css(css = extra_css, outfile = "my_custom.css")
+
+# Knitr options
+opts_chunk$set(
+  comment = "#>",
+  fig.align = "center",
+  fig.height = 5,
+  fig.width = 8,
+  warning = F,
+  message = F
+)
+
+```
+
+
+# Course Updates
+
+
+--
+Assignment 2 Clarification:
+- The goal of this assignment is to examine whether there is a relationship between educational attainment (**independent variable**) and alcohol use frequency (number of drinking days in the preceding year; **dependent variable**) among NHANES participants - and if so, whether the relationship is consistent with prior research. 
+
+
+--
+Assignment 3 (Nested Data): 
+- Current due date is Tuesday 5/30; **moved to Wednesday 5/31** to give time for support during labs (available 5/23)
+
+
+--
+Assignment 4: <span style = "color:red"> Dropped </span>
+
+
+--
+Final Assignment: Due 6/13 (available 6/1)
+- Final will incorporate week 9 and 10 course content on assessing reliability and addressing missing data.
+
+
+--
+May 30th Class: No in-person class meeting (lab will still occur in-person at usual time).
+
+
+---
+class: middle, inverse
+
+# Feedback on Assignment 1
+
+
+---
+class: middle, inverse
+
+# Nested Data 
+
+
+---
+# What is Nested Data?
+
+
+--
+Nesting occurs when variability in our outcome occurs at multiple levels.
+
+
+--
+A common example we've already discussed is student outcomes: 
+
+
+--
+- If Oregon were interested in looking at factors that influence students' academic performance, performance is expected to differ from student to student. Can performance vary at other levels?
+
+
+--
+- Performance could also vary from classroom to classroom (on average) and from school to school (on average). If the federal government were interested in this question, performance may also vary from state to state.
+
+
+--
+What are other examples of nesting you can think of?
+
+
+--
+Another form of nesting occurs in longitudinal studies, where multiple measurements are nested in each participant. 
+
+
+
+---
+# What is Nested Data?
+
+--
+In the academic performance example, what do you think happens if we don't account for variability in performance at the classroom and school levels? And what about the longitudinal study example?
+
+
+--
+- We get biased estimates of effects and precision, and we risk *aggregation bias*.
+
+
+--
+In addition to more accurate estimates when we model nested data appropriately, we might be interested in different relationships at each level:
+
+
+--
+- Student level: Do students who are not routinely bullied have better performance than students who are routinely bullied?
+
+
+--
+- Classroom level: Does the presence of a teaching assistance result in better student performance, compared with classrooms that don't have a teaching assistant?
+
+
+--
+- School level: Do schools with a sufficient number of academic counselors report better student performance than schools with inadequate academic counseling?
+
+
+--
+With a model for nested data - generally called a multilevel model (MLM) or hierarchical linear model (HLM) - we can account for variability at multiple levels *and* test hypotheses at one or more levels using a single model. 
+
+
+---
+# To Dos
+
+### Assignments
+
+- Assignment 2 is due May 12.
+
+### Reading
+
+- Complete prior to May 16 meeting: BMLR Ch. 8.6-8.11 (pp. 234-251).
