@@ -46,45 +46,6 @@ opts_chunk$set(
 ```
 
 
-# Course Updates
-
-
---
-Assignment 2 Clarification:
-- The goal of this assignment is to examine whether there is a relationship between educational attainment (**independent variable**) and alcohol use frequency (number of drinking days in the preceding year; **dependent variable**) among NHANES participants - and if so, whether the relationship is consistent with prior research. 
-
-
---
-Assignment 3 (Nested Data): 
-- Current due date is Tuesday 5/30; **moved to Wednesday 5/31** to give time for support during labs (available 5/23)
-
-
---
-Assignment 4: <span style = "color:red"> Dropped </span>
-
-
---
-Final Assignment: Due 6/13 (available 6/1)
-- Final will incorporate week 9 and 10 course content on assessing reliability and addressing missing data.
-
-
---
-May 30th Class: No in-person class meeting (lab will still occur in-person at usual time).
-
-
----
-class: middle, inverse
-
-# Feedback on Assignment 1
-
-
----
-class: middle, inverse
-
-# Nested Data 
-
-
----
 # What is Nested Data?
 
 
@@ -93,11 +54,7 @@ Nesting occurs when variability in our outcome occurs at multiple levels.
 
 
 --
-A common example we've already discussed is student outcomes: 
-
-
---
-- If Oregon were interested in looking at factors that influence students' academic performance, performance is expected to differ from student to student. Can performance vary at other levels?
+A common example we've already discussed is student outcomes: If Oregon were interested in looking at factors that influence students' academic performance, performance is expected to differ from student to student. Can performance vary at other levels?
 
 
 --
@@ -109,23 +66,37 @@ What are other examples of nesting you can think of?
 
 
 --
-Another form of nesting occurs in longitudinal studies, where multiple measurements are nested in each participant. 
-
+Another form of nesting occurs in longitudinal studies, where the outcome is assessed multiple times for each participant. 
 
 
 ---
 # What is Nested Data?
 
---
-In the academic performance example, what do you think happens if we don't account for variability in performance at the classroom and school levels? And what about the longitudinal study example?
+One way of thinking of nesting is as a form of <span style = "color:green"> clustering</span>: There are clusters of observations in our data that share something in common. 
 
 
 --
-- We get biased estimates of effects and precision, and we risk *aggregation bias*.
+- Observations share the same context (e.g., the same classroom or school, when there are many classrooms or schools in our data) or could be clustered within each person in our dataset (multiple observations from the same person). 
 
 
 --
-In addition to more accurate estimates when we model nested data appropriately, we might be interested in different relationships at each level:
+Clustered observations are dependent, meaning they are more similar than they would be if they were unclustered (independent) observations.
+
+
+--
+In the academic performance example, what do you think happens if we don't account for variability in performance at the classroom and school levels? And what about the longitudinal study example, where we have dependent observations within each person?
+
+
+--
+- We get biased estimates of effects and precision.
+
+
+
+---
+# Analyzing Nested Data
+
+--
+In addition to more accurate estimates when we model nested or clustered data appropriately, we might be interested in different relationships at each level:
 
 
 --
@@ -142,6 +113,79 @@ In addition to more accurate estimates when we model nested data appropriately, 
 
 --
 With a model for nested data - generally called a multilevel model (MLM) or hierarchical linear model (HLM) - we can account for variability at multiple levels *and* test hypotheses at one or more levels using a single model. 
+
+
+---
+# Aggregation Bias
+
+A final concern with nested data is that when we ignore nesting, we risk <span style = "color:green"> aggregation bias</span>. 
+
+
+--
+Imagine we were studying the school-level question on the previous slide, Do schools with a sufficient number of academic counselors report better student performance than schools with inadequate academic counseling?
+
+
+--
+- In this example, school-level data was the mean student performance level for each school, and classroom-level data was the mean student performance level for each classroom. The higher level data are <span style = "color:green"> aggregate </span>data, in the sense that means are aggregates of more granular data. 
+
+
+--
+If we modeled the relationship between two variables - whether or not the school had a sufficient number of academic counselors (IV) and mean student performance for each school (DV) - we might find that having adequate academic counseling was associated with greater average student performance. 
+
+
+--
+- Would this approach give us enough insight to conclude that policy-makers should provide more resources for academic counseling?
+
+
+--
+It might, but what if this relationship was different in each classroom? 
+
+
+
+
+
+---
+# Aggregation Bias
+
+Maybe there was little or no relationship in small classrooms and a stronger relationship in larger classrooms. What's a plausible reason why this could be the case?
+
+
+--
+- Perhaps in small classrooms, teachers can give more attention to students, while in larger classrooms, students are not getting adequate support. 
+
+
+--
+- So, academic counseling makes more of a difference in the larger classrooms, because it is making up for support the teacher is not able to provide. In the smaller classrooms, the students don't need more support and are already high performing without academic counseling. 
+
+
+--
+Aggregation bias would occur if we concluded from our model that adequate academic counseling improves average student performance at the school level, when the relationship is actually more complex and depends on classroom-level factors like class size (or presence of teaching assistants, etc). 
+
+
+--
+- If a policy-maker concluded from our school-level findings that the solution was for schools to have more funding for academic counseling, that might be wasting resources if more students would benefit from addressing the underlying, classroom-level issue (i.e., reducing class size by increasing funding to hire more teachers, have more classroom space, etc).
+
+
+---
+# Analyzing Nested Data
+
+Several methods can be used to account for nesting or clustering of data so that we get more accurate estimates of associations (or effects) and error/significance. Some methods also allow for investigating relationships at multiple levels.
+
+
+--
+<span style = "color:green"> Adjusting standard errors: </span> The most straightforward approach is to adjust the model standard errors for clustering. This is based on the idea that a naive model (where the clusters are ignored) would consider every observation independent, in which case there would appear to be more information in the data than there really is (resulting in artificially narrow confidence intervals). 
+
+
+--
+<span style = "color:green"> Subgroup-level analyses: </span> With large enough sample sizes and appropriate adjustment for multiple comparisons, we could carry out our analyses within each subgroup or cluster.
+
+
+--
+<span style = "color:green"> Multilevel (or mixed-effects) models: </span> The most common analytic approach for nested data, which can address dependency among observations and can be used to examine the relationships between the outcome and (different) predictors at each level. 
+
+
+--
+<span style = "color:green"> Repeated-measures models: </span> With longitudinal data, there are several approaches that can be used to account for repeated observations from the same participant (e.g., growth curve modeling).
 
 
 ---
