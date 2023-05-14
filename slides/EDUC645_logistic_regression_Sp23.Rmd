@@ -177,14 +177,14 @@ class: middle, inverse
 ---
 # Probability and odds
 
-How do we represent dichotomous outcomes? We could calculate a *simple proportion*:
+How do we represent dichotomous outcomes? We could calculate a <span style = "color:green"> simple proportion: </span>
 
 
 --
 $$\frac{N\ of\ Participants\ with\ Diabetes}{N\ of\ All\ Participants} = 0.102\ or\ 10.2\%$$
 
 --
-**That's a probability!** The probability of having diabetes. Probabilities range from 0-1 or 0-100%. We can do the same for "Participants without Diabetes". Notice we'd get the same result if we subtracted our first probability from 1 (1 - 0.09).
+<span style = "color:green"> That's a probability. </span> The probability of having diabetes. Probabilities range from 0-1 or 0-100%. We can do the same for "Participants without Diabetes". Notice we'd get the same result if we subtracted our first probability from 1 (1 - 0.09).
 
 $$\frac{Participants\ without\ Diabetes}{All\ Participants} = 0.898\ or\ 89.8\%$$
 
@@ -315,7 +315,7 @@ Compared with being active, being inactive is associated with a greater odds of 
 ---
 # An alternative to odds ratio?
 
-Instead of doing this, let's just divide the *probability* of having diabetes in each activity group. This will give us a $\color{blue}{\text{risk ratio}}$ or $\color{blue}{\text{relative risk}}$ (RR). It can be similar in magnitude to an odds ratio, especially when the probability of the outcome is low (just like how odds and probability can be similar). But, the RR has a somewhat different interpretation.
+Instead of doing this, let's just divide the probability of having diabetes in each activity group. This will give us a risk ratio or relative risk (RR). It can be similar in magnitude to an odds ratio, especially when the probability of the outcome is low (just like how odds and probability can be similar). But, the RR has a somewhat different interpretation.
 
 
 --
@@ -409,7 +409,7 @@ Instead we need an analysis method that we can use like the linear regression mo
 
 
 --
-- There are a few options, but the most commonly used is $\color{blue}{\text{logistic regression}}$. 
+- There are a few options, but the most commonly used is <span style = "color:green"> logistic regression. </span>
 
 
 --
@@ -467,7 +467,7 @@ So, if we want to be able to apply the same basic linear regression approach to 
 
 
 --
-Here is where *odds* (and therefore the odds ratio) becomes important. It turns out they have a very handy feature: Taking the $\color{blue}{\text{logarithm}}$ of odds *makes them behave linearly*.
+Here is where *odds* (and therefore the odds ratio) becomes important. It turns out they have a very handy feature: Taking the <span style = "color:green"> logarithm </span>of odds *makes them behave linearly*.
 
 
 ---
@@ -910,7 +910,7 @@ class: middle, inverse
 ---
 # Model estimation
 
-Regression models with dichotomous and other nonlinear outcomes are estimated with *maximum likelihood estimation (MLE)*.
+Regression models with dichotomous and other nonlinear outcomes are estimated with <span style = "color:green"> maximum likelihood estimation (MLE). </span> 
 
 
 --
@@ -945,7 +945,7 @@ MLE is using the information we put into the model (the independent and dependen
 ---
 # Significance and fit
 
-**Are fit and significance related?** Think of the example of a well-fitting model that conclusively shows that an intervention is *ineffective.* This model includes an independent variable that corresponds to whether a participant was exposed to the intervention or not, and several other sociodemographic variables we want to control for. 
+<span style = "color:green"> Are fit and significance related? </span>Think of the example of a well-fitting model that conclusively shows that an intervention is *ineffective.* This model includes an independent variable that corresponds to whether a participant was exposed to the intervention or not, and several other sociodemographic variables we want to control for. 
 
 
 --
@@ -1000,71 +1000,91 @@ So, poor model fit does not necessarily equate to non-significance, and a well-f
 
 
 --
-**Note that none of these is saying anything about significance!** We also want to stay mindful of *overfitting*, or pursuing better fit just for fit's sake. This is where theory and prior research come in: What factors, aside from intervention exposure, do we already know to be associated with the outcome?
+<span style = "color:green"> Note that none of these is saying anything about significance! </span>We also want to stay mindful of *overfitting*, or pursuing better fit just for fit's sake. This is where theory and prior research come in: What factors, aside from intervention exposure, do we already know to be associated with the outcome?
 
 
 ---
 class: middle, inverse
 
-# Assumptions and Diagnostics
+# Assumptions and diagnostics
 
 ---
 # Assession whether the model meets assumptions
 
-After selecting a best-fitting model, then we assess whether there are major violations of logistic regression assumptions. 
+After selecting a best-fitting model, then we assess whether there are major violations of key logistic regression assumptions: 
 
-- Outcome (Y) is discrete binomial variable (0/1 variable)
+- Absence of multicollinearity and influential outliers
 
-- Must be enough responses in every category
+- Model residuals are normally distributed
 
-- Linearity in the logit scale 
-  - X's must be linearly related to logit(Y)
-  
-- Absence of multicollinearity
-
-- No outliers
-
-- Independence of (X,Y)'s 
-  + No clustering of data into groups/contexts that would provide information about the values of other errors
-
----
-# Assumptions and Diagnostics
-
-We can check outliers and multicollinearity visually using the `check_model()` function from the *easystats* package.
-
-```{r}
-check_model(mod_3, check = c("outliers", "vif"))
-```
-
----
-# Assumptions and Diagnostics
-
-In generalized linear models like logistic regression, checking the normality of residuals can be challenging.
-
-- In linear regression, we anticipate that residuals will follow the normal distribution. In logistic regression, however, remember that we are dealing with probability (the probability of having the outcome (1) or not (0)). 
-
-- Probability doesn't follow a normal distribution, so residuals from logistic and similar models may appear non-normal even when the model is actually well-fitting. 
+- Linearity on the logit scale (particularly for continuous independent variables/covariates)
 
 
 --
-One solution is to "standardize" the residuals so that they behave like residuals from a typical linear regression model. We can do this using the *DHARMa* package. 
+Note about sample size and diagnostic significance tests: Larger sample sizes give us more power. In the context of our hypothesis tests, this is an advantage because we want to detect the *presence* of something (an association, effect, etc). But for diagnostic tests, we are testing for the *absence* of something (outliers, non-normality, etc). 
+
+
+--
+- This means that when we have a large dataset, diagnostic tests can be oversensitive (i.e., they may be significant when there are actually not concerning outliers).
+
+---
+# Assumptions and diagnostics
+
+We can check multicollinearity visually using the `check_model()` function from the *performance* package.
 
 ```{r}
-# After loading the DHARMa package, 
-# create an object containing the standardized residuals:
-mod_3_residuals <- simulateResiduals(mod_3)
+performance::check_model(mod_3, check = "vif")
 ```
 
 ---
-# Assumptions and Diagnostics
+# Assumptions and diagnostics
+
+In generalized linear models like logistic regression, checking  normality of residuals can be challenging.
+
+- In linear regression, we anticipate that residuals will follow a normal distribution. In logistic regression, however, remember that we are dealing with probability (the probability of having the outcome (1) or not (0)), which doesn't follow a normal distribution. This means that raw residuals from logistic and similar models may appear non-normal even when the model is actually well-fitting. 
+
+
+--
+One solution is to "standardize" the residuals so they plot like residuals from a typical linear regression model. We can use these standardized residuals to check for normality of residuals and the presence of influential outliers. 
+
+
+--
+The first step is to use the *DHARMa* package to create an object containing the standardized residuals. Increasing the number of simulations (specifying n = 1000) helps to address the oversensitivity of the outlier test because of excess power. 
 
 ```{r}
-# Then plot the residuals:
+mod_3_residuals <- simulateResiduals(mod_3, n = 1000)
+```
+
+
+--
+Then we plot the residuals...
+
+---
+# Assumptions and diagnostics
+
+```{r}
 plot(mod_3_residuals)
 ```
 
+Again, the diagnostic tests are helpful but not definitive. We are looking for major deviations, particularly those that have a clear pattern...
+
+
 ---
-# Assumptions and Diagnostics
+# Assumptions and diagnostics
+
+An example of concerning results (using simulated data).
+
+```{r, echo=FALSE, eval=TRUE}
+testData = createData(sampleSize = 200, overdispersion = 1.5, family = poisson())
+fittedModel <- glm(observedResponse ~  Environment1 , family = "poisson", data = testData)
+
+simulationOutput <- simulateResiduals(fittedModel = fittedModel)
+plot(simulationOutput)
+```
+
+
+---
+# Assumptions and diagnostics
 
 For linearity, we are especially interested in whether the relationship between each *continuous* independent variable and the *log odds* of our outcome is linear. If not, we might try transforming the variable (e.g., squaring it), among other approaches. 
 
@@ -1082,7 +1102,7 @@ NHANES_data1112 %>%
 
 
 ---
-# Assumptions and Diagnostics
+# Assumptions and diagnostics
 
 For linearity, we are especially interested in whether the relationship between each *continuous* independent variable and the *log odds* of our outcome is linear. If not, we might try transforming the variable (e.g., squaring it), among other approaches. 
 
@@ -1099,7 +1119,7 @@ NHANES_data1112 %>%
 ```
 
 ---
-# Assumptions and Diagnostics
+# Assumptions and diagnostics
 
 We can add a "local" (or loess) regression line that will show the most detail about linearity (or lack of).
 
@@ -1117,7 +1137,7 @@ NHANES_data1112 %>%
 ```
 
 ---
-# Assumptions and Diagnostics
+# Assumptions and diagnostics
 
 We can add a "local" (or loess) regression line that will show the most detail about linearity (or lack of).
 
@@ -1135,7 +1155,7 @@ NHANES_data1112 %>%
 ```
 
 ---
-# Assumptions and Diagnostics
+# Assumptions and diagnostics
 
 Or, we can add a linear regression line that will give us an overall sense of linearity. 
 
@@ -1153,7 +1173,7 @@ NHANES_data1112 %>%
 ```
 
 ---
-# Assumptions and Diagnostics
+# Assumptions and diagnostics
 
 Or, we can add a linear regression line that will give us an overall sense of linearity. 
 

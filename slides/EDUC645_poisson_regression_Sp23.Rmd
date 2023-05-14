@@ -124,7 +124,7 @@ NHANESraw %>%
 
 
 --
-*Linear regression:* Count outcome variables are sometimes log-transformed and analyzed using OLS regression. 
+<span style = "color:green"> Linear regression: </span>Count outcome variables are sometimes log-transformed and analyzed using OLS regression. 
 
 
 --
@@ -132,15 +132,15 @@ NHANESraw %>%
 
 
 --
-*Poisson regression:* Often used for modeling count data. 
+<span style = "color:green"> Poisson regression: </span>Often used for modeling count data. 
 
 
 --
-*Negative binomial regression:* Similar to Poisson regression, but relaxes a restrictive assumption (to be discussed in a few slides).
+<span style = "color:green"> Negative binomial regression: </span>Similar to Poisson regression, but relaxes a restrictive assumption (to be discussed in a few slides).
 
 
 --
-*Zero-inflated regression model:* Used to account for excess zeros produced by a different process from "true" zeros. 
+<span style = "color:green"> Zero-inflated regression model: </span>Used to account for excess zeros produced by a different process from "true" zeros. 
 
 ---
 class: middle, inverse
@@ -470,7 +470,7 @@ mod_3_int$aic
 ---
 # Assumptions and diagnostics
 
-We can then use the same tools to assess model assumptions as we used in logistic regression. For large datasets like ours, an outlier test can be oversensitive (it may be significant when there are actually not concerning outliers). Increasing the number of simulations in the DHARMa function helps to address this issue (type 1 error).
+We can then use the same tools to assess model assumptions as we used in logistic regression. 
 
 --
 ```{r}
@@ -509,7 +509,7 @@ Even if the test had been significant, is our outcome one where there could be p
 Checking multicollinearity visually using the `check_model()` function from the *performance* package.
 
 ```{r}
-performance::check_model(mod_3_int, check = c("vif"))
+performance::check_model(mod_3_int, check = "vif")
 ```
 
 ---

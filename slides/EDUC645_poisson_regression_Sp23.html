@@ -81,7 +81,7 @@ Contrast with `SleepHrsNight`, the self-reported number of hours of sleep a part
 
 
 --
-*Linear regression:* Count outcome variables are sometimes log-transformed and analyzed using OLS regression. 
+&lt;span style = "color:green"&gt; Linear regression: &lt;/span&gt;Count outcome variables are sometimes log-transformed and analyzed using OLS regression. 
 
 
 --
@@ -89,15 +89,15 @@ Contrast with `SleepHrsNight`, the self-reported number of hours of sleep a part
 
 
 --
-*Poisson regression:* Often used for modeling count data. 
+&lt;span style = "color:green"&gt; Poisson regression: &lt;/span&gt;Often used for modeling count data. 
 
 
 --
-*Negative binomial regression:* Similar to Poisson regression, but relaxes a restrictive assumption (to be discussed in a few slides).
+&lt;span style = "color:green"&gt; Negative binomial regression: &lt;/span&gt;Similar to Poisson regression, but relaxes a restrictive assumption (to be discussed in a few slides).
 
 
 --
-*Zero-inflated regression model:* Used to account for excess zeros produced by a different process from "true" zeros. 
+&lt;span style = "color:green"&gt; Zero-inflated regression model: &lt;/span&gt;Used to account for excess zeros produced by a different process from "true" zeros. 
 
 ---
 class: middle, inverse
@@ -614,7 +614,7 @@ mod_3_int$aic
 ---
 # Assumptions and diagnostics
 
-We can then use the same tools to assess model assumptions as we used in logistic regression. For large datasets like ours, an outlier test can be oversensitive (it may be significant when there are actually not concerning outliers). Increasing the number of simulations in the DHARMa function helps to address this issue (type 1 error).
+We can then use the same tools to assess model assumptions as we used in logistic regression. 
 
 --
 
@@ -679,7 +679,7 @@ Checking multicollinearity visually using the `check_model()` function from the 
 
 
 ```r
-performance::check_model(mod_3_int, check = c("vif"))
+performance::check_model(mod_3_int, check = "vif")
 ```
 
 &lt;img src="EDUC645_poisson_regression_Sp23_files/figure-html/unnamed-chunk-28-1.png" style="display: block; margin: auto;" /&gt;
