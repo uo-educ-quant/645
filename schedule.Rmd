@@ -101,7 +101,7 @@ knitr::opts_chunk$set(echo = TRUE)
 **Lecture**:
 
  * [Lecture slides](./slides/EDUC645_nested_data_Sp23.html)
- * Dataset (to be added)
+ * [Dataset](./data/seda_oregon.csv)
 
 **Assignment**:
 
