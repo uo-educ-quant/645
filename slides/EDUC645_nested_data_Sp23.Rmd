@@ -11,6 +11,8 @@ output:
       highlightStyle: github
       highlightLines: true
       countIncrementalSlides: false
+  editor_options: 
+  chunk_output_type: console
 ---
 
 ```{R, setup, include = F}
@@ -43,6 +45,10 @@ opts_chunk$set(
   message = F
 )
 
+seda <- tibble(rio::import(here::here("data", "seda_oregon.csv"))) %>%
+  filter(subject == "mth") %>% 
+  select(-subject) %>% 
+  mutate(grade = as_factor(recode(grade, '3' = "Grade 3", '4' = "Grade 4", '5' = "Grade 5", '6' = "Grade 6"))) 
 ```
 
 
@@ -159,7 +165,7 @@ Maybe there was little or no relationship in small classrooms and a stronger rel
 
 
 --
-Aggregation bias would occur if we concluded from our model that adequate academic counseling improves average student performance at the school level, when the relationship is actually more complex and depends on classroom-level factors like class size (or presence of teaching assistants, etc). 
+Aggregation bias would occur if we concluded from our model that adequate academic counseling improves average student performance at the school level, when the relationship is actually more complex and depends on lower-level factors like class size (or presence of teaching assistants, etc). 
 
 
 --
@@ -189,12 +195,228 @@ Several methods can be used to account for nesting or clustering of data so that
 
 
 ---
-# To Dos
+# Example
 
-### Assignments
+The Stanford Education Data Archive (SEDA) was launched in 2016 to provide nationally comparable, publicly available test score data for U.S. public school districts. 
 
-- Assignment 2 is due May 12.
 
-### Reading
+--
+SEDA allows researchers to study relationships between educational conditions, contexts, and outcomes (e.g., student math achievement) at the district level across the nation.
 
-- Complete prior to May 16 meeting: BMLR Ch. 8.6-8.11 (pp. 234-251).
+
+--
+We'll look at district-level data for 103 Oregon school districts from the 2017-18 academic year. 
+
+- Each district has 4 observations (rows), one for each grade from 3-6.
+
+- Observations with missing values on any of the key variables were deleted for simplification.
+
+
+---
+# View the data 
+
+```{r}
+head(seda)
+```
+
+
+--
+Notice there are 4 observations for each grade in each district. 
+
+
+--
+Whenever you have multiple observations that share something in common (share the same district, group, person), this is an indication that you probably have nested data! 
+
+
+---
+# Understanding clustered data
+
+Let's look at the average math achievement score (`achievement`) across all grades for each Oregon district.
+
+
+--
+```{r, echo = FALSE}
+seda %>% 
+  group_by(district) %>% 
+  mutate(mean = mean(achievement)) %>%
+  ungroup() %>% 
+  select(district, mean) %>%
+  ggplot(aes(district, mean)) +
+  geom_point() +
+  labs(x = "District",
+       y = "Math Achievement")
+```
+
+
+--
+<span style = "color:green"> What is the relationship between proportion of ELL students and math achievement in Oregon districts? </span>
+
+
+---
+# % ELL and achievement
+
+
+--
+We might consider averaging all 4 grades' math achievement scores in each district and fit a simple linear regression for the association between % ELL and math achievement:
+
+
+--
+```{r, echo = FALSE}
+seda %>%
+  group_by(district) %>% 
+  mutate(achievement = mean(achievement)) %>% 
+  ungroup() %>% 
+  ggplot(aes(percent_ell, achievement)) +
+  geom_smooth(method='lm', se = 0) +
+  geom_point(alpha = 0.1) + 
+  labs(x = "ELL Proportion",
+       y = "Math Achievement")
+```
+
+
+--
+But do we have more information if we didn't average the outcome over the 4 grades?
+
+---
+# Achievement for all grades
+
+```{r, echo = FALSE}
+seda %>% 
+  group_by(district) %>% 
+  mutate(mean = mean(achievement)) %>%
+  ungroup() %>% 
+  select(district, mean) %>%
+  ggplot(aes(district, mean)) +
+  geom_point() +
+  labs(x = "District",
+       y = "Math Achievement")
+```
+
+---
+# Achievement for each grade
+
+```{r, echo = FALSE}
+seda %>% 
+  group_by(district, grade) %>% 
+  mutate(mean = mean(achievement)) %>% 
+  ungroup() %>% 
+  select(district, grade, mean) %>%
+  ggplot(aes(district, mean, color = grade)) +
+  geom_point() +
+  labs(x = "District",
+       y = "Math Achievement")
+```
+
+
+--
+If we fit a model for each grade, what could differ about the regression lines for each grade?
+
+
+---
+# Relationship by grade
+
+Fitting a simple linear regression model for each grade (i.e., 4 separate models):
+
+
+--
+```{r, echo = FALSE}
+seda %>%
+  group_by(district, grade) %>% 
+  mutate(achievement = mean(achievement)) %>% 
+  ungroup() %>% 
+  ggplot(aes(percent_ell, achievement, color = grade)) +
+  geom_smooth(method='lm', se = 0) +
+  geom_point(alpha = 0.1) +
+  labs(x = "ELL Proportion",
+       y = "Math Achievement")
+```
+
+
+--
+Now that you see regression lines for each grade, what model parameters (intercepts, slopes) did end up differing for each grade?
+
+---
+# Intraclass correlation coefficient
+
+We can estimate the differences we've been discussing using the <span style = "color:green"> intraclass correlation coefficient (ICC) </span>. The ICC gives us an estimate of how much of the variability in our outcome is simply because of differences in the outcome between groups (in our example, grades). 
+
+
+--
+The ICC ranges from 0 to 1. The larger the ICC, the greater the proportion of variability in the outcome that is due to group differences. The ICC is one tool we can use to gauge whether clustering is important enough to warrant multilevel modeling.
+
+
+--
+<span style = "color:green"> The ICC for the math achievement outcome in our data is 0.645 or 64.5%. </span> How would you interpret this? 
+
+
+--
+- 64.5% of the variation in the math achievement outcome is attributable to differences in achievement between grades. 
+
+
+--
+- Because the ICC is telling us that more than two-thirds of the variability in the outcome is because of grade (and has nothing to do with ELL proportion), we know that our findings could mask important differences in grade-level achievement.
+
+
+---
+# Linear regression ignoring grouping
+
+```{r, echo=T}
+m1 <- lm(achievement ~ percent_ell, data = seda)
+coef(m1) # Extracting intercept and %ELL coefficient
+```
+
+
+--
+This is called a <span style = "color:green"> fixed-effect model </span>because all grouping/clustering is ignored (i.e., model intercepts and slopes are "fixed" across the groups)
+
+---
+# Mixed-effects model
+
+Instead of the simple linear regression (fixed-effect model), we can fit a mixed-effects model that allows intercepts, slopes, or both to vary across grade. For now, let's look at what happens if we let the intercept (the average math achievement level at 0% ELL) vary by grade. We'll use the `lmer()` function from the base R package *lme4*.
+
+
+--
+```{r}
+m2 <- lmer(achievement ~ percent_ell + (1 | grade), data = seda)
+```
+
+
+--
+The same function and formula style are used for all the mixed-effects models we'll use. The only difference from the linear regression specification you're used to is the element in parentheses. 
+
+
+--
+- This is the "random effect" part of the model, or what we want to allow to differ across groups/clusters. 
+
+
+--
+- What is after the `|` is the variable that indicates the group/cluster. What is before the `|` is what we're interested in estimating for each group. Like the basic regression model where 1 is used to fit a model that estimates only the intercept, here the `(1 | grade)` means "only the intercept (1) can vary by grade." 
+
+---
+# Mixed-effects model
+
+```{r}
+coef(m2)$grade
+```
+
+
+--
+This is called a <span style = "color:green"> random-intercepts model </span> because the intercept is allowed to vary for each grade. In practice, before fitting a mixed-effects model, we'd fit the equivalent of the null model we're used to and use it to calculate the ICC. 
+
+
+--
+```{r}
+m0 <- lmer(achievement ~ 1 + (1 | grade), data = seda)
+performance::icc(m0)
+```
+
+<!-- --- -->
+<!-- # To Dos -->
+
+<!-- ### Assignments -->
+
+<!-- - Assignment 2 is due May 12. -->
+
+<!-- ### Reading -->
+
+<!-- - Complete prior to May 16 meeting: BMLR Ch. 8.6-8.11 (pp. 234-251). -->

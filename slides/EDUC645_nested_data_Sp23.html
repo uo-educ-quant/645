@@ -140,7 +140,7 @@ Maybe there was little or no relationship in small classrooms and a stronger rel
 
 
 --
-Aggregation bias would occur if we concluded from our model that adequate academic counseling improves average student performance at the school level, when the relationship is actually more complex and depends on classroom-level factors like class size (or presence of teaching assistants, etc). 
+Aggregation bias would occur if we concluded from our model that adequate academic counseling improves average student performance at the school level, when the relationship is actually more complex and depends on lower-level factors like class size (or presence of teaching assistants, etc). 
 
 
 --
@@ -170,15 +170,218 @@ Several methods can be used to account for nesting or clustering of data so that
 
 
 ---
-# To Dos
+# Example
 
-### Assignments
+The Stanford Education Data Archive (SEDA) was launched in 2016 to provide nationally comparable, publicly available test score data for U.S. public school districts. 
 
-- Assignment 2 is due May 12.
 
-### Reading
+--
+SEDA allows researchers to study relationships between educational conditions, contexts, and outcomes (e.g., student math achievement) at the district level across the nation.
 
-- Complete prior to May 16 meeting: BMLR Ch. 8.6-8.11 (pp. 234-251).
+
+--
+We'll look at district-level data for 103 Oregon school districts from the 2017-18 academic year. 
+
+- Each district has 4 observations (rows), one for each grade from 3-6.
+
+- Observations with missing values on any of the key variables were deleted for simplification.
+
+
+---
+# View the data 
+
+
+```r
+head(seda)
+```
+
+```
+#&gt; # A tibble: 6 × 7
+#&gt;   district     grade achievement gap_gender percent_ell percent_sped percent_frl
+#&gt;   &lt;chr&gt;        &lt;fct&gt;       &lt;dbl&gt;      &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt;
+#&gt; 1 VALE SD 84   Grad…        2.54      0.974      0.0492        0.128       0.622
+#&gt; 2 VALE SD 84   Grad…        3.09     -0.788      0.0492        0.128       0.622
+#&gt; 3 VALE SD 84   Grad…        4.57      0.836      0.0492        0.128       0.622
+#&gt; 4 VALE SD 84   Grad…        6.03      0.863      0.0492        0.128       0.622
+#&gt; 5 YAMHILL CAR… Grad…        3.15     -1.09       0.0144        0.141       0.434
+#&gt; 6 YAMHILL CAR… Grad…        2.78     -0.583      0.0144        0.141       0.434
+```
+
+
+--
+Notice there are 4 observations for each grade in each district. 
+
+
+--
+Whenever you have multiple observations that share something in common (share the same district, group, person), this is an indication that you probably have nested data! 
+
+
+---
+# Understanding clustered data
+
+Let's look at the average math achievement score (`achievement`) across all grades for each Oregon district.
+
+
+--
+&lt;img src="EDUC645_nested_data_Sp23_files/figure-html/unnamed-chunk-2-1.png" style="display: block; margin: auto;" /&gt;
+
+
+--
+&lt;span style = "color:green"&gt; What is the relationship between proportion of ELL students and math achievement in Oregon districts? &lt;/span&gt;
+
+
+---
+# % ELL and achievement
+
+
+--
+We might consider averaging all 4 grades' math achievement scores in each district and fit a simple linear regression for the association between % ELL and math achievement:
+
+
+--
+&lt;img src="EDUC645_nested_data_Sp23_files/figure-html/unnamed-chunk-3-1.png" style="display: block; margin: auto;" /&gt;
+
+
+--
+But do we have more information if we didn't average the outcome over the 4 grades?
+
+---
+# Achievement for all grades
+
+&lt;img src="EDUC645_nested_data_Sp23_files/figure-html/unnamed-chunk-4-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+# Achievement for each grade
+
+&lt;img src="EDUC645_nested_data_Sp23_files/figure-html/unnamed-chunk-5-1.png" style="display: block; margin: auto;" /&gt;
+
+
+--
+If we fit a model for each grade, what could differ about the regression lines for each grade?
+
+
+---
+# Relationship by grade
+
+Fitting a simple linear regression model for each grade (i.e., 4 separate models):
+
+
+--
+&lt;img src="EDUC645_nested_data_Sp23_files/figure-html/unnamed-chunk-6-1.png" style="display: block; margin: auto;" /&gt;
+
+
+--
+Now that you see regression lines for each grade, what model parameters (intercepts, slopes) did end up differing for each grade?
+
+---
+# Intraclass correlation coefficient
+
+We can estimate the differences we've been discussing using the &lt;span style = "color:green"&gt; intraclass correlation coefficient (ICC) &lt;/span&gt;. The ICC gives us an estimate of how much of the variability in our outcome is simply because of differences in the outcome between groups (in our example, grades). 
+
+
+--
+The ICC ranges from 0 to 1. The larger the ICC, the greater the proportion of variability in the outcome that is due to group differences. The ICC is one tool we can use to gauge whether clustering is important enough to warrant multilevel modeling.
+
+
+--
+&lt;span style = "color:green"&gt; The ICC for the math achievement outcome in our data is 0.645 or 64.5%. &lt;/span&gt; How would you interpret this? 
+
+
+--
+- 64.5% of the variation in the math achievement outcome is attributable to differences in achievement between grades. 
+
+
+--
+- Because the ICC is telling us that more than two-thirds of the variability in the outcome is because of grade (and has nothing to do with ELL proportion), we know that our findings could mask important differences in grade-level achievement.
+
+
+---
+# Linear regression ignoring grouping
+
+
+```r
+m1 &lt;- lm(achievement ~ percent_ell, data = seda)
+coef(m1) # Extracting intercept and %ELL coefficient
+```
+
+```
+#&gt; (Intercept) percent_ell 
+#&gt;    4.504827   -6.466889
+```
+
+
+--
+This is called a &lt;span style = "color:green"&gt; fixed-effect model &lt;/span&gt;because all grouping/clustering is ignored (i.e., model intercepts and slopes are "fixed" across the groups)
+
+---
+# Mixed-effects model
+
+Instead of the simple linear regression (fixed-effect model), we can fit a mixed-effects model that allows intercepts, slopes, or both to vary across grade. For now, let's look at what happens if we let the intercept (the average math achievement level at 0% ELL) vary by grade. We'll use the `lmer()` function from the base R package *lme4*.
+
+
+--
+
+```r
+m2 &lt;- lmer(achievement ~ percent_ell + (1 | grade), data = seda)
+```
+
+
+--
+The same function and formula style are used for all the mixed-effects models we'll use. The only difference from the linear regression specification you're used to is the element in parentheses. 
+
+
+--
+- This is the "random effect" part of the model, or what we want to allow to differ across groups/clusters. 
+
+
+--
+- What is after the `|` is the variable that indicates the group/cluster. What is before the `|` is what we're interested in estimating for each group. Like the basic regression model where 1 is used to fit a model that estimates only the intercept, here the `(1 | grade)` means "only the intercept (1) can vary by grade." 
+
+---
+# Mixed-effects model
+
+
+```r
+coef(m2)$grade
+```
+
+```
+#&gt;         (Intercept) percent_ell
+#&gt; Grade 3    2.856961   -6.466889
+#&gt; Grade 4    3.913716   -6.466889
+#&gt; Grade 5    5.065668   -6.466889
+#&gt; Grade 6    6.182964   -6.466889
+```
+
+
+--
+This is called a &lt;span style = "color:green"&gt; random-intercepts model &lt;/span&gt; because the intercept is allowed to vary for each grade. In practice, before fitting a mixed-effects model, we'd fit the equivalent of the null model we're used to and use it to calculate the ICC. 
+
+
+--
+
+```r
+m0 &lt;- lmer(achievement ~ 1 + (1 | grade), data = seda)
+performance::icc(m0)
+```
+
+```
+#&gt; # Intraclass Correlation Coefficient
+#&gt; 
+#&gt;     Adjusted ICC: 0.645
+#&gt;   Unadjusted ICC: 0.645
+```
+
+&lt;!-- --- --&gt;
+&lt;!-- # To Dos --&gt;
+
+&lt;!-- ### Assignments --&gt;
+
+&lt;!-- - Assignment 2 is due May 12. --&gt;
+
+&lt;!-- ### Reading --&gt;
+
+&lt;!-- - Complete prior to May 16 meeting: BMLR Ch. 8.6-8.11 (pp. 234-251). --&gt;
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
