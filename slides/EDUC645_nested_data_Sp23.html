@@ -192,20 +192,19 @@ We'll look at district-level data for 103 Oregon school districts from the 2017-
 
 
 ```r
-head(seda)
+head(seda, n = 5) %&gt;% 
+  print_md() 
 ```
 
-```
-#&gt; # A tibble: 6 × 7
-#&gt;   district     grade achievement gap_gender percent_ell percent_sped percent_frl
-#&gt;   &lt;chr&gt;        &lt;fct&gt;       &lt;dbl&gt;      &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt;
-#&gt; 1 VALE SD 84   Grad…        2.54      0.974      0.0492        0.128       0.622
-#&gt; 2 VALE SD 84   Grad…        3.09     -0.788      0.0492        0.128       0.622
-#&gt; 3 VALE SD 84   Grad…        4.57      0.836      0.0492        0.128       0.622
-#&gt; 4 VALE SD 84   Grad…        6.03      0.863      0.0492        0.128       0.622
-#&gt; 5 YAMHILL CAR… Grad…        3.15     -1.09       0.0144        0.141       0.434
-#&gt; 6 YAMHILL CAR… Grad…        2.78     -0.583      0.0144        0.141       0.434
-```
+
+
+|district             |  grade | achievement| gap_gender| percent_ell| percent_sped| percent_frl|
+|:--------------------|:-------|-----------:|----------:|-----------:|------------:|-----------:|
+|VALE SD 84           |Grade 3 |        2.54|       0.97|        0.05|         0.13|        0.62|
+|VALE SD 84           |Grade 4 |        3.09|      -0.79|        0.05|         0.13|        0.62|
+|VALE SD 84           |Grade 5 |        4.57|       0.84|        0.05|         0.13|        0.62|
+|VALE SD 84           |Grade 6 |        6.03|       0.86|        0.05|         0.13|        0.62|
+|YAMHILL CARLTON SD 1 |Grade 3 |        3.15|      -1.09|        0.01|         0.14|        0.43|
 
 
 --
@@ -223,7 +222,7 @@ Let's look at the average math achievement score (`achievement`) across all grad
 
 
 --
-&lt;img src="EDUC645_nested_data_Sp23_files/figure-html/unnamed-chunk-2-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC645_nested_data_Sp23_files/figure-html/unnamed-chunk-2-1.png" width="576" style="display: block; margin: auto;" /&gt;
 
 
 --
@@ -239,7 +238,7 @@ We might consider averaging all 4 grades' math achievement scores in each distri
 
 
 --
-&lt;img src="EDUC645_nested_data_Sp23_files/figure-html/unnamed-chunk-3-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC645_nested_data_Sp23_files/figure-html/unnamed-chunk-3-1.png" width="576" style="display: block; margin: auto;" /&gt;
 
 
 --
@@ -267,7 +266,7 @@ Fitting a simple linear regression model for each grade (i.e., 4 separate models
 
 
 --
-&lt;img src="EDUC645_nested_data_Sp23_files/figure-html/unnamed-chunk-6-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC645_nested_data_Sp23_files/figure-html/unnamed-chunk-6-1.png" width="576" style="display: block; margin: auto;" /&gt;
 
 
 --
@@ -296,7 +295,7 @@ The ICC ranges from 0 to 1. The larger the ICC, the greater the proportion of va
 
 
 ---
-# Linear regression ignoring grouping
+# Simple linear regression
 
 
 ```r
@@ -311,7 +310,7 @@ coef(m1) # Extracting intercept and %ELL coefficient
 
 
 --
-This is called a &lt;span style = "color:green"&gt; fixed-effect model &lt;/span&gt;because all grouping/clustering is ignored (i.e., model intercepts and slopes are "fixed" across the groups)
+This is called a &lt;span style = "color:green"&gt; fixed-effect model. &lt;/span&gt; We're assuming that groups (grades) are sufficiently similar that a single (or fixed) slope and intercept would give us an accurate enough picture of the relationship of interest.  
 
 ---
 # Mixed-effects model
@@ -338,11 +337,11 @@ The same function and formula style are used for all the mixed-effects models we
 - What is after the `|` is the variable that indicates the group/cluster. What is before the `|` is what we're interested in estimating for each group. Like the basic regression model where 1 is used to fit a model that estimates only the intercept, here the `(1 | grade)` means "only the intercept (1) can vary by grade." 
 
 ---
-# Mixed-effects model
+# Mixed-effects models
 
 
 ```r
-coef(m2)$grade
+coef(m2)$grade # Specify the grouping variable
 ```
 
 ```
@@ -355,7 +354,7 @@ coef(m2)$grade
 
 
 --
-This is called a &lt;span style = "color:green"&gt; random-intercepts model &lt;/span&gt; because the intercept is allowed to vary for each grade. In practice, before fitting a mixed-effects model, we'd fit the equivalent of the null model we're used to and use it to calculate the ICC. 
+This is called a &lt;span style = "color:green"&gt; random intercepts model &lt;/span&gt; because the intercept is allowed to vary for each grade. In practice, before fitting a mixed-effects model, we'd fit the equivalent of the null model we're used to and use it to calculate the ICC. 
 
 
 --
@@ -371,6 +370,194 @@ performance::icc(m0)
 #&gt;     Adjusted ICC: 0.645
 #&gt;   Unadjusted ICC: 0.645
 ```
+
+---
+# Back to variability explained
+
+&lt;img src="EDUC645_nested_data_Sp23_files/figure-html/unnamed-chunk-11-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+---
+# Mixed-effects models
+
+So far we've considered one intercept and slope for all grades or examining individual intercepts for each grade, and we have a good sense from our plot earlier that the random-intercepts model is probably sufficient for our data. 
+
+
+--
+But let's illustrate what happens with the remaining two modeling options:
+
+
+--
+- We can look at slopes for each grade, but only one intercept across grades (random-slopes model). 
+ 
+ 
+--
+- Or, we can examine intercepts *and* slopes for each grade (random-effects model)
+
+
+---
+# Mixed-effects models
+
+
+--
+&lt;span style = "color:green"&gt; Random-slopes model: &lt;/span&gt;Individual slope for each grade (`percent_ell|grade`), but intercept is fixed (0). Note that in practice, we'd often move from fixed-effect &gt; random-intercepts &gt; random-slopes-and-intercepts (the full "random-effects model).
+
+
+--
+
+```r
+m3 &lt;- lmer(achievement ~ 1 + (0 + percent_ell|grade), data = seda)
+coef(m3)$grade
+```
+
+```
+#&gt;         percent_ell (Intercept)
+#&gt; Grade 3  -16.307389     4.47197
+#&gt; Grade 4  -10.263599     4.47197
+#&gt; Grade 5   -2.428400     4.47197
+#&gt; Grade 6    4.669357     4.47197
+```
+
+
+--
+&lt;span style = "color:green"&gt; Random-effects model: &lt;/span&gt;Slopes (`percent_ell|grade`) and intercepts (1) for each grade
+
+
+--
+
+```r
+m4 &lt;- lmer(achievement ~ percent_ell + (percent_ell|grade), data = seda)
+coef(m4)$grade
+```
+
+```
+#&gt;         (Intercept) percent_ell
+#&gt; Grade 3    2.826638   -6.120839
+#&gt; Grade 4    3.904292   -6.343056
+#&gt; Grade 5    5.075495   -6.584562
+#&gt; Grade 6    6.212885   -6.819096
+```
+
+
+---
+# Fixed effect vs random effects
+
+&lt;img src="EDUC645_nested_data_Sp23_files/figure-html/unnamed-chunk-14-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+---
+# Bringing it together
+
+--
+.pull-left[
+The &lt;span style = "color:green"&gt; random-effects model &lt;/span&gt; gives us the slope and intercept for each cluster:
+
+
+```r
+coef(m4)$grade
+```
+
+```
+#&gt;         (Intercept) percent_ell
+#&gt; Grade 3    2.826638   -6.120839
+#&gt; Grade 4    3.904292   -6.343056
+#&gt; Grade 5    5.075495   -6.584562
+#&gt; Grade 6    6.212885   -6.819096
+```
+]
+
+--
+.pull-right[
+The &lt;span style = "color:green"&gt; fixed-effect model &lt;/span&gt; gives us the average (or aggregation) of the different intercepts and slopes across grades:
+ 
+
+```r
+coef(m1)
+```
+
+```
+#&gt; (Intercept) percent_ell 
+#&gt;    4.504827   -6.466889
+```
+]
+
+
+--
+.pull-left[
+In other words, the fixed-effect results are the average of the random-effects model results:
+]
+
+
+--
+.pull-right[
+
+```
+#&gt;      (Intercept) percent_ell
+#&gt; [1,]    4.504827   -6.466889
+```
+]
+
+
+--
+So, the primary question guiding us through our model fitting process is the same as it is for any average: Is an average a good enough representation of the underlying range of estimates (values of intercepts and slopes) to be interpretable on its own, or do we need to look at the underlying range to have a better understanding. 
+
+
+---
+# Comparison
+
+We can use many of the same tools we've already used to compare models, including deviance tests and AIC. We'll also use RMSE (root mean-squared error), which is the average difference between values predicted by the model and the actual values in our data (so, lower RMSE = better fitting).
+
+
+--
+
+```r
+performance::test_likelihoodratio(m1, m2) %&gt;% 
+  print_md() # Only for slides
+```
+
+
+
+|Name |           Model| df| df_diff|   Chi2|        p|
+|:----|---------------:|--:|-------:|------:|--------:|
+|m1   |              lm|  3|        |       |         |
+|m2   | lmerModLmerTest|  4|       1| 159.56| 1.41e-36|
+
+
+--
+
+```r
+performance::test_likelihoodratio(m2, m4) %&gt;% 
+  print_md()
+```
+
+
+
+|Name |          Model | df| df_diff| Chi2|    p|
+|:----|:---------------|--:|-------:|----:|----:|
+|m2   |lmerModLmerTest |  4|        |     |     |
+|m4   |lmerModLmerTest |  6|       2| 0.08| 0.96|
+
+
+---
+# Comparison
+
+```r
+performance::compare_performance(m1, m2, m4, metrics = "common") %&gt;% 
+  print_md()
+```
+
+
+
+Table: Comparison of Model Performance Indices
+
+|Name |           Model | AIC (weights) |    BIC (weights) | RMSE | R2 (cond.) | R2 (marg.) |  ICC |   R2 | R2 (adj.) |
+|:----|:---------------:|:-------------:|:----------------:|:----:|:----------:|:----------:|:----:|:----:|:---------:|
+|m1   |              lm | 663.7 (&lt;.001) |    673.2 (&lt;.001) | 1.57 |            |            |      | 0.09 |      0.08 |
+|m2   | lmerModLmerTest |  506.2 (0.88) |     518.8 (0.99) | 0.94 |       0.72 |       0.07 | 0.70 |      |           |
+|m4   | lmerModLmerTest |  510.1 (0.12) | 529.1 (6.00e-03) | 0.94 |       0.72 |       0.07 | 0.70 |      |           |
+
+
+--
+So, the random-intercepts model is better fitting than the fixed-effect model (the simple linear regression), but the random-effects model is not any better fitting than the random-intercepts model.
+
 
 &lt;!-- --- --&gt;
 &lt;!-- # To Dos --&gt;

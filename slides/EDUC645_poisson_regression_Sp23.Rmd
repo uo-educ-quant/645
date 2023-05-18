@@ -99,7 +99,7 @@ Let's look at `DaysMHBad_count`, the number of days per month a participant repo
 
 
 --
-```{r, warning=FALSE, echo=FALSE}
+```{r, warning=FALSE, echo=FALSE, fig.retina=3}
 NHANES_data1112 %>% 
   ggplot(aes(DaysMHBad_count)) +
   geom_histogram(binwidth = 1)
@@ -473,7 +473,7 @@ mod_3_int$aic
 We can then use the same tools to assess model assumptions as we used in logistic regression. 
 
 --
-```{r}
+```{r, fig.retina=3}
 mod_3_int_residuals <- simulateResiduals(mod_3_int, n = 1000) 
 plot(mod_3_int_residuals)
 ```
@@ -517,7 +517,7 @@ performance::check_model(mod_3_int, check = "vif")
 
 Checking multicollinearity using the `vif()` function from the *car* package. 
 
-```{r, warning=FALSE}
+```{r, warning=FALSE, fig.retina=3}
 car::vif(mod_3_int, type = "predictor")
 ```
 
@@ -546,7 +546,7 @@ print(mod_3_int_probs)
 ---
 # Interpreting an interaction
 
-```{r}
+```{r, fig.retina=3}
 plot(mod_3_int_probs)
 ```
 

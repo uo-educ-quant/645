@@ -149,7 +149,7 @@ head(NHANES_data1112, n = 4)
 ---
 # Diabetes (No/Yes)
 
-```{r, echo = F}
+```{r, echo = F, fig.retina=3}
 NHANES_data1112 %>% 
   ggplot(aes(Diabetes)) +
   geom_bar(fill = c("yellow", "royalblue"), width = 0.5, alpha = 0.8) +
@@ -161,7 +161,7 @@ NHANES_data1112 %>%
 ---
 # PhysActive (Inactive/Active)
 
-```{r, echo = F}
+```{r, echo = F, fig.retina=3}
 NHANES_data1112 %>% 
   ggplot(aes(PhysActive)) +
   geom_bar(fill = c("yellow", "royalblue"), width = 0.5, alpha = 0.8) +
@@ -777,7 +777,7 @@ print(mod_3_int_probs) # print() isn't usually needed
 ---
 # Interpretting the interaction
 
-```{r}
+```{r, fig.retina=3}
 plot(mod_3_int_probs)
 ```
 
@@ -1032,7 +1032,7 @@ Note about sample size and diagnostic significance tests: Larger sample sizes gi
 
 We can check multicollinearity visually using the `check_model()` function from the *performance* package.
 
-```{r}
+```{r, fig.retina=3}
 performance::check_model(mod_3, check = "vif")
 ```
 
@@ -1062,7 +1062,7 @@ Then we plot the residuals...
 ---
 # Assumptions and diagnostics
 
-```{r}
+```{r, fig.retina=3}
 plot(mod_3_residuals)
 ```
 
@@ -1074,7 +1074,7 @@ Again, the diagnostic tests are helpful but not definitive. We are looking for m
 
 An example of concerning results (using simulated data).
 
-```{r, echo=FALSE, eval=TRUE}
+```{r, echo=FALSE, eval=TRUE, fig.retina=3}
 testData = createData(sampleSize = 200, overdispersion = 1.5, family = poisson())
 fittedModel <- glm(observedResponse ~  Environment1 , family = "poisson", data = testData)
 
@@ -1088,7 +1088,7 @@ plot(simulationOutput)
 
 For linearity, we are especially interested in whether the relationship between each *continuous* independent variable and the *log odds* of our outcome is linear. If not, we might try transforming the variable (e.g., squaring it), among other approaches. 
 
-```{r, eval=FALSE}
+```{r, eval=FALSE, fig.retina=3}
 NHANES_data1112 %>%
   group_by(Age) %>%    
   count(Diabetes) %>%
@@ -1106,7 +1106,7 @@ NHANES_data1112 %>%
 
 For linearity, we are especially interested in whether the relationship between each *continuous* independent variable and the *log odds* of our outcome is linear. If not, we might try transforming the variable (e.g., squaring it), among other approaches. 
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, fig.retina=3}
 NHANES_data1112 %>%
   group_by(Age) %>%    
   count(Diabetes) %>%
@@ -1123,7 +1123,7 @@ NHANES_data1112 %>%
 
 We can add a "local" (or loess) regression line that will show the most detail about linearity (or lack of).
 
-```{r, eval=FALSE}
+```{r, eval=FALSE, fig.retina=3}
 NHANES_data1112 %>%
   group_by(Age) %>%    
   count(Diabetes) %>%
@@ -1141,7 +1141,7 @@ NHANES_data1112 %>%
 
 We can add a "local" (or loess) regression line that will show the most detail about linearity (or lack of).
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, fig.retina=3}
 NHANES_data1112 %>%
   group_by(Age) %>%    
   count(Diabetes) %>%
@@ -1159,7 +1159,7 @@ NHANES_data1112 %>%
 
 Or, we can add a linear regression line that will give us an overall sense of linearity. 
 
-```{r, eval=FALSE}
+```{r, eval=FALSE, fig.retina=3}
 NHANES_data1112 %>%
   group_by(Age) %>%    
   count(Diabetes) %>%
@@ -1177,7 +1177,7 @@ NHANES_data1112 %>%
 
 Or, we can add a linear regression line that will give us an overall sense of linearity. 
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, fig.retina=3}
 NHANES_data1112 %>%
   group_by(Age) %>%    
   count(Diabetes) %>%

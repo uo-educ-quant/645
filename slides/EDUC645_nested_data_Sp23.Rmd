@@ -19,7 +19,7 @@ output:
 library(pacman)
 p_load(easystats, emmeans, DHARMa, ggeffects,
        here, tidyverse, ggplot2, xaringan, knitr, kableExtra, foreign, broom, xaringanthemer, reshape2, DiagrammeR, lme4,
-       equatiomatic, performance, lmerTest, gtsummary)
+       performance, lmerTest, gtsummary)
 
 i_am("slides/EDUC645_nested_data_Sp23.rmd")
 
@@ -45,10 +45,10 @@ opts_chunk$set(
   message = F
 )
 
-seda <- tibble(rio::import(here::here("data", "seda_oregon.csv"))) %>%
+seda <- read_csv(here::here("data", "seda_oregon.csv")) %>%
   filter(subject == "mth") %>% 
   select(-subject) %>% 
-  mutate(grade = as_factor(recode(grade, '3' = "Grade 3", '4' = "Grade 4", '5' = "Grade 5", '6' = "Grade 6"))) 
+  mutate(grade = as_factor(recode(grade, '3' = "Grade 3", '4' = "Grade 4", '5' = "Grade 5", '6' = "Grade 6")))
 ```
 
 
@@ -216,7 +216,8 @@ We'll look at district-level data for 103 Oregon school districts from the 2017-
 # View the data 
 
 ```{r}
-head(seda)
+head(seda, n = 5) %>% 
+  print_md() 
 ```
 
 
@@ -235,7 +236,7 @@ Let's look at the average math achievement score (`achievement`) across all grad
 
 
 --
-```{r, echo = FALSE}
+```{r, echo = FALSE, fig.retina=3}
 seda %>% 
   group_by(district) %>% 
   mutate(mean = mean(achievement)) %>%
@@ -261,7 +262,7 @@ We might consider averaging all 4 grades' math achievement scores in each distri
 
 
 --
-```{r, echo = FALSE}
+```{r, echo = FALSE, fig.retina=3}
 seda %>%
   group_by(district) %>% 
   mutate(achievement = mean(achievement)) %>% 
@@ -319,7 +320,7 @@ Fitting a simple linear regression model for each grade (i.e., 4 separate models
 
 
 --
-```{r, echo = FALSE}
+```{r, echo = FALSE, fig.retina=3}
 seda %>%
   group_by(district, grade) %>% 
   mutate(achievement = mean(achievement)) %>% 
@@ -358,7 +359,7 @@ The ICC ranges from 0 to 1. The larger the ICC, the greater the proportion of va
 
 
 ---
-# Linear regression ignoring grouping
+# Simple linear regression
 
 ```{r, echo=T}
 m1 <- lm(achievement ~ percent_ell, data = seda)
@@ -367,7 +368,7 @@ coef(m1) # Extracting intercept and %ELL coefficient
 
 
 --
-This is called a <span style = "color:green"> fixed-effect model </span>because all grouping/clustering is ignored (i.e., model intercepts and slopes are "fixed" across the groups)
+This is called a <span style = "color:green"> fixed-effect model. </span> We're assuming that groups (grades) are sufficiently similar that a single (or fixed) slope and intercept would give us an accurate enough picture of the relationship of interest.  
 
 ---
 # Mixed-effects model
@@ -393,15 +394,15 @@ The same function and formula style are used for all the mixed-effects models we
 - What is after the `|` is the variable that indicates the group/cluster. What is before the `|` is what we're interested in estimating for each group. Like the basic regression model where 1 is used to fit a model that estimates only the intercept, here the `(1 | grade)` means "only the intercept (1) can vary by grade." 
 
 ---
-# Mixed-effects model
+# Mixed-effects models
 
 ```{r}
-coef(m2)$grade
+coef(m2)$grade # Specify the grouping variable
 ```
 
 
 --
-This is called a <span style = "color:green"> random-intercepts model </span> because the intercept is allowed to vary for each grade. In practice, before fitting a mixed-effects model, we'd fit the equivalent of the null model we're used to and use it to calculate the ICC. 
+This is called a <span style = "color:green"> random intercepts model </span> because the intercept is allowed to vary for each grade. In practice, before fitting a mixed-effects model, we'd fit the equivalent of the null model we're used to and use it to calculate the ICC. 
 
 
 --
@@ -409,6 +410,153 @@ This is called a <span style = "color:green"> random-intercepts model </span> be
 m0 <- lmer(achievement ~ 1 + (1 | grade), data = seda)
 performance::icc(m0)
 ```
+
+---
+# Back to variability explained
+
+```{r, echo = FALSE, fig.retina=3}
+piedata <- data.frame(
+  R2=c("Grade variability", "Explained variability", "Unexplained variability"),
+  value=c(0.083, 0.645, 0.272)
+)
+
+
+ggplot(piedata, aes(x="", y=value, fill=R2)) +
+  geom_bar(stat="identity", width=1) +
+  coord_polar("y", start=0)
+```
+
+---
+# Mixed-effects models
+
+So far we've considered one intercept and slope for all grades or examining individual intercepts for each grade, and we have a good sense from our plot earlier that the random-intercepts model is probably sufficient for our data. 
+
+
+--
+But let's illustrate what happens with the remaining two modeling options:
+
+
+--
+- We can look at slopes for each grade, but only one intercept across grades (random-slopes model). 
+ 
+ 
+--
+- Or, we can examine intercepts *and* slopes for each grade (random-effects model)
+
+
+---
+# Mixed-effects models
+
+
+--
+<span style = "color:green"> Random-slopes model: </span>Individual slope for each grade (`percent_ell|grade`), but intercept is fixed (0). Note that in practice, we'd often move from fixed-effect > random-intercepts > random-slopes-and-intercepts (the full "random-effects model).
+
+
+--
+```{r}
+m3 <- lmer(achievement ~ 1 + (0 + percent_ell|grade), data = seda)
+coef(m3)$grade
+```
+
+
+--
+<span style = "color:green"> Random-effects model: </span>Slopes (`percent_ell|grade`) and intercepts (1) for each grade
+
+
+--
+```{r}
+m4 <- lmer(achievement ~ percent_ell + (percent_ell|grade), data = seda)
+coef(m4)$grade
+```
+
+
+---
+# Fixed effect vs random effects
+
+```{r, echo = FALSE, fig.retina=3}
+seda %>% 
+  ggplot(aes(percent_ell, achievement)) +
+  geom_smooth(method='lm', se = 0, color = "deeppink") +
+  geom_point(alpha = 0.1) + 
+  geom_smooth(aes(color = grade), method='lm', se = 0) +
+  geom_point(aes(color = grade), alpha = 0.1) +
+  scale_color_hue(l=80, c=30) +
+  labs(x = "ELL Percentage",
+       y = "Math Achievement")
+```
+
+---
+# Bringing it together
+
+--
+.pull-left[
+The <span style = "color:green"> random-effects model </span> gives us the slope and intercept for each cluster:
+
+```{r}
+coef(m4)$grade
+```
+]
+
+--
+.pull-right[
+The <span style = "color:green"> fixed-effect model </span> gives us the average (or aggregation) of the different intercepts and slopes across grades:
+ 
+```{r}
+coef(m1)
+```
+]
+
+
+--
+.pull-left[
+In other words, the fixed-effect results are the average of the random-effects model results:
+]
+
+
+--
+.pull-right[
+```{r, echo=FALSE}
+cbind(`(Intercept)` = mean(unlist(coef(m4)$grade[1])), 
+      percent_ell = mean(unlist(coef(m4)$grade[2])))
+```
+]
+
+
+--
+So, the primary question guiding us through our model fitting process is the same as it is for any average: Is an average a good enough representation of the underlying range of estimates (values of intercepts and slopes) to be interpretable on its own, or do we need to look at the underlying range to have a better understanding. 
+
+
+---
+# Comparison
+
+We can use many of the same tools we've already used to compare models, including deviance tests and AIC. We'll also use RMSE (root mean-squared error), which is the average difference between values predicted by the model and the actual values in our data (so, lower RMSE = better fitting).
+
+
+--
+```{r}
+performance::test_likelihoodratio(m1, m2) %>% 
+  print_md() # Only for slides
+```
+
+
+--
+```{r}
+performance::test_likelihoodratio(m2, m4) %>% 
+  print_md()
+```
+
+
+---
+# Comparison
+```{r}
+performance::compare_performance(m1, m2, m4, metrics = "common") %>% 
+  print_md()
+```
+
+
+--
+So, the random-intercepts model is better fitting than the fixed-effect model (the simple linear regression), but the random-effects model is not any better fitting than the random-intercepts model.
+
 
 <!-- --- -->
 <!-- # To Dos -->
