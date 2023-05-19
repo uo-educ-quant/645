@@ -414,16 +414,31 @@ performance::icc(m0)
 ---
 # Back to variability explained
 
+```{r}
+performance::icc(m0)
+```
+
+
+
+--
+```{r}
+performance::r2_nakagawa(m0)
+```
+
+---
+# Back to variability explained
+
 ```{r, echo = FALSE, fig.retina=3}
 piedata <- data.frame(
-  R2=c("Grade variability", "Explained variability", "Unexplained variability"),
+  Variability=c("Explained by ELL%", "By Grade", "Unexplained"),
   value=c(0.083, 0.645, 0.272)
 )
 
 
-ggplot(piedata, aes(x="", y=value, fill=R2)) +
+ggplot(piedata, aes(x="", y=value, fill=Variability)) +
   geom_bar(stat="identity", width=1) +
-  coord_polar("y", start=0)
+  coord_polar("y", start=0) +
+  theme_void()
 ```
 
 ---
@@ -438,8 +453,8 @@ But let's illustrate what happens with the remaining two modeling options:
 
 --
 - We can look at slopes for each grade, but only one intercept across grades (random-slopes model). 
- 
- 
+
+
 --
 - Or, we can examine intercepts *and* slopes for each grade (random-effects model)
 
@@ -449,7 +464,7 @@ But let's illustrate what happens with the remaining two modeling options:
 
 
 --
-<span style = "color:green"> Random-slopes model: </span>Individual slope for each grade (`percent_ell|grade`), but intercept is fixed (0). Note that in practice, we'd often move from fixed-effect > random-intercepts > random-slopes-and-intercepts (the full "random-effects model).
+<span style = "color:green"> Random-slopes model: </span>Individual slope for each grade (`percent_ell|grade`), but intercept is fixed (0). Note that in practice, we'd often move from fixed-effect > random-intercepts > random-slopes-and-intercepts (the full "random-effects model").
 
 
 --
@@ -529,7 +544,7 @@ So, the primary question guiding us through our model fitting process is the sam
 ---
 # Comparison
 
-We can use many of the same tools we've already used to compare models, including deviance tests and AIC. We'll also use RMSE (root mean-squared error), which is the average difference between values predicted by the model and the actual values in our data (so, lower RMSE = better fitting).
+We can use many of the same tools we've already used to compare models, including deviance tests and AIC. We'll also use RMSE (root mean square error), which is the average difference between values predicted by the model and the actual values in our data (so, lower RMSE = better fitting).
 
 
 --
@@ -548,6 +563,7 @@ performance::test_likelihoodratio(m2, m4) %>%
 
 ---
 # Comparison
+
 ```{r}
 performance::compare_performance(m1, m2, m4, metrics = "common") %>% 
   print_md()

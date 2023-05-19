@@ -374,7 +374,37 @@ performance::icc(m0)
 ---
 # Back to variability explained
 
-&lt;img src="EDUC645_nested_data_Sp23_files/figure-html/unnamed-chunk-11-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+```r
+performance::icc(m0)
+```
+
+```
+#&gt; # Intraclass Correlation Coefficient
+#&gt; 
+#&gt;     Adjusted ICC: 0.645
+#&gt;   Unadjusted ICC: 0.645
+```
+
+
+
+--
+
+```r
+performance::r2_nakagawa(m0)
+```
+
+```
+#&gt; # R2 for Mixed Models
+#&gt; 
+#&gt;   Conditional R2: 0.645
+#&gt;      Marginal R2: 0.000
+```
+
+---
+# Back to variability explained
+
+&lt;img src="EDUC645_nested_data_Sp23_files/figure-html/unnamed-chunk-13-1.png" width="576" style="display: block; margin: auto;" /&gt;
 
 ---
 # Mixed-effects models
@@ -388,8 +418,8 @@ But let's illustrate what happens with the remaining two modeling options:
 
 --
 - We can look at slopes for each grade, but only one intercept across grades (random-slopes model). 
- 
- 
+
+
 --
 - Or, we can examine intercepts *and* slopes for each grade (random-effects model)
 
@@ -399,7 +429,7 @@ But let's illustrate what happens with the remaining two modeling options:
 
 
 --
-&lt;span style = "color:green"&gt; Random-slopes model: &lt;/span&gt;Individual slope for each grade (`percent_ell|grade`), but intercept is fixed (0). Note that in practice, we'd often move from fixed-effect &gt; random-intercepts &gt; random-slopes-and-intercepts (the full "random-effects model).
+&lt;span style = "color:green"&gt; Random-slopes model: &lt;/span&gt;Individual slope for each grade (`percent_ell|grade`), but intercept is fixed (0). Note that in practice, we'd often move from fixed-effect &gt; random-intercepts &gt; random-slopes-and-intercepts (the full "random-effects model").
 
 
 --
@@ -441,7 +471,7 @@ coef(m4)$grade
 ---
 # Fixed effect vs random effects
 
-&lt;img src="EDUC645_nested_data_Sp23_files/figure-html/unnamed-chunk-14-1.png" width="576" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC645_nested_data_Sp23_files/figure-html/unnamed-chunk-16-1.png" width="576" style="display: block; margin: auto;" /&gt;
 
 ---
 # Bringing it together
@@ -503,7 +533,7 @@ So, the primary question guiding us through our model fitting process is the sam
 ---
 # Comparison
 
-We can use many of the same tools we've already used to compare models, including deviance tests and AIC. We'll also use RMSE (root mean-squared error), which is the average difference between values predicted by the model and the actual values in our data (so, lower RMSE = better fitting).
+We can use many of the same tools we've already used to compare models, including deviance tests and AIC. We'll also use RMSE (root mean square error), which is the average difference between values predicted by the model and the actual values in our data (so, lower RMSE = better fitting).
 
 
 --
@@ -538,6 +568,7 @@ performance::test_likelihoodratio(m2, m4) %&gt;%
 
 ---
 # Comparison
+
 
 ```r
 performance::compare_performance(m1, m2, m4, metrics = "common") %&gt;% 
