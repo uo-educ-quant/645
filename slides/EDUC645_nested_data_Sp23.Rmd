@@ -17,7 +17,7 @@ output:
 
 ```{R, setup, include = F}
 library(pacman)
-p_load(easystats, emmeans, DHARMa, ggeffects,
+p_load(easystats, emmeans, DHARMa, ggeffects, haven,
        here, tidyverse, ggplot2, xaringan, knitr, kableExtra, foreign, broom, xaringanthemer, reshape2, DiagrammeR, lme4,
        performance, lmerTest, gtsummary)
 
@@ -48,7 +48,14 @@ opts_chunk$set(
 seda <- read_csv(here::here("data", "seda_oregon.csv")) %>%
   filter(subject == "mth") %>% 
   select(-subject) %>% 
-  mutate(grade = as_factor(recode(grade, '3' = "Grade 3", '4' = "Grade 4", '5' = "Grade 5", '6' = "Grade 6")))
+  mutate(grade = as_factor(recode(grade, '3' = "Grade 3", '4' = "Grade 4", '5' = "Grade 5", '6' = "Grade 6"))) %>% 
+  as.data.frame()
+
+popular <- haven::read_sav(file ="https://github.com/MultiLevelAnalysis/Datasets-third-edition-Multilevel-book/blob/master/chapter%202/popularity/SPSS/popular2.sav?raw=true") %>% 
+  select(pupil:popteach) %>% 
+  mutate(sex = as_factor(case_when(sex == 1 ~ "Female",
+                                   sex == 0 ~ "Male"))) %>% 
+  as.data.frame()
 ```
 
 
@@ -216,17 +223,12 @@ We'll look at district-level data for 103 Oregon school districts from the 2017-
 # View the data 
 
 ```{r}
-head(seda, n = 5) %>% 
-  print_md() 
+head(seda, n = 5) %>% print_md()
 ```
 
 
 --
-Notice there are 4 observations for each grade in each district. 
-
-
---
-Whenever you have multiple observations that share something in common (share the same district, group, person), this is an indication that you probably have nested data! 
+.small[Notice the 4 observations for each grade in each district. Whenever you have multiple observations that share something in common (share the same district, group, person), this is an indication that you probably have nested data!]
 
 
 ---
@@ -268,7 +270,7 @@ seda %>%
   mutate(achievement = mean(achievement)) %>% 
   ungroup() %>% 
   ggplot(aes(percent_ell, achievement)) +
-  geom_smooth(method='lm', se = 0) +
+  geom_smooth(method='lm', se = FALSE) +
   geom_point(alpha = 0.1) + 
   labs(x = "ELL Proportion",
        y = "Math Achievement")
@@ -326,7 +328,7 @@ seda %>%
   mutate(achievement = mean(achievement)) %>% 
   ungroup() %>% 
   ggplot(aes(percent_ell, achievement, color = grade)) +
-  geom_smooth(method='lm', se = 0) +
+  geom_smooth(method='lm', se = FALSE) +
   geom_point(alpha = 0.1) +
   labs(x = "ELL Proportion",
        y = "Math Achievement")
@@ -368,13 +370,57 @@ coef(m1) # Extracting intercept and %ELL coefficient
 
 
 --
-This is called a <span style = "color:green"> fixed-effect model. </span> We're assuming that groups (grades) are sufficiently similar that a single (or fixed) slope and intercept would give us an accurate enough picture of the relationship of interest.  
+This is called a <span style = "color:green"> fixed-effect model. </span> We're assuming that grades are sufficiently similar that we can average the slopes and intercepts for each grade, and this will give us an accurate enough picture of the relationship of interest. 
+
+
+--
+Another way of saying this is each grade's slope and intercept are set - "fixed" - to be the average slope and intercept across grades.
+
+
+---
+# Simple linear regression
+
+When thinking about whether a fixed-effect approach makes sense, we can apply the same reasoning we use when thinking about any average. 
+
+
+--
+Any mean is a single value (say, 31.5) that represents a set of values:
+
+
+--
+- If that set is close to the average (say, 29 and 34), then the single value of 31.5 is probably a good representation of the underlying values (i.e., it's not very different from 29 or 34). 
+
+
+--
+- But the same mean of 31.5 could represent the values of 0 and 63.
+
+
+--
+0-63 is the range of the Beck Depression Index (BDI): Does a mean of 31.5 convey that one person has no depression symptoms (0) and a second person has severe depression (63)?
+
 
 ---
 # Mixed-effects model
 
-Instead of the simple linear regression (fixed-effect model), we can fit a mixed-effects model that allows intercepts, slopes, or both to vary across grade. For now, let's look at what happens if we let the intercept (the average math achievement level at 0% ELL) vary by grade. We'll use the `lmer()` function from the base R package *lme4*.
+Instead of the simple linear regression (fixed-effect model), we can fit a mixed-effects model that allows intercepts, or both intercepts and slopes, to vary across grades. 
 
+
+--
+In other words, this approach allows us to examine the underlying values of the intercepts and/or slopes that are contributing to the fixed-effect model estimates (the average of each grade's intercept and slope). 
+
+
+--
+- Another term for this is *disaggregating*, in the same sense as we used when talking about aggregation bias. We're potentially reducing our risk of aggregation bias by disaggregating results by grade. 
+
+
+--
+For now, let's look at what happens if we let the intercept (the average math achievement level at 0% ELL) vary by grade. This is called a <span style = "color:green"> random-intercepts model </span> because the intercept is allowed to vary for each grade. 
+
+
+---
+# Random-intercepts model
+
+For mixed-effects models, we'll use the `lmer()` function from the base R package *lme4*, which uses a function and formula style similar to the models we've been fitting:
 
 --
 ```{r}
@@ -383,18 +429,19 @@ m2 <- lmer(achievement ~ percent_ell + (1 | grade), data = seda)
 
 
 --
-The same function and formula style are used for all the mixed-effects models we'll use. The only difference from the linear regression specification you're used to is the element in parentheses. 
+The only difference from the usual linear regression specification is the element in parentheses. This is the "random effect" part of the model, or what we want to allow to differ across groups/clusters. 
 
 
 --
-- This is the "random effect" part of the model, or what we want to allow to differ across groups/clusters. 
+- What is after the `|` is the variable that indicates the group/cluster. What is before the `|` is what we're interested in allowing to vary for each group. 
 
 
 --
-- What is after the `|` is the variable that indicates the group/cluster. What is before the `|` is what we're interested in estimating for each group. Like the basic regression model where 1 is used to fit a model that estimates only the intercept, here the `(1 | grade)` means "only the intercept (1) can vary by grade." 
+- Like the basic regression model where 1 is used to fit a model that estimates only the intercept, here the `(1 | grade)` means "only the intercept (1) can vary by grade."
+
 
 ---
-# Mixed-effects models
+# Random-intercepts model
 
 ```{r}
 coef(m2)$grade # Specify the grouping variable
@@ -402,7 +449,14 @@ coef(m2)$grade # Specify the grouping variable
 
 
 --
-This is called a <span style = "color:green"> random intercepts model </span> because the intercept is allowed to vary for each grade. In practice, before fitting a mixed-effects model, we'd fit the equivalent of the null model we're used to and use it to calculate the ICC. 
+What do you notice is different for each grade?
+
+
+
+---
+# ICC and variability explained
+
+In practice, before fitting a mixed-effects model, we'd fit the equivalent of the null model we're used to and use it to calculate the ICC. 
 
 
 --
@@ -411,79 +465,45 @@ m0 <- lmer(achievement ~ 1 + (1 | grade), data = seda)
 performance::icc(m0)
 ```
 
----
-# Back to variability explained
 
-```{r}
-performance::icc(m0)
-```
-
+--
+There's a relationship between the ICC and variability explained, or $R^2$:
 
 
 --
+.pull-left[
 ```{r}
 performance::r2_nakagawa(m0)
 ```
+]
+
+
+--
+.pull-right[
+In essence, the mixed-effect model is resetting our baseline of "explainable" variation from all of the variation in achievement (100%) to only the portion that is not attributable to differences in achievement by grade (100% - 65% = **35%**). 
+]
 
 ---
-# Back to variability explained
+# Adding random slopes
 
-```{r, echo = FALSE, fig.retina=3}
-piedata <- data.frame(
-  Variability=c("Explained by ELL%", "By Grade", "Unexplained"),
-  value=c(0.083, 0.645, 0.272)
-)
-
-
-ggplot(piedata, aes(x="", y=value, fill=Variability)) +
-  geom_bar(stat="identity", width=1) +
-  coord_polar("y", start=0) +
-  theme_void()
-```
-
----
-# Mixed-effects models
-
-So far we've considered one intercept and slope for all grades or examining individual intercepts for each grade, and we have a good sense from our plot earlier that the random-intercepts model is probably sufficient for our data. 
+So far we've considered one intercept and slope for all grades or examining individual intercepts for each grade.
 
 
 --
-But let's illustrate what happens with the remaining two modeling options:
+It's fairly clear from the earlier plot that the random-intercepts model is probably sufficient for our data. But let's illustrate what happens if we examine intercepts *and* slopes for each grade (random-slopes-and-intercepts model).
 
 
 --
-- We can look at slopes for each grade, but only one intercept across grades (random-slopes model). 
+<span style = "color:green"> Random-slopes-and-intercepts model: </span>
 
-
---
-- Or, we can examine intercepts *and* slopes for each grade (random-effects model)
-
-
----
-# Mixed-effects models
-
-
---
-<span style = "color:green"> Random-slopes model: </span>Individual slope for each grade (`percent_ell|grade`), but intercept is fixed (0). Note that in practice, we'd often move from fixed-effect > random-intercepts > random-slopes-and-intercepts (the full "random-effects model").
-
-
---
 ```{r}
-m3 <- lmer(achievement ~ 1 + (0 + percent_ell|grade), data = seda)
+m3 <- lmer(achievement ~ percent_ell + (percent_ell|grade), data = seda)
 coef(m3)$grade
 ```
 
 
 --
-<span style = "color:green"> Random-effects model: </span>Slopes (`percent_ell|grade`) and intercepts (1) for each grade
-
-
---
-```{r}
-m4 <- lmer(achievement ~ percent_ell + (percent_ell|grade), data = seda)
-coef(m4)$grade
-```
-
+.small[Note that we can look at slopes for each grade with only one intercept across grades (random-slopes model), but in practice we wouldn't typically test this model. If the random-intercepts model is better fitting than the fixed-effect model, the next logical step in model fitting is to add random slopes to the random-intercepts model (i.e., the random-slopes-and-intercepts model).]
 
 ---
 # Fixed effect vs random effects
@@ -491,30 +511,31 @@ coef(m4)$grade
 ```{r, echo = FALSE, fig.retina=3}
 seda %>% 
   ggplot(aes(percent_ell, achievement)) +
-  geom_smooth(method='lm', se = 0, color = "deeppink") +
+  geom_smooth(method='lm', se = FALSE, color = "deeppink") +
   geom_point(alpha = 0.1) + 
   geom_smooth(aes(color = grade), method='lm', se = 0) +
   geom_point(aes(color = grade), alpha = 0.1) +
   scale_color_hue(l=80, c=30) +
-  labs(x = "ELL Percentage",
+  labs(x = "ELL Proportion",
        y = "Math Achievement")
 ```
+
 
 ---
 # Bringing it together
 
 --
 .pull-left[
-The <span style = "color:green"> random-effects model </span> gives us the slope and intercept for each cluster:
+The <span style = "color:green"> random-slopes-and-intercepts model </span> gives us the slope and intercept for each cluster:
 
 ```{r}
-coef(m4)$grade
+coef(m3)$grade
 ```
 ]
 
 --
 .pull-right[
-The <span style = "color:green"> fixed-effect model </span> gives us the average (or aggregation) of the different intercepts and slopes across grades:
+The <span style = "color:green"> fixed-effect model </span> gives us the average (or aggregation) of the different intercepts and slopes across clusters:
  
 ```{r}
 coef(m1)
@@ -524,25 +545,25 @@ coef(m1)
 
 --
 .pull-left[
-In other words, the fixed-effect results are the average of the random-effects model results:
+In other words, the fixed-effect results are the average of the intercepts and slopes for each grade:
 ]
 
 
 --
 .pull-right[
 ```{r, echo=FALSE}
-cbind(`(Intercept)` = mean(unlist(coef(m4)$grade[1])), 
-      percent_ell = mean(unlist(coef(m4)$grade[2])))
+cbind(`(Intercept)` = mean(unlist(coef(m3)$grade[1])), 
+      percent_ell = mean(unlist(coef(m3)$grade[2])))
 ```
 ]
 
 
 --
-So, the primary question guiding us through our model fitting process is the same as it is for any average: Is an average a good enough representation of the underlying range of estimates (values of intercepts and slopes) to be interpretable on its own, or do we need to look at the underlying range to have a better understanding. 
+So, back to averages: Does the average of the slope and the intercept give a good enough representation of the slopes and intercepts across grades? If not, which one do you think we need to examine by grade?
 
 
 ---
-# Comparison
+# Model comparison
 
 We can use many of the same tools we've already used to compare models, including deviance tests and AIC. We'll also use RMSE (root mean square error), which is the average difference between values predicted by the model and the actual values in our data (so, lower RMSE = better fitting).
 
@@ -556,31 +577,310 @@ performance::test_likelihoodratio(m1, m2) %>%
 
 --
 ```{r}
-performance::test_likelihoodratio(m2, m4) %>% 
-  print_md()
+performance::test_likelihoodratio(m2, m3) %>% print_md()
 ```
 
 
 ---
-# Comparison
+# Model comparison
 
 ```{r}
-performance::compare_performance(m1, m2, m4, metrics = "common") %>% 
+performance::compare_performance(m1, m2, m3, metrics = "common") %>% 
   print_md()
 ```
 
 
 --
-So, the random-intercepts model is better fitting than the fixed-effect model (the simple linear regression), but the random-effects model is not any better fitting than the random-intercepts model.
+So, the random-intercepts model is better fitting than the fixed-effect model (the simple linear regression), but the random-slopes-and-intercepts model is not any better fitting than the random-intercepts model.
 
 
-<!-- --- -->
-<!-- # To Dos -->
+---
+# Back to variability explained
 
-<!-- ### Assignments -->
 
-<!-- - Assignment 2 is due May 12. -->
+--
+.pull-left[
 
-<!-- ### Reading -->
+<span style = "color:green"> Our understanding from the fixed-effect model: </span>All variation in math achievement could be explained, but %ELL explained very little of it (marginal $R^2$ from previous slide, or $R^2$ from simple linear regression). We might have concluded that %ELL was not an important predictor of math achievement. 
+]
 
-<!-- - Complete prior to May 16 meeting: BMLR Ch. 8.6-8.11 (pp. 234-251). -->
+
+.pull-right[
+```{r, echo = FALSE, fig.retina=3}
+m1r2 <- summary(m1)$r.squared
+m0icc <- performance::icc(m0)$ICC_unadjusted
+
+piedata1 <- tibble(
+  Variability=c("Explained by ELL%", "Unexplained"),
+  value=c(m1r2, 1-m1r2)
+)
+
+ggplot(piedata1, aes(x="", y=value, fill=Variability)) +
+  geom_bar(stat="identity", width=1) +
+  coord_polar("y", start=0) +
+  theme_void() +
+  theme(legend.position="top", 
+        legend.title = element_blank(),
+        legend.text = element_text(size=18),
+        plot.margin = margin(t = 0, r = 0, b = 0, l = 0, unit = "pt"))
+```
+]
+
+
+--
+.pull-left[
+<span style = "color:green"> Our understanding from the random-intercepts model: </span>Only one-third of variation in math achievement could be explained after accounting for differences in achievement by grade (65%). %ELL and grade differences explain 72% of variability in math achievement (conditional $R^2$). This could lead to a very different conclusion compared with the fixed-effect model. 
+]
+
+
+.pull-right[
+```{r, echo = FALSE, fig.retina=3}
+piedata2 <- tibble(
+  Variability=c("Explained by ELL% + Grade", "Unexplained"),
+  value=c(m1r2+m0icc, 1-(m1r2+m0icc))
+)
+
+ggplot(piedata2, aes(x="", y=value, fill=Variability)) +
+  geom_bar(stat="identity", width=1) +
+  coord_polar("y", start=0) +
+  theme_void() +
+  theme(legend.position="top", 
+        legend.title = element_blank(),
+        legend.text = element_text(size=18),
+        plot.margin = margin(t = 0, r = 0, b = 0, l = 0, unit = "pt"))
+```
+]
+
+
+---
+# Covariates, interactions, etc
+
+Just as with the fixed-effect models we've used up to now, we can improve mixed-effects model fit by adding covariates. 
+
+
+--
+However, as we've seen, with mixed-effects models we can also influence model fit by adding random intercepts or random intercepts and slopes. 
+
+
+--
+For this reason, in mixed-effects models it is especially important to use theory and existing research to select covariates and moderators of interest ahead of time.
+
+
+--
+- It also means that studies that will generate nested data (and analyses of existing data) should be carefully planned and informed by available theory and research. 
+
+
+--
+Finally, we must approach fit testing carefully, to be sure we are isolating and testing each change we've made (if we test the addition of a covariate and a random effect together, we don't know which improved model fit).
+
+---
+# Popular
+
+The dataset `popular` includes data on students' levels of extraversion and popularity, students' sex, and teacher experience level (a classroom-level variable). 1,000 students are nested in 100 classrooms. 
+
+
+--
+```{r}
+head(popular) %>% print_md()
+```
+
+
+--
+How can you tell the difference between student-level variables and classroom-level variables?
+
+
+
+---
+# Including covariates and cross-level interaction
+
+**We're interested in whether students who are more extroverted are, in general, more popular than students who are more introverted.**
+
+
+--
+Imagine existing studies have sometimes, but not always, found that this relationship differs by (or, is moderated by) student sex. Because this is not a consistent finding, we'll plan to control for sex but not examine a moderation relationship (i.e., interaction). 
+
+
+--
+Finally, we have an exploratory question about whether teacher experience is a moderator of the association between extraversion and popularity.
+
+
+--
+- Perhaps more experienced teachers assert more control of the classroom, resulting in less extraversion/attention-seeking from students (so, student popularity in those classrooms may be driven by other factors).
+
+
+---
+# Model fitting steps
+
+--
+1) Null model including a random effect for classroom, to calculate the ICC:
+
+```{r}
+pop_m0 <- lmer(popular ~ 1 + (1 | class), data = popular)
+```
+
+--
+2) Random-intercepts model including the student-level independent variable (extraversion) and control variable (sex):
+
+```{r}
+pop_m1 <- lmer(popular ~ extrav + sex + (1 | class), 
+               REML = FALSE, data = popular)
+```
+
+
+--
+3) Random-intercepts-and-slopes model to test whether random slopes are needed for student-level predictors:
+
+```{r}
+pop_m2 <- lmer(popular ~ extrav + sex + (1 + extrav + sex | class), 
+               REML = FALSE, data = popular)
+```
+
+
+--
+4) Test the cross-level interaction using the best-fitting model, then run diagnostics.
+
+
+---
+# Initial look at the data
+
+```{r, echo = FALSE, fig.retina=3}
+popular %>%
+  ggplot(aes(extrav, popular, color = class, group = class)) +
+  geom_smooth(method='lm', se = FALSE, size = .5, alpha  = .8) +
+  geom_point(size = 1, alpha = 0.2, position = "jitter") +
+  labs(x = "Extraversion",
+       y = "Popularity") +
+  scale_color_gradientn(colors = rainbow(100)) +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+
+
+---
+# Model fitting 
+
+
+--
+*Load the `lmertest` package, which includes supplementary tools for `lmer` models, before fitting any models.*
+
+
+--
+```{r}
+performance::icc(pop_m0)
+```
+
+
+--
+A substantial amount of variability in student popularity (37%) is attributable to differences in popularity across classrooms, so it will be important to account for this going forward. 
+
+
+---
+# Model fitting 
+
+```{r, warnings=FALSE}
+performance::compare_performance(pop_m1, pop_m2, metrics = "common") %>% 
+  print_md()
+```
+
+
+--
+Overall, the model with random intercepts and slopes is better fitting (AIC, RMSE) and somewhat more explanatory (conditional $R^2$). However, we added 2 random slopes, so we want to see if it's necessary to keep both of these or just one. 
+
+
+
+---
+# Model fitting 
+
+First, we can see in the model summary that the variance for sex is very small, meaning the slope for sex doesn't vary much across classroom. 
+
+
+```{r}
+print(VarCorr(pop_m2), comp = "Variance")
+```
+
+
+--
+This is a clue that sex may not need to be retained as a random slope (we're also getting a "failed to converge" warning at the end of the summary, which can be because of low variance of a random effect).
+
+
+---
+# Model fitting 
+
+We can test the significance of the difference in fit between models with and without each of the random slopes in a similar way to the likelihood ratio test we've used before. We can test models that differ only in random effects by using the `ranova()` function from *lmertest*.
+
+```{r, warnings = FALSE}
+lmerTest::ranova(pop_m2, reduce.terms = TRUE)
+```
+
+---
+# Model fitting 
+
+We saw that the random slope for sex is nonsignificant, so our final model before testing the cross-level interaction should retain the random slope for extraversion and drop the random slope for sex. We can now add the interaction to that model:
+
+```{r}
+pop_m3 <- lmer(popular ~ extrav + sex + 
+                 (1 + extrav | class), REML = FALSE, data = popular)
+pop_m3_int <- lmer(popular ~ extrav + sex + texp*extrav + 
+                     (1 + extrav | class), REML = FALSE, data = popular)
+coef(summary(pop_m3_int)) # Assess interaction significance
+```
+
+
+---
+# Model fitting 
+
+```{r, warnings=FALSE}
+performance::compare_performance(pop_m3, pop_m3_int, metrics = "common") %>% 
+  print_md()
+```
+
+--
+So, our interaction is significant and the model with the interaction seems better fitting. But before we interpret it, we should run diagnostics on the final model. Note that we don't need to standardize residuals because our outcome is continuous. 
+
+<span style = "color:green"> Before diagnostics and interpretation of a final model, rerun the model without `REML = FALSE`. </span>
+
+
+---
+# Diagnostics
+
+```{r, fig.retina=3}
+pop_m3_int_fin <- lmer(popular ~ extrav + sex + texp*extrav + 
+                         (1 + extrav | class), data = popular)
+check_model(pop_m3_int_fin, check = c("linearity", "outliers", 
+                                      "vif", "qq"))
+```
+
+---
+# Interpreting the interaction
+
+Overall, there aren't major concerns from model diagnostics. To interpret the interaction, we'll take a similar approach as we have for other interactions using predicted values, but here we'll use the `ggpredict` function and set *type* to `re` for random effects. 
+
+Teacher experience is a continuous variable ranging from 2 to 25 years, so we'll also set a few levels of experience: new teacher (2 years), moderately experienced (10 years), highly experienced (25 years). 
+
+
+--
+```{r}
+# using the ggeffects package
+library(ggeffects)
+pop_m3_int_pred <- ggpredict(pop_m3_int_fin,
+                             type = "re",
+                             terms = c("extrav", "texp [2, 10, 25]"))
+```
+
+
+---
+# Interpreting the interaction
+
+```{r}
+pop_m3_int_pred
+```
+
+---
+# Interpreting the interaction
+
+```{r, fig.retina=3}
+plot(pop_m3_int_pred, ci = FALSE)
+```
+
+
+
