@@ -48,14 +48,26 @@ opts_chunk$set(
 seda <- read_csv(here::here("data", "seda_oregon.csv")) %>%
   filter(subject == "mth") %>% 
   select(-subject) %>% 
-  mutate(grade = as_factor(recode(grade, '3' = "Grade 3", '4' = "Grade 4", '5' = "Grade 5", '6' = "Grade 6"))) %>% 
-  as.data.frame()
+  mutate(grade = as_factor(recode(grade, '3' = "Grade 3", '4' = "Grade 4", '5' = "Grade 5", '6' = "Grade 6")))
 
 popular <- haven::read_sav(file ="https://github.com/MultiLevelAnalysis/Datasets-third-edition-Multilevel-book/blob/master/chapter%202/popularity/SPSS/popular2.sav?raw=true") %>% 
   select(pupil:popteach) %>% 
   mutate(sex = as_factor(case_when(sex == 1 ~ "Female",
-                                   sex == 0 ~ "Male"))) %>% 
-  as.data.frame()
+                                   sex == 0 ~ "Male"))) 
+
+respire <- geepack::respiratory %>% 
+  as_tibble() %>% 
+  mutate(outcome = as_factor(case_when(outcome == 1 ~ "Yes", 
+                                       outcome == 0 ~ "No")),
+         visit = as_factor(case_when(visit == 1 ~ "Baseline",
+                                     visit == 2 ~ "F1",
+                                     visit == 3 ~ "F2",
+                                     visit == 4 ~ "F3")),
+         age.c = datawizard::standardize(age, center = TRUE, scale = FALSE),
+         treat = case_when(treat == "P" ~ "Treatment", 
+                           treat == "A" ~ "Placebo"),
+         assignment = treat) %>% 
+  select(-baseline, -treat)
 ```
 
 
@@ -881,6 +893,185 @@ pop_m3_int_pred
 ```{r, fig.retina=3}
 plot(pop_m3_int_pred, ci = FALSE)
 ```
+
+---
+# Longitudinal data
+
+Analyzing longitudinal data with mixed models is approached in generally the same way as analyzing other nested data. 
+
+
+--
+With longitudinal (or repeated-measures) data, the main form of clustering is by participant: repeated measures taken of the outcome for each participant (e.g. at baseline, immediately after an intervention, and 1 year after the intervention).
+
+
+--
+This said, we can still have the same forms of clustering/nesting that we've talked about already:
+
+
+--
+- Multiple assessments of students in different classrooms, schools, etc.
+
+
+--
+- Multiple assessments of patients at different clinics, hospitals, etc. 
+
+
+--
+We can model these different kinds of dependencies using mixed models, and because we are still working in the GLM framework, we can also analyze different types of outcomes. 
+
+
+---
+# Respire data
+
+The `respire` dataset is from a randomized controlled trial (RCT) of a drug for the treatment of a respiratory illness. The outcome was whether the patient developed the illness, and was measured in 111 participants across 2 medical centers. The outcome was measured 4 times for each participant: baseline (pretreatment) and at 3 follow-up visits. 
+
+* `outcome`: developed respiratory illness (Yes or No)
+* `visit`: measurement point (Baseline, F1, F2, F3)
+* `assignment`: group assignment (placebo - P or active - A)
+* `center`: treatment center (1/2)
+* `id`: patient ID
+* `sex`: patient sex (M or F)
+* `age`: patient age (range 11-68 years)
+
+
+---
+# Respire data
+
+```{r}
+head(respire, n = 10) %>% print_md()
+```
+
+---
+# Longitudinal data
+
+When analyzing longitudinal data, an additional consideration is how the outcome changes over time. This is especially important when we are comparing outcomes across groups, such as a group that received an intervention/treatment and a group that did not (control group).
+
+
+--
+If we just look at the main effect of *treatment group assignment* (whether someone received the treatment or not), then we are combining the outcome values across measurement points.
+
+
+--
+- It's common to see a large treatment effect right after the intervention, and then the effect gets smaller over time. If we combine large and small outcome estimates together, we get a smaller overall estimate. 
+
+
+--
+If we just look at the main effect of *time* (e.g., follow-up visit or assessment number), then we are ignoring group assignment. This doesn't give us insight into whether the treatment is effective.
+
+
+--
+What do you think is the solution?
+
+
+--
+- `treatment x time` interaction
+
+
+---
+# Model fitting
+
+--
+1) Null model including a random effect for participant, to calculate the ICC:
+
+```{r}
+respire_m0 <- glmer(outcome ~ 1 + (1 | id), family = binomial, 
+                    data = respire)
+performance::icc(respire_m0)
+```
+
+--
+2) Random-intercepts model including the `treatment x time` interaction and control variables (sex and age). For random-effects, we generally want at least 5 units. Here, we only have 2 centers, so we'll instead include a fixed effect for center (i.e., a control variable).
+
+```{r}
+respire_m1 <- glmer(outcome ~ assignment*visit + sex + age.c + center + 
+                      (1 | id), family = binomial, 
+                    control = glmerControl(optimizer = "bobyqa", 
+                                           optCtrl = list(maxfun = 2e5)),
+                    data = respire)
+```
+
+---
+# Model fitting 
+
+3) Random-intercepts-and-slopes model to test whether random slopes are needed for time:
+
+```{r, warning=FALSE}
+respire_m2 <- glmer(outcome ~ assignment*visit + sex + age.c + center + 
+                      (visit | id), family = binomial, 
+                    control = glmerControl(optimizer = "bobyqa", 
+                                           optCtrl = list(maxfun = 2e5)),
+                    data = respire)
+```
+
+--
+```{r}
+anova(respire_m1, respire_m2)
+```
+
+---
+# Model fitting 
+
+```{r}
+performance::compare_performance(respire_m1, respire_m2, metrics = "common") %>% 
+  print_md()
+```
+
+
+---
+# Model diagnostics 
+
+```{r, fig.retina=3}
+respire_m1_residuals <- simulateResiduals(respire_m1, n = 1000) 
+plot(respire_m1_residuals)
+```
+
+---
+# Model diagnostics 
+
+```{r, fig.retina=3}
+check_model(respire_m1, check = "vif")
+```
+
+---
+# Interpretation
+
+```{r}
+# using the ggeffects package
+respire_m1_probs <- ggeffect(respire_m1,
+                             type = "re",
+                             terms = c("visit", "assignment"))
+respire_m1_probs
+```
+
+---
+# Interpretation
+
+```{r, fig.retina=3}
+plot(respire_m1_probs)
+```
+
+---
+# A final note about cluster-robust SEs
+
+Cluster-robust (or sandwich) standard errors are sometimes used instead of mixed-effects models (that is, instead of explicitly incorporating the nested structure of the data into the analysis). Although they're more straightforward to implement, these SEs have several limitations:
+
+
+--
+- They don't give us insight into whether the *relationship* between the predictor(s) and outcome differs across clusters.
+
+
+--
+- They don't address the issue of misinterpreting the variability explained by our model, meaning they shouldn't be used unless the null ICC is very small (e.g., less than 5%).
+
+
+--
+- They're only appropriate for simple forms of clustering and when sampling or randomization was conducted at the same level of the cluster. 
+
+
+--
+For all of these reasons, it's generally better to use a model that is more informative about, and better accounts for, the nested structure of your data (and you can still use cluster-robust SEs!). 
+
+
 
 
 
