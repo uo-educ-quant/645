@@ -19,9 +19,9 @@ navbar:
         href: ./slides/EDUC645_poisson_regression_Sp23.html
       - text: "Nested Data"
         href: ./slides/EDUC645_nested_data_Sp23.html
-      - text: "Reliability in Measurement"
-        href: 
       - text: "Missing Data"
+        href: 
+      - text: "Reliability in Measurement"
         href: 
   - text: R Project Workflow
     href: workflow.html

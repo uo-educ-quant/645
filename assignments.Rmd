@@ -31,7 +31,7 @@ For each of the 3 assignments and the final project, you are required to submit 
 
 ## Assignments
 
-#### **Assignment 1 (Dichotmous Outcomes and Logistic Regression)**
+#### **Assignment 1 (Dichotomous Outcomes and Logistic Regression)**
 
 Objectives:
 
@@ -55,39 +55,19 @@ Due: May 12
 
 **[Assignment details](./assignments/assignment02_Sp23.html)**
 
-#### **Assignment 3 (Nested Data)**
+#### **Final Project (Nested Data Analysis with Missing Data Analysis and Measure Reliability Assessment**
 
-*Details to be added*
+*Instructions to be added May 31*
 
-<!-- Objectives: -->
+Objectives:
 
-<!--  - Using mixed-effects model to estimate a relationship when the clustering nature of data needs to be addressed -->
-<!--  - Interpret and report the results and make statistic inference from the estimated parameters -->
-
-Due: May 31
-
-<!-- Assignment description: [assignment3.html](./assignments/assignment03.html) -->
-
-<!-- Dataset: [gpa.csv](./data/gpa.csv) -->
-
-<!-- Key: [doc file]; [R script] -->
-
-#### **Final Project**
-
-*Details to be added*
-
-<!-- Objectives: -->
-
-<!--  -  -->
-<!--  -  -->
+ - Examine and address missing outcome data using multiple imputation
+ - Use mixed-effects models to appropriately analyze data with a nested structure 
+ - Use coefficient omega to assess the reliability of measures used to construct analytic variables 
 
 Due: June 13
 
-<!-- Assignment description: [final.html](./assignments/final.html) -->
-
-<!-- Datasets: [add_health.csv](./data/add_health.csv); [fsi.csv](./data/fsi.csv) -->
-
-<!-- Key: [doc file]; [R script] -->
+<!-- **[Instructions](./assignments/final_Sp23.html)** -->
 
 
 
