@@ -837,23 +837,14 @@ pop_m3_int <- lmer(popular ~ extrav + sex + texp*extrav +
 coef(summary(pop_m3_int)) # Assess interaction significance
 ```
 
-
----
-# Model fitting 
-
-```{r, warnings=FALSE}
-performance::compare_performance(pop_m3, pop_m3_int, metrics = "common") %>% 
-  print_md()
-```
-
 --
-So, our interaction is significant and the model with the interaction seems better fitting. But before we interpret it, we should run diagnostics on the final model. Note that we don't need to standardize residuals because our outcome is continuous. 
-
-<span style = "color:green"> Before diagnostics and interpretation of a final model, rerun the model without `REML = FALSE`. </span>
+So, our interaction is significant. But before we interpret it, we should run diagnostics on the final model. <span style = "color:green"> Before diagnostics and interpretation of a final model, rerun the model without `REML = FALSE`. </span>
 
 
 ---
 # Diagnostics
+
+*Note that we don't need to standardize residuals because our outcome is continuous...*
 
 ```{r, fig.retina=3}
 pop_m3_int_fin <- lmer(popular ~ extrav + sex + texp*extrav + 
@@ -893,6 +884,11 @@ pop_m3_int_pred
 ```{r, fig.retina=3}
 plot(pop_m3_int_pred, ci = FALSE)
 ```
+
+---
+class: middle, inverse
+
+# Longitudinal data
 
 ---
 # Longitudinal data
@@ -944,7 +940,7 @@ head(respire, n = 10) %>% print_md()
 ---
 # Longitudinal data
 
-When analyzing longitudinal data, an additional consideration is how the outcome changes over time. This is especially important when we are comparing outcomes across groups, such as a group that received an intervention/treatment and a group that did not (control group).
+When analyzing longitudinal data, an additional consideration is how the predictor-outcome relationship changes over time. This is especially important when we are comparing outcomes across groups, such as a group that received an intervention/treatment and a group that did not (control group).
 
 
 --
@@ -1004,15 +1000,17 @@ respire_m2 <- glmer(outcome ~ assignment*visit + sex + age.c + center +
 ```
 
 --
+`ranova()` isn't available for `glmer` models, so we'll just use the likelihood ratio test we used before. This is appropriate because the models differ in only one random slope, not two.
+
 ```{r}
-anova(respire_m1, respire_m2)
+performance::test_likelihoodratio(respire_m1, respire_m2) %>% print_md()
 ```
 
 ---
 # Model fitting 
 
 ```{r}
-performance::compare_performance(respire_m1, respire_m2, metrics = "common") %>% 
+performance::compare_performance(respire_m1, respire_m2, metrics = "common", verbose = FALSE) %>% 
   print_md()
 ```
 
@@ -1051,7 +1049,7 @@ plot(respire_m1_probs)
 ```
 
 ---
-# A final note about cluster-robust SEs
+# A note on cluster-robust SEs
 
 Cluster-robust (or sandwich) standard errors are sometimes used instead of mixed-effects models (that is, instead of explicitly incorporating the nested structure of the data into the analysis). Although they're more straightforward to implement, these SEs have several limitations:
 
@@ -1072,6 +1070,37 @@ Cluster-robust (or sandwich) standard errors are sometimes used instead of mixed
 For all of these reasons, it's generally better to use a model that is more informative about, and better accounts for, the nested structure of your data (and you can still use cluster-robust SEs!). 
 
 
+---
+# Applying cluster-robust SEs
+
+Instead of including `center` as a control variable, let's fit a simpler model without it, then adjust our SEs for center. 
+
+```{r}
+respire_m1b <- glmer(outcome ~ assignment*visit + sex + age.c + 
+                      (1 | id), family = binomial, 
+                    control = glmerControl(optimizer = "bobyqa", 
+                                           optCtrl = list(maxfun = 2e5)),
+                    data = respire)
+```
 
 
+--
+Adding cluster-robust SEs to predicted probabilities:
 
+```{r}
+# using the ggeffects package
+respire_m1b_probs <- ggeffect(respire_m1b,
+                             type = "re",
+                             terms = c("visit", "assignment"),
+                             vcov.fun = "vcovCR", vcov.type = "CR0", 
+                             vcov.args = list(cluster = respire$center))
+```
+
+---
+# Plot with cluster-robust SEs
+
+```{r, fig.retina=3}
+plot(respire_m1b_probs)
+```
+
+Results are very similar to the model that includes site as a control variable.
