@@ -865,7 +865,7 @@ Teacher experience is a continuous variable ranging from 2 to 25 years, so we'll
 ```{r}
 # using the ggeffects package
 library(ggeffects)
-pop_m3_int_pred <- ggpredict(pop_m3_int_fin,
+pop_m3_int_pred <- ggeffect(pop_m3_int_fin,
                              type = "re",
                              terms = c("extrav", "texp [2, 10, 25]"))
 ```
