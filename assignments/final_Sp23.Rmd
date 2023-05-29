@@ -75,7 +75,7 @@ The goal of this component is to examine whether there is a relationship between
 
 ### Component 2 (20%)
 
-Download the second dataset [here](https://uo-educ-quant.github.io/645/data/add_health_final_miss.RData). This dataset (n = 3,378) is drawn from the first wave of the National Longitudinal Study of Adolescent to Adult Health ([Add Health](https://addhealth.cpc.unc.edu/data/#public-use)) data. Add Health is a longitudinal study of a nationally representative sample of over 20,000 adolescents who were aged from 12-20 during the first wave (1995) and aged from 18-26 and from 24-32 when the third (2001) and fourth (2008) waves took place. Variables in our dataset include:
+Download the second dataset [here](https://uo-educ-quant.github.io/645/data/add_health_miss.RData). This dataset (n = 3,378) is drawn from the first wave of the National Longitudinal Study of Adolescent to Adult Health ([Add Health](https://addhealth.cpc.unc.edu/data/#public-use)) data. Add Health is a longitudinal study of a nationally representative sample of over 20,000 adolescents who were aged from 12-20 during the first wave (1995) and aged from 18-26 and from 24-32 when the third (2001) and fourth (2008) waves took place. Variables in our dataset include:
 
  * `id`: Participant ID.
  * `sex`: Assigned sex of participant (`Female` or `Male`).
