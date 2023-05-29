@@ -23,6 +23,7 @@ You are required to submit the following files:
  * ggeffects
  * mice
  * mitml
+ * VIM
  
 ## Instructions
 
