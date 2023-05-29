@@ -361,17 +361,30 @@ display: none;
 <h4>Submission Format</h4>
 <p>You are required to submit the following files:</p>
 <ul>
-<li>.doc, .html, or .pdf file with your typed responses to the problems
-and any tables and figures you produce.</li>
+<li>.doc, .html, or .pdf file with your typed responses and any tables
+and figures you produce.</li>
 <li>If you used R to create tables and/or figures in the above
 doc/html/pdf file, you must also submit the .Rmd or .R file you used to
 render the tables and figures.</li>
 </ul>
 </div>
+<div id="necessary-packages" class="section level4">
+<h4>Necessary Packages</h4>
+<ul>
+<li>lmer</li>
+<li>lmerTest</li>
+<li>DHARMa</li>
+<li>performance</li>
+<li>ggeffects</li>
+<li>mice</li>
+<li>mitml</li>
+</ul>
+</div>
 <div id="instructions" class="section level2">
 <h2>Instructions</h2>
 <p>The final assignment has <strong>2 components</strong>. Each
-component uses a different dataset.</p>
+component uses a different dataset. Label each section of your submitted
+materials as “Component 1” or as “Component 2”.</p>
 <div id="component-1-80" class="section level3">
 <h3>Component 1 (80%)</h3>
 <p>Download the first dataset <a href="https://uo-educ-quant.github.io/645/data/school.RData">here</a>.
@@ -429,6 +442,8 @@ summary statistics.</li>
 <li>Methods and analysis (30%)
 <ul>
 <li>Model the relationship between student SES and language competency.
+<em>Be sure to load <code>lmertest</code> before fitting any
+models.</em>
 <ul>
 <li>Calculate the ICC to determine the amount of variability in language
 competency across schools.</li>

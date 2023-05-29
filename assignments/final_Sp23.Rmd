@@ -11,12 +11,22 @@ June 13 (11:59 PM)
 
 You are required to submit the following files:  
 
- * .doc, .html, or .pdf file with your typed responses to the problems and any tables and figures you produce. 
+ * .doc, .html, or .pdf file with your typed responses and any tables and figures you produce. 
  * If you used R to create tables and/or figures in the above doc/html/pdf file, you must also submit the .Rmd or .R file you used to render the tables and figures. 
+
+#### Necessary Packages
+
+ * lmer
+ * lmerTest
+ * DHARMa
+ * performance
+ * ggeffects
+ * mice
+ * mitml
  
 ## Instructions
 
-The final assignment has **2 components**. Each component uses a different dataset.
+The final assignment has **2 components**. Each component uses a different dataset. Label each section of your submitted materials as "Component 1" or as "Component 2".
 
 ### Component 1 (80%)
 
@@ -44,7 +54,7 @@ The goal of this component is to examine whether there is a relationship between
     + Write a paragraph describing the sample, key variables, and the summary statistics.
  
 3. Methods and analysis (30%)
-    + Model the relationship between student SES and language competency.
+    + Model the relationship between student SES and language competency. *Be sure to load `lmertest` before fitting any models.*
       + Calculate the ICC to determine the amount of variability in language competency across schools. 
       + Fit and compare random-intercepts and random-intercepts-and-slopes models with student SES and verbal reasoning ability included as fixed-effect covariates, then with their slopes allowed to vary by school, respectively. Examine whether the added random slopes are important (i.e., significant) to retain.  
       + Using the retained model, explore whether verbal reasoning ability moderates the relationship between SES and language competency. 
