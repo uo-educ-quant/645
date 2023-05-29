@@ -55,19 +55,16 @@ Due: May 12
 
 **[Assignment details](./assignments/assignment02_Sp23.html)**
 
-#### **Final Project (Nested Data Analysis with Missing Data Analysis and Measure Reliability Assessment**
-
-*Instructions to be added May 31*
+#### **Final Project (Nested Data Analysis and Addressing Missing Data)**
 
 Objectives:
 
- - Examine and address missing outcome data using multiple imputation
  - Use mixed-effects models to appropriately analyze data with a nested structure 
- - Use coefficient omega to assess the reliability of measures used to construct analytic variables 
+ - Examine and address missing outcome data using multiple imputation
 
 Due: June 13
 
-<!-- **[Instructions](./assignments/final_Sp23.html)** -->
+**[Instructions](./assignments/final_Sp23.html)**
 
 
 

@@ -169,6 +169,6 @@ No quiz for this unit.
 
 ## Final Project
 
- * Due June 13 (posted 5/29)
- * Final project details (to be added)
+ * Due June 13
+ * [Instructions](./assignments/final_Sp23.html)
 
