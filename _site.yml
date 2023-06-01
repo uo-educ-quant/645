@@ -20,7 +20,7 @@ navbar:
       - text: "Nested Data"
         href: ./slides/EDUC645_nested_data_Sp23.html
       - text: "Missing Data"
-        href: 
+        href: ./slides/EDUC645_cleaning_missing_Sp23.html
       - text: "Reliability in Measurement"
         href: 
   - text: R Project Workflow

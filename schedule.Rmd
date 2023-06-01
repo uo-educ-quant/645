@@ -131,8 +131,8 @@ No quiz for this unit (included with Unit 4 quiz).
 
 **Lecture**:
 
- * Lecture slides (to be added)
- * Dataset (to be added)
+ * [Lecture slides](./slides/EDUC645_cleaning_missing_Sp23.html)
+ * [Dataset](./data/galo.csv)
  
 **Assignment**:
 

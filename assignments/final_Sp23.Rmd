@@ -16,7 +16,7 @@ You are required to submit the following files:
 
 #### Necessary Packages
 
- * lmer
+ * lme4
  * lmerTest
  * DHARMa
  * performance
