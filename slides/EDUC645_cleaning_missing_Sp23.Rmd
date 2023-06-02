@@ -277,9 +277,16 @@ list("List" = m1,
 
 The first step is to examine the patterns and distributions of missing data. Then, we impute multiple datasets and inspect diagnostic plots. Finally, we carry out the analyses. The `mice` and `VIM` packages are necessary.
 
+```{r, eval=FALSE}
+VIM::marginplot(galo_miss[, c("advice", "medu")])
+# Red dots are missing values on the variable on the alternate axis
+```
 
---
-```{r, fig.retina=3}
+
+---
+# Margin plot
+
+```{r, echo=FALSE, fig.retina=3}
 VIM::marginplot(galo_miss[, c("advice", "medu")])
 # Red dots are missing values on the variable on the alternate axis
 ```
