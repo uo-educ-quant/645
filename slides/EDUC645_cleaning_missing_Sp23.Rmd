@@ -157,7 +157,7 @@ There are 3 forms of missingness:
 ---
 # Imputation
 
-Traditional methods that replace missing values (versus deleting observations) either ignore relationships among variables in the dataset.
+Traditional methods that replace missing values (versus deleting observations) ignore relationships among variables in the dataset.
 
 
 --
@@ -363,11 +363,20 @@ summary(pool(est2)) # Be sure to include pool()
 # Compared with complete data
 
 ```{r, echo=FALSE}
-list("Comp" = m5,
+est1__ <- tidy_override(pool(est1),
+                        glance = list(nobs = 1382, r.squared = pool.r.squared(est1)[, "est"]))
+
+est2__ <- tidy_override(pool(est2),
+                        glance = list(nobs = 1382, r.squared = pool.r.squared(est2)[, "est"]))
+
+t <- list("Comp" = m5,
      "Comp (cov)" = m6,
-     "MI" = pool(est1),
-     "MI (cov)" = pool(est2)) %>% 
-  huxreg(coefs = c("score"), statistics = character(0))
+     "MI" = est1__,
+     "MI (cov)" = est2__) %>% 
+  huxreg(coefs = c("score"), statistics = c(N = "nobs", R2 = "r.squared"))
+number_format(t)[4, 4] <- 0
+number_format(t)[4, 5] <- 0
+t
 ```
 
 ---
@@ -399,10 +408,6 @@ Final note: `mice` and its add-on packages have functions for imputing nested (m
 
 
 --
-* Indicate the primary reason you believe data are missing and briefly justify your assumption.
-
-
---
 * Report the imputation method. If using MI, report the number of imputed data sets and mention algorithm used.
 
 
@@ -415,14 +420,6 @@ Final note: `mice` and its add-on packages have functions for imputing nested (m
 
 ---
 # To Dos
-
-### Reading
-- Read Dunn et al 2014 (Canvas) before June 6 class
-
-
-### Quiz
-- Final quiz due June 6 (posts tomorrow on Canvas)
-
 
 ### Assignments
 - Final project due June 13
