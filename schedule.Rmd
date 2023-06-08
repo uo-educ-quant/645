@@ -152,12 +152,12 @@ No assignment for this unit (included in final project).
 
 **Readings**: 
 
- * Complete prior to June 6 meeting: Dunn et al 2014 (Canvas)
+ * Complete prior to June 8 meeting: Dunn et al 2014 (Canvas)
 
 **Lecture**:
 
- * Lecture slides (to be added)
- * Dataset (to be added)
+ * [Lecture slides](./slides/EDUC645_measure_assess_Sp23.html)
+ * [Dataset](./data/ah_happiness.csv)
  
 **Assignment**:
 

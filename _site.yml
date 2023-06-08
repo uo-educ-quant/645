@@ -22,7 +22,7 @@ navbar:
       - text: "Missing Data"
         href: ./slides/EDUC645_cleaning_missing_Sp23.html
       - text: "Reliability in Measurement"
-        href: 
+        href: ./slides/EDUC645_measure_assess_Sp23.html
   - text: R Project Workflow
     href: workflow.html
     
