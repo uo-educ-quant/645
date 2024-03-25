@@ -10,6 +10,7 @@ navbar:
     href: schedule.html
   - text: Lectures
     menu: 
+    
       - text: "Course Overview"
         href: ./slides/EDUC645_1_Intro.html
       - text: "Outcome Types, Data Structures, and Validity"
