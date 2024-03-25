@@ -10,14 +10,14 @@ navbar:
     href: schedule.html
   - text: Lectures
     menu: 
-      - text: Course Overview
-        href: ./slides/EDUC645_1_Intro.html
-      - text: Outcome Types, Data Structures, and Validity
-        href: ./slides/EDUC645_logistic_regression_Sp23.html
-      - text: Dichotomous Outcomes
-        href: ./slides/EDUC645_poisson_regression_Sp23.html
-      - text: Count Outcomes
-        href: ./slides/EDUC645_nested_data_Sp23.html
+    - text: Course Overview
+      href: ./slides/EDUC645_1_Intro.html
+    - text: Outcome Types, Data Structures, and Validity
+      href: ./slides/EDUC645_logistic_regression_Sp23.html
+    - text: Dichotomous Outcomes
+      href: ./slides/EDUC645_poisson_regression_Sp23.html
+    - text: Count Outcomes
+      href: ./slides/EDUC645_nested_data_Sp23.html
   - text: R Project Workflow
     href: workflow.html
     
