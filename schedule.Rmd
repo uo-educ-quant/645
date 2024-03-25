@@ -1,5 +1,5 @@
 ---
-title: "EDUC 645 Schedule"
+title: "EDUC 645 (EDUC 610L) Schedule"
 site: distill::distill_website
 output:
   html_document:
@@ -13,162 +13,110 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Unit 1: Dichotomous Outcomes and Logistic Regression
+---
 
-**Learning Objectives**: 
+## Unit 1: Outcome Types, Data Structures, and Validity
 
-- Describe the linear probability model and discuss its limitations
+**Topics**: 
 
-- Differentiate between the concepts of probability, odds, and logit
+- Conceptual differences in continuous, dichotomous, and count outcomes
 
-- Estimate and interpret model parameters of logistic regression model with continuous and categorical predictors
+- Reliability (internal consistency) of measures 
 
-- Discuss predictive power, model fit, and diagnostics for logistic regression models
+- Nested data and methods to account for nesting/clustering in analyses 
+
+- Data with missingness and methods to handle missingness 
 
 **Readings**:
 
- * Complete prior to April 6 meeting: BMLR Ch. 2 (pp. 39-68), 6.1-6.4 (pp. 151-155)
- * Complete prior to April 11 meeting: BMLR Ch. 6.5-6.7 (pp. 159-180)
- * *Recommended*: BMLR 3.3 ‘Discrete Random Variables’ (pp. 72-79)
+ * Complete prior to April 4 meeting: Dunn et al, 2014 
+ * Complete prior to April 9 meeting: BMLR Ch. 8.1-8.5 (pp. 211-231) 
+ * Complete prior to April 16 meeting: Little et al. 2013 
 
 **Lecture**:
 
- * [Lecture slides](./slides/EDUC645_logistic_regression_Sp23.html)
- * [Dataset](./data/NHANES_data1112.RData)
+*Slides to be added*
+
+ * [Lecture slides]()
+ * [Dataset]()
 
 **Assignment**:
 
- * Due April 26
- * [Assignment details](./assignments/assignment01_Sp23.html)
+ * Due April 22
+ * [Assignment details]()
  
-**Unit Quiz**: Due April 18 (Canvas)
+**Unit Quiz**: Due April 15 (Canvas)
 
-## Unit 2: Count Outcomes
+---
 
-**Learning Objectives**: 
+## Unit 2: Dichotomous Outcomes
 
-- Apply regression models to analyze count and rates as outcome variables
+**Topics**: 
 
--	Describe situations which merit the use of Poisson regression and related models
+- Outcome measures for dichotomous data 
 
--	State the assumptions of Poisson regression and negative-binomial models
+- Methods to analyze dichotomous outcomes 
 
-- Use Poisson regression and negative-binomial models with continuous and categorical predictors, and interpret the model parameters and inference for model parameters
-
-- Evaluate dispersion of the outcome variable, model fit, and diagnostics
+- Fitting and interpreting logistic regression models with single-level data, nested (clustered) data, longitudinal data, and missing data
 
 **Readings**: 
 
- * Complete prior to April 27 meeting: BMLR Ch. 4.1-4.4 (pp. 93-112)
- * Complete prior to May 2 meeting: BMLR Ch. 4.5-4.10 (pp. 113-132), Ch. 5 (pp. 145-148)
+ * Complete prior to April 23 meeting: BMLR Ch. 2 (pp. 39-68) 
+ * Complete prior to April 30 meeting: BMLR Ch. 6 (pp. 151-180) 
+ * Complete prior to May 7 meeting: BMLR Ch. 8.6-8.11 (pp. 234-251); Recommended: BMLR Ch. 11 (pp. 373-398) 
+ * Complete prior to May 14 meeting: BMLR Ch. 9.1-9.7 (pp. 263-306) 
  
 **Lecture**:
 
- * [Lecture slides](./slides/EDUC645_poisson_regression_Sp23.html)
- * [Dataset](./data/NHANES_data1112.RData)
+*Slides to be added*
+
+ * [Lecture slides]()
+ * [Dataset]()
 
 **Assignment**
 
- * Due May 12
- * [Assignment details](./assignments/assignment02_Sp23.html)
+ * Due May 13
+ * [Assignment details]()
  
-**Unit Quiz**: Due May 5 (Canvas)
+**Unit Quiz**: Due May 6 (Canvas)
 
-## Unit 3: Nested Data
+---
 
-**Learning Objectives**: 
+## Unit 3: Count Outcomes
 
-- Describe nested data structures (two-level, e.g., repeated measures within individuals, students within schools)
+**Topics**: 
 
-- Demonstrate how intercepts, slopes, and regression coefficients may vary across clusters
+- Methods to analyze count outcomes 
 
-- Compare and contrast using fixed-effects and random-effects in regression models
+- Fitting and interpreting Poisson regression models with single-level data, nested (clustered) data, and missing data
 
-- Explain the covariance matrix of random-effects and describe implications of ignoring random-effects in terms of the inference for fixed-effects and statistical power
+- Poisson regression model fit assessment and diagnostics 
 
-- Measure within-cluster dependency using intraclass correlation coefficient, and describe how to evaluate whether multilevel modeling is appropriate
-
-- Create fixed and random intercept-only models and interpret the model parameters using the R `lmer` package
-
-- Discuss alternatives to multilevel modeling of nested data
+- Critical appraisal of published studies using course methods 
 
 **Readings**: 
  
- * Complete prior to May 9 meeting: BMLR Ch. 8.1-8.5 (pp. 211-231)
- * Complete prior to May 16 meeting: BMLR Ch. 8.6-8.11 (pp. 234-251)
- * Complete prior to May 23 meeting: BMLR Ch. 9.1-9.7 (pp. 263-306), Ch. 11 (pp. 373-398)
+ * Complete prior to May 21 meeting: BMLR Ch. 4.1-4.4 (pp. 93-112) 
+ * Complete prior to May 28 meeting: BMLR Ch. 4.5-4.10 (pp. 113-132), Ch. 5 (pp. 145-148) 
  
 **Lecture**:
 
- * [Lecture slides](./slides/EDUC645_nested_data_Sp23.html)
- * Datasets: [seda](./data/seda_oregon.csv) | [popular](./data/popular.RData) | [respire](./data/respire.RData)
+*Slides to be added*
+
+ * [Lecture slides]()
+ * [Dataset]()
 
 **Assignment**:
 
-No assignment for this unit (included in final project).
+ * Due June 3
+ * [Assignment details]()
 
-**Unit Quiz**:
+**Unit Quiz**: Due May 27 (Canvas)
 
-No quiz for this unit (included with Unit 4 quiz).
-
-## Unit 4: Missing Data
-
-**Learning Objectives:** 
-
-- Discuss the concept of model-based imputation in the context of linear regression, logistic regression, and Poisson regression models
-
-- Identify and describe missing data mechanisms
-
-- Explain the applications and limitations of different methods for handling missing data
-
-- Assess missing data characteristics 
-
-- Using the R `mice` package to practice applying multiple imputation to fit linear, logistic, and Poisson regression models for a data set with missing values
-
-**Readings**: 
-
- * Complete prior to June 1 meeting: Little et al 2014 (Canvas)
-
-**Lecture**:
-
- * [Lecture slides](./slides/EDUC645_cleaning_missing_Sp23.html)
- * [Dataset](./data/galo_miss.RData)
- 
-**Assignment**:
-
-No assignment for this unit (included in final project).
-
-**Unit 3 and 4 Quiz**: Due June 6 (Canvas)
-
-## Unit 5: Reliability in Measurement
-
-**Learning Objectives**: 
-
-- Differentiate and define aspects of measurement and understand when they apply
-
-- Demonstrate how to compute and interpret coefficients alpha and omega
-
-- Define the assumptions and limitations for methods to assess reliability
-
-**Readings**: 
-
- * Complete prior to June 8 meeting: Dunn et al 2014 (Canvas)
-
-**Lecture**:
-
- * [Lecture slides](./slides/EDUC645_measure_assess_Sp23.html)
- * [Dataset](./data/ah_happiness.csv)
- 
-**Assignment**:
-
-No assignment for this unit (included in final project).
-
-**Unit Quiz**:
-
-No quiz for this unit.
+---
 
 ## Final Project
 
- * Due June 13
- * [Instructions](./assignments/final_Sp23.html)
+ * Due June 12
+ * [Instructions]()
 

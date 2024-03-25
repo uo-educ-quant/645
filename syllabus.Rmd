@@ -1,5 +1,5 @@
 ---
-title: "EDUC 645 Syllabus"
+title: "EDUC 645 (EDUC 610L) Syllabus"
 site: distill::distill_website
 output:
   html_document:
@@ -18,45 +18,45 @@ library(tidyverse)
 The University of Oregon is located on Kalapuya Ilihi, the traditional indigenous homeland of the Kalapuya people. Today, descendants are citizens of the Confederated Tribes of the Grand Ronde Community of Oregon and the Confederated Tribes of Siletz Indians of Oregon, and they continue to make important contributions in their communities, at UO, and across the land we now refer to as Oregon. 
 
 # I. General Course Information
-**EDUC 645: Applied Statistics in Education and Human Services III (3 credits) - Spring 2023 (36574)**
+**EDUC 645 (EDUC 610L): Applied Statistics in Education and Human Services III (3 credits) - Spring 2024 (31569)**
 
 *Meeting Time and Location*
 
 Tuesdays and Thursdays, 5:00pm–6:20pm
 
-HEDCO 146
+HEDCO 142
 
 *Instructor and GTFs*: 
 
 * Nicholas J. Parr, PhD, MPH (he/him/his); Email: nparr2@uoregon.edu (preferred); Office hour: by appointment
 
-* Claire Zhang (she/her/hers); Email: congliz@uoregon.edu (preferred); Office: Lokey Ed 102J; Office hour: by appointment
-
 * Havisha (Havi) Khurana (she/her/hers); Email: havishak@uoregon.edu (preferred); Office: Lokey Ed 111; Office hour: by appointment
 
+* Brittany Spinner; Email: bspinner@uoregon.edu (preferred)
+
 # II. Course Overview
-This course is the third in a sequence intended to provide a toolkit of statistical concepts, methods, and their implementation to producers of applied research in education, human services, and other social sciences. The course is organized around the principle that research design depends in part on researchers’ substantive questions and their quantitative data available to address these questions. In this upper-level introductory course, students will learn about and practice using analytic models and strategies that are suitable for examining data that have (a) a dichotomous outcome variable, (b) a count outcome variable, (c) a nested structure, and/or (d) missing values; students will also learn about when and how to estimate (e) internal consistency and interrater reliability for research purposes. The course seeks to blend a conceptual, mathematical, and applied understanding of introductory statistical concepts. At the core of our pedagogical approach is the belief that students learn statistical analysis by doing statistical analysis. 
+This course is the third in a sequence intended to provide a toolkit of statistical concepts, methods, and their implementation to producers of applied research in education, human services, and other social sciences. The course is organized around the principle that research design depends in part on researchers’ substantive questions and their quantitative data available to address these questions. In this upper-level introductory course, students will learn about and practice using analytic models and strategies that are suitable for examining data that have (a) a dichotomous outcome variable, (b) a count outcome variable, (c) a nested structure, and/or (d) missing values; students will also learn about when and how to estimate (e) internal consistency reliability for research purposes. The course seeks to blend a conceptual, mathematical, and applied understanding of introductory statistical concepts. At the core of our pedagogical approach is the belief that students learn statistical analysis by doing statistical analysis. 
 
 *EDUC 643 (or a similar intermediate statistics course) is a pre-requisite as is a basic familiarity with a statistical programming language (preferably R).*  
 
 # III. Student Learning Outcomes
 By the end of this term, it is expected that students will be able to: 
 
-1. Determine when it is appropriate to use logistic regression or Poisson regression analyses and analyses that account for nested data in education and human services research. 
+1. Determine when it is appropriate to use logistic regression or Poisson regression analyses and analyses that account for nested data in education and human services research.  
 
-2. Conduct and interpret basic logistic and Poisson regression analyses and analyses for nested data.
+2. Conduct and interpret basic logistic and Poisson regression analyses and analyses that account for nested data.  
 
-3. Describe the assumptions of logistic and Poisson regression analyses and analyses for nested data, and test analytic models for the extent to which they satisfy the models’ assumptions. 
+3. Describe the assumptions of logistic and Poisson regression analyses and analyses for nested data, and test analytic models for the extent to which they satisfy the models’ assumptions.  
 
-4. Explain and apply the concepts of reliability and agreement in measurement for research purposes.  
+4. Understand the role of reliability in linear models and calculate internal consistency coefficients.   
 
-5. Explain common mechanisms of missingness and the applications and limitations of different methods for handling missing data. 
+5. Explain common mechanisms of missingness and the applications and limitations of different methods for handling missing data.  
 
-6. Assess missing data characteristics and implement multiple imputation to handle missing data. 
+6. Assess missing data characteristics and implement multiple imputation to handle missing data.  
 
-7. Perform all analyses using an object-oriented, open-source programming language.
+7. Perform all analyses using an object-oriented, open-source programming language. 
 
-# IV. Textbooks and Reading Materials
+# Textbooks, Reading Materials, and Software
 ## Textbooks
 The following text and reading materials are required:
 
@@ -64,18 +64,19 @@ The following text and reading materials are required:
 
 * Dunn, T. J., Baguley, T., & Brunsden V. (2014). From alpha to omega: A practical solution to the pervasive problem of internal consistency estimation. British Journal of Psychology, 105, 399–412. https://doi.org/10.1111/bjop.12046  
 
-* Hallgren, K. A. (2012). Computing inter-rater reliability for observational data: An overview and tutorial. Tutorials in Quantitative Methods for Psychology, 8(1), 23–34. https://doi.org/10.20982/tqmp.08.1.p023
-
 * Little, T. D., Jorgensen, T. D., Lang, K. M., & Moore, W. G. (2013). On the joys of missing data. Journal of Pediatric Psychology, 39(2), 151–162. https://doi.org/10.1093/jpepsy/jst048 
 
 We will primarily be referring to chapters in Roback and Legler’s [Beyond Multiple Linear Regression ](https://bookdown.org/roback/bookdown-BeyondMLR/) (**BMLR**), which is available for free online.
 
+## Supplemental reading materials 
+Further readings will be provided in the form of peer-reviewed journal articles. Links to these papers will be provided in the schedule. 
+
 ## R and RStudio
-Students must have the latest version of R, which can be downloaded [here](https://ftp.osuosl.org/pub/cran/). It is strongly recommended that students also download the RStudio GUI, available [here](https://www.rstudio.com/products/rstudio/download/#download). Both softwares are free. We will provide tutorials on R/RStudio installation and they are also accessible [here](.slides/tutorial.html).
+Students must have the latest version of R, which can be downloaded [here](https://ftp.osuosl.org/pub/cran/). It is strongly recommended that students also download the RStudio GUI, available [here](https://www.rstudio.com/products/rstudio/download/#download). Both are free.
 
 ### Resources for R and RStudio
 
-While we will teach you how to effectively use R and RStudio to conduct analyses, one of the key skills required to use R is the ability to find answers on your own. Many common questions or problems are either available on blogs or have been asked and answered in discussion forums already. Finding and deciphering those answers is an important skill you should seek to hone. *You will never remember all of the programming commands!*
+While this course teaches you how to effectively use R and RStudio to conduct analyses, one of the key skills required to use R is the ability to find answers on your own. Many common questions or problems are either available on blogs or have been asked and answered in discussion forums already. Finding and deciphering those answers is an important skill you should seek to hone. *It is impossible to remember all programming commands!* 
 
 Here are some sites where you can find the answers to many R questions and learn new tricks:
 
@@ -93,33 +94,33 @@ Here are some sites where you can find the answers to many R questions and learn
 See [here](./schedule.html). 
 
 # V. Grading Components and Criteria 
-Grades will be assigned in accordance with the College of Education grading requirements. Grades are criterion-referenced; that is, each student’s performance is graded according to the extent to which they meet the course learning and performance criteria and exhibit individual learning. You can check your assignment grades and points on Canvas. 
+Grades will be assigned in accordance with the College of Education grading requirements. Grades are criterion-referenced; that is, each student’s performance is graded according to the extent to which they meet the course learning and performance criteria and exhibit individual learning. You can check your assignment grades and points on Canvas.  
 
-The due dates for course assignments and the final are posted [here](./assignments.html). A maximum of 75% credit will be earned for work submitted up to 3 days late; assignments more than 3 days late will be given no credit. 
+The due dates for course assignments and the final are posted [here](./assignments.html). Late work can receive a grade no higher than a B+ unless an extension has been requested and approved by the instructor **before** the assignment is due. Assignments submitted after the last day of class will be given no credit.  
 
 Final grades will be based on the following components:
 
-- Quizzes: 20% (5 quizzes 4% each)
-- Assignments: 60% (3 assignments, 20% each)
-- Final Project: 20%
+- Quizzes: 15% (3 quizzes at 5% each)
+- Assignments: 60% (3 assignments at 20% each)
+- Final Project: 25%
 
 | Grade | Percentage   | Grade | Percentage   |
 |-------|--------------|-------|--------------|
 | A+    | >_ 98%       | C+    | 77% to < 80% |
 | A     | 94% to < 98% | C     | 73% to < 77% |
-| A-    | 80% to < 94% | C-    | 70% to < 73% |
+| A-    | 90% to < 94% | C-    | 70% to < 73% |
 | B+    | 87% to < 90% | D     | 60% to < 70% |
 | B     | 83% to < 87% | F     | < 60%        |
 | B-    | 80% to < 83% |       |              |
 
 ## Quizzes
-Five classes will begin with a very short multiple-choice quiz that is designed to test your knowledge of the theoretical principles underlying the statistics we are studying for the week. Quizzes will be open book and notes.
+Each of the three units will include an open-book/open-note quiz taken on Canvas. Quizzes will cover core concepts discussed in the initial lectures of each unit. 
 
 ## Assignments
-The goal of the assignments is to practice the concepts and vocabulary we have been modeling in class and implement some of the techniques we have learned. Each assignment has an associated data source, short codebook and detailed instructions for the required data and analytic tasks. You may work on your own or with up to two (2) partners. If you choose to work with others, please make sure that you engage in a full, fair, and mutually-agreeable collaboration. Plan, execute, and write-up your analyses together; do not simply divide up the work. Further assignment details are available [here](./assignments.html). Assignments will be evaluated based on students’ performance in completing the assignment tasks, showing their work, and in demonstrating their understanding of the course concepts and terminology.
+The goal of the assignments is to practice the concepts and vocabulary we have been modeling in class and implement some of the techniques we have discussed. Each assignment has an associated data source, short codebook, and detailed instructions for the required data and analytic tasks. You may work on your own or collaborate with up to two (2) partners. Please make sure that you engage in a full, fair, and mutually-agreeable collaboration if you do choose to collaborate. If you do collaborate, you should plan, execute, and write-up your analyses together; do not simply divide up the work. Please make sure to indicate clearly when your work is joint and any other individual or resource (outside of class material) you consulted in your responses. Further assignment details are available on the course website. Further assignment details are available [here](./assignments.html). Assignments will be evaluated based on students’ performance in completing the assignment tasks, showing their work, and in demonstrating their understanding of the course concepts and terminology.
 
 ## Final
-The final assignment involves a more extended application and synthesis of the concepts of descriptive and relational applied data analysis covered in this course. 
+The final assignment involves a more extended application of methods covered in this course. Instructions for the final assignment will be provided during Week 9 and listed [here](./assignments.html).
 
 # VI. Statement of How Requirements Differ for Undergraduate and Graduate Students 
 
@@ -188,7 +189,7 @@ Life at college can be very complicated. Students often feel overwhelmed or stre
 
 As your instructor if I believe you may need additional support, I will express my concerns, the reasons for them, and refer you to resources that might be helpful. It is not my intention to know the details of what might be bothering you, but simply to let you know I care and that help is available. Getting help is a courageous thing to do—for yourself and those you care about.
 
-University Health Services help students cope with difficult emotions and life stressors. If you need general resources on coping with stress or want to talk with another student who has been in the same place as you, visit the Duck Nest (located in the EMU on the ground floor) and get help from one of the specially trained Peer Wellness Advocates. Find out more at health.uoregon.edu/ducknest. 
+University Health Services help students cope with difficult emotions and life stressors. If you need general resources on coping with stress or want to talk with another student who has been in the same place as you, visit the Duck Nest (located in the EMU on the ground floor) and get help from one of the specially trained Peer Wellness Advocates. Find out more at https://health.uoregon.edu/ducknest. 
 
 University Counseling Services (UCS) has a team of dedicated staff members to support you with your concerns, many of whom can provide identity-based support. All clinical services are free and confidential. Find out more at https://counseling.uoregon.edu/ or by calling 541-346-3227 (anytime UCS is closed, the After-Hours Support and Crisis Line is available by calling this same number).
 

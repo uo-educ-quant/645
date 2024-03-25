@@ -1,5 +1,5 @@
 ---
-title: "EDUC 645 Assignments"
+title: "EDUC 645 (EDUC 610L) Assignments"
 site: distill::distill_website
 output:
   html_document:
@@ -31,40 +31,9 @@ For each of the 3 assignments and the final project, you are required to submit 
 
 ## Assignments
 
-#### **Assignment 1 (Dichotomous Outcomes and Logistic Regression)**
+*To be posted*
 
-Objectives:
 
- - Examine dichotomous outcome data
- - Use logistic regression to estimate a relationship where the dependent variable is dichotomous
- - Describe, interpret, and draw inferences from the model results
-
-Due: April 26
-
-**[Assignment details](./assignments/assignment01_Sp23.html)**
-
-#### **Assignment 2 (Count Outcomes)**
-
-Objectives:
-
- - Examine count outcome data
- - Use the appropriate regression model to estimate a relationship where the dependent variable is a count
- - Describe, interpret, and draw inferences from the model results
-
-Due: May 12
-
-**[Assignment details](./assignments/assignment02_Sp23.html)**
-
-#### **Final Project (Nested Data Analysis and Addressing Missing Data)**
-
-Objectives:
-
- - Use mixed-effects models to appropriately analyze data with a nested structure 
- - Examine and address missing outcome data using multiple imputation
-
-Due: June 13
-
-**[Instructions](./assignments/final_Sp23.html)**
 
 
 
