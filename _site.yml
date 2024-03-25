@@ -10,7 +10,7 @@ navbar:
     href: schedule.html
   - text: Lectures
     menu: 
-    - text: Course Overview
+    - text: "Course Overview""
       href: ./slides/EDUC645_1_Intro.html
     - text: Outcome Types, Data Structures, and Validity
       href: ./slides/EDUC645_logistic_regression_Sp23.html
