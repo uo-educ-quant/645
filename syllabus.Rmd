@@ -26,13 +26,17 @@ Tuesdays and Thursdays, 5:00pm–6:20pm
 
 HEDCO 142
 
-*Instructor and GTFs*: 
+*Instructor*: 
 
 * Nicholas J. Parr, PhD, MPH (he/him/his); Email: nparr2@uoregon.edu (preferred); Office hour: by appointment
 
-* Havisha (Havi) Khurana (she/her/hers); Email: havishak@uoregon.edu (preferred); Office: Lokey Ed 111; Office hour: by appointment
+*GTFs*:
 
-* Brittany Spinner; Email: bspinner@uoregon.edu (preferred)
+* Havisha (Havi) Khurana (she/her/hers); Email: havishak@uoregon.edu (preferred); Office hour: by appointment
+
+* Brittany Spinner (she/her/hers); Email: bspinner@uoregon.edu (preferred); Office hour: by appointment  
+
+* Errol Kaylor (he/him/his); Email: errolk@uoregon.edu (preferred); Office hour: by appointment
 
 # II. Course Overview
 This course is the third in a sequence intended to provide a toolkit of statistical concepts, methods, and their implementation to producers of applied research in education, human services, and other social sciences. The course is organized around the principle that research design depends in part on researchers’ substantive questions and their quantitative data available to address these questions. In this upper-level introductory course, students will learn about and practice using analytic models and strategies that are suitable for examining data that have (a) a dichotomous outcome variable, (b) a count outcome variable, (c) a nested structure, and/or (d) missing values; students will also learn about when and how to estimate (e) internal consistency reliability for research purposes. The course seeks to blend a conceptual, mathematical, and applied understanding of introductory statistical concepts. At the core of our pedagogical approach is the belief that students learn statistical analysis by doing statistical analysis. 
