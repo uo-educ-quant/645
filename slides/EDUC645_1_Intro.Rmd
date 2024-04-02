@@ -61,9 +61,8 @@ opts_chunk$set(
 
 
 --
- + The full-year sequence (EDUC 641 $\rightarrow$ EDUC 643 $\rightarrow$ **EDUC 645**) prepares you to make valuable contributions to a research team
- + Not all the skills you will need (and not the only courses you should take), particularly for those interested in analysis-heavy positions, or becoming an applied quantitative doctoral-level researcher
- + Foundations of statistics, methods, and data science
+ + The full-year sequence (EDUC 641 $\rightarrow$ EDUC 643 $\rightarrow$ **EDUC 645**) covers the foundations of statistics and data science to prepare you to make valuable contributions to a research team
+ + Not all the skills you'll need are covered, particularly for those interested in analysis-heavy positions, or becoming an applied quantitative doctoral-level researcher
 
 
 --
@@ -84,12 +83,20 @@ opts_chunk$set(
 
 Courses in the EDUC methods sequence share the following principles:
 
+
+--
 - Analysis follows research design, which emerges from substantive questions
 
+
+--
 - Students learn statistical analysis by doing statistical analysis
 
+
+--
 - Create an inclusive, supportive environment in which we learn from each other
 
+
+--
 - Balance support and academic stretch across a variety of levels of prior experience and comfort with quantitative analysis
 
 
@@ -133,17 +140,37 @@ See [EDUC 641 data management guide](https://daviddliebowitz.github.io/EDUC641_2
 
 In this intermediate course, we will focus on using analytic models and strategies for examining data that have: 
 
+
+--
 - a dichotomous outcome
+
+
+--
 - a count outcome
+
+
+--
 - a nested structure
 
 
 --
-We will also discuss when and how to estimate the consistency of participants' responses to outcome measures (or researchers' ratings of participant characteristics), and methods for understanding and addressing missing data.
+- missingness
 
 
 --
-**.blue[But what's the real-world applicability of these methods?]**
+During Unit 1, we'll also talk briefly about tools that give us information about how consistently the assessment tools we use are measuring our outcome. 
+
+
+--
+  + Are students with the same depression severity responding similarly to our depression scale?
+
+
+--
+Finally, at the end of the course, we'll spend some time critically appraising published studies that use course methods.
+
+
+--
+**.blue[What's the real-world applicability of the methods we'll discuss?]**
 
 ---
 # Applications
@@ -178,7 +205,7 @@ We will also discuss when and how to estimate the consistency of participants' r
 
 
 --
-  + Perhaps some teachers are more likable than others, or students in some classes, on average, have less parental support and engagement. 
+  + Perhaps some teachers are more effective than others, or students in some classes, on average, have less parental support and engagement. 
 
 
 --
@@ -199,40 +226,26 @@ We will also discuss when and how to estimate the consistency of participants' r
 ---
 # Roadmap of EDUC 645
 
-- Toward the end of the course, we'll also talk about tools that give us information about how consistently the assessment tools we use are measuring our outcome. 
-
 
 --
-  + Are students with the same depression severity responding similarly to our depression scale?
-
-
---
-- We'll also discuss concepts and methods related to missing data.
-
-
---
-
 | Unit  | Week(s) | Topic
 |----------------------------------------------------
-| 1     | 1-3     | Dichotomous outcomes
-| 2     | 4-5     | Count outcomes
-| 3     | 6-8     | Nested data
-| 4     | 9       | Reliability in measurement
-| 5     | 10      | Missing data
-
+| 1     | 1-3     | Outcome Types + Data Structures and Validity 
+| 2     | 4-7     | Dichotomous Outcomes
+| 3     | 8-10    | Count Outcomes
 
 ---
-# Weekly schedule of activities
+# Course activities
 
-1. Two 1.5-hour lectures will introduce concepts in interactive lectures, discussion and activities
+1. Two weekly 1.5-hour lectures will introduce concepts in interactive lectures, discussion and activities
 
-2. Readings are intended to supplement material from lectures (these can be completed after the first class of the unit)
+2. Readings are intended to supplement material from lectures
 
 3. Two *OPTIONAL, UNGRADED* weekly lab meetings intended to provide support for R programming tasks. Each lab will cover identical material.
 
-4. Five (5) take-home quizzes worth trivial amount of points each (4% of grade)
+4. Three (3) take-home quizzes worth trivial amount of points each (5% of grade)
 
-5. Four (4) data analytic assignments (15% each) + final project (20% of grade)
+5. Three (3) unit assignments (15% each) + final project (25% of grade)
 
 
 --
