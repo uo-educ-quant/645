@@ -68,7 +68,7 @@ The following text and reading materials are required:
 
 * Dunn, T. J., Baguley, T., & Brunsden V. (2014). From alpha to omega: A practical solution to the pervasive problem of internal consistency estimation. British Journal of Psychology, 105, 399–412. https://doi.org/10.1111/bjop.12046  
 
-* Little, T. D., Jorgensen, T. D., Lang, K. M., & Moore, W. G. (2013). On the joys of missing data. Journal of Pediatric Psychology, 39(2), 151–162. https://doi.org/10.1093/jpepsy/jst048 
+* Little, T. D., Jorgensen, T. D., Lang, K. M., & Moore, W. G. (2014). On the joys of missing data. Journal of Pediatric Psychology, 39(2), 151–162. https://doi.org/10.1093/jpepsy/jst048 
 
 We will primarily be referring to chapters in Roback and Legler’s [Beyond Multiple Linear Regression ](https://bookdown.org/roback/bookdown-BeyondMLR/) (**BMLR**), which is available for free online.
 
