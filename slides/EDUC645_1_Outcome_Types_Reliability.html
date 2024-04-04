@@ -42,11 +42,7 @@ Dichotomous (or binary) outcomes are a broad group of outcomes that take on only
 
 
 --
-The fact that the outcome can only be 0 or 1 (or two mutually exclusive categories) implies certain things about the meaning of the outcome.
-
-
---
-- Any ideas?
+The fact that the outcome can only be 0 or 1 (or two mutually exclusive categories) implies certain things about the meaning of the outcome. **.blue[Any ideas?]**
   
 
 --
@@ -68,7 +64,7 @@ A researcher might be interested in life experiences associated with severe depr
   
 
 --
-- What are some potential downsides of this approach?
+- **.blue[Can you think of any potential downsides of this approach?]**
   
 
 --
@@ -80,13 +76,13 @@ Other times, an outcome will be measured dichotomously, but we wonder if that is
 
 
 --
-- Could there be an intermediate between "not nice to me" and "nice to me"? Is it realistic to think that a principal would be "not nice" to student? Is "niceness" the best construct?
+- **.blue[Could there be an intermediate between "not nice to me" and "nice to me"? Is it realistic to think that a principal would be "not nice" to a student? Is "niceness" the best construct?]**
 
 
 ---
 # Example data: NHANES
 
-NHANES (National Health and Nutrition Examination Study) is an annual US survey of about 5,000 children and adults. Participants answer an interview questionnaire and receive a physical examination to collect data on demographic characteristics, nutrition and physical activity, and physical and mental health. We'll look at a few variables initially:
+NHANES (National Health and Nutrition Examination Study) is an annual US survey of about 5,000 children and adults. Participants answer an interview questionnaire and receive a physical examination, and data are collected on demographic characteristics, nutrition and physical activity, and physical and mental health. We'll look at a few variables initially:
 
 
 --
@@ -102,38 +98,62 @@ NHANES (National Health and Nutrition Examination Study) is an annual US survey 
 We'll use data from the 2011-12 survey year and limit the sample to adults and adolescents (13 or older). We'll also remove any participant with missing data (later in the term we'll discuss why this might be a bad idea!).
 
 
+
+```r
+NHANES_data1112 &lt;- NHANES_raw %&gt;% 
+  filter(SurveyYr == "2011_12", Age &gt; 12) %&gt;% 
+  drop_na()
+```
+
+
 --
 
 ```r
 NHANES_data1112 %&gt;% 
   select(ID:PhysActive) %&gt;% 
-  head(n = 4)
+  head(n = 3)
 ```
 
-<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:unnamed-chunk-1">
-<col><col><col><col><col><col><col><tr>
-<th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">ID</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">Age</th><th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">Sex</th><th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">Race_Eth</th><th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">Diabetes</th><th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">Depress_Freq</th><th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">PhysActive</th></tr>
+<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:unnamed-chunk-2">
+<col><col><col><col><col><col><col><col><tr>
+<th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">ID</th><th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">SurveyYr</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">Age</th><th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">Sex</th><th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">Race_Eth</th><th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">Diabetes</th><th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">Depress_Freq</th><th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">PhysActive</th></tr>
 <tr>
-<td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">62172</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">43</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">female</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">Black</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">No</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">Most</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">Inactive</td></tr>
+<td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">62172</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">2011_12</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">43</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">female</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">Black</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">No</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">Most</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">Inactive</td></tr>
 <tr>
-<td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">62174</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">80</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">male</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">White</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">No</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">None</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">Inactive</td></tr>
+<td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">62174</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">2011_12</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">80</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">male</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">White</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">No</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">None</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">Inactive</td></tr>
 <tr>
-<td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">62174</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">80</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">male</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">White</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">No</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">None</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">Inactive</td></tr>
-<tr>
-<td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">62176</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">34</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">female</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">White</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">No</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">None</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">Active</td></tr>
+<td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">62174</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">2011_12</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">80</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">male</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">White</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">No</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">None</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">Inactive</td></tr>
 </table>
 
 
 ---
 # Diabetes (No/Yes)
 
-&lt;img src="EDUC645_1_Outcome_Types_Reliability_files/figure-html/unnamed-chunk-2-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+```r
+NHANES_data1112 %&gt;% 
+  ggplot(aes(Diabetes)) +
+  geom_bar(fill = c("yellow", "royalblue"), width = 0.5, alpha = 0.8) +
+  labs(x = "Has Diabetes",
+       y = "Number of Participants")
+```
+
+&lt;img src="EDUC645_1_Outcome_Types_Reliability_files/figure-html/unnamed-chunk-3-1.png" width="576" style="display: block; margin: auto;" /&gt;
 
 
 ---
 # PhysActive (Inactive/Active)
 
-&lt;img src="EDUC645_1_Outcome_Types_Reliability_files/figure-html/unnamed-chunk-3-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+```r
+NHANES_data1112 %&gt;% 
+  ggplot(aes(PhysActive)) +
+  geom_bar(fill = c("yellow", "royalblue"), width = 0.5, alpha = 0.8) +
+  labs(x = "Participates in Physical Activities",
+       y = "Number of Participants")
+```
+
+&lt;img src="EDUC645_1_Outcome_Types_Reliability_files/figure-html/unnamed-chunk-4-1.png" width="576" style="display: block; margin: auto;" /&gt;
 
 ---
 class: middle, inverse
@@ -237,8 +257,8 @@ table(NHANES_data1112$PhysActive, NHANES_data1112$Diabetes)
 ```
 #&gt;           
 #&gt;              No  Yes
-#&gt;   Active   1692  127
-#&gt;   Inactive 1304  211
+#&gt;   Active   1689  127
+#&gt;   Inactive 1300  211
 ```
 
 
@@ -330,7 +350,7 @@ round((0.163 / 0.075), digits = 2)
 
 
 ---
-# More interpretations
+# Interpretation
 
 To summarize (OR):
 
@@ -344,32 +364,17 @@ Compared with being active, being inactive is associated with a greater odds of 
 
 
 --
-- When we're describing *more than* for a ratio, we have to subtract 1 from the ratio (because we're starting from 1, or no difference between groups, and saying how much greater the odds or risk are than that). This is how we get 117% (2.17 - 1 = 1.17). For the flipped ratio with odds of diabetes in the active group in the numerator, the odds ratio was 0.46. Because this ratio is less than 1, here we subtract *from 1:* 1 - 0.46 = 0.54 ("Being active is associated with a 54% reduction in odds of diabetes compared with being inactive.")
+- When we're describing *more than* for a ratio, we have to subtract 1 from the ratio (because we're starting from 1, or no difference between groups, and saying how much greater the odds are than that). This is how we get 117% (2.17 - 1 = 1.17). For the flipped ratio with odds of diabetes in the active group in the numerator, the odds ratio was 0.46. Because this ratio is less than 1, here we subtract *from 1:* 1 - 0.46 = 0.54 ("Being active is associated with a 54% reduction in odds of diabetes compared with being inactive.")
 
 
 ---
-# An alternative to odds ratio?
+# So, why use odds?
 
-Instead of doing this, let's just divide the probability of having diabetes in each activity group. This will give us a risk ratio or relative risk (RR). It can be similar in magnitude to an odds ratio, especially when the probability of the outcome is low (just like how odds and probability can be similar). But, the RR has a somewhat different interpretation.
-
-
---
-`$$\ RR = \frac{Probability\ of\ Being\ Inactive\ and\ Having\ Diabetes}{Probability\ of\ Being\ Active\ and\ Having\ Diabetes} = \frac{0.14}{0.07} = 2.00$$`
-
-- Inactive participants had a higher risk of having diabetes than active participants. Participants who were inactive were 2 times more likely to have diabetes than participants who were active.
-
-- Compared with being active, being inactive is associated with greater risk of diabetes. Inactive participants had 100% greater risk of having diabetes than active participants. 
-
-
-
----
-# An alternative to odds ratio?
-
-So, if probability (i.e., likelihood, risk) is more interpretable, why do we use odds? In the example we've just been discussing, we were interested in the relationship between one independent variable (whether or not a participant was physically active `PhysActive`) and the outcome, diabetes status. 
+In the example we've just been discussing, we were interested in the relationship between one independent variable (whether or not a participant was physically active `PhysActive`) and the outcome, diabetes status. 
 
 
 --
-Because we have only have two variables, we can represent our data in a simple table...
+Because we have only have two variables, we can represent our data in a simple table known as a 2-by-2 table or contingency table:
 
 |           | No Diabetes | Diabetes   |
 |:----------|:------------|:-----------|
@@ -378,16 +383,15 @@ Because we have only have two variables, we can represent our data in a simple t
 
 
 --
-Both an odds ratio and risk ratio can be calculated directly from this table, and can test the significance of the difference between groups.
+Both an odds ratio and risk ratio can be calculated directly from this table, and we can test whether the difference between groups that is quantified by the ratio is significant.
 
+
+--
+But, what if we want to look at the relationship between a *continuous* independent variable, like `Age`, and a dichotomous outcome like `Diabetes`? 
 
 ---
 # So, why use odds?
 
-But what happens if we want to look at the relationship between a *continuous* independent variable, like `Age`, and a dichotomous outcome like `Diabetes`. 
-
-
---
 **This implies that there is contingency table for each value of the independent value (i.e., for each year of age ranging from 13 to 80):**
 
 
@@ -424,11 +428,11 @@ Hopefully, it's becoming clear that looking at anything more than a basic relati
 
 
 --
-Instead we need an analysis method that we can use like the linear regression model we're already familiar with, but that can accommodate the unique properties of dichotomous outcomes. 
+Instead we need an analysis method that - like the linear regression model we're already familiar with - provides us a single estimate of the relationship of interest, while also accommodating the unique properties of dichotomous outcomes. 
 
 
 --
-- There are a few options, but the most commonly used is &lt;span style = "color:green"&gt; logistic regression. &lt;/span&gt; The properties of odds (versus probability) make logistic regression models easier to estimate.
+- There are a few options, but the most commonly used is &lt;span style = "color:green"&gt; logistic regression. &lt;/span&gt;
 
 
 ---
@@ -436,10 +440,45 @@ class: middle, inverse
 
 # Count Outcomes
 
+
+---
+# Normally distributed data
+
+Let's first look at a more normally distributed variable: `SleepHrsNight`, the self-reported number of hours of sleep a participant usually gets.
+
+
+--
+
+```r
+NHANES_data1112 %&gt;% 
+  ggplot(aes(SleepHrsNight)) +
+  geom_histogram(binwidth = 0.5)
+```
+
+&lt;img src="EDUC645_1_Outcome_Types_Reliability_files/figure-html/unnamed-chunk-11-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+
+---
+# Count data
+
+`DaysMHBad_count`, the number of days per month a participant reports experiencing poor mental health.
+
+
+--
+
+```r
+NHANES_data1112 %&gt;% 
+  ggplot(aes(DaysMHBad_count)) +
+  geom_histogram(binwidth = 1)
+```
+
+&lt;img src="EDUC645_1_Outcome_Types_Reliability_files/figure-html/unnamed-chunk-12-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+
 ---
 # What makes a count outcome a count?
 
-Counts indicate how many of an outcome are present, or often, how many of an outcome are present *in a specific timeframe* (aka a *rate*).     
+Counts indicate how many of an outcome are present, or often, how many of an outcome are present *in a specific timeframe* (aka a *rate*).
 
 
 --
@@ -447,34 +486,24 @@ In addition, a distribution of counts is:
 
 
 --
-- Usually **skewed**, meaning that some values are much more common than others - often a lot, or none at all (zero).
+- Usually *skewed*, meaning that some values are much more common than others - often a lot, or none at all (zero).
 
 
 --
-- Often **overdispersed**, which means the counts vary more than would be expected.
+- Often *overdispersed*, which means the counts vary more than would be expected.
 
 
 --
-Counts/rates require analyses that account for these properties. These methods are similar to those used for dichotomous outcomes, because another way of thinking of counts is that they measure a series of dichotomous outcomes. For example, the number of times a student is absent (versus present).
-
-
----
-# Count data
-
-Let's look at `DaysMHBad_count`, the number of days per month a participant reports experiencing poor mental health.
+Counts/rates require analyses that account for these properties. These methods are similar to those used for dichotomous outcomes. 
 
 
 --
-&lt;img src="EDUC645_1_Outcome_Types_Reliability_files/figure-html/unnamed-chunk-10-1.png" width="576" style="display: block; margin: auto;" /&gt;
-
----
-# Closer-to-normally-distributed data
-
-Contrast with `SleepHrsNight`, the self-reported number of hours of sleep a participant usually gets.
+ - **.blue[Why do you think that is?]** *Hint: Think about why `SleepHrsNight` was normally distributed and `DaysMHBad_count` was distributed like a count.*
 
 
 --
-&lt;img src="EDUC645_1_Outcome_Types_Reliability_files/figure-html/unnamed-chunk-11-1.png" style="display: block; margin: auto;" /&gt;
+ - Another way of thinking of counts is that they measure a series of dichotomous outcomes.
+
 
 ---
 class: middle, inverse
@@ -485,41 +514,64 @@ class: middle, inverse
 ---
 # Reliability 
 
-Consistency of measurement:
-
-* Individuals with the same true value of the underlying (aka latent) construct - like depression or happiness - have similar responses to the measure.
-
-* Responses to the scale won't systematically differ just because measurement is conducted at different times or by different researchers.
-
-* Scale questions (items) are internally consistent, meaning they measure the same construct.
-
-
----
-# Common Reliability Methods
-
-* Test-retest method: tests stability over time
-
-* Inter-rater method: tests equivalence among researchers
-
-* Alternative form method: tests whether different forms/orders of a scale function similarly
-
-* Coefficients alpha and omega: tests internal consistency
-
-
----
-# Internal Consistency
-
-How well a set of variables correlate with each other (“hang together”) is internal consistency reliability. If measures are strongly correlated, this gives some evidence that they are measuring the same construct across participants.
-
-* Internal consistency estimates can be impacted to missing data, the number of items, whether items share the same direction. Having one or more items coded in the opposite direction of other items is a common source of (artificially) low internal consistency.
-
-* Estimates are specific to the sample: A scale may have greater internal consistency in one dataset and less in another. 
-
-* Estimates are accompanied by some degree of uncertainty, so it is important to also report a confidence interval.
+Reliability is general term for consistency of measurement, but there are different forms of consistency that are important. 
 
 
 --
-The most common internal consistency measure (coefficient) is Alpha; another option is coefficient Omega. Both range from 0-1, with estimates closer to 1 indicating greater internal consistency. Omega uses more realistic assumptions that improve accuracy of estimate. 
+* Scale items (questions) are **.blue[internally consistent]**: they are likely to be measuring the *same* underlying (aka latent) construct, like depression or happiness.
+
+
+--
+  - Coefficients alpha and omega estimate internal consistency
+
+
+--
+* Responses to the scale won't systematically differ just because measurement is conducted at different times, by different researchers, or with different forms of the scale.
+
+
+--
+  - *Test-retest reliability* tests stability over time
+
+
+--
+  - *Inter-rater reliability* tests equivalence among researchers
+
+
+--
+  - *Alternative forms* tests reliability of different item orders or wording 
+
+
+--
+* Individuals with the same true value of the construct will have the same score on the scale.
+
+
+--
+  - Best examined with latent variable methods like Item Response Theory (IRT).
+
+---
+# Internal consistency reliability
+
+How well a set of items correlate with each other (“hang together”) is internal consistency reliability. If items are strongly correlated, this gives some evidence that they are measuring the same construct.
+
+
+--
+The most common internal consistency measure (coefficient) is Alpha; another option is coefficient Omega. Both range from 0-1, with estimates closer to 1 indicating greater internal consistency. 
+
+
+--
+* Omega uses more realistic assumptions that improve the accuracy of the estimate. 
+
+
+--
+* Internal consistency estimates can be impacted to missing data, the number of items, and whether items share the same direction. *Having one or more items coded in the opposite direction of other items is a common source of (artificially) low internal consistency.*
+
+
+--
+* Estimates are specific to the sample: A scale may have greater internal consistency in one dataset and less in another. 
+
+
+--
+* Estimates are accompanied by some degree of uncertainty, so it is important to also report a confidence interval.
 
 
 ---
@@ -543,14 +595,15 @@ Eight items from a rating scale intended to measure the construct of happiness.
 (0 = never or rarely, 1 = sometimes, 2 = a lot of the time, 3 = most or all of the time)
 
 ---
-# Data example - Add Health
+# Example data: Add Health
 
 
 ```r
-head(ah_happiness)
+ah_happiness %&gt;% 
+  head()
 ```
 
-<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:unnamed-chunk-12">
+<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:unnamed-chunk-13">
 <col><col><col><col><col><col><col><col><tr>
 <th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">q1</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">q2</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">q3</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">q4</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">q5</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">q6</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">q7</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">q8</th></tr>
 <tr>
