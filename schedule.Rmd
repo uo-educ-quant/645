@@ -35,7 +35,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 **Lecture**:
 
- * Lecture slides: [Course Overview](./slides/EDUC645_1_Intro.html) | [Outcome Types & Reliability](./slides/EDUC645_1_Outcome Types & Reliability.html)
+ * Lecture slides: [Course Overview](./slides/EDUC645_1_Intro.html) | [Outcome Types & Reliability](./slides/EDUC645_1_Outcome_Types_Reliability.html)
  * Datasets: [NHANES_data1112](./data/NHANES_data1112.RData) | [ah_happiness](./data/ah_happiness.RData)
 
 **Assignment**:

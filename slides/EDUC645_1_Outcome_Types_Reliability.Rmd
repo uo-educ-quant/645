@@ -18,7 +18,7 @@ library(pacman)
 p_load(NHANES, easystats, emmeans, DHARMa, ggeffects,
        here, tidyverse, ggplot2, xaringan, knitr, kableExtra, foreign, broom, xaringanthemer, reshape2, lfe, arsenal, ggpubr, stargazer, fixest, gtsummary, huxtable, aod, MBESS)
 
-i_am("slides/EDUC645_1_Outcome Types & Reliability.rmd")
+i_am("slides/EDUC645_1_Outcome_Types_Reliability.rmd")
 
 extra_css <- list(
   ".red"   = list(color = "red"),
