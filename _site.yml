@@ -12,8 +12,8 @@ navbar:
     menu: 
     - text: "Course Overview"
       href: ./slides/EDUC645_1_Intro.html
-    - text: "Outcome Types, Data Structures, and Validity"
-      #href: ./slides/EDUC645_logistic_regression_Sp23.html
+    - text: "Outcome Types and Reliability"
+      href: ./slides/EDUC645_1_Outcome Types & Reliability.html
     - text: "Dichotomous Outcomes"
       #href: ./slides/EDUC645_poisson_regression_Sp23.html
     - text: "Count Outcomes"
