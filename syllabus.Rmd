@@ -39,7 +39,7 @@ HEDCO 142
 * Errol Kaylor (he/him/his); Email: errolk@uoregon.edu (preferred); Office hour: by appointment
 
 # II. Course Overview
-This course is the third in a sequence intended to provide a toolkit of statistical concepts, methods, and their implementation to producers of applied research in education, human services, and other social sciences. The course is organized around the principle that research design depends in part on researchers’ substantive questions and their quantitative data available to address these questions. In this upper-level introductory course, students will learn about and practice using analytic models and strategies that are suitable for examining data that have (a) a dichotomous outcome variable, (b) a count outcome variable, (c) a nested structure, and/or (d) missing values; students will also learn about when and how to estimate (e) internal consistency reliability for research purposes. The course seeks to blend a conceptual, mathematical, and applied understanding of introductory statistical concepts. At the core of our pedagogical approach is the belief that students learn statistical analysis by doing statistical analysis. 
+This course is the third in a sequence intended to provide a toolkit of statistical concepts, methods, and their implementation to producers of applied research in education, human services, and other social sciences. The course is organized around the principle that research design and analysis depends on researchers’ substantive questions and the data they have available to address these questions. In this intermediate level course, students will learn about and practice using analytic models and strategies that are suitable for examining data that have (a) a dichotomous outcome variable, (b) a count outcome variable, (c) a nested structure, and/or (d) missing values. Students will also learn (e) when and how to estimate internal consistency reliability. The course seeks to blend a conceptual, mathematical, and applied understanding of introductory statistical concepts. Students will employ these statistical tools in a variety of applications, with a particular emphasis on strategies to generate research products relevant to culturally and linguistically diverse communities. At the core of our pedagogical approach is the belief that students learn statistical analysis by doing statistical analysis. 
 
 *EDUC 643 (or a similar intermediate statistics course) is a pre-requisite as is a basic familiarity with a statistical programming language (preferably R).*  
 
@@ -58,7 +58,9 @@ By the end of this term, it is expected that students will be able to:
 
 6. Assess missing data characteristics and implement multiple imputation to handle missing data.  
 
-7. Perform all analyses using an object-oriented, open-source programming language. 
+7. Use the above applied statistical tools (alongside others learned in prior courses in the EDUC quantitative sequence) to generate research that is relevant to culturally and linguistically diverse communities.
+
+8. Perform all analyses using an object-oriented, open-source programming language. 
 
 # Textbooks, Reading Materials, and Software
 ## Textbooks

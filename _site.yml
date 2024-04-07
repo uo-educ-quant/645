@@ -14,10 +14,8 @@ navbar:
       href: ./slides/EDUC645_1_Intro.html
     - text: "Outcome Types and Reliability"
       href: ./slides/EDUC645_1_Outcome_Types_Reliability.html
-    - text: "Dichotomous Outcomes"
-      #href: ./slides/EDUC645_poisson_regression_Sp23.html
-    - text: "Count Outcomes"
-      #href: ./slides/EDUC645_nested_data_Sp23.html
+    - text: "Nested Data"
+      href: ./slides/EDUC645_1_Nested_Data.html
   - text: R Project Workflow
     href: workflow.html
     
