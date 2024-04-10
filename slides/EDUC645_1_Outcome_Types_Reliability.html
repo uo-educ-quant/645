@@ -263,7 +263,7 @@ table(NHANES_data1112$PhysActive, NHANES_data1112$Diabetes)
 
 
 --
-For example, the number of participants who are inactive and have diabetes is N = 211, and summing the row (211 + 1304) gives the total number of inactive participants (N = 1,515). 
+For example, the number of participants who are inactive and have diabetes is N = 211, and summing the row (211 + 1300) gives the total number of inactive participants (N = 1,511). 
 
 
 ---
@@ -273,11 +273,11 @@ Then we calculate the probability of having diabetes for inactive participants:
 
 
 ```r
-round((211 / (211 + 1304)), digits = 3)
+round((211 / (211 + 1300)), digits = 3)
 ```
 
 ```
-#&gt; [1] 0.139
+#&gt; [1] 0.14
 ```
 
 
@@ -286,11 +286,11 @@ And the probability of NOT having diabetes for inactive participants:
 
 
 ```r
-round((1304 / (211 + 1304)), digits = 3) # Equal to 1 - 0.14.
+round((1300 / (211 + 1300)), digits = 3) # Equal to 1 - 0.14.
 ```
 
 ```
-#&gt; [1] 0.861
+#&gt; [1] 0.86
 ```
 
 
@@ -318,7 +318,7 @@ And do the same for active participants (top row):
 
 
 ```r
-round((127 / (127 + 1692)), digits = 3)
+round((127 / (127 + 1689)), digits = 3)
 ```
 
 ```

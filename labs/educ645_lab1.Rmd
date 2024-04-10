@@ -1,0 +1,163 @@
+---
+title: "Week 1 Lab"
+author: "(add your name)"
+date: "4/2/2024"
+output:
+  word_document: default
+  html_document:
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+# Don't make a change here
+knitr::opts_chunk$set(echo = TRUE,
+                      warning = FALSE,
+                      message = FALSE)
+```
+
+**Instruction to work on this sheet: In each code chunk, you can find some code being taken out purposely and left with three dots instead. Your task is to first uncomment the code line, then replace the three dots with the code you would write.**
+
+## Topic: Set-up and Review: Multiple regression with continuous outcome variable 
+
+### Data 
+
+```{r}
+#loading libraries
+library(tidyverse)
+library(modelsummary)
+```
+
+
+```{r}
+#loading data and selecting key variables
+seda <- read.csv("https://daviddliebowitz.github.io/EDUC643_23W/data/seda.csv") %>%
+  select(sedalea, math,
+         totenrl, perfl, 
+         locale)
+```
+
+
+```{r}
+# data management: noticing the variable locale is coded as chr but should be changed to factor
+
+seda$locale <- factor(seda$locale)
+
+table(seda$locale)
+# Based on the table, decide which locale should be the reference category and change the code
+
+# seda$locale <- relevel(seda$locale, ref = "...")
+```
+
+The dataset we'll be using in this lab is drawn from the Stanford Education Data Archive (SEDA) version 4.1. This is the same dataset you used for your final project. Take a look at this link here to remind yourself of the included variables 
+
+[here](https://daviddliebowitz.github.io/EDUC643_23W/assignments/assignment_6.html). 
+
+Brief variable descriptions we use here:
+
+ - sedalea, NCES district ID
+ 
+ - math, standardized math achievement score
+ 
+ - perfl, district-level proportion of students eligible for free- or reduced-price school lunch
+ 
+ - locale, Census-based location of schools attended by majority/plurality of students (Urban, Suburb, Town, Rural)
+ 
+ - totenrl - total district enrollment grades 3-8
+
+**Table 1. Analytic sample summary statistics**
+
+```{r}
+datasummary_skim(data = seda[,3:4])
+datasummary_skim(data = seda, type = "categorical")
+```
+
+1. Write a short paragraph describing the sample, key variables, and the summary statistics displayed in Table 1.
+
+*Answer here*
+
+### Research question 
+
+# RQ1: What is the relationship between percentage of FL students (perfl) and math achievement in Oregon districts? 
+
+*Outcome variable: ....*
+
+*Predictor variable: ....*
+
+**Figure 1. Visualization of the relationship between math achievement and percentage of FL students**
+
+```{r}
+## Make a plot, remember to put the predictor on the x-axis and outcome variable on the y-axis
+# ggplot(seda,
+#        aes(x = ..., y = ...)) +
+#   geom_point()+
+#   geom_smooth(method = 'lm') +
+#   labs(x = "...",
+#        y = "...") +
+#   theme_minimal(base_size = 14) 
+```
+
+2. Describe the strength of the relationship between percentage of FL students (perfl) and math achievement in Oregon districts? Use the terms strength, magnitude, direction, outliers, shape of curve (linear or othewise).
+
+*Answer here*
+
+
+```{r}
+# Use format: lm(outcome ~ predictor)
+#fit1 <- lm(... ~ ..., data = seda)
+#modelsummary(fit1)
+```
+
+3. Report the magnitude of the relationship from a simple regression model in one-two lines.
+
+*Answer here*
+
+### Multiple Regression
+
+# RQ2: Does the relationship between math achievement and proportion of students receiving free/reduced lunch differ by locale?
+
+3. We want to see if the relationship between math achievement test and percentage of students eligible for free lunch differs by locale. 
+
+The model is:
+
+$Math = \beta_0 + \beta_1*PerFl + + \beta_2*Locale + \beta_3*Locale*PerFl + \epsilon$
+
+
+a. Which parameter (beta) is of direct interest for our research question?
+
+*Answer here*
+
+The null hypothsis is: 
+$\beta_{(enter the parameter of interest)} = 0$
+
+*Answer here*
+
+b. Run the model. Did we reject the null?
+
+```{r}
+fit2 <- lm(math ~ perfl + locale + perfl:locale, data = seda)
+anova(fit2)
+```
+
+*Answer here*
+
+c. Visualize the relationship and interpret.
+
+**Figure 2. Visualization of the relationship between math achievement and percentage of FL students by locale**
+
+```{r}
+#modelsummary(fit2)
+
+## Make a plot, add locale to the color aesthestics and give meaningful names
+## margins::margins(fit2,
+#                 at = list(locale = c(..., ..., ..., ...))) %>% 
+# ggplot(fit,
+#        aes(x = perfl, y = math, color = ...)) +
+#   geom_point()+
+#   geom_smooth(method = 'lm') +
+#   labs(x = "...",
+#        y = "...",
+#       color = "...") +
+#   theme_minimal(base_size = 14) 
+```
+
+*Answer here*

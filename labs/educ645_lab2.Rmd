@@ -1,0 +1,232 @@
+---
+title: "Week 2 Lab"
+author: "(add your name)"
+date: "4/09/2023"
+output:
+  html_document:
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+
+# Don't make a change here
+knitr::opts_chunk$set(echo = TRUE,
+                      warning = FALSE,
+                      message = FALSE)
+```
+
+## *Goals:*
+
+
+1. Visualize dichotomous outcome: count, proportion, odds ratio
+2. Visualize dichotomous outcome and dichotomous predictor
+3. Visualize count outcome variable
+
+*Instruction to work on this sheet:* In each code chunk, you can find some code being taken out purposely and left with three dots instead. Your task is to first uncomment the code line, replace the three dots with the code you would write, and then run the code to proceed.
+
+### Topic: Understanding Dichotomous and Count Outcomes - Probability and Odds Ratio
+
+### Packages and Data 
+
+```{r}
+# Load necessary packages 
+library(tidyverse)
+library(modelsummary)
+
+# read in dataset and select variables of interest 
+# Quotes are important around URL link for data retrieval 
+
+prin <- read.csv("https://raw.githubusercontent.com/uo-educ-quant/645/master/data/principal.csv") %>% 
+  drop_na() #this is a simplistic way of dealing with missing data, we simply drop observations with missingness on any row
+```
+
+For this lab, we will be using the prinicpal.csv dataset available [here](https://raw.githubusercontent.com/uo-educ-quant/645/master/data/principal.csv). 
+Read in the dataset in the environment and save it to the object prin.
+
+*Brief variable descriptions:*
+
+ - *schid*, identifier variable for School ID
+ 
+ - *stuid*, identifier variable for Student ID
+ 
+ - *pfemale*, an indicator variable telling if the school principal is a female or not (1 - is a female, 0 - not a female)
+ 
+ - *page*, age of the principal
+ 
+ - *sfemale*, an indicator variable telling if the student is a female or not (1 - is a female, 0 - not a female)
+ 
+ - *match*, an indicator variable telling if the student and principal self-reported sex matched or not (1 - matched, 0 - didn't match)
+ 
+ - *attention*, standardized attention score for the student
+ 
+ - *affective*, an indicator variable telling if the student considers the principal to be affective (1 - Yes, - 0 No)
+
+```{r}
+# inspect data 
+# str(...)
+
+# factor all categorical variables - match, affective, pfemale, sfemale
+
+ # prin$... <- factor(prin$...,
+ #                    levels = c(0,1),
+ #                    labels = c("...", "..."))
+ # 
+ #  prin$... <- factor(prin$...,
+ #                    levels = c(0,1),
+ #                    labels = c("...", "..."))
+ #  
+ #  prin$... <- factor(prin$..., 
+ #                           levels = c(0,1),
+ #                           labels = c("...", "..."))
+
+```
+
+**Q1: How many complete observation do we have in the dataset?**
+*Answer here*
+
+**Table 1. Analytic sample summary statistics**
+
+```{r}
+# datasummary formula - specify name of columns ~ statistics for continuous variables
+
+
+# datasummary(page + attention ~ Mean + SD + Median, prin,
+#             title = "...",
+#             notes = "...")
+
+
+# datasummary code for categorical variables 
+
+# datasummary_skim(data = prin, type = "categorical",
+#             title = "...",
+#             notes = "...")
+
+# Or alternatively using the datasummary function,
+# datasummary(pfemale + sfemale + match + affective ~ N + Percent("all"), prin)
+```
+
+## Dichotomous Outcome
+
+**Q2: Our main outcome variable here is affective. How many students consider their principal to be affective? What is the probability that a student would would say that the principal is affective? What are the odds that students would consider their principal non-affective, compared to being affective?**
+
+
+```{r}
+# Plug numbers from the table to calculate
+# N of all students = number of observations in the dataset
+
+# probability affective = N of students who seen principal as affective / N of all students 
+
+# probability of non-affective = N of students who seen as not affective / N of all students 
+
+# odds of a principal being not-affective vs being affective = probability not-affective / probability of affective
+
+```
+
+*Answer here*
+
+*probability affective: ....*
+
+*probability of non-affective: ....*
+
+*odds of a principal being affective vs not: ....*
+
+**Visualize the number of principals seen as affective vs. not. Write a short paragraph to report the results. **
+
+```{r}
+# Simple visualization for dichotmous outcome variable - count, proportion
+
+affective_count <- ggplot(prin, aes(x = affective))+
+    geom_bar()+
+    labs(x = "...",
+         y = "...",
+         title = "...")
+
+affective_prop <- ggplot(prin, aes(x = "Student Response", fill = affective))+
+    geom_bar(width = 0.5, position = "fill")+
+    labs(x = "...",
+         y = "...",
+         title = "...")
+```
+
+
+**Q3. Present a table and visual displaying the proportion of principals that students to be affective (affective) and the proportion of principals that are female (pfemale). Describe what you see in 2 lines.**
+
+```{r}
+# simple contingency table
+# outcome 
+# datasummary(affective ~ sfemale*(N + Percent("row")), prin,
+#             title = "...",
+#             notes = "...")
+
+# Alternate code
+# table(prin$affective, prin$sfemale, 
+#       dnn = c("Affective", "Gender"))
+# 
+# # To present a table in proportions
+# # Using dnn labels the table
+# round(prop.table(table(prin$affective, prin$sfemale, 
+#       dnn = c("Affective", "Female"))),2) 
+```
+
+**Visualizing dichotmous outcome and predictor**
+
+```{r}
+# Can show counts - okay representation
+ggplot(prin, aes(x = affective, fill = sfemale))+
+    geom_bar(position = "dodge")+
+    labs(x = "...",
+         y = "...",
+         title = "...")
+
+# Can show proportions, which is way better
+ggplot(prin, aes(x = affective, fill = sfemale))+
+    geom_bar(position = "fill")+
+    labs(x = "...",
+         y = "...",
+         title = "...")
+
+# Equivalent visualization, flipping x and female - depends on what you want to say
+ggplot(prin, aes(x = sfemale, fill = affective))+
+    geom_bar(position = "fill")+
+    labs(x = "...",
+         y = "...",
+         title = "...")
+```
+
+
+*Answer here*
+
+### Count Outcome
+
+Page is a discrete continuous variable, describing principle age. It is a dummy for years of experience. Let's assume this as a variable we are interested in, and visualize it using histograms.
+
+```{r}
+ggplot(prin, aes(x = page)) +
+    geom_histogram(fill = "cornflowerblue") +
+    scale_x_continuous(breaks = c(34:46))+
+    labs(x = "...",
+         y = "...",
+         title = "...")
+```
+
+```{r}
+ggplot(prin, aes(x = page, fill = affective))+
+    geom_histogram()+
+    scale_x_continuous(breaks = c(34:46))+
+    labs(x = "...",
+         y = "...",
+         title = "...")
+
+ggplot(prin, aes(x = page, fill = affective))+
+    geom_histogram(position = "fill")+
+    scale_x_continuous(breaks = c(34:46))+
+    labs(x = "...",
+         y = "...",
+         title = "...")
+```
+
+**Q4. Describe the visualizations for principal age in 2-3 lines.**
+
+*Answer here*
+
+
