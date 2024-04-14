@@ -277,10 +277,16 @@ list("List" = m1,
 
 The first step is to examine the patterns and distributions of missing data. Then, we impute multiple datasets and inspect diagnostic plots. Finally, we carry out the analyses. Here we'll use functions from the `mice` package.
 
+```{r, eval=FALSE}
+galo_miss %>% 
+  select(advice, medu, fedu, focc) %>% 
+  md.pattern(rotate.names = TRUE)
+```
+
 ---
 # Missing data pattern
 
-```{r, fig.retina=3}
+```{r, echo = FALSE, fig.retina=3}
 galo_miss %>% 
   select(advice, medu, fedu, focc) %>% 
   md.pattern(rotate.names = TRUE)
