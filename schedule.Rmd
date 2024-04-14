@@ -44,7 +44,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 **Assignment**:
 
- * Due April 22
+ * Due April 25
  * [Assignment details]()
  
 **Unit Quiz**: Due April 15 (Canvas)
@@ -77,7 +77,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 **Assignment**
 
- * Due May 13
+ * Due May 16
  * [Assignment details]()
  
 **Unit Quiz**: Due May 6 (Canvas)
