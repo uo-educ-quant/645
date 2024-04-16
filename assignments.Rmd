@@ -27,7 +27,9 @@ For each of the 3 assignments and the final project, you are required to submit 
 
  - .doc, .html, or .pdf file with your typed responses to the problems and any tables and figures you produce. 
    
- - If you used R to create tables and/or figures in the above doc/html/pdf file, you must also submit the .Rmd or .R file you used to render the tables/figures. 
+ - .Rmd or .R file you used to render tables and figures. Tables may be created in Word, and in that case, do not require accompanying code. 
+
+*Note that specific assignments may have additional submission requirements, which will be listed in assignment instructions.*
 
 ## Assignments
 
