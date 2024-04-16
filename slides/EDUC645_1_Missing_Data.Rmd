@@ -219,7 +219,65 @@ missMethods::count_NA(galo_miss)
 ```
 
 ---
-# Listwise deletion
+# Data handling note
+
+We just looked at missingness in our raw data. A good practice is to do most of our data handling prior to assessing and addressing missingness. In particular, we should filter participants we're not interested in (eg, people under 18) and make sure variables of interest are the correct type/class. 
+
+
+--
+```{r}
+str(galo_miss)
+```
+
+
+--
+Most variables have numeric values so it makes sense to keep them as numeric (integers). But what if we wanted a more informative representation of participant sex (ie, a factor with level names)?
+
+---
+# Data handling note
+
+We'll first create a new variable `Sex` with level names that correspond to the existing dummy coded values. Then, in the same code chunk, we'll make this variable a factor.
+
+
+--
+```{r}
+galo_miss <- galo_miss %>% 
+  mutate(Sex = case_when(female == 0 ~ "Male",
+                         female == 1 ~ "Female"),
+         Sex = factor(Sex))
+```
+
+
+--
+```{r}
+str(galo_miss$Sex) # or levels(galo_miss$Sex)
+```
+
+
+--
+The first level of the factor will be the first level encountered in the dataset, but we may want a different order.
+
+
+--
+```{r}
+galo_miss <- galo_miss %>% 
+  mutate(Sex = factor(Sex, levels = c("Male", "Female")))
+```
+
+
+--
+```{r}
+str(galo_miss$Sex)
+```
+
+
+---
+# Traditional method: Listwise deletion
+
+```{r, echo=FALSE}
+galo_miss <- galo_miss %>% select(-Sex)
+```
+
 
 ```{r}
 m1 <- lm(advice ~ score, data = galo_miss)
@@ -236,7 +294,7 @@ list("List" = m1,
 
 
 ---
-# Mean imputation
+# Traditional method: Mean imputation
 
 ```{r, echo = F}
 galo_mean <- missMethods::impute_mean(galo_miss)
@@ -402,9 +460,13 @@ Final note: `mice` and its add-on packages have functions for imputing nested (m
 --
 * If there is substantial missingness, conduct and mention a sensitivity analysis of primary analyses using the imputed data and complete case analyses.
 
+
+--
+**.blue[Food for thought: Do you think there are different considerations we should take into account when addressing missing demographic (or "identity") data - like a person's age or race or ethnicity - versus outcome data (eg, depression level)?]**
+
 ---
 # To Dos
 
 ### Assignments
-- Assignment 1 due by 11:59 PM on Monday 4/22
+- Assignment 1 due by 11:59 PM on Thursday 4/25
  
