@@ -1,0 +1,61 @@
+---
+title: "EDUC 645 Assignment 1"
+subtitle: "Unit 1"
+output: html_document
+---
+
+#### Submission Deadline
+
+April 25 (11:59 PM)
+
+#### Submission Format
+
+You are required to submit the following files:  
+
+ * .doc, .html, or .pdf file with your typed responses to the problems and any tables and figures you produce. 
+ * You must also submit the .Rmd or .R file you used to carry out data management tasks (element #1) and to render the tables and figures. 
+ 
+#### Background and Dataset
+
+The National Health and Nutrition Examination Survey (NHANES) is an annual household survey and health examination of about 5,000 participants across the US. NHANES uses a sophisticated methodology to produce a sample that provides information about the full US population, including historically underrepresented populations like racial and ethnic minorities. 
+
+Download the assignment dataset [here](https://uo-educ-quant.github.io/645/data/NHANES_data0910.RData). These data are from the 2009-10 NHANES survey. Below are the variables are of interest.
+
+Descriptive variables:
+
+ * `Age`: Age in years at screening of study participant.
+ * `Sex`: Assigned sex of study participant (Male or Female).
+ * `Education_level`: Educational level of study participant. Reported for participants aged 20 years or older.
+ 
+Outcome variables:
+
+ * `DepressionSymp`: Indicates whether participants reported experiencing depression symptoms several or more days per month (Yes or No). This outcome is reported only for participants who are 18 years or older.
+ * `AlcoholYear`: Estimated number of days over the preceding year that a study participant drank alcoholic beverages. Reported for participants aged 18 years or older.
+
+#### Assignment Requirements
+
+The goal of this assignment is to practice skills in exploring and manipulating dichotomous and count variables, and in assessing missingness. **Be sure to install and load the `mice` package.**
+
+**Your submission should include the following elements (% weight for grading):**
+
+1. Data handling (20%) 
+    + After importing the data set, perform data management tasks:
+      + Because education level was only assessed in participants 20 years or older, delete observations from participants under 20 at the time of the assessment.
+      + Check variables for missingness (after filtering by age). 
+      + Check whether the variables are in the right class: dichotomous and other categorical variables should be *factors*, and continuous and count variables should be *numeric* (num) or *integers* (int). If not, convert them to the right type. Also check that factor levels are in order, if appropriate (e.g., `Education_level` should move from lowest to highest education level).  
+
+2. Analytic sample description (40%)
+    + Produce a summary statistics table (Table 1), including median and interquartile range (IQR) for participant age, mean and standard deviation (SD) for count outcomes, and proportion of the sample with each level of each dichotomous/categorical variable.
+    + Produce a plot showing the proportion of participants with each level of `DepressionSymp`. Produce another plot showing the distribution of `AlcoholYear` (note that you may receive a warning that some observations are removed because of missingness). For both plots, be sure to provide a descriptive name to axes (i.e., do not label axis with only raw variable name). For the plot of the count variable, adjust the "binwidth" specification as needed to produce a reasonably smooth distribution. 
+    + Inspect missingness patterns. Include a missing data pattern plot in your submission.
+    + Write a short paragraph describing the sample, key variables, summary statistics, and your observations about the extent and patterns of missingness.
+
+4. Inspect missing data (20%)
+    + Impute missing data using `mice` and the `cart` imputation method. Examine a density plot for `AlcoholYear` and write a brief paragraph summarizing your observations about the consistency of imputations.
+    + Include density plot in submission.
+
+5. Tables and figures (20%)
+    + Must include Table 1 and plots for each outcome variable, a missing data pattern plot, and a density plot.
+    + Other tables and figures you think are helpful.
+
+

@@ -31,7 +31,10 @@ For each of the 3 assignments and the final project, you are required to submit 
 
 ## Assignments
 
-*To be posted*
+**Unit 1**:
+
+ * Due April 25
+ * [Assignment details](./assignments/assignment01_Sp24.html)
 
 
 
