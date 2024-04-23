@@ -26,11 +26,43 @@ class: center, middle, inverse, title-slide
 
 
 
+# Midway Student Experience Survey 
+
+Survey is now open and will close at 06:00 PM on Fri, Apr 26, 2024 PDT. 
+
+Access the survey via the UO Course Surveys tab on Canvas, or by logging into DuckWeb and clicking the link (not tab) titled Course Surveys on the Main Menu page. Then click "Open the Course Surveys site" and choose your course.  
+
+---
+# Unit Overview
+
+Week 1 (slide set #1)
+
+- Recap of dichotomous outcome concepts
+
+- Basic logistic regression model fit and interpretation
 
 
+--
+Week 2 (slide set #1)
+
+- Assessing logistic regression model fit and diagnostics
+
+
+--
+Week 3 (slide set #2)
+
+- Conducting logistic regression in nested (clustered) data
+
+
+--
+Week 4 (slide set #2)
+
+- Conducting logistic regression in longitudinal and missing data
+
+---
 # Dichotomous outcomes recap
 
-Dichotomous (or binary) outcomes are a broad group of outcomes that take on only two values. 
+Dichotomous (or binary) outcomes are a broad group of outcomes that can take only two values. 
 
 
 --
@@ -122,7 +154,7 @@ We can do this by dividing these two odds; in other words, a ratio. This ratio t
 `$$\ Active\ Participants: \frac{Probability\ of\ Having\ Diabetes}{Probability\ of\ Not\ Having\ Diabetes} = \frac{0.07}{0.93} = 0.075$$`
 
 ---
-# Odds ratio
+# Odds ratio recap
 
 We divide these odds to find our odds ratio (OR):
 
@@ -137,7 +169,7 @@ An odds ratio of 1 means the odds of having diabetes are the same for participan
 - So, compared with being active, being inactive is associated with higher odds of having diabetes.
   
 ---
-# Odds ratio
+# Odds ratio recap
 
 We can also flip the odds ratio if our question is focused on being active:
 
@@ -192,10 +224,6 @@ Instead we need an analysis method that we can use like the linear regression mo
 - There are a few options, but the most commonly used is &lt;span style = "color:green"&gt; logistic regression. &lt;/span&gt;
 
 
---
-- *Note:* Sometimes a standard linear regression model is used for dichotomous outcomes. This approach is called a *linear probability model (LPM)*, and some argue its interpretation is more straightforward than logistic regression. It does, however, violate several key assumptions of linear regression.
-
-
 ---
 class: middle, inverse
 
@@ -204,10 +232,24 @@ class: middle, inverse
 ---
 # Logistic regression
 
-Logistic regression is a form of the linear regression model you're familiar with. Both are part of the family of generalized linear models (GLMs).
+Logistic regression is a member of the same family of generalized linear models (GLMs) that includes linear regression.
 
 
 --
+Rather than providing an estimate of how changes in the IV result in incremental changes along a continuum of the outcome (less to more math ability), logistic regression tells us how changes in the IV result in incremental changes in the *chances of being in one of two states* (dead or alive, absent or present, have diabetes or not)
+
+
+--
+Because of this property, logistic regression is often used for **.blue[classification and accuracy]**. A common application is determining how accurate a screening tool is at classifying whether individuals are "high risk" or "low risk" (eg, for a certain cancer; high risk means they start receiving preventive measures at a younger age).
+
+
+--
+*Note:* Sometimes a standard linear regression model is used for dichotomous outcomes. This approach is called a **.blue[linear probability model (LPM)]**, and some argue its interpretation is more straightforward than logistic regression. It does, however, violate several key assumptions of linear regression.
+
+
+---
+# Logistic regression
+
 Remember that in linear regression, the (continuous) outcome variable responds in a linear way. That is, it behaves like a number line (0 in the center with negative numbers extending to the left and positive to the right).
 
 
@@ -355,6 +397,7 @@ Becomes...
 
  + `\(Y_i\)` is the number events of `\(n\)` observations. 
  + `\(p_i\)` is the probability of an event on a single observation. 
+
 
 ---
 class: middle, inverse
