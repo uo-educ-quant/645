@@ -1,0 +1,1007 @@
+---
+title: "Logistic Regression 1"
+subtitle: "EDUC 645 (Unit 2)"
+#author:
+#date: "`r format(Sys.time(), '%d %B %Y')`"
+output:
+  xaringan::moon_reader:
+    css: ['default', 'uo', 'ki-fonts', 'my_custom.css', 'xaringanthemer.css']
+    # self_contained: true
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{R, setup, include = F}
+library(pacman)
+p_load(NHANES, easystats, emmeans, DHARMa, ggeffects,
+       here, tidyverse, ggplot2, xaringan, knitr, kableExtra, foreign, broom, xaringanthemer, reshape2, lfe, arsenal, ggpubr, stargazer, fixest, gtsummary, huxtable, aod)
+
+i_am("slides/EDUC645_2_Logistic1.rmd")
+
+extra_css <- list(
+  ".red"   = list(color = "red"),
+  ".blue"  =list(color = "blue"),
+  ".green" = list(color = "#8bb174"),
+  ".purple" = list(color = "#6A5ACD"),
+  ".red-pink" = list(color= "#e64173"),
+  ".grey-light" = list(color= "grey70"),
+  ".slate" = list(color="#314f4f"),
+  ".small" = list("font-size" = "90%"))
+
+write_extra_css(css = extra_css, outfile = "my_custom.css")
+
+# Knitr options
+opts_chunk$set(
+  comment = "#>",
+  fig.align = "center",
+  fig.height = 5,
+  fig.width = 8,
+  warning = F,
+  message = F
+)
+
+NHANES_data1112 <- NHANES::NHANES %>% 
+  select(ID, SurveyYr, Gender, Age, AgeDecade, Race3, Education, Poverty, Diabetes, DaysMentHlthBad, Depressed, PhysActive, SleepTrouble, SleepHrsNight) %>% 
+  mutate(Race_Eth = as_factor(case_when(Race3 == "Mexican" | Race3 == "Hispanic" ~ "Hispanic/Latino",
+                                        TRUE ~ Race3)),
+         PhysActive = as_factor(case_when(PhysActive == "No" ~ "Inactive",
+                                          PhysActive == "Yes" ~ "Active")),
+         PhysActive = factor(PhysActive, levels = c("Active", "Inactive")),
+         DaysMHBad_most = as_factor(case_when(DaysMentHlthBad < 10 ~ "No",
+                                              DaysMentHlthBad >= 10 ~ "Yes")),
+         DaysMHBad_most = factor(DaysMHBad_most, levels = c("No", "Yes"))) %>% 
+  rename(Depress_Freq = Depressed, Sex = Gender, DaysMHBad_count = DaysMentHlthBad, Sleep_Trouble = SleepTrouble) %>% 
+  select(ID, SurveyYr, Age, Sex, Race_Eth, Diabetes, Depress_Freq, PhysActive, DaysMHBad_count, DaysMHBad_most, Sleep_Trouble, SleepHrsNight) %>%   
+  filter(SurveyYr == "2011_12", Age > 12) %>% 
+  filter(if_all(everything(), ~!is.na(.))) %>% 
+  select(-SurveyYr)
+
+```
+
+
+
+# Dichotomous outcomes recap
+
+Dichotomous (or binary) outcomes are a broad group of outcomes that take on only two values. 
+
+
+--
+- In a dataset, these may be represented as 0 or 1, or with names that correspond to two categories. 
+
+
+--
+The fact that the outcome can only be 0 or 1 (or two mutually exclusive categories) implies certain things about the meaning of the outcome.
+  
+
+--
+One implication is that the outcome describes the presence or the absence of a characteristic, or two states of being. 
+
+
+--
+- More specifically, a person can't possess *some* or *part* of the characteristic. Or, there isn't some "in-between" state of being (like "semi-alive").
+
+
+--
+- Sometimes, however, a study will "construct" a dichotomous variable out of a continuous one, or similarly, measure a continuous outcome dichotomously.
+
+
+---
+# Example data: NHANES
+
+NHANES (National Health and Nutrition Examination Study) is an annual US survey of about 5,000 children and adults. Participants answer an interview questionnaire and receive a physical examination, and data are collected on demographic characteristics, nutrition and physical activity, and physical and mental health. We'll look at a few variables initially:
+
+
+--
+`Diabetes` is whether or not (yes/no) a participant has been diagnosed with diabetes.
+
+`PhysActive` represents whether the "participant does moderate or vigorous-intensity sports, fitness or recreational activities" (see [here](https://cran.r-project.org/web/packages/NHANES/NHANES.pdf)). Participants answered "yes" or "no".
+
+`PhysActiveDays` is the number of days in a typical week that the participant does those activities. 
+
+---
+# Diabetes (No/Yes)
+
+```{r, fig.retina=3}
+NHANES_data1112 %>% 
+  ggplot(aes(Diabetes)) +
+  geom_bar(fill = c("yellow", "royalblue"), width = 0.5, alpha = 0.8) +
+  labs(x = "Has Diabetes",
+       y = "Number of Participants")
+```
+
+
+---
+# PhysActive (Inactive/Active)
+
+```{r, fig.retina=3}
+NHANES_data1112 %>% 
+  ggplot(aes(PhysActive)) +
+  geom_bar(fill = c("yellow", "royalblue"), width = 0.5, alpha = 0.8) +
+  labs(x = "Participates in Physical Activities",
+       y = "Number of Participants")
+```
+
+
+---
+# Odds ratio recap
+
+
+Maybe we're interested in whether there is a relationship between being physically active and having diabetes. 
+
+
+--
+- That means we're interested in comparing the odds of having diabetes among participants who are physically active to the odds of having diabetes among participants who are not physically active. 
+
+
+--
+We can do this by dividing these two odds; in other words, a ratio. This ratio tells us how much higher or lower the odds of the outcome are for one group compared with the other group. 
+
+
+--
+- We can calculate the odds just as we did before, but within the physically inactive group (`PhysActive` = Inactive) and the physically active group (`PhysActive` = Active): 
+
+
+
+$$\ Inactive\ Participants: \frac{Probability\ of\ Having\ Diabetes}{Probability\ of\ Not\ Having\ Diabetes} = \frac{0.14}{0.86} = 0.163$$
+
+
+$$\ Active\ Participants: \frac{Probability\ of\ Having\ Diabetes}{Probability\ of\ Not\ Having\ Diabetes} = \frac{0.07}{0.93} = 0.075$$
+
+---
+# Odds ratio
+
+We divide these odds to find our odds ratio (OR):
+
+$$\ OR = \frac{Odds\ of\ Inactive\ and\ Having\ Diabetes}{Odds\ of\ Active\ and\ Having\ Diabetes} = \frac{0.163}{0.075} = 2.17$$
+
+
+--
+An odds ratio of 1 means the odds of having diabetes are the same for participants who were active and those who were inactive. An odds ratio greater than 1 means inactive participants (the numerator) have greater odds of having diabetes than active participants. 
+
+
+--
+- So, compared with being active, being inactive is associated with higher odds of having diabetes.
+  
+---
+# Odds ratio
+
+We can also flip the odds ratio if our question is focused on being active:
+
+$$\ OR = \frac{Odds\ of\ Active\ and\ Having\ Diabetes}{Odds\ of\ Inactive\ and\ Having\ Diabetes} = \frac{0.075}{0.163} = 0.46$$
+
+
+--
+So, compared with being inactive, being active is associated with lower odds of having diabetes. 
+
+
+--
+Both interpretations are mathematically equivalent, but one might be preferred based on the research question or setting: 
+
+- If the interest is on protective factors for diabetes, then you might put the emphasis on being active ("Being active is associated with lower odds of diabetes") 
+  
+- If the focus is on risk factors for diabetes, then you might put the emphasis on being inactive ("Being inactive is associated with greater odds of diabetes") 
+
+
+---
+# An alternative to odds ratio?
+
+Instead of doing this, let's just divide the probability of having diabetes in each activity group. This will give us a risk ratio or relative risk (RR). It can be similar in magnitude to an odds ratio, especially when the probability of the outcome is low (just like how odds and probability can be similar). But, the RR has a somewhat different interpretation.
+
+
+--
+$$\ RR = \frac{Probability\ of\ Being\ Inactive\ and\ Having\ Diabetes}{Probability\ of\ Being\ Active\ and\ Having\ Diabetes} = \frac{0.14}{0.07} = 2.00$$
+
+- Inactive participants had a higher risk of having diabetes than active participants. Participants who were inactive were 2 times more likely to have diabetes than participants who were active.
+
+- Compared with being active, being inactive is associated with greater risk of diabetes. Inactive participants had 100% greater risk of having diabetes than active participants. 
+
+
+---
+# So, why use odds?
+
+What happens when we want to include *multiple* independent variables? These could be continuous, dichotomous, categorical, or a mix.
+
+
+--
+- This is necessary for many common research questions. For example: What are the odds of diabetes for inactive participants compared with active participants, controlling for participant age?
+
+
+--
+Hopefully, it's becoming clear that looking at anything more than a basic relationship between two dichotomous variables will not result in easily interpretable results (i.e., a single estimate of the relationship). 
+
+
+--
+Instead we need an analysis method that we can use like the linear regression model we're already familiar with, but that can accommodate the unique properties of dichotomous outcomes. 
+
+
+--
+- There are a few options, but the most commonly used is <span style = "color:green"> logistic regression. </span>
+
+
+--
+- *Note:* Sometimes a standard linear regression model is used for dichotomous outcomes. This approach is called a *linear probability model (LPM)*, and some argue its interpretation is more straightforward than logistic regression. It does, however, violate several key assumptions of linear regression.
+
+
+---
+class: middle, inverse
+
+# Using Logistic Regression
+
+---
+# Logistic regression
+
+Logistic regression is a form of the linear regression model you're familiar with. Both are part of the family of generalized linear models (GLMs).
+
+
+--
+Remember that in linear regression, the (continuous) outcome variable responds in a linear way. That is, it behaves like a number line (0 in the center with negative numbers extending to the left and positive to the right).
+
+
+--
+- If an increase in the independent variable is associated with an increase in the outcome, each unit increase in the independent variable results in an increase in the outcome by some amount. *Another* increase in the independent variable results in *another* increase in the outcome *by the same amount*.
+
+
+--
+- The same thing happens if the association is negative, except each unit increase in the independent variable results in a *decrease* in the outcome by some amount. We tell the difference between these situations by whether the model coefficient is positive or negative. If there were no relationship, the coefficient would be...0. 
+
+
+--
+Notice the two key features: Values can be positive or negative, which is needed to indicate the direction of effect, and change in the outcome is by a consistent magnitude, for every unit change in the independent variable. 
+
+
+--
+**Dichotomous outcomes don't naturally behave this way.**
+
+---
+# So, why use odds?
+
+We talked earlier about how the most intuitive way to describe a relationship between two dichotomous variables is a proportion (= probability). This was because it doesn't make sense to say that being more active means that a person has "less" diabetes.
+
+--
+- In the NHANES data, 14% of inactive participants had diabetes, compared with 7% of active participants. 
+
+
+--
+Despite having a more straightforward interpretation, probability does not behavior linearly (like a number line): It ranges only from 0 to 1. And, changes in the independent variable don't necessarily result in consistent changes in probability. 
+
+--
+- Odds have the same behavior, and they also don't range in value like a number line (remember, odds can't be less than 0).
+
+
+--
+So, if we want to be able to apply the same basic linear regression approach to a dichotomous outcome, we have to find some way to transform the outcome so that it behaves more like what the linear model is expecting.
+
+
+--
+Here is where *odds* (and therefore the odds ratio) becomes important. It turns out they have a very handy feature: Taking the <span style = "color:green"> logarithm </span>of odds *makes them behave linearly*.
+
+
+---
+# Relationship between probability, odds, and log odds
+
+We can easily see this strange relationship:
+
+```{r odds table, echo=FALSE}
+odds_table <- tibble(Log_odds = seq(from = -5, to = 5, by = 0.25),
+                     Odds = round(exp(Log_odds), 3),
+                     Odds_diff = Odds - lag(Odds),
+                     Prob1 = round(Odds/(1 + Odds), 3),
+                     Prob1_diff = Prob1 - lag(Prob1)) %>% 
+  select(Prob1, Prob1_diff, Odds, Odds_diff, Log_odds) %>% 
+  slice(17:25) %>% 
+  mutate(Odds_diff = case_when(Odds_diff < 0.09 ~ NA_real_,
+                          TRUE ~ Odds_diff),
+         Prob1_diff = case_when(Prob1_diff < 0.05 ~ NA_real_,
+                          TRUE ~ Prob1_diff))
+  
+knitr::kable(head(odds_table), format = 'html')
+```
+
+
+---
+# Revisiting the GLM
+
+Recall that our generalized linear regression model is written as:
+
+$$Y_{i} = \color{blue}{\beta_{0} + \beta_1 x_i } + \color{green}{\varepsilon_{i}}$$
+
+  + $Y_{i}$: Our outcome, with the subscript $i$ to emphasize that the model estimates the outcome for each of the $i$ units (students, schools, patients, etc.)
+
+  + $\color{blue}{\beta_{0}}$ and $\color{blue}{\beta_{1}}$: Our population parameters and regression coefficients to be estimated
+
+  + $\color{green}{\varepsilon_{i}}$: Our error/residual
+
+
+--
+The $\color{blue}{\text{logit link}}$ allows us to connect linear regression with logistic regression. 
+
+$$\log(\frac{p}{1-p})$$
+
+  + $p$: Probability of a given event
+
+
+---
+# Using Logit Link in Logistic Regression
+
+When we have an outcome variable that follows the binomial distribution, as does a dichotomous variable, we can insert the logit link function into our GLM model:
+
+
+--
+$$\color{green}{Y_i}=\beta_0 + \beta_1 x_i + \varepsilon_{i}$$
+
+
+--
+$$\color{green}{Y_i} = \color{blue}{\log(\frac{p_i}{1-p_i})}$$
+
+
+--
+Becomes...
+
+$$\color{blue}{\log(\frac{p_i}{1-p_i})}=\beta_0 + \beta_1 x_i +  \varepsilon_i$$
+
+ + $Y_i$ is the number events of $n$ observations. 
+ + $p_i$ is the probability of an event on a single observation. 
+
+---
+class: middle, inverse
+
+# Setting Up the Model
+
+---
+# Data check
+
+Before setting up the model, we should check that our variables are the correct types. Dichotomous variables should be *factors*, and continuous variables should be *numeric* (num) or *integers* (int).
+
+```{r}
+str(NHANES_data1112)
+```
+
+---
+# Data check
+
+Also check the *order* of factor levels (e.g., "No", "Yes"). We'll discuss reordering the levels in a few slides. 
+
+- For factors to be used as **independent variables**, the second level should be the desired "target" level (the state we want to focus our interpretation on, e.g., "Yes" indicating being physically active). The first level will be the reference level. 
+
+- For **dependent variables**, the second level should be the outcome of interest (e.g., "Yes" indicating having diabetes). 
+
+```{r}
+str(NHANES_data1112)
+```
+
+
+---
+# Logistic regression model estimates (continuous IV)
+
+`family` refers to the type of distribution, where we have defined `binomial`, and the `link` asks for the link function that we want to use, which is the `logit` for a logistic regression.
+
+We'll start with a continuous independent variable `Age`. Example question: Is increased age associated with greater odds of diabetes? 
+
+
+--
+*Regression equation components:*
+
+$$Diabetes = \color{orange}{(\beta_0)} + \color{green}{(\beta_1)}(Age)$$
+
+  + $\beta_1$: Change in *log odds* for 1 unit change in $X_i$
+
+  + <span style = "color:orange"> Intercept $(\beta_0)$: </span> Predicted outcome when X is equal to 0.
+
+  + <span style = "color:green"> Slope $(\beta_1)$: </span> Predicted increase in the outcome for every one unit increase in X.
+
+
+
+---
+# Output
+
+```{r}
+mod_1 <- glm(Diabetes ~ Age, data = NHANES_data1112,
+             family = binomial(link = "logit"))
+summary(mod_1)
+```
+
+
+---
+# Logistic regression model estimates (categorical IV)
+
+Or, as in our manual OR calculations: Do inactive participants have greater odds of diabetes than active participants? 
+
+Here we use our categorical activity variable `PhysActive`:
+
+```{r}
+mod_2 <- glm(Diabetes ~ PhysActive, data = NHANES_data1112,
+             family = binomial(link = "logit"))
+```
+
+---
+# Output
+
+```{r}
+summary(mod_2)
+```
+
+
+---
+# Logistic regression model estimates (categorical and continuous IV)
+
+Or, our question could be: Do inactive participants have greater odds of diabetes than active participants, controlling for age? 
+
+We then include both variables:
+
+```{r}
+mod_3 <- glm(Diabetes ~ PhysActive + Age, data = NHANES_data1112,
+             family = binomial(link = "logit"))
+```
+
+---
+# Output
+
+```{r}
+summary(mod_3)
+```
+
+
+---
+# Interpreting output
+
+Remember that the quantities the model is working in are *log odds*, but we want to be working in *odds* and *odds ratios*. To do this, we need to exponentiate our model parameters.
+
+- *Note:* An odds ratio from a multiple logistic regression model is referred to as an *adjusted odds ratio* (aOR).
+
+
+--
+The default output also doesn't provide us confidence intervals, which we need for interpreting how precise are results are. 
+
+
+--
+- For logistic models, we use what are called *profiled* confidence intervals. The standard CI you learned about last term (the Wald CI) is strongly dependent on the assumption of normality. The profiled CI is less sensitive to this assumption, and takes advantage of the same likelihood methods we use to estimate the model. 
+
+
+---
+# Interpreting output
+
+```{r}
+mod_3 %>% 
+      broom::tidy(exponentiate = TRUE, conf.int = TRUE)
+```
+
+---
+# Recoding levels of independent variable
+
+We can make `PhysActiveInactive` the reference level, so that our interpretation focuses on inactive participants ("Compared with active participants, inactive participants had...").
+
+
+```{r}
+NHANES_data1112 <- NHANES_data1112 %>% 
+  mutate(PhysActive_r = factor(PhysActive, 
+                               levels = c("Inactive", "Active")))
+
+mod_3_r <- glm(Diabetes ~ PhysActive + Age, data = NHANES_data1112,
+               family = binomial(link = "logit"))
+```
+
+
+---
+# Output
+
+```{r}
+mod_3_r %>% 
+  broom::tidy(exponentiate = TRUE, conf.int = TRUE)
+```
+
+
+---
+# Including an interaction
+
+We might also have a question like: For participants who report having poor mental health frequently (10 more days per month), does also being inactive increase their odds of diabetes?
+
+```{r}
+mod_3_int <- glm(Diabetes ~ PhysActive + Age + DaysMHBad_most + 
+                   PhysActive*DaysMHBad_most, 
+                 data = NHANES_data1112, 
+                 family = binomial(link = "logit"))
+```
+
+
+---
+# Output
+
+```{r}
+summary(mod_3_int)
+```
+
+---
+# Interpretting the interaction
+
+To interpret the interaction, we should first think about what the interaction means *structurally*. When we looked at physical activity alone, we had 2 odds: the odds of diabetes for *inactive participants* and the odds of diabetes for *active participants*. 
+
+
+--
+Because the interaction is significant, however, it suggests we actually have 4 different odds: 
+
+- Odds of diabetes for inactive participants *with frequently poor mental health*
+- Odds of diabetes for inactive participants *with infrequently poor mental health*
+- Odds of diabetes for active participants *with frequently poor mental health*
+- Odds of diabetes for active participants *with infrequently poor mental health*
+
+
+--
+These are, effectively, different subgroups in our data. If we think about the interaction this way, we can then easily understand what it means by looking at the outcome in each of these subgroups and then by comparing these subgroups. These comparisons are also called **contrasts**.
+
+
+---
+# Interpretting the interaction
+
+One approach is to look at the odds ratio we've already been discussing (odds of diabetes by physical activity level), but *within* the subgroups of participants with infrequently or frequently poor mental health. 
+
+First we create an object containing the outcome estimates across subgroups using the `emmeans` package (type = "response" exponentiates for odds ratios). 
+
+```{r}
+mod_3_int_emmeans <- emmeans(mod_3_int, ~ PhysActive*DaysMHBad_most, 
+                             type = "response")
+```
+
+Using this object, we request contrasts by the `DaysMHBad_most` variable, with an adjustment of the significance level for multiple comparisons...
+
+---
+# Interpretting the interaction
+
+```{r}
+contrast(mod_3_int_emmeans, "revpairwise", by = "DaysMHBad_most", 
+         adjust = "bonferroni") 
+```
+
+The significant interaction tells us that the relationship between physical activity and diabetes varies according to whether someone frequently has poor mental health. The contrasts tell us that after adjusting for age, inactive participants have significantly greater odds of diabetes than active participants - but this relationship is much more substantial for participants who report frequently having poor mental health compared with those who rarely have poor mental health.
+
+But it's still not exactly clear what this means, in part because we don't have a sense of what the magnitude of difference in the OR represents in real terms.
+
+---
+# Interpretting the interaction
+
+We can address this by moving the outcome back to probabilities. 
+
+
+--
+Here, though, we use probabilities of the outcome that are based on our model (i.e., predicted by the model). This gets around the statistical issues with analyzing probabilities (the model is still analyzing log odds) and allows us to get probabilities from "adjusted" and other more complex models.
+
+
+--
+```{r}
+# using the ggeffects package
+mod_3_int_probs <- ggeffect(mod_3_int,
+                            type = "fe",
+                            terms = c("PhysActive", "DaysMHBad_most"))
+```
+
+---
+# Interpretting the interaction
+
+```{r}
+print(mod_3_int_probs) # print() isn't usually needed
+```
+
+---
+# Interpretting the interaction
+
+```{r, fig.retina=3}
+plot(mod_3_int_probs)
+```
+
+
+---
+# Interpretting the interaction
+
+The plot gives us a clearer picture of what's going on:
+
+
+--
+Active participants regardless of poor mental health frequency, *and* inactive participants who rarely have poor mental health, all have about the same likelihood of diabetes (each probability is a similar magnitude, and the CIs don't overlap). 
+
+
+--
+But participants who are *both* inactive and often have poor mental health are much more likely to have diabetes. The implication of this is hard to know because our data are cross-sectional, but one possible explanation is that frequent poor mental health (e.g., depression) may correspond to poor dietary choices, and when paired with inactivity, results in the greatest risk of diabetes.
+
+
+--
+Also note the CIs don't overlap in the inactive subgroup. What does this mean?
+
+---
+# Predicted probabilities: A general tool?
+
+What if our interaction wasn't significant? We can get all the interpretive benefits of predicted probabilities for a model without an interaction. 
+
+
+--
+```{r}
+mod_3_probs <- ggeffect(mod_3,
+                        type = "fe",
+                        terms = c("PhysActive"))
+print(mod_3_probs)
+```
+
+
+--
+Here's another example of the importance of magnitude. Our OR was 1.60, which most people would describe as "not small" (but also "not large"). But here we see that diabetes is rare in both activity groups, and the OR of 1.60 corresponds to only a 4% difference in the probability of diabetes. 
+
+---
+# Predicted probabilities: A general tool?
+
+```{r}
+plot(mod_3_probs)
+```
+
+---
+class: middle, inverse
+
+# Model Comparison
+
+---
+# A few options for model comparison
+
+There are several tools we can use to assess how well a model fits our data, compared with other models. 
+
+
+--
+- As with linear regression, we consider a model with no independent variables (a "null" model) to be the worst-fitting model possible: If we include no variables to explain the outcome, then the model does a terrible job explaining the outcome (i.e., it fits very poorly).
+
+
+--
+Ideally, the independent variables to be added to the model should be selected with theoretical justification. After demonstrating improved fit with the added variables, it can be appropriate to modify the model to improve fit further (e.g., through including interactions or transformations of variables like squaring or cubing)
+
+
+--
+Often adding more variables improves the fit of a model, so we must be cautious about overcomplicating the model or improving fit just for fit's sake. 
+
+
+---
+# A few options for model comparison
+
+In linear regression, you learned about $R^2$ as one tool for model comparison. A similar concept in logistic regression is *deviance*, which is a measure of the goodness of model fit. By comparing deviance across models, we can gauge whether fit is improving with additional independent variables or other changes. 
+
+- Among models compared, the one with the lowest deviance is likely to be the best model for the given dataset. We can test the significance of the difference in deviance across models, so long as the models use exactly the same data.
+
+
+--
+A conceptually similar metric is AIC
+
+- Among models compared, the one with the lowest AIC is likely to be the best model for the given dataset.
+  
+
+---
+# Model Comparison
+
+**Before comparing models, ensure there is no missingness on all independent variables.**
+
+Deviance of the null model is always provided in the model output. So, to compare deviance between the null model and the model with `PhysActive`, we can just include that model in the `anova()` function:
+
+```{r}
+print(anova(mod_2, test ="Chisq"))
+```
+
+---
+# Model Comparison
+
+Since the model with `PhysActive` with significantly better fitting than the null model, we now can compare the deviance between that model and the model with both `PhysActive` and `Age`. We're no longer comparing against the null model, so now we need to be specific about the models we're comparing:
+
+```{r}
+print(anova(mod_2, mod_3, test ="Chisq"))
+```
+
+---
+# Model Comparison
+
+We can make similar comparisons with AIC. Here, we need to manually fit the null model because the model output does not include the null AIC value (unlike deviance). 
+
+```{r}
+mod_0 <- glm(Diabetes ~ 1, data = NHANES_data1112,
+             family = binomial(link = "logit"))
+mod_0$aic 
+```
+
+```{r}
+mod_2$aic 
+```
+
+
+```{r}
+mod_3$aic 
+```
+
+
+---
+class: middle, inverse
+
+# Model Estimation, Fit, and Significance
+
+---
+# Model estimation
+
+Regression models with dichotomous and other nonlinear outcomes are estimated with <span style = "color:green"> maximum likelihood estimation (MLE). </span> 
+
+
+--
+- MLE is a general method in statistics that provides flexibility in the types of outcomes we can analyze and offers more options for comparing models and for addressing missing data (we'll talk about these topics more as the course progresses).
+
+
+--
+MLE asks "If the model parameters were [some specific values], how well does that align with our data?" 
+
+
+--
+- During fitting, the model repeats this question for many combinations of parameter values, then selects the values that most closely match the data (which is the same as saying *most likely* to result in the data...or have the *maximum likelihood* of resulting in the data...or *maximum likelihood estimation*). 
+
+
+---
+# Model estimation
+
+For example, we have a large dataset in which diabetes is more common in inactive participants.
+
+
+--
+So, parameter estimates that are likeliest to reproduce our data are those that correspond to an odds ratio indicating *inactive* participants have *greater* odds of diabetes, accompanied by a fairly small amount of error/imprecision (i.e., a narrow confidence interval). 
+
+
+--
+By the same logic, parameter estimates that correspond to an odds ratio that indicates the opposite (*active* participants have greater odds of diabetes) and a large amount of error (wide confidence interval) are clearly not good matches to our data. They are *unlikely* solutions for our model. 
+
+
+--
+MLE is using the information we put into the model (the independent and dependent variables) to try to reproduce our data from a range of possible parameter estimates. If we put variables into the model that don't relate to variability in the outcome, it is difficult to identify parameter values that reproduce the data well.
+
+---
+# Significance and fit
+
+<span style = "color:green"> Are fit and significance related? </span>Think of the example of a well-fitting model that conclusively shows that an intervention is *ineffective.* This model includes an independent variable that corresponds to whether a participant was exposed to the intervention or not, and several other sociodemographic variables we want to control for. 
+
+
+--
+What would you expect the results of this model to look like (value of OR, width of CI, significance of p-value)?
+
+
+--
+- We'd expect a <span style = "color:green"> precisely estimated </span> <span style = "color:blue"> small or null effect size: </span> (e.g., an OR close to 1 accompanied by a narrow confidence interval). Because the OR is so close to 1, the CI might *include* 1, resulting in a nonsignificant result. 
+
+
+--
+In other words, exposure to the intervention results in two groups that have about the same odds of the outcome. This is very informative! A model could be exactly as well-fitting if the exposure to the intervention resulted in one group with greater odds of the outcome. 
+
+---
+# Significance and fit
+
+But now imagine that we first ran a model with *only* the intervention exposure variable. The OR could still suggest both intervention and nonintervention groups were similar in their odds of the outcome (so, no intervention effect), but this model had a poorer fit compared to the model with sociodemographic control variables. What does that mean? 
+
+
+--
+- It means that the model with sociodemographic variables explains more of the **total amount** of variability in the (probability of the) outcome in our dataset than the model with only the intervention exposure variable.
+
+
+--
+Explaining the variability in the outcome by intervention exposure is the main "portion" of variability in the data the we're interested in. But remember this is only part of the total amount of variability in the outcome. We can observe some sources of variability, others we can't, and some variability is purely by chance (i.e., random error).
+
+
+--
+- This is especially important when we appear to **have** an intervention effect, and we want to rule out other possible reasons why the outcome may vary. If there are other factors producing variation in the outcome (i.e., confounders), a better fitting model would be the model that includes those variables. 
+
+
+---
+# Bringing it together
+
+So, poor model fit does not necessarily equate to non-significance, and a well-fitting model can result in nonsignificant findings. If we bring all of these ideas together, we get a few general scenarios for better and worse model fit:
+
+
+--
+1. Outcome variation mostly results from observable sources and we've measured and included most major sources in our model...Best fit
+
+
+--
+2. Outcome variation mostly results from observable sources and we've measured and included some of the major sources (others were not measured, or measured but not included)...Better fit
+
+
+--
+3. Outcome variation mostly results from observable sources and we've not measured/included many of these sources, or most variability is from *unobservable* sources...Worse fit
+
+
+--
+4. We've included nothing related to the variability in our outcome (i.e., the null model)...Worst fit
+
+
+--
+<span style = "color:green"> Note that none of these is saying anything about significance! </span>We also want to stay mindful of *overfitting*, or pursuing better fit just for fit's sake. This is where theory and prior research come in: What factors, aside from intervention exposure, do we already know to be associated with the outcome?
+
+
+---
+class: middle, inverse
+
+# Assumptions and diagnostics
+
+---
+# Assession whether the model meets assumptions
+
+After selecting a best-fitting model, then we assess whether there are major violations of key logistic regression assumptions: 
+
+- Absence of multicollinearity and influential outliers
+
+- Model residuals are normally distributed
+
+- Linearity on the logit scale (particularly for continuous independent variables/covariates)
+
+
+--
+Note about sample size and diagnostic significance tests: Larger sample sizes give us more power. In the context of our hypothesis tests, this is an advantage because we want to detect the *presence* of something (an association, effect, etc). But for diagnostic tests, we are testing for the *absence* of something (outliers, non-normality, etc). 
+
+
+--
+- This means that when we have a large dataset, diagnostic tests can be oversensitive (i.e., they may be significant when there are actually not concerning outliers).
+
+---
+# Assumptions and diagnostics
+
+We can check multicollinearity visually using the `check_model()` function from the *performance* package.
+
+```{r, fig.retina=3}
+performance::check_model(mod_3, check = "vif")
+```
+
+---
+# Assumptions and diagnostics
+
+In generalized linear models like logistic regression, checking  normality of residuals can be challenging.
+
+- In linear regression, we anticipate that residuals will follow a normal distribution. In logistic regression, however, remember that we are dealing with probability (the probability of having the outcome (1) or not (0)), which doesn't follow a normal distribution. This means that raw residuals from logistic and similar models may appear non-normal even when the model is actually well-fitting. 
+
+
+--
+One solution is to "standardize" the residuals so they plot like residuals from a typical linear regression model. We can use these standardized residuals to check for normality of residuals and the presence of influential outliers. 
+
+
+--
+The first step is to use the *DHARMa* package to create an object containing the standardized residuals. Increasing the number of simulations (specifying n = 1000) helps to address the oversensitivity of the outlier test because of excess power. 
+
+```{r}
+mod_3_residuals <- simulateResiduals(mod_3, n = 1000)
+```
+
+
+--
+Then we plot the residuals...
+
+---
+# Assumptions and diagnostics
+
+```{r, fig.retina=3}
+plot(mod_3_residuals)
+```
+
+Again, the diagnostic tests are helpful but not definitive. We are looking for major deviations, particularly those that have a clear pattern...
+
+
+---
+# Assumptions and diagnostics
+
+An example of concerning results (using simulated data).
+
+```{r, echo=FALSE, eval=TRUE, fig.retina=3}
+testData = createData(sampleSize = 200, overdispersion = 1.5, family = poisson())
+fittedModel <- glm(observedResponse ~  Environment1 , family = "poisson", data = testData)
+
+simulationOutput <- simulateResiduals(fittedModel = fittedModel)
+plot(simulationOutput)
+```
+
+
+---
+# Assumptions and diagnostics
+
+For linearity, we are especially interested in whether the relationship between each *continuous* independent variable and the *log odds* of our outcome is linear. If not, we might try transforming the variable (e.g., squaring it), among other approaches. 
+
+```{r, eval=FALSE, fig.retina=3}
+NHANES_data1112 %>%
+  group_by(Age) %>%    
+  count(Diabetes) %>%
+  mutate(prop = n/sum(n)) %>%
+  filter(Diabetes == "Yes") %>%
+  summarise(log_odds = log(prop/(1 - prop))) %>%
+  ggplot(aes(x = Age, y = log_odds)) +
+  geom_point() +
+  ylab("Log odds of diabetes")
+```
+
+
+---
+# Assumptions and diagnostics
+
+For linearity, we are especially interested in whether the relationship between each *continuous* independent variable and the *log odds* of our outcome is linear. If not, we might try transforming the variable (e.g., squaring it), among other approaches. 
+
+```{r, echo=FALSE, fig.retina=3}
+NHANES_data1112 %>%
+  group_by(Age) %>%    
+  count(Diabetes) %>%
+  mutate(prop = n/sum(n)) %>%
+  filter(Diabetes == "Yes") %>%
+  summarise(log_odds = log(prop/(1 - prop))) %>%
+  ggplot(aes(x = Age, y = log_odds)) +
+  geom_point() +
+  ylab("Log odds of diabetes")
+```
+
+---
+# Assumptions and diagnostics
+
+We can add a "local" (or loess) regression line that will show the most detail about linearity (or lack of).
+
+```{r, eval=FALSE, fig.retina=3}
+NHANES_data1112 %>%
+  group_by(Age) %>%    
+  count(Diabetes) %>%
+  mutate(prop = n/sum(n)) %>%
+  filter(Diabetes == "Yes") %>%
+  summarise(log_odds = log(prop/(1 - prop))) %>%
+  ggplot(aes(x = Age, y = log_odds)) +
+  geom_point() +
+  ylab("Log odds of diabetes") +
+  geom_smooth(method = "loess") # Adds a loess regression line
+```
+
+---
+# Assumptions and diagnostics
+
+We can add a "local" (or loess) regression line that will show the most detail about linearity (or lack of).
+
+```{r, echo=FALSE, fig.retina=3}
+NHANES_data1112 %>%
+  group_by(Age) %>%    
+  count(Diabetes) %>%
+  mutate(prop = n/sum(n)) %>%
+  filter(Diabetes == "Yes") %>%
+  summarise(log_odds = log(prop/(1 - prop))) %>%
+  ggplot(aes(x = Age, y = log_odds)) +
+  geom_point() +
+  ylab("Log odds of diabetes") +
+  geom_smooth(method = "loess") # Adds a loess regression line
+```
+
+---
+# Assumptions and diagnostics
+
+Or, we can add a linear regression line that will give us an overall sense of linearity. 
+
+```{r, eval=FALSE, fig.retina=3}
+NHANES_data1112 %>%
+  group_by(Age) %>%    
+  count(Diabetes) %>%
+  mutate(prop = n/sum(n)) %>%
+  filter(Diabetes == "Yes") %>%
+  summarise(log_odds = log(prop/(1 - prop))) %>%
+  ggplot(aes(x = Age, y = log_odds)) +
+  geom_point() +
+  ylab("Log odds of diabetes") +
+  geom_smooth(method = "lm") # Adds a linear regression line
+```
+
+---
+# Assumptions and diagnostics
+
+Or, we can add a linear regression line that will give us an overall sense of linearity. 
+
+```{r, echo=FALSE, fig.retina=3}
+NHANES_data1112 %>%
+  group_by(Age) %>%    
+  count(Diabetes) %>%
+  mutate(prop = n/sum(n)) %>%
+  filter(Diabetes == "Yes") %>%
+  summarise(log_odds = log(prop/(1 - prop))) %>%
+  ggplot(aes(x = Age, y = log_odds)) +
+  geom_point() +
+  ylab("Log odds of diabetes") +
+  geom_smooth(method = "lm") # Adds a linear regression line
+```
+
+
+
+
+
+
+
+

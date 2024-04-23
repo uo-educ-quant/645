@@ -40,7 +40,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 **Lab Worksheets**
 
- * [Week 1 worksheet](./labs/educ645_lab1.Rmd) | [Week 2 worksheet](./labs/educ645_lab2.Rmd)
+ * [Week 1 worksheet](./labs/educ645_lab1.Rmd) | [Week 2 worksheet](./labs/educ645_lab2.Rmd) | [Week 3 worksheet](./labs/educ645_lab3.Rmd)
 
 **Assignment**:
 
@@ -72,8 +72,8 @@ knitr::opts_chunk$set(echo = TRUE)
 
 *Slides to be added*
 
- * [Lecture slides]()
- * [Dataset]()
+ * Lecture slides: [Logistic Regression 1](./slides/EDUC645_2_Logistic1.html)
+ * Datasets: [NHANES_data1112](./data/NHANES_data1112.RData) 
 
 **Assignment**
 

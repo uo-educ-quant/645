@@ -18,6 +18,8 @@ navbar:
       href: ./slides/EDUC645_1_Nested_Data.html
     - text: "Missing Data"
       href: ./slides/EDUC645_1_Missing_Data.html
+    - text: "Logistic Regression 1"
+      href: ./slides/EDUC645_2_Logistic1.html
   - text: R Project Workflow
     href: workflow.html
     
