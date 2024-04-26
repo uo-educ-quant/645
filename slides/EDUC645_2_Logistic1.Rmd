@@ -449,7 +449,7 @@ summary(mod_1)
 ---
 # Logistic regression model estimates (categorical IV)
 
-Or, as in our manual OR calculations: Do inactive participants have greater odds of diabetes than active participants? 
+Or, as in the manual OR calculations: Do inactive participants have greater odds of diabetes than active participants? 
 
 Here we use our categorical activity variable `PhysActive`:
 
