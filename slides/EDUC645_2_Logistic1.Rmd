@@ -278,7 +278,7 @@ Because of this property, logistic regression is often used for **.blue[classifi
 ---
 # Logistic regression
 
-Remember that in linear regression, the (continuous) outcome variable responds in a linear way. That is, it behaves like a number line (0 in the center with negative numbers extending to the left and positive to the right).
+Remember that in linear regression, the estimate of the relationship (beta) behaves in a linear way. That is, it follows a number line (0 in the center with negative numbers extending to the left and positive to the right).
 
 
 --
@@ -418,7 +418,7 @@ str(NHANES_data1112)
 ---
 # Logistic regression model estimates (continuous IV)
 
-`family` refers to the type of distribution, where we have defined `binomial`, and the `link` asks for the link function that we want to use, which is the `logit` for a logistic regression.
+`family` refers to the type of distribution, where we have specified `binomial`, and the `link` asks for the link function that we want to use, which is the `logit` for a logistic regression.
 
 We'll start with a continuous independent variable `Age`. Example question: Is increased age associated with greater odds of diabetes? 
 
@@ -521,7 +521,7 @@ NHANES_data1112 <- NHANES_data1112 %>%
   mutate(PhysActive_r = factor(PhysActive, 
                                levels = c("Inactive", "Active")))
 
-mod_3_r <- glm(Diabetes ~ PhysActive + Age, data = NHANES_data1112,
+mod_3_r <- glm(Diabetes ~ PhysActive_r + Age, data = NHANES_data1112,
                family = binomial(link = "logit"))
 ```
 
@@ -538,7 +538,7 @@ mod_3_r %>%
 ---
 # Including an interaction
 
-We might also have a question like: For participants who report having poor mental health frequently (10 more days per month), does also being inactive increase their odds of diabetes?
+We might also have a question like: Does the relationship between activity and diabetes differ for participants who report having poor mental health frequently (10 more days per month), compared with participants who report few poor mental health days?
 
 ```{r}
 mod_3_int <- glm(Diabetes ~ PhysActive + Age + DaysMHBad_most + 
@@ -558,7 +558,7 @@ summary(mod_3_int)
 ---
 # Interpretting the interaction
 
-To interpret the interaction, we should first think about what the interaction means *structurally*. When we looked at physical activity alone, we had 2 odds: the odds of diabetes for *inactive participants* and the odds of diabetes for *active participants*. 
+To interpret an interaction, we should first think about what the interaction implies about the structure of our data. When we looked at physical activity alone, we had 2 odds: the odds of diabetes for *inactive participants* and the odds of diabetes for *active participants*. 
 
 
 --
