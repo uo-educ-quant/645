@@ -691,7 +691,11 @@ There are several tools we can use to assess how well a model fits our data, com
 
 
 --
-Ideally, the independent variables to be added to the model should be selected with theoretical justification. After demonstrating improved fit with the added variables, it can be appropriate to modify the model to improve fit further (e.g., through including interactions or transformations of variables like squaring or cubing)
+Ideally, the independent variable and covariates to be added to the model should be selected with theoretical justification. 
+
+
+--
+After demonstrating improved fit with the added variables, it can be appropriate to modify the model to improve fit further (e.g., through including interactions or transformations of variables like squaring or cubing)
 
 
 --
@@ -701,13 +705,13 @@ Often adding more variables improves the fit of a model, so we must be cautious 
 ---
 # A few options for model comparison
 
-In linear regression, you learned about $R^2$ as one tool for model comparison. A similar concept in logistic regression is *deviance*, which is a measure of the goodness of model fit. By comparing deviance across models, we can gauge whether fit is improving with additional independent variables or other changes. 
+In linear regression, you learned about $R^2$ as a tool for model comparison. In logistic regression, the model's **.blue[deviance]** can be used to gauge whether model fit is improving with the addition of independent variables or other changes. 
 
 - Among models compared, the one with the lowest deviance is likely to be the best model for the given dataset. We can test the significance of the difference in deviance across models, so long as the models use exactly the same data.
 
 
 --
-A conceptually similar metric is AIC
+A conceptually similar metric is **.blue[AIC]** 
 
 - Among models compared, the one with the lowest AIC is likely to be the best model for the given dataset.
   
@@ -754,46 +758,6 @@ mod_3$aic
 
 
 ---
-class: middle, inverse
-
-# Model Estimation, Fit, and Significance
-
----
-# Model estimation
-
-Regression models with dichotomous and other nonlinear outcomes are estimated with <span style = "color:green"> maximum likelihood estimation (MLE). </span> 
-
-
---
-- MLE is a general method in statistics that provides flexibility in the types of outcomes we can analyze and offers more options for comparing models and for addressing missing data (we'll talk about these topics more as the course progresses).
-
-
---
-MLE asks "If the model parameters were [some specific values], how well does that align with our data?" 
-
-
---
-- During fitting, the model repeats this question for many combinations of parameter values, then selects the values that most closely match the data (which is the same as saying *most likely* to result in the data...or have the *maximum likelihood* of resulting in the data...or *maximum likelihood estimation*). 
-
-
----
-# Model estimation
-
-For example, we have a large dataset in which diabetes is more common in inactive participants.
-
-
---
-So, parameter estimates that are likeliest to reproduce our data are those that correspond to an odds ratio indicating *inactive* participants have *greater* odds of diabetes, accompanied by a fairly small amount of error/imprecision (i.e., a narrow confidence interval). 
-
-
---
-By the same logic, parameter estimates that correspond to an odds ratio that indicates the opposite (*active* participants have greater odds of diabetes) and a large amount of error (wide confidence interval) are clearly not good matches to our data. They are *unlikely* solutions for our model. 
-
-
---
-MLE is using the information we put into the model (the independent and dependent variables) to try to reproduce our data from a range of possible parameter estimates. If we put variables into the model that don't relate to variability in the outcome, it is difficult to identify parameter values that reproduce the data well.
-
----
 # Significance and fit
 
 <span style = "color:green"> Are fit and significance related? </span>Think of the example of a well-fitting model that conclusively shows that an intervention is *ineffective.* This model includes an independent variable that corresponds to whether a participant was exposed to the intervention or not, and several other sociodemographic variables we want to control for. 
@@ -809,6 +773,7 @@ What would you expect the results of this model to look like (value of OR, width
 
 --
 In other words, exposure to the intervention results in two groups that have about the same odds of the outcome. This is very informative! A model could be exactly as well-fitting if the exposure to the intervention resulted in one group with greater odds of the outcome. 
+
 
 ---
 # Significance and fit
@@ -1041,6 +1006,14 @@ NHANES_data1112 %>%
   geom_smooth(method = "lm") # Adds a linear regression line
 ```
 
+
+---
+# To Dos
+
+
+### Quiz
+
+- Unit 2 quiz available Friday 5/3 and due by 11:59 PM on Monday 5/6.
 
 
 
