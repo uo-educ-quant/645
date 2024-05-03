@@ -51,7 +51,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ---
 
-## Unit 2: Dichotomous Outcomes
+## Unit 2: Analyzing Dichotomous Outcomes
 
 **Topics**: 
 
@@ -86,7 +86,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ---
 
-## Unit 3: Count Outcomes
+## Unit 3: Analyzing Count Outcomes
 
 **Topics**: 
 
