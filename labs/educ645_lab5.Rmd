@@ -1,0 +1,207 @@
+---
+title: "Week 5 Lab"
+author: "(add your name)"
+date: "4/30/2023"
+output:
+  html_document:
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+
+# Don't make a change here
+knitr::opts_chunk$set(echo = TRUE,
+                      warning = FALSE,
+                      message = FALSE)
+```
+
+## *Goals:*
+
+1. Visualizing dichotomous outcomes with continuous and categorical explanatory variables,
+2. Conduct a basic logistic regression with continuous estimates 
+3. Conduct a basic logistic regression with categorical estimates 
+
+*Instruction to work on this sheet:* In each code chunk, you can find some code being taken out purposely and left with three dots instead. Your task is to first uncomment the code line, replace the three dots with the code you would write, and then run the code to proceed.
+
+*Data*
+For this lab, we will be using the prinicpal.csv dataset available [here](https://raw.githubusercontent.com/uo-educ-quant/645/master/data/principal.csv). 
+Read in the dataset in the environment and save it to the object prin.
+
+*Brief variable descriptions:*
+
+ - *schid*, identifier variable for School ID
+ 
+ - *stuid*, identifier variable for Student ID
+ 
+ - *pfemale*, an indicator variable telling if the school principal is a female or not (1 - is a female, 0 - not a female)
+ 
+ - *page*, age of the principal
+ 
+ - *sfemale*, an indicator variable telling if the student is a female or not (1 - is a female, 0 - not a female)
+ 
+ - *match*, an indicator variable telling if the student and principal self-reported sex matched or not (1 - matched, 0 - didn't match)
+ 
+ - *attention*, standardized attention score for the student
+ 
+ - *affective*, an indicator variable telling if the student considers the principal to be affective (1 - Yes, - 0 No)
+
+### Topic: Dichotomous outcomes and basic logistic regression
+
+### Packages and Data 
+
+```{r}
+# Load necessary packages 
+library(tidyverse)
+#install.packages("broom")
+library(broom)
+library(modelsummary)
+
+# read in dataset and select variables of interest 
+# Quotes are important around URL link for data retrieval 
+
+prin <- read.csv("https://raw.githubusercontent.com/uo-educ-quant/645/master/data/principal.csv") %>% 
+  drop_na() #this is a simplistic way of dealing with missing data, we simply drop observations with missingness on any row
+```
+
+**RQ1: What is the relationship between principal age _page_ and student response of principal affectiveness _affective_ (1 - Yes, - 0 No)?**
+
+**Task 1: Prepare your dataset for analysis by selecting the relevant variables, and transforming to factor wherever needed.**
+
+```{r}
+# check that variables are the correct types. 
+# Dichotomous variables should be factors, and continuous variables should be numeric (num) or integers (int).
+# factor all categorical variable
+
+
+str(prin)
+
+# convert any dichotomous variable to factor
+ prin$pfemale <- factor(prin$pfemale,
+                    levels = c(0,1),
+                    labels = c("male", "female"))
+ 
+  prin$sfemale <- factor(prin$sfemale,
+                    levels = c(0,1),
+                    labels = c("male", "female"))
+  prin$affective <- factor(prin$affective, 
+                           levels = c(0,1),
+                           labels = c("Not Affective", "Affective"))
+
+str(prin)
+```
+
+```{r}
+# Some raw data visualization
+# The outcome variable
+ggplot(prin, aes(x = affective)) +
+    geom_bar(fill = "cornflowerblue", width = 0.5)+
+    theme_minimal() +
+    labs(x = "Student Response",
+         y = "Number of students")
+
+# The outcome and predictor variables
+ggplot(prin, aes(x = page, fill = affective)) +
+    geom_density(alpha = 0.4)+
+    theme_minimal() +
+    labs(x = "Principal Age",
+         y = "Distribution",
+         fill = "Student perception")
+    
+```
+
+
+### Logistic regression model estimates (continuous IV)
+
+```{r}
+# family refers to the type of distribution, where we have specified binomial, and the link asks for the link function that we want to use, which is the logit for a logistic regression.
+
+# mod_1 <- glm(y ~ x, data = ...,
+#              family = binomial(link = "logit"))
+
+## this gives the output in log odds unit
+# summary(mod_1)
+
+## this gives the output in odds ratio units
+
+# mod_1 %>%
+#       broom::tidy(exponentiate = TRUE, conf.int = TRUE)
+```
+
+
+```{r}
+## A neater table        
+# modelsummary(mod_1,
+#              exponentiate = TRUE,
+#              statistic = "conf.int",
+#              stars = TRUE,
+#              coef_omit = "(Intercept)",
+#              coef_rename = c('page' = 'Principal Age'),
+#              gof_omit = "AIC|BIC|Log.Lik|RMSE",
+#              title = "Relationship between ....",
+#              notes = "Data ....")
+```
+
+**Interpret the result of the logistics regression model**
+
+
+### Logistic regression model estimates (categorical IV)
+
+**RQ2: Do female principals have greater odds of being consider _affective_ (1 - Yes, - 0 No) than male principals?**
+
+```{r}
+# Visualize the outcome and predictor variables in raw data
+ggplot(prin, aes(x = pfemale, fill = affective)) +
+    geom_bar(position = "dodge")+
+    theme_minimal() +
+    labs(x = "Principal Gender",
+         y = "Number of students",
+         fill = "Student-report of Principal")
+```
+
+
+```{r}
+# mod_2 <- glm(y ~ x, data = ...,
+#              family = binomial(link = "logit"))
+
+# mod_2 %>%
+#       broom::tidy(exponentiate = TRUE, conf.int = TRUE)
+```
+```{r}
+# Let's make a neater table
+# modelsummary(mod_2,
+#              exponentiate = TRUE, 
+#              statistic = "conf.int",
+#              stars = TRUE,
+#              coef_rename = c('pfemalefemale' = 'Female'),
+#              gof_omit = "AIC|BIC|Log.Lik|RMSE",
+#              title = "Relationship between ....",
+#              notes = "Data ....")
+```
+
+**Interpret the result of the logistics regression model**
+
+### Logistic regression model estimates (categorical and continuous IV)
+
+**RQ3: Do female principals have greater odds of being considered affective than male principals, controlling for principal age?**
+
+```{r}
+# mod_3 <- glm(y ~ x + covariate, data =...,
+#              family = binomial(link = "logit"))
+
+# mod_3 %>% 
+#       broom::tidy(exponentiate = TRUE, conf.int = TRUE)
+```
+
+```{r}
+# Make a neater table for Model 3 using modelsummary
+```
+
+**Interpret the result of the logistics regression model**
+
+*interpret results*
+
+
+
+
+
+

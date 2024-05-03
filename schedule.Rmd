@@ -70,10 +70,12 @@ knitr::opts_chunk$set(echo = TRUE)
  
 **Lecture**:
 
-*Slides to be added*
-
  * Lecture slides: [Logistic Regression 1](./slides/EDUC645_2_Logistic1.html)
  * Datasets: [NHANES_data1112](./data/NHANES_data1112.RData) 
+
+**Lab Worksheets**
+
+ * [Week 5 worksheet](./labs/educ645_lab5.Rmd)
 
 **Assignment**
 
