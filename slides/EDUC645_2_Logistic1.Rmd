@@ -53,10 +53,21 @@ NHANES_data1112 <- NHANES::NHANES %>%
                                               DaysMentHlthBad >= 10 ~ "Yes")),
          DaysMHBad_most = factor(DaysMHBad_most, levels = c("No", "Yes"))) %>% 
   rename(Depress_Freq = Depressed, Sex = Gender, DaysMHBad_count = DaysMentHlthBad, Sleep_Trouble = SleepTrouble) %>% 
-  select(ID, SurveyYr, Age, Sex, Race_Eth, Diabetes, Depress_Freq, PhysActive, DaysMHBad_count, DaysMHBad_most, Sleep_Trouble, SleepHrsNight) %>%   
+  select(ID, SurveyYr, Age, Sex, Race_Eth, Diabetes, Depress_Freq, PhysActive, DaysMHBad_count, DaysMHBad_most, 
+         Sleep_Trouble, SleepHrsNight) %>%   
   filter(SurveyYr == "2011_12", Age > 12) %>% 
   filter(if_all(everything(), ~!is.na(.))) %>% 
   select(-SurveyYr)
+
+NHANES_data0910 <- NHANES::NHANES %>% 
+  select(ID, SurveyYr, Age, Gender, Education, Depressed, AlcoholYear) %>% 
+  filter(SurveyYr == "2009_10", !is.na(Age), !is.na(Gender), !is.na(Depressed)) %>% 
+  mutate(Education_level = factor(Education, levels = c("High School", "8th Grade", "9 - 11th Grade", "Some College", "College Grad")),
+         Depression_level = case_when(Depressed == "None" ~ "No",
+                                      Depressed == "Several" | Depressed == "Most" ~ "Yes"),
+         Depression_level = as.character(Depression_level)) %>% 
+  rename(Sex = Gender) %>% 
+  select(ID, Age, Sex, Education, Education_level, Depression_level, AlcoholYear)
 
 ```
 
@@ -1016,8 +1027,98 @@ NHANES_data1112 %>%
 - Unit 2 quiz available Friday 5/3 and due by 11:59 PM on Monday 5/6.
 
 
+---
+# Factors: Levels vs labels
+
+```{r}
+NHANES_data0910 %>% 
+  select(ID, Education_level, Depression_level, AlcoholYear) %>% 
+  head()
+```
 
 
+---
+# Factors: Levels vs labels
 
+
+Using "levels ="
+
+```{r}
+NHANES_data0910_levels <- NHANES_data0910 %>% 
+  mutate(Education_level = factor(Education_level, 
+                                  levels = c("8th Grade", "9 - 11th Grade", 
+                                             "High School", "Some College", 
+                                             "College Grad")))
+```
+
+
+--
+Using "labels ="
+```{r}
+NHANES_data0910_labels <- NHANES_data0910 %>% 
+  mutate(Education_level = factor(Education_level, 
+                                  labels = c("8th Grade", "9 - 11th Grade", 
+                                             "High School", "Some College", 
+                                             "College Grad")))
+```
+
+
+---
+# Factors: Levels vs labels
+
+
+--
+```{r}
+# Raw data
+str(NHANES_data0910$Education_level)
+```
+
+You can see the first observation in the data is getting the first level (1), by default.
+
+--
+```{r}
+# Using "levels ="
+str(NHANES_data0910_levels$Education_level)
+```
+
+High school is now the 3rd level, as desired. 
+
+--
+```{r}
+# Using "labels ="
+str(NHANES_data0910_labels$Education_level)
+```
+
+First observation still gets coded as level 1, only with a different label.  
+
+
+---
+# Factors: Levels vs labels
+
+```{r}
+NHANES_data0910_labels %>% 
+  select(ID, Education_level, Education) %>% 
+  head()
+```
+
+
+---
+# Missing Data
+
+```{r, echo = FALSE, results='hide'}
+NHANES_data0910 <- NHANES_data0910 %>% 
+  filter(Age >= 20) %>% 
+  mutate(Depression_level = factor(Depression_level),
+         Education_level = factor(Education_level, levels = c("8th Grade", "9 - 11th Grade", 
+                                                              "High School", "Some College", "College Grad")))
+
+library(mice)
+
+NHANES_data0910_imp <- mice(NHANES_data0910, method = "cart", m = 20, maxit = 10)
+```
+
+```{r, fig.retina=3}
+densityplot(NHANES_data0910_imp)
+```
 
 
