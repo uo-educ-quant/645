@@ -51,7 +51,7 @@ The goal of this assignment is to examine whether there is an association betwee
 3. Methods and analysis (60%)
     + Model the relationship between physical activity and depression symptoms using a logistic regression model.
       + Fit alternative models with age, and age and sex, included as control variables (covariates), and compare model fit to determine the best fitting model.
-      + Check for critical assumptions and outliers of the best-fitting model. Produce and interpret a **plot of the linearity of the relationship between age (a continuous covariate) and the log odds of the depression outcome (Figure 1)**.
+      + Check for critical assumptions and outliers of the best-fitting model. Produce and interpret a **plot of the linearity of the relationship between age (a continuous covariate) and the log odds of the depression outcome (Figure 1)**. Include a fitted linear regression (lm) line in the plot to aid interpretation. 
       + After identifying the best-fitting model and carrying out diagnostics on the model, test an interaction between sex and physical activity. If the interaction is significant, consider the model with the interaction to be your final model. If the interaction is nonsignificant, consider the best-fitting model without the interaction to be your final model. 
     + Produce a **results table (Table 2)** that includes the final model results.
     + Produce a **plot of predicted probabilities (Figure 2)** for the final model.
