@@ -42,7 +42,7 @@ The goal of this assignment is to examine whether there is an association betwee
 2. Analytic sample summary statistics (10%)
     + Load the dataset and perform basic data management.
       + Because depression was only assessed in adult participants, delete observations from participants under 18 at the time of the assessment.  
-      + Check whether the variables are the right class: dichotomous variables should be *factors*, and continuous variables should be *numeric* (num) or *integers* (int). If not, convert them to the right type. Also check that factor levels are in the correct order for analysis. 
+      + Check whether the variables are the right class: dichotomous variables should be *factors*, and continuous variables should be *numeric* (num) or *integers* (int). If not, convert them to the right type. Also check that factor levels are in the desired order for analysis. 
       + Check whether there is any missingness present in the dataset.
     + Produce a **summary statistics table (Table 1)**, including median and IQR of participant age, proportion of the sample that is female, proportion reporting physical activity, and proportion reporting depression symptoms.
     + Write a short paragraph describing the sample, key variables, and the summary statistics.
