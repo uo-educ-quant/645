@@ -75,12 +75,12 @@ knitr::opts_chunk$set(echo = TRUE)
 
 **Lab Worksheets**
 
- * [Week 5 worksheet](./labs/educ645_lab5.Rmd)
+ * [Week 5 worksheet](./labs/educ645_lab5.Rmd) | [Week 6 worksheet](./labs/educ645_lab6.Rmd) 
 
 **Assignment**
 
  * Due May 16
- * [Assignment details]()
+ * [Assignment details](./assignments/assignment02_Sp24.html)
  
 **Unit Quiz**: Due May 6 (Canvas)
 

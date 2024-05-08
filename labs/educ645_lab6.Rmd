@@ -1,0 +1,266 @@
+---
+title: "Week 6 Lab"
+author: "(add your name)"
+date: "5/7/2023"
+output:
+  html_document:
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+
+# Don't make a change here
+knitr::opts_chunk$set(echo = TRUE,
+                      warning = FALSE,
+                      message = FALSE,
+                      eval = FALSE)
+```
+
+*Goals:*
+
+1. Conduct a basic logistic regression with an interaction
+2. Visualize the interaction effect
+3. Compare and interpret model fits.
+
+*Instruction to work on this sheet:* In each code chunk, you can find some code being taken out purposely and left with three dots instead. Your task is to first uncomment the code line, replace the three dots with the code you would write, and then run the code to proceed.
+
+*Data*
+For this lab, we will be using the prinicpal.csv dataset available [here](https://raw.githubusercontent.com/uo-educ-quant/645/master/data/principal.csv). 
+Read in the dataset in the environment and save it to the object prin.
+
+*Brief variable descriptions:*
+
+ - *schid*, identifier variable for School ID
+ 
+ - *stuid*, identifier variable for Student ID
+ 
+ - *pfemale*, an indicator variable telling if the school principal is a female or not (1 - is a female, 0 - not a female)
+ 
+ - *page*, age of the principal
+ 
+ - *sfemale*, an indicator variable telling if the student is a female or not (1 - is a female, 0 - not a female)
+ 
+ - *match*, an indicator variable telling if the student and principal self-reported sex matched or not (1 - matched, 0 - didn't match)
+ 
+ - *attention*, standardized attention score for the student
+ 
+ - *affective*, an indicator variable telling if the student considers the principal to be affective (1 - Yes, - 0 No)
+ 
+ 
+ 
+### Topic: Interaction Effects in Logistic Regression and Comparing Models
+
+### Packages and Data 
+
+```{r}
+# Load necessary packages 
+library(tidyverse)
+#install.packages("broom")
+library(broom)
+#install.packages("modelsumary")
+library(modelsummary)
+#install.packages("ggeffects")
+library(ggeffects)
+
+# read in dataset and select variables of interest 
+# Quotes are important around URL link for data retrieval 
+
+prin <- read.csv("https://raw.githubusercontent.com/uo-educ-quant/645/master/data/principal.csv") %>% 
+  drop_na() #this is a simplistic way of dealing with missing data, we simply drop observations with missingness on any row
+```
+
+### Guided Practice
+
+**Task 1: Prepare your dataset for analysis by selecting the relevant variables, and transforming to factor wherever needed.**
+
+```{r}
+# check that variables are the correct types. 
+# Dichotomous variables should be factors, and continuous variables should be numeric (num) or integers (int).
+# factor all categorical variable
+
+
+str(prin)
+
+# convert any dichotomous variable to factor
+ prin$pfemale <- factor(prin$pfemale,
+                    levels = c(0,1),
+                    labels = c("Male", "Female"))
+ 
+  prin$sfemale <- factor(prin$sfemale,
+                    levels = c(0,1),
+                    labels = c("Male", "Female"))
+  
+  prin$affective <- factor(prin$affective, 
+                           levels = c(0,1),
+                           labels = c("Not Affective", "Affective"))
+  prin$match <- factor(prin$match, 
+                           levels = c(0,1),
+                           labels = c("Didn't match", "Matched"))
+
+str(prin)
+```
+
+**Task 2: Visualize the variables and run the analysis**
+
+**RQ1: What is the relationship between student-principal gender matching and student perception of principal affectiveness? Is the relationship different by student gender?**
+
+*What is the main effect RQ and the interaction effect RQ here? Identify the predictor, outcome, and moderation variables.*
+
+*Answer here:*
+
+```{r}
+# Some raw data visualization
+# The outcome variable
+ggplot(prin, aes(x = ...)) + #replace the dots with the outcome variable
+    geom_bar(fill = "cornflowerblue", width = 0.5)+
+    theme_minimal() +
+    labs(x = "Student Response",
+         y = "Number of students")
+
+# The outcome and predictor variables
+ggplot(prin, aes(x = ..., fill = ...)) + #replace the x with predictor variable and fill with outcome variable
+    geom_bar(position = "dodge")+
+    theme_minimal() +
+    labs(x = "...",
+         y = "...",
+         fill = "...")
+
+ggplot(prin, aes(x = ..., fill = ...)) + #replace the x with predictor variable and fill with outcome variable
+    geom_bar()+
+    theme_minimal() +
+  facet_wrap(~...)+ #replace with the moderator variable
+    labs(x = "Principal Age",
+         y = "Distribution",
+         fill = "Student perception")
+    
+```
+
+
+```{r}
+# family refers to the type of distribution, where we have specified binomial, and the link asks for the link function that we want to use, which is the logit for a logistic regression.
+
+rq1_mod1 <- glm(affective ~ match, data =prin,
+             family = binomial(link = "logit"))
+
+rq1_mod2 <- glm(affective ~ match*sfemale, data =prin,
+             family = binomial(link = "logit"))
+
+
+## A neater table        
+modelsummary(list('Main Effect Model' = rq1_mod1, 'Interaction Effect Model' = rq1_mod2),
+             exponentiate = TRUE,
+             statistic = "conf.int",
+             stars = TRUE,
+             coef_omit = "(Intercept)",
+             coef_rename = c('page' = 'Principal Age'),
+             gof_omit = "AIC|BIC|Log.Lik|RMSE",
+             title = "Relationship between ....",
+             notes = "Data ....")
+```
+
+**Task 3: Visualize Model results**
+
+```{r}
+# Visualize main effect model
+
+rq_mod1_probs <- ggeffect(rq1_mod1,
+                        type = "fe",
+                        terms = c("match")) 
+
+print(rq_mod1_probs)
+plot(rq_mod1_probs)
+
+rq_mod1_probs  <- ggeffect(rq1_mod2,
+                                 type = "fe",
+                                 terms = c("sfemale", "match"))
+plot(rq_mod1_probs)
+```
+
+**Interpret the result of the logistic regression model**
+
+**Task4: Model Comparison**
+
+**Inspect model deviance**
+
+```{r}
+
+#First, compare the base model (no interaction) with the null model
+print(anova(rq1_mod1,test="Chisq"))
+
+#Next, compare our base model with our interaction model
+print(anova(rq1_mod1,rq1_mod2,test="Chisq"))
+
+```
+
+**Inspect Model AIC**
+
+```{r}
+mod_0 <- glm(affective ~ 1,
+             data = prin,
+             family = binomial(link = "logit"))
+
+mod_0$aic
+rq1_mod1$aic
+rq1_mod1$aic
+```
+
+**Interpret the results of our model comparison. Which model is the best fitting model?**
+
+### Try Yourself
+
+**RQ2: Does the relationship between student perception of principal affectiveness and principal age vary by student-principal gender match?**
+
+```{r}
+# Main effect model
+rq2_mod1 <- glm(affective ~ ..., data = prin,
+             family = binomial(link = "logit"))
+
+# Interaction effect model
+rq2_mod2 <- glm(affective ~ ...*..., data = prin,
+             family = binomial(link = "logit"))
+
+## A neater table        
+modelsummary(list("Main effect" = rq2_mod1, "Interaction Effect" = rq2_mod2),
+             exponentiate = TRUE,
+             statistic = "conf.int",
+             stars = TRUE,
+             coef_omit = "(Intercept)",
+             coef_rename = c('page' = 'Principal Age'),
+             gof_omit = "AIC|BIC|Log.Lik|RMSE",
+             title = "Relationship between ....",
+             notes = "Data ....")
+```
+
+
+```{r}
+# Visualize the outcome and predictor variables in raw data
+
+rq2_mod1_probs <- ggeffect(rq2_mod1,
+                        type = "fe",
+                        terms = c("...")) 
+
+print(rq2_mod1_probs)
+plot(rq2_mod1_probs)
+
+rq2_mod2_probs <- ggeffect(rq2_mod2,
+                                 type = "fe",
+                                 terms = c("...", "..."))
+plot(rq2_mod2_probs)
+```
+*What is the answer to the research question?*
+
+
+```{r}
+
+#First, compare the base model (no interaction) with the null model
+print(anova(rq2_mod1,test="Chisq"))
+
+#Next, compare our base model with our interaction model
+print(anova(rq2_mod1,rq2_mod2,test="Chisq"))
+
+```
+
+*Which model is better?*
+
+
+

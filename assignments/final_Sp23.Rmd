@@ -65,7 +65,7 @@ The goal of this component is to examine whether there is a relationship between
     + Produce a results table (Table 2) that includes the model results and model fit statistics. 
     + If the interaction is significant, include a plot (Figure 1) of predicted values (using `ggeffects::ggeffect()`) to facilitate interpretation. 
 
-4. Discussions and conclusions (20%)
+4. Discussion and conclusions (20%)
     + Write 2-3 paragraphs summarizing your results, describing whether (and to what extent) the results address your research question, and relating your findings back to the broader evidence base. If the interaction with verbal reasoning ability is significant, be sure to discuss potential implications of this moderating relationship. 
     + Describe potential limitations of your data and methods.
 

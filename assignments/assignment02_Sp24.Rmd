@@ -1,18 +1,18 @@
 ---
-title: "EDUC 645 Assignment 1"
-subtitle: "Unit 1: Dichotomous Outcomes and Logistic Regression"
+title: "EDUC 645 Assignment 2"
+subtitle: "Dichotomous Outcomes and Logistic Regression"
 output: html_document
 ---
 
 #### Submission Deadline
 
-April 26 (11:59 PM)
+May 16 (11:59 PM)
 
 #### Submission Format
 
 You are required to submit the following files:  
 
- * .doc, .html, or .pdf file with your typed responses to the problems and any tables and figures you produce. 
+ * .doc, .html, or .pdf file with your typed responses and any tables and figures you produce. If any references are cited, a reference list must be included and formatted in APA or AMA style.
  * If you used R to create tables and/or figures in the above doc/html/pdf file, you must also submit the .Rmd or .R file you used to render the tables and figures. 
  
 #### Background and Dataset
@@ -21,10 +21,10 @@ Available evidence suggests that regular exercise can help to improve depression
 
 The National Health and Nutrition Examination Survey (NHANES) is an annual household survey and health examination of about 5,000 participants across the US. NHANES uses a sophisticated methodology to produce a sample that provides information about the full US population, including historically underrepresented populations like racial and ethnic minorities. 
 
-Download the assignment dataset [here](https://uo-educ-quant.github.io/645/data/NHANES_data_Assign1.RData). These data are from the 2009-10 NHANES survey. For our purposes, we will use a simplified version of the dataset (N = 4,136) that can be treated like a simple random sample of the US population. The following variables are of interest:
+Download the assignment dataset [here](https://uo-educ-quant.github.io/645/data/NHANES_data_Assign1.RData). These data are from the 2009-10 NHANES survey. For our purposes, we will use a reduced version of the dataset (N = 4,136) that can be treated like a simple random sample of the US population. The following variables are of interest:
 
  * `Age`: Age in years at screening of study participant.
- * `Sex`: Assigned sex of study participant (Male or Female).
+ * `Sex`: Female or Male (self-reported).
  * `PhysActive`: Indicates whether participant does moderate or vigorous-intensity sports, fitness, or recreational activities (Yes or No).
  * `DepressionSymp`: Indicates whether participants reported experiencing depression symptoms several or more days per month (Yes or No). This outcome is reported only for participants who are 18 years or older.
 
@@ -38,28 +38,27 @@ The goal of this assignment is to examine whether there is an association betwee
     + Read over the literature reviews linked in the background section, and other relevant studies you might identify, and provide a 1-2 paragraph summary of existing evidence on the relationship between physical activity and depression symptoms. 
     + After reviewing the available evidence, restate the research question in your own words. 
 
+
 2. Analytic sample summary statistics (10%)
     + Load the dataset and perform basic data management.
       + Because depression was only assessed in adult participants, delete observations from participants under 18 at the time of the assessment.  
       + Check whether the variables are the right class: dichotomous variables should be *factors*, and continuous variables should be *numeric* (num) or *integers* (int). If not, convert them to the right type. Also check that factor levels are in the correct order for analysis. 
-    + Produce a summary statistics table (Table 1), including median participant age, proportion of the sample that is female, proportion reporting physical activity, and proportion reporting depression symptoms.
+      + Check whether there is any missingness present in the dataset.
+    + Produce a **summary statistics table (Table 1)**, including median and IQR of participant age, proportion of the sample that is female, proportion reporting physical activity, and proportion reporting depression symptoms.
     + Write a short paragraph describing the sample, key variables, and the summary statistics.
- 
-3. Methods and analysis (50%)
+
+
+3. Methods and analysis (60%)
     + Model the relationship between physical activity and depression symptoms using a logistic regression model.
       + Fit alternative models with age, and age and sex, included as control variables (covariates), and compare model fit to determine the best fitting model.
-      + Check for critical assumptions and outliers of the best-fitting model.
+      + Check for critical assumptions and outliers of the best-fitting model. Produce and interpret a **plot of the linearity of the relationship between age (a continuous covariate) and the log odds of the depression outcome (Figure 1)**.
+      + After identifying the best-fitting model and carrying out diagnostics on the model, test an interaction between sex and physical activity. If the interaction is significant, consider the model with the interaction to be your final model. If the interaction is nonsignificant, consider the best-fitting model without the interaction to be your final model. 
+    + Produce a **results table (Table 2)** that includes the final model results.
+    + Produce a **plot of predicted probabilities (Figure 2)** for the final model.
     + Write a paragraph describing your model selection process and diagnostics results.
-    + Write a paragraph stating the results of your best-fitting model.
-    + Produce a results table that includes the model results and model fit statistics.
+    + Write a paragraph stating the results of your final (best-fitting) model. Interpret the model results in terms of odds ratios as well as predicted probabilities.
 
 
 4. Discussion and conclusions (20%)
     + Write 1-2 paragraphs summarizing your results, describing whether (and to what extent) the results address your research question, and relating your findings back to the broader evidence base. 
-
-
-5. References, tables, and figures (10%)
-    + Must include references, Table 1, and Table 2.
-    + Other tables and figures you think are helpful.
-
 

@@ -349,21 +349,22 @@ display: none;
 
 
 <h1 class="title toc-ignore">EDUC 645 Assignment 2</h1>
-<h3 class="subtitle">Unit 2: Count Outcomes and Poisson Regression</h3>
+<h3 class="subtitle">Dichotomous Outcomes and Logistic Regression</h3>
 
 </div>
 
 
 <div id="submission-deadline" class="section level4">
 <h4>Submission Deadline</h4>
-<p>May 12 (11:59 PM)</p>
+<p>May 16 (11:59 PM)</p>
 </div>
 <div id="submission-format" class="section level4">
 <h4>Submission Format</h4>
 <p>You are required to submit the following files:</p>
 <ul>
-<li>.doc, .html, or .pdf file with your typed responses to the problems
-and any tables and figures you produce.</li>
+<li>.doc, .html, or .pdf file with your typed responses and any tables
+and figures you produce. If any references are cited, a reference list
+must be included and formatted in APA or AMA style.</li>
 <li>If you used R to create tables and/or figures in the above
 doc/html/pdf file, you must also submit the .Rmd or .R file you used to
 render the tables and figures.</li>
@@ -371,70 +372,57 @@ render the tables and figures.</li>
 </div>
 <div id="background-and-dataset" class="section level4">
 <h4>Background and Dataset</h4>
-<p>Educational attainment is generally lower for people with limited
-economic resources and social capital. Compared with college graduates,
-individuals who have not graduated high school or obtained a college
-degree are more likely to experience poorer physical and mental health
-outcomes. Opportunities that can be afforded by post-secondary education
-– including higher income, greater economic stability, and improved
-quality of life – may directly influence health outcomes by increasing
-access to preventative health care and reducing life stress and exposure
-to unhealthy environmental conditions, among other mechanisms. See <a href="https://uo-educ-quant.github.io/645/articles/Duncan_2017.pdf">Duncan
-2017</a>, <a href="https://uo-educ-quant.github.io/645/articles/Friesen_2022.pdf">Friesen
-2022</a>, and <a href="https://uo-educ-quant.github.io/645/articles/Hair_2015.pdf">Hair
-2015</a> for further discussion.</p>
-<p><a href="https://uo-educ-quant.github.io/645/articles/Case_Deaton_2017.pdf">Case
-and Deaton</a> have proposed that multigenerational economic and social
-disadvantage also have indirect effects on health and mortality by
-creating environments that are hostile to economic advancement, social
-connectedness, and socioemotional wellbeing. These conditions, they
-argue, result in the marked increase in overdoses, suicides, and
-alcohol-related mortality among adults with low educational attainment –
-outcomes they describe as <em>deaths of despair</em>.</p>
-<p>A number of studies have found greater burden of alcohol misuse among
-those with lower socioeconomic status <a href="https://uo-educ-quant.github.io/645/articles/Probst_2015.pdf">see
-Probst et al 2015 for a review</a>. At the same time, some research
-(e.g., <a href="https://uo-educ-quant.github.io/645/articles/Assari_Lankarani_2017.pdf">Assari
-and Lankarani, 2017</a>) has suggested that college-educated adults have
-higher rates of alcohol use than adults with lower educational
-attainment, potentially due to greater availability of financial and
-other resources that enable more frequent drinking.</p>
-<p>Download the assignment dataset <a href="https://uo-educ-quant.github.io/645/data/NHANES_data_Assign2.RData">here</a>.
-These data are from the 2011-12 NHANES survey. For our purposes, we will
-use a simplified version of the dataset that can be treated like a
-simple random sample of the US population. The following variables are
-of interest:</p>
+<p>Available evidence suggests that regular exercise can help to improve
+depression symptoms (see literature reviews <a href="https://doi.org/10.1186/s12889-020-09323-y">here</a> and <a href="https://uo-educ-quant.github.io/645/articles/Kandola_2019.pdf">here</a>).
+In general, randomized controlled trials (RCTs) provide the strongest
+evidence about whether an intervention is effective. Once RCTs show that
+an intervention is effective, however, large and well-conducted
+observational studies can provide insights into the generalizability of
+RCT findings. In other words, if a rigorously conducted survey study in
+the population of interest demonstrates an association between exercise
+and depression symptoms that is consistent with the findings of earlier
+RCTs, then this suggests the RCT findings may have broad
+applicability.</p>
+<p>The National Health and Nutrition Examination Survey (NHANES) is an
+annual household survey and health examination of about 5,000
+participants across the US. NHANES uses a sophisticated methodology to
+produce a sample that provides information about the full US population,
+including historically underrepresented populations like racial and
+ethnic minorities.</p>
+<p>Download the assignment dataset <a href="https://uo-educ-quant.github.io/645/data/NHANES_data_Assign1.RData">here</a>.
+These data are from the 2009-10 NHANES survey. For our purposes, we will
+use a reduced version of the dataset (N = 4,136) that can be treated
+like a simple random sample of the US population. The following
+variables are of interest:</p>
 <ul>
-<li><code>AlcoholYear</code>: Estimated number of days over the
-preceding year that a study participant drank alcoholic beverages.
-Reported for participants aged 18 years or older.</li>
-<li><code>Education_level</code>: Educational level of study
-participant: <code>High school or less</code> (i.e., no college degree)
-or <code>Graduated college</code> Reported for participants aged 20
-years or older.</li>
 <li><code>Age</code>: Age in years at screening of study
 participant.</li>
-<li><code>Sex</code>: Assigned sex of study participant
-(<code>Male</code> or <code>Female</code>).</li>
+<li><code>Sex</code>: Female or Male (self-reported).</li>
+<li><code>PhysActive</code>: Indicates whether participant does moderate
+or vigorous-intensity sports, fitness, or recreational activities (Yes
+or No).</li>
+<li><code>DepressionSymp</code>: Indicates whether participants reported
+experiencing depression symptoms several or more days per month (Yes or
+No). This outcome is reported only for participants who are 18 years or
+older.</li>
 </ul>
 </div>
 <div id="assignment-requirements" class="section level4">
 <h4>Assignment Requirements</h4>
-<p>The goal of this assignment is to examine whether there is a
-relationship between educational attainment (independent variable) and
-alcohol use frequency (number of drinking days in the preceding year;
-dependent variable) among NHANES participants - and if so, whether the
-relationship is consistent with prior research.</p>
+<p>The goal of this assignment is to examine whether there is an
+association between physical activity (independent variable) and
+frequent depression symptoms (dependent variable) among NHANES
+participants, and if so, whether the relationship is consistent with
+prior research.</p>
 <p><strong>Your submission should include the following elements (%
 weight for grading):</strong></p>
 <ol style="list-style-type: decimal">
 <li>Research significance (10%)
 <ul>
-<li>Read over the studies and literature reviews linked in the first and
-third paragraphs of the background section, and other relevant studies
-you might identify, and provide a 1-2 paragraph summary of existing
-evidence on the relationship between educational attainment and alcohol
-use.</li>
+<li>Read over the literature reviews linked in the background section,
+and other relevant studies you might identify, and provide a 1-2
+paragraph summary of existing evidence on the relationship between
+physical activity and depression symptoms.</li>
 <li>After reviewing the available evidence, restate the research
 question in your own words.</li>
 </ul></li>
@@ -442,63 +430,58 @@ question in your own words.</li>
 <ul>
 <li>Load the dataset and perform basic data management.
 <ul>
-<li>Because education level was only assessed in participants 20 years
-or older, delete observations from participants under 20 at the time of
-the assessment.<br />
+<li>Because depression was only assessed in adult participants, delete
+observations from participants under 18 at the time of the
+assessment.<br />
 </li>
 <li>Check whether the variables are the right class: dichotomous
-independent variables should be <em>factors</em>, and continuous and
-count variables should be <em>numeric</em> (num) or <em>integers</em>
-(int). If not, convert them to the right type. Also check that factor
-levels are in the preferred order for analysis.</li>
+variables should be <em>factors</em>, and continuous variables should be
+<em>numeric</em> (num) or <em>integers</em> (int). If not, convert them
+to the right type. Also check that factor levels are in the correct
+order for analysis.</li>
+<li>Check whether there is any missingness present in the dataset.</li>
 </ul></li>
-<li>Produce a summary statistics table (Table 1), including medians of
-continuous and count variables and proportions of categorical
-variables.</li>
+<li>Produce a <strong>summary statistics table (Table 1)</strong>,
+including median and IQR of participant age, proportion of the sample
+that is female, proportion reporting physical activity, and proportion
+reporting depression symptoms.</li>
 <li>Write a short paragraph describing the sample, key variables, and
 the summary statistics.</li>
 </ul></li>
-<li>Methods and analysis (50%)
+<li>Methods and analysis (60%)
 <ul>
-<li>Model the relationship between education level and the number of
-days that participants drank alcohol in the preceding year.
+<li>Model the relationship between physical activity and depression
+symptoms using a logistic regression model.
 <ul>
-<li>Compare Poisson and negative binomial models (with
-<code>Education_level</code> as the only independent variable) and
-select the best-fitting model type.</li>
-<li>Once you have selected a model type, fit and compare alternative
-models with age, and age and sex, included as covariates.</li>
-<li>Then, explore an interaction between sex and education level, given
-research that suggests alcohol use and related outcomes can differ by
-sex.</li>
+<li>Fit alternative models with age, and age and sex, included as
+control variables (covariates), and compare model fit to determine the
+best fitting model.</li>
 <li>Check for critical assumptions and outliers of the best-fitting
-model.</li>
+model. Produce and interpret a <strong>plot of the linearity of the
+relationship between age (a continuous covariate) and the log odds of
+the depression outcome (Figure 1)</strong>.</li>
+<li>After identifying the best-fitting model and carrying out
+diagnostics on the model, test an interaction between sex and physical
+activity. If the interaction is significant, consider the model with the
+interaction to be your final model. If the interaction is
+nonsignificant, consider the best-fitting model without the interaction
+to be your final model.</li>
 </ul></li>
+<li>Produce a <strong>results table (Table 2)</strong> that includes the
+final model results.</li>
+<li>Produce a <strong>plot of predicted probabilities (Figure
+2)</strong> for the final model.</li>
 <li>Write a paragraph describing your model selection process and
 diagnostics results.</li>
-<li>Write a paragraph stating the results of your best-fitting model
-(including predicted counts).</li>
-<li>Produce a results table (Table 2) that includes the model results
-and model fit statistics.</li>
-<li>If the interaction is significant, include a plot (Figure 1) of
-predicted counts to facilitate interpretation.</li>
+<li>Write a paragraph stating the results of your final (best-fitting)
+model. Interpret the model results in terms of odds ratios as well as
+predicted probabilities.</li>
 </ul></li>
 <li>Discussion and conclusions (20%)
 <ul>
 <li>Write 1-2 paragraphs summarizing your results, describing whether
 (and to what extent) the results address your research question, and
 relating your findings back to the broader evidence base.</li>
-<li>Describe potential limitations of your methods, including the use of
-cross-sectional data to examine the association between educational
-attainment and alcohol use. If the test for zero inflation was
-significant, discuss potential reasons why there might be an excessive
-amount of zero counts in the data.</li>
-</ul></li>
-<li>References, tables, and figures (10%)
-<ul>
-<li>Must include references, Table 1, and Table 2. Figure 1 should be
-included if interaction is significant.</li>
-<li>Other tables and figures you think are helpful.</li>
 </ul></li>
 </ol>
 </div>

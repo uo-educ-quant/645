@@ -59,7 +59,7 @@ The goal of this assignment is to examine whether there is a relationship betwee
     + If the interaction is significant, include a plot (Figure 1) of predicted counts to facilitate interpretation. 
 
 
-4. Discussions and conclusions (20%)
+4. Discussion and conclusions (20%)
     + Write 1-2 paragraphs summarizing your results, describing whether (and to what extent) the results address your research question, and relating your findings back to the broader evidence base. 
     + Describe potential limitations of your methods, including the use of cross-sectional data to examine the association between educational attainment and alcohol use. If the test for zero inflation was significant, discuss potential reasons why there might be an excessive amount of zero counts in the data. 
 
