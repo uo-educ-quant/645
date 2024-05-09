@@ -71,7 +71,7 @@ knitr::opts_chunk$set(echo = TRUE)
 **Lecture**:
 
  * Lecture slides: [Logistic Regression 1](./slides/EDUC645_2_Logistic1.html)
- * Datasets: [NHANES_data1112](./data/NHANES_data1112.RData) 
+ * Datasets: [NHANES_data1112](./data/NHANES_data1112.RData) | [add_health_miss](./data/add_health_miss.RData) 
 
 **Lab Worksheets**
 
