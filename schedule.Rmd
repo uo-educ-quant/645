@@ -70,8 +70,8 @@ knitr::opts_chunk$set(echo = TRUE)
  
 **Lecture**:
 
- * Lecture slides: [Logistic Regression 1](./slides/EDUC645_2_Logistic1.html)
- * Datasets: [NHANES_data1112](./data/NHANES_data1112.RData) | [add_health_miss](./data/add_health_miss.RData) 
+ * Lecture slides: [Logistic Regression 1](./slides/EDUC645_2_Logistic1.html) | [Logistic Regression 2](./slides/EDUC645_2_Logistic2.html)
+ * Datasets: [NHANES_data1112](./data/NHANES_data1112.RData) | [add_health_miss](./data/add_health_miss.RData) | [seda](./data/seda.RData) | [popular](./data/popular.RData) | [respire](./data/respire.RData) 
 
 **Lab Worksheets**
 

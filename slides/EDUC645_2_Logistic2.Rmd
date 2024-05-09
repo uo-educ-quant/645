@@ -1,0 +1,904 @@
+---
+title: "Logistic Regression 2"
+subtitle: "EDUC 645 (Unit 2)"
+#author: "TBD"
+#date: "`r format(Sys.time(), '%d %B %Y')`"
+output:
+  xaringan::moon_reader:
+    css: ['default', 'uo', 'ki-fonts', 'my_custom.css', 'xaringanthemer.css']
+    # self_contained: true
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+  editor_options: 
+  chunk_output_type: console
+---
+
+```{R, setup, include = F}
+library(pacman)
+p_load(easystats, emmeans, DHARMa, ggeffects, haven,
+       here, tidyverse, ggplot2, xaringan, knitr, kableExtra, foreign, broom, xaringanthemer, reshape2, DiagrammeR, lme4,
+       performance, lmerTest, gtsummary, mice, mitml)
+
+i_am("slides/EDUC645_2_Logistic2.rmd")
+
+extra_css <- list(
+  ".red"   = list(color = "red"),
+  ".blue"  =list(color = "blue"),
+  ".green" = list(color = "#8bb174"),
+  ".purple" = list(color = "#6A5ACD"),
+  ".red-pink" = list(color= "#e64173"),
+  ".grey-light" = list(color= "grey70"),
+  ".slate" = list(color="#314f4f"),
+  ".small" = list("font-size" = "90%"))
+
+write_extra_css(css = extra_css, outfile = "my_custom.css")
+
+# Knitr options
+opts_chunk$set(
+  comment = "#>",
+  fig.align = "center",
+  fig.height = 5,
+  fig.width = 8,
+  warning = F,
+  message = F
+)
+
+seda <- read_csv(here::here("data", "seda_oregon.csv")) %>%
+  as_tibble() %>% 
+  filter(subject == "mth") %>% 
+  select(-subject) %>% 
+  mutate(grade = as_factor(recode(grade, '3' = "Grade 3", '4' = "Grade 4", '5' = "Grade 5", '6' = "Grade 6")))
+
+popular <- haven::read_sav(file ="https://github.com/MultiLevelAnalysis/Datasets-third-edition-Multilevel-book/blob/master/chapter%202/popularity/SPSS/popular2.sav?raw=true") %>% 
+  as_tibble() %>% 
+  select(pupil:popteach) %>% 
+  mutate(sex = as_factor(case_when(sex == 1 ~ "Female",
+                                   sex == 0 ~ "Male"))) 
+
+respire <- geepack::respiratory %>% 
+  as_tibble() %>% 
+  mutate(outcome = as_factor(case_when(outcome == 1 ~ "Yes", 
+                                       outcome == 0 ~ "No")),
+         visit = as_factor(case_when(visit == 1 ~ "Baseline",
+                                     visit == 2 ~ "F1",
+                                     visit == 3 ~ "F2",
+                                     visit == 4 ~ "F3")),
+         age.c = datawizard::standardize(age, center = TRUE, scale = FALSE),
+         treat = case_when(treat == "P" ~ "Treatment", 
+                           treat == "A" ~ "Placebo"),
+         assignment = treat) %>% 
+  select(-baseline, -treat)
+
+load(url("https://uo-educ-quant.github.io/645/data/add_health_miss.RData"))
+add_health_miss <- add_health_final_miss %>% 
+  as_tibble()
+```
+
+class: middle, inverse
+
+# Logistic regression with missing data
+
+
+---
+# Add Health 
+
+Add Health is a longitudinal survey of a nationally representative sample of over 20,000 adolescents who were aged from 12-20 during the first wave (1995) and aged from 18-26 and from 24-32 when the third (2001) and fourth (2008) waves took place. Variables in our dataset include:
+
+ * `id`: Participant ID.
+ * `sex`: Assigned sex of participant (`Female` or `Male`).
+ * `gpa`: Participant GPA.
+ * `ever_smoke`: Dummy variable coded one for participants who ever smoked.
+
+
+--
+**.blue[Is academic performance associated with smoking status during adolescence?]**
+
+
+
+---
+# Examine missingness
+
+First, let's make `ever_smoke` a factor:
+
+```{r}
+add_health_miss <- add_health_final_miss %>% 
+  mutate(ever_smoke_f = case_when(ever_smoke == 0 ~ "No",
+                                  ever_smoke == 1 ~ "Yes"),
+         ever_smoke_f = factor(ever_smoke_f, levels = c("No", "Yes"))) %>% 
+  select(-ever_smoke)
+```
+
+
+--
+Then examine missingness:
+
+```{r}
+missMethods::count_NA(add_health_miss)
+```
+
+
+---
+# Impute 
+
+```{r, results='hide'}
+add_health_miss_imp <- mice(add_health_miss, method = "cart", 
+                            m = 20, maxit = 10)
+```
+
+
+--
+```{r, fig.retina=3}
+densityplot(add_health_miss_imp, ~ gpa)
+```
+
+
+---
+# Impute 
+
+```{r, fig.retina=3}
+densityplot(add_health_miss_imp, ~ ever_smoke_f)
+```
+
+
+--
+*Note: We plot these separately because they are different variable types (numeric and factor).*
+
+---
+# Model fitting and comparison
+
+```{r}
+add_health_m1_imp <- with(add_health_miss_imp, 
+                          glm(ever_smoke_f ~ gpa, 
+                          family = binomial(link = "logit")))
+
+add_health_m2_imp <- with(add_health_miss_imp, 
+                          glm(ever_smoke_f ~ gpa + sex, 
+                          family = binomial(link = "logit")))
+```
+
+
+--
+```{r} 
+anova(add_health_m1_imp, add_health_m2_imp)
+```
+
+
+--
+`pool.r.squared()` is also an option for linear regression models. 
+
+
+
+---
+# Diagnostics
+
+It is not straightforward to conduct diagnostics on multiply imputed data. One strategy is to pull out 1 one of the completed datasets at random, refit our final model, then conduct diagnostics on that model. 
+
+
+--
+```{r}
+# Create a dataframe object of the 5th imputed dataset
+add_health_comp5 <- complete(add_health_miss_imp, action = 5) 
+
+# Refit selected model
+add_health_m1_diag <- glm(ever_smoke_f ~ gpa, data = add_health_comp5,
+                          family = binomial(link = "logit"))
+```
+
+
+--
+Then we proceed normally with diagnostics. For example, because we are using a logistic regression model, we would next standardize our residuals. 
+
+```{r}
+add_health_m1_diag_residuals <- simulateResiduals(add_health_m1_diag, 
+                                                  n = 1000)
+```
+
+
+---
+# Inspect residuals
+
+```{r, fig.retina=3}
+plot(add_health_m1_diag_residuals)
+```
+
+
+--
+We should be cautious when interpreting diagnostics because they are conducted in only one of our 20 datasets - but some diagnostics are better than none at all. 
+
+
+---
+# Results
+
+```{r}
+add_health_m1_imp %>% 
+  pool() %>% 
+  summary(conf.int = TRUE, exponentiate = TRUE) %>% 
+  print_md()
+```
+
+
+---
+class: middle, inverse
+
+# Logistic regression in nested data 
+
+---
+# Going back to the ICC
+
+Remember the ICC gives us an estimate of how much of the variability in our outcome is simply because of differences in the outcome between groups (grades, classrooms, intervention sites). 
+
+
+--
+The closer the ICC is to 1, the greater the proportion of variability in the outcome that is due to group differences. The ICC is one tool we can use to gauge whether clustering is important enough to warrant multilevel modeling.
+
+
+--
+Recall the SEDA dataset, which includes math achievement scores for Oregon elementary students by grade level.
+
+
+--
+- The ICC for the math achievement outcome was 0.645, which told us that 64.5% of the variation in the math achievement outcome is attributable to differences in achievement between grades. 
+
+
+--
+- Because the ICC is telling us that more than two-thirds of the variability in the outcome is because of grade (and has nothing to do with ELL proportion), we know that our findings could mask important differences in grade-level achievement.
+
+
+---
+# Simple linear regression
+
+```{r, echo=T}
+m1 <- lm(achievement ~ percent_ell, data = seda)
+coef(m1) # Extracting intercept and %ELL coefficient
+```
+
+
+--
+This is called a <span style = "color:green"> fixed-effect model. </span> We're assuming that grades are sufficiently similar that we can average the slopes and intercepts for each grade, and this will give us an accurate enough picture of the relationship of interest. 
+
+
+--
+Another way of saying this is each grade's slope and intercept are set - "fixed" - to be the average slope and intercept across grades.
+
+
+---
+# Simple linear regression
+
+When thinking about whether a fixed-effect approach makes sense, we can apply the same reasoning we use when thinking about any average. 
+
+
+--
+Any mean is a single value (say, 31.5) that represents a set of values:
+
+
+--
+- If that set is close to the average (say, 29 and 34), then the single value of 31.5 is probably a good representation of the underlying values (i.e., it's not very different from 29 or 34). 
+
+
+--
+- But the same mean of 31.5 could represent the values of 0 and 63.
+
+
+--
+0-63 is the range of the Beck Depression Index (BDI): Does a mean of 31.5 convey that one person has no depression symptoms (0) and a second person has severe depression (63)?
+
+
+---
+# Mixed-effects model
+
+Instead of the simple linear regression (fixed-effect model), we can fit a mixed-effects model that allows intercepts, or both intercepts and slopes, to vary across grades. 
+
+
+--
+In other words, this approach allows us to examine the underlying values of the intercepts and/or slopes that are contributing to the fixed-effect model estimates (the average of each grade's intercept and slope). 
+
+
+--
+- Another term for this is *disaggregating*, in the same sense as we used when talking about aggregation bias. We're potentially reducing our risk of aggregation bias by disaggregating results by grade. 
+
+
+--
+For now, let's look at what happens if we let the intercept (the average math achievement level at 0% ELL) vary by grade. This is called a <span style = "color:green"> random-intercepts model </span> because the intercept is allowed to vary for each grade. 
+
+
+---
+# Random-intercepts model
+
+For mixed-effects models, we'll use the `lmer()` function from the base R package *lme4*, which uses a function and formula style similar to the models we've been fitting:
+
+--
+```{r}
+m2 <- lmer(achievement ~ percent_ell + (1 | grade), data = seda)
+```
+
+
+--
+The only difference from the usual linear regression specification is the element in parentheses. This is the "random effect" part of the model, or what we want to allow to differ across groups/clusters. 
+
+
+--
+- What is after the `|` is the variable that indicates the group/cluster. What is before the `|` is what we're interested in allowing to vary for each group. 
+
+
+--
+- Like the basic regression model where 1 is used to fit a model that estimates only the intercept, here the `(1 | grade)` means "only the intercept (1) can vary by grade."
+
+
+---
+# Random-intercepts model
+
+```{r}
+coef(m2)$grade # Specify the grouping variable
+```
+
+
+--
+What do you notice is different for each grade?
+
+
+---
+# Adding random slopes
+
+So far we've considered one intercept and slope for all grades or examining individual intercepts for each grade.
+
+
+--
+It's fairly clear from the earlier plot that the random-intercepts model is probably sufficient for our data. But let's illustrate what happens if we examine intercepts *and* slopes for each grade (random-slopes-and-intercepts model).
+
+
+--
+<span style = "color:green"> Random-slopes-and-intercepts model: </span>
+
+```{r}
+m3 <- lmer(achievement ~ percent_ell + (percent_ell|grade), data = seda)
+coef(m3)$grade
+```
+
+
+--
+.small[Note that we can look at slopes for each grade with only one intercept across grades (random-slopes model), but in practice we wouldn't typically test this model. If the random-intercepts model is better fitting than the fixed-effect model, the next logical step in model fitting is to add random slopes to the random-intercepts model (i.e., the random-slopes-and-intercepts model).]
+
+---
+# Fixed effect vs random effects
+
+```{r, echo = FALSE, fig.retina=3}
+seda %>% 
+  ggplot(aes(percent_ell, achievement)) +
+  geom_smooth(method='lm', se = FALSE, color = "deeppink") +
+  geom_point(alpha = 0.1) + 
+  geom_smooth(aes(color = grade), method='lm', se = 0) +
+  geom_point(aes(color = grade), alpha = 0.1) +
+  scale_color_hue(l=80, c=30) +
+  labs(x = "ELL Proportion",
+       y = "Math Achievement")
+```
+
+
+---
+# Bringing it together
+
+--
+.pull-left[
+The <span style = "color:green"> random-slopes-and-intercepts model </span> gives us the slope and intercept for each cluster (grade):
+
+```{r}
+coef(m3)$grade
+```
+]
+
+--
+.pull-right[
+The <span style = "color:green"> fixed-effect model </span> gives us the average (or aggregation) of the different intercepts and slopes across grades:
+ 
+```{r}
+coef(m1)
+```
+]
+
+
+--
+So, back to averages: Does the average of the slope and the intercept give a good enough representation of the slopes and intercepts across grades? If not, which one do you think we need to examine by grade?
+
+
+---
+# Model comparison
+
+We can use many of the same tools we've already used to compare models, including deviance tests and AIC. We'll also use RMSE (root mean square error), which is the average difference between values predicted by the model and the actual values in our data (so, lower RMSE = better fitting).
+
+
+--
+```{r}
+performance::test_likelihoodratio(m1, m2) %>% 
+  print_md() # Only for slides
+```
+
+
+--
+```{r}
+performance::test_likelihoodratio(m2, m3) %>% print_md()
+```
+
+
+---
+# Model comparison
+
+```{r}
+performance::compare_performance(m1, m2, m3, metrics = "common") %>% 
+  print_md()
+```
+
+
+--
+So, the random-intercepts model is better fitting than the fixed-effect model (the simple linear regression), but the random-slopes-and-intercepts model is not any better fitting than the random-intercepts model.
+
+
+---
+# Covariates, interactions, etc
+
+Just as with the fixed-effect models we've used up to now, we can improve mixed-effects model fit by adding covariates. 
+
+
+--
+However, as we've seen, with mixed-effects models we can also influence model fit by adding random intercepts or random intercepts and slopes. 
+
+
+--
+For this reason, in mixed-effects models it is especially important to use theory and existing research to select covariates and moderators of interest ahead of time.
+
+
+--
+- It also means that studies that will generate nested data (and analyses of existing data) should be carefully planned and informed by available theory and research. 
+
+
+--
+Finally, we must approach fit testing carefully, to be sure we are isolating and testing each change we've made (if we test the addition of a covariate and a random effect together, we don't know which improved model fit).
+
+---
+# A note about imputing missing nested data
+
+Remember that multiple imputation depends on the relationships between variables, and between observations, in the dataset to determine the most likely values of missing data.
+
+
+--
+If some observations are more related to one another than other observations (eg, because they are from the same person or within the same classroom), it is important that the imputation model knows this. 
+
+
+--
+`mice` has several functions to impute missing nested data in different scenarios (eg, data missing in all levels, just to lowest level, just the cluster variable).
+
+---
+# Popular
+
+The dataset `popular` includes data on students' levels of extraversion and popularity, students' sex, and teacher experience level (a classroom-level variable). 1,000 students are nested in 100 classrooms. 
+
+
+--
+```{r}
+popular %>% head()
+```
+
+
+--
+How can you tell the difference between student-level variables and classroom-level variables?
+
+
+
+---
+# Including covariates and cross-level interaction
+
+**We're interested in whether students who are more extroverted are, in general, more popular than students who are more introverted.**
+
+
+--
+Imagine existing studies have sometimes, but not always, found that this relationship differs by (or, is moderated by) student sex. Because this is not a consistent finding, we'll plan to control for sex but not examine a moderation relationship (i.e., interaction). 
+
+
+--
+Finally, we have an exploratory question about whether teacher experience is a moderator of the association between extraversion and popularity.
+
+
+--
+- Perhaps more experienced teachers assert more control of the classroom, resulting in less extraversion/attention-seeking from students (so, student popularity in those classrooms may be driven by other factors).
+
+
+---
+# Model fitting steps
+
+--
+1) Null model including a random effect for classroom, to calculate the ICC:
+
+```{r}
+pop_m0 <- lmer(popular ~ 1 + (1 | class), data = popular)
+```
+
+--
+2) Random-intercepts model including the student-level independent variable (extraversion) and control variable (sex):
+
+```{r}
+pop_m1 <- lmer(popular ~ extrav + sex + (1 | class), 
+               REML = FALSE, data = popular)
+```
+
+
+--
+3) Random-intercepts-and-slopes model to test whether random slopes are needed for student-level predictors:
+
+```{r}
+pop_m2 <- lmer(popular ~ extrav + sex + (1 + extrav + sex | class), 
+               REML = FALSE, data = popular)
+```
+
+
+--
+4) Test the cross-level interaction using the best-fitting model, then run diagnostics.
+
+
+---
+# Initial look at the data
+
+```{r, echo = FALSE, fig.retina=3}
+popular %>%
+  ggplot(aes(extrav, popular, color = class, group = class)) +
+  geom_smooth(method='lm', se = FALSE, size = .5, alpha  = .8) +
+  geom_point(size = 1, alpha = 0.2, position = "jitter") +
+  labs(x = "Extraversion",
+       y = "Popularity") +
+  scale_color_gradientn(colors = rainbow(100)) +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+
+
+---
+# Model fitting 
+
+
+--
+*Load the `lmertest` package, which includes supplementary tools for `lmer` models, before fitting any models.*
+
+
+--
+```{r}
+performance::icc(pop_m0)
+```
+
+
+--
+A substantial amount of variability in student popularity (37%) is attributable to differences in popularity across classrooms, so it will be important to account for this going forward. 
+
+
+---
+# Model fitting 
+
+```{r, warnings=FALSE}
+performance::compare_performance(pop_m1, pop_m2, metrics = "common") %>% 
+  print_md()
+```
+
+
+--
+Overall, the model with random intercepts and slopes is better fitting (AIC, RMSE) and somewhat more explanatory (conditional $R^2$). However, we added 2 random slopes, so we want to see if it's necessary to keep both of these or just one. 
+
+
+
+---
+# Model fitting 
+
+First, we can see in the model summary that the variance for sex is very small, meaning the slope for sex doesn't vary much across classroom. 
+
+
+```{r}
+print(VarCorr(pop_m2), comp = "Variance")
+```
+
+
+--
+This is a clue that sex may not need to be retained as a random slope (we're also getting a "failed to converge" warning at the end of the summary, which can be because of low variance of a random effect).
+
+
+---
+# Model fitting 
+
+We can test the significance of the difference in fit between models with and without each of the random slopes in a similar way to the likelihood ratio test we've used before. We can test models that differ only in random effects by using the `ranova()` function from *lmertest*.
+
+```{r, warnings = FALSE}
+lmerTest::ranova(pop_m2, reduce.terms = TRUE)
+```
+
+---
+# Model fitting 
+
+We saw that the random slope for sex is nonsignificant, so our final model before testing the cross-level interaction should retain the random slope for extraversion and drop the random slope for sex. We can now add the interaction to that model:
+
+```{r}
+# Drops random slope for sex and keeps slope for extraversion
+pop_m3 <- lmer(popular ~ extrav + sex + 
+                 (1 + extrav | class), REML = FALSE, data = popular)
+
+# Adds interaction
+pop_m3_int <- lmer(popular ~ extrav + sex + texp*extrav + 
+                     (1 + extrav | class), REML = FALSE, data = popular)
+```
+
+
+---
+# Model fitting 
+
+```{r, warnings = FALSE}
+coef(summary(pop_m3_int))
+```
+
+
+--
+So, our interaction is significant. But before we interpret it, we should run diagnostics on the final model. <span style = "color:green"> Before diagnostics and interpretation of a final model, rerun the model without `REML = FALSE`. </span>
+
+
+---
+# Diagnostics
+
+*Note that we don't need to standardize residuals because our outcome is continuous...*
+
+```{r, fig.retina=3}
+pop_m3_int_fin <- lmer(popular ~ extrav + sex + texp*extrav + 
+                         (1 + extrav | class), data = popular)
+check_model(pop_m3_int_fin, check = c("linearity", "outliers", 
+                                      "vif", "qq"))
+```
+
+---
+# Interpreting the interaction
+
+Overall, there aren't major concerns from model diagnostics. To interpret the interaction, we'll take a similar approach as we have for other interactions using predicted values, but here we'll use the `ggpredict` function and set *type* to `re` for random effects. 
+
+Teacher experience is a continuous variable ranging from 2 to 25 years, so we'll also set a few levels of experience: new teacher (2 years), moderately experienced (10 years), highly experienced (25 years). 
+
+
+--
+```{r}
+# using the ggeffects package
+library(ggeffects)
+pop_m3_int_pred <- ggeffect(pop_m3_int_fin,
+                             type = "re",
+                             terms = c("extrav", "texp [2, 10, 25]"))
+```
+
+
+---
+# Interpreting the interaction
+
+```{r}
+pop_m3_int_pred
+```
+
+---
+# Interpreting the interaction
+
+```{r, fig.retina=3}
+plot(pop_m3_int_pred, ci = FALSE)
+```
+
+---
+class: middle, inverse
+
+# Longitudinal data
+
+---
+# Longitudinal data
+
+Analyzing longitudinal data with mixed models is approached in generally the same way as analyzing other forms of nested data. 
+
+
+--
+With longitudinal (or repeated-measures) data, the main form of clustering is by participant: repeated measures taken of the outcome for each participant (e.g. at baseline, immediately after an intervention, and 1 year after the intervention).
+
+
+--
+This said, we can still have the same forms of clustering/nesting that we've talked about already:
+
+
+--
+- Multiple assessments of students in different classrooms, schools, etc.
+
+
+--
+- Multiple assessments of patients at different clinics, hospitals, etc. 
+
+
+--
+We can model these different kinds of dependencies using mixed models, and because we are still working in the GLM framework, we can also analyze different types of outcomes. 
+
+
+---
+# Respire data
+
+The `respire` dataset is from a randomized controlled trial (RCT) of a drug for the treatment of a respiratory illness. The outcome was whether the patient developed the illness, and was measured in 111 participants across 2 medical centers. The outcome was measured 4 times for each participant: baseline (pretreatment) and at 3 follow-up visits. 
+
+* `outcome`: dichotomous variable indicating whether a participant developed respiratory illness (Yes or No)
+* `visit`: measurement time point (Baseline, F1, F2, F3)
+* `assignment`: group assignment (placebo - P or active - A)
+* `center`: treatment center (1 or 2)
+* `id`: patient ID
+* `sex`: patient sex (M or F)
+* `age`: patient age (range 11-68 years)
+
+
+---
+# Respire data
+
+```{r}
+respire %>% head()
+```
+
+---
+# Longitudinal data
+
+When analyzing longitudinal data, an additional consideration is how the predictor-outcome relationship changes over time. This is especially important when we are comparing outcomes across groups, such as a group that received an intervention/treatment and a group that did not (control group).
+
+
+--
+If we just look at the main effect of *treatment group assignment* (whether someone received the treatment or not), then we are combining the outcome values across measurement points.
+
+
+--
+- It's common to see a large treatment effect right after the intervention, and then the effect gets smaller over time. If we combine large and small outcome estimates together, we get a smaller overall estimate. 
+
+
+--
+If we just look at the main effect of *time* (e.g., follow-up visit or assessment number), then we are ignoring group assignment. This doesn't give us insight into whether the treatment is effective.
+
+
+--
+What do you think is the solution?
+
+
+--
+- A `treatment x time` interaction
+
+
+---
+# Model fitting
+
+For logistic regression in nested data, we'll use the `glmer` package.
+
+--
+1) Null model including a random effect for participant, to calculate the ICC:
+
+```{r}
+respire_m0 <- glmer(outcome ~ 1 + (1 | id), family = binomial, 
+                    data = respire)
+performance::icc(respire_m0)
+```
+
+--
+2) Random-intercepts model including the `treatment x time` interaction and control variables (sex and age). For random-effects, we generally want at least 5 clusters. Here, we only have 2 centers, so we'll instead include a fixed effect for center (i.e., a control variable).
+
+```{r}
+respire_m1 <- glmer(outcome ~ assignment*visit + sex + age.c + center + 
+                      (1 | id), family = binomial, 
+                    control = glmerControl(optimizer = "bobyqa", 
+                                           optCtrl = list(maxfun = 2e5)),
+                    data = respire)
+```
+
+---
+# Model fitting (continued)
+
+3) Random-intercepts-and-slopes model to test whether random slopes are needed for time:
+
+```{r, warning=FALSE}
+respire_m2 <- glmer(outcome ~ assignment*visit + sex + age.c + center + 
+                      (visit | id), family = binomial, 
+                    control = glmerControl(optimizer = "bobyqa", 
+                                           optCtrl = list(maxfun = 2e5)),
+                    data = respire)
+```
+
+--
+`ranova()` isn't available for `glmer` models, so we'll just use the likelihood ratio test we used before. This is appropriate because the models differ in only one random slope, not two.
+
+```{r}
+performance::test_likelihoodratio(respire_m1, respire_m2) %>% print_md()
+```
+
+---
+# Model fitting 
+
+```{r}
+performance::compare_performance(respire_m1, respire_m2, metrics = "common", verbose = FALSE) %>% 
+  print_md()
+```
+
+
+---
+# Model diagnostics 
+
+```{r, fig.retina=3}
+respire_m1_residuals <- simulateResiduals(respire_m1, n = 1000) 
+plot(respire_m1_residuals)
+```
+
+---
+# Model diagnostics 
+
+```{r, fig.retina=3}
+check_model(respire_m1, check = "vif")
+```
+
+---
+# Interpretation
+
+```{r}
+# using the ggeffects package
+respire_m1_probs <- ggeffect(respire_m1,
+                             type = "re",   # Note the "re" not "fe"
+                             terms = c("visit", "assignment"))
+respire_m1_probs
+```
+
+---
+# Interpretation
+
+```{r, fig.retina=3}
+plot(respire_m1_probs)
+```
+
+---
+# A note on cluster-robust SEs
+
+Cluster-robust (or sandwich) standard errors are sometimes used instead of mixed-effects models (that is, instead of explicitly incorporating the nested structure of the data into the analysis). Although they're more straightforward to implement, these SEs have several limitations:
+
+
+--
+- They don't give us insight into whether the *relationship* between the predictor(s) and outcome differs across clusters.
+
+
+--
+- They don't address the issue of misinterpreting the variability explained by our model, meaning they shouldn't be used unless the null ICC is very small (e.g., less than 5%).
+
+
+--
+- They're only appropriate for simple forms of clustering and when sampling or randomization was conducted at the same level of the cluster. 
+
+
+--
+For all of these reasons, it's generally better to use a model that is more informative about, and better accounts for, the nested structure of your data (and you can still use cluster-robust SEs!). 
+
+
+---
+# Applying cluster-robust SEs
+
+Instead of including `center` as a control variable, let's fit a simpler model without it, then adjust our SEs for center. 
+
+```{r}
+respire_m1b <- glmer(outcome ~ assignment*visit + sex + age.c + 
+                      (1 | id), family = binomial, 
+                    control = glmerControl(optimizer = "bobyqa", 
+                                           optCtrl = list(maxfun = 2e5)),
+                    data = respire)
+```
+
+
+--
+Adding cluster-robust SEs to predicted probabilities:
+
+```{r}
+# using the ggeffects package
+respire_m1b_probs <- ggeffect(respire_m1b,
+                             type = "re",
+                             terms = c("visit", "assignment"),
+                             vcov.fun = "vcovCR", vcov.type = "CR0", 
+                             vcov.args = list(cluster = respire$center))
+```
+
+---
+# Plot with cluster-robust SEs
+
+```{r, fig.retina=3}
+plot(respire_m1b_probs)
+```
+
+Results are very similar to the model that includes site as a control variable.
+
+
