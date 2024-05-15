@@ -476,7 +476,8 @@ The dataset `popular` includes data on students' levels of extraversion and popu
 
 --
 ```{r}
-popular %>% head()
+popular %>% head() %>% 
+  print_md()
 ```
 
 
@@ -568,6 +569,8 @@ performance::icc(pop_m0)
 --
 A substantial amount of variability in student popularity (37%) is attributable to differences in popularity across classrooms, so it will be important to account for this going forward. 
 
+- In other words, we can skip fitting a fixed-effects model, and move directly to fitting the *simplest* model that accounts for the nested structure of our data (a random-intercepts model).
+
 
 ---
 # Model fitting 
@@ -650,7 +653,7 @@ check_model(pop_m3_int_fin, check = c("linearity", "outliers",
 ---
 # Interpreting the interaction
 
-Overall, there aren't major concerns from model diagnostics. To interpret the interaction, we'll take a similar approach as we have for other interactions using predicted values, but here we'll use the `ggpredict` function and set *type* to `re` for random effects. 
+Overall, there aren't major concerns from model diagnostics. To interpret the interaction, we'll take a similar approach as we have for other interactions using predicted values from the `ggeffects` package. 
 
 Teacher experience is a continuous variable ranging from 2 to 25 years, so we'll also set a few levels of experience: new teacher (2 years), moderately experienced (10 years), highly experienced (25 years). 
 
@@ -659,9 +662,11 @@ Teacher experience is a continuous variable ranging from 2 to 25 years, so we'll
 ```{r}
 # using the ggeffects package
 library(ggeffects)
-pop_m3_int_pred <- ggeffect(pop_m3_int_fin,
-                             type = "re",
-                             terms = c("extrav", "texp [2, 10, 25]"))
+pop_m3_int_pred <- predict_response(pop_m3_int_fin,
+                                    type = "fe",
+                                    terms = c("extrav", 
+                                              "texp [2, 10, 25]"),
+                                    margin = "marginalmeans")
 ```
 
 
@@ -691,11 +696,11 @@ Analyzing longitudinal data with mixed models is approached in generally the sam
 
 
 --
-With longitudinal (or repeated-measures) data, the main form of clustering is by participant: repeated measures taken of the outcome for each participant (e.g. at baseline, immediately after an intervention, and 1 year after the intervention).
+With longitudinal (or *repeated-measures*) data, the main form of clustering is by participant: repeated measures taken of the outcome for each participant (e.g. at baseline, immediately after the intervention, and 6 and 12 months after the intervention).
 
 
 --
-This said, we can still have the same forms of clustering/nesting that we've talked about already:
+This said, we can still have the same forms of clustering/nesting that we've talked about already, for example:
 
 
 --
@@ -728,7 +733,9 @@ The `respire` dataset is from a randomized controlled trial (RCT) of a drug for 
 # Respire data
 
 ```{r}
-respire %>% head()
+respire %>% 
+  head() %>% 
+  print_md()
 ```
 
 ---
@@ -762,6 +769,7 @@ What do you think is the solution?
 
 For logistic regression in nested data, we'll use the `glmer` package.
 
+
 --
 1) Null model including a random effect for participant, to calculate the ICC:
 
@@ -771,15 +779,17 @@ respire_m0 <- glmer(outcome ~ 1 + (1 | id), family = binomial,
 performance::icc(respire_m0)
 ```
 
---
-2) Random-intercepts model including the `treatment x time` interaction and control variables (sex and age). For random-effects, we generally want at least 5 clusters. Here, we only have 2 centers, so we'll instead include a fixed effect for center (i.e., a control variable).
+
+---
+# Model fitting (continued)
+
+2) Random-intercepts model including the `treatment x time` interaction and a control variable (age). For random-effects, we generally want at least 5 clusters. Here, we only have 2 centers, so we'll instead include a fixed effect for center (i.e., a control variable).
 
 ```{r}
-respire_m1 <- glmer(outcome ~ assignment*visit + sex + age.c + center + 
-                      (1 | id), family = binomial, 
-                    control = glmerControl(optimizer = "bobyqa", 
-                                           optCtrl = list(maxfun = 2e5)),
-                    data = respire)
+respire_m1 <- glmer(outcome ~ assignment*visit + age + center + 
+                      (1 | id), family = binomial, data = respire,
+                 control = glmerControl(optimizer = "bobyqa", 
+                                        optCtrl = list(maxfun = 2e5)))
 ```
 
 ---
@@ -788,28 +798,39 @@ respire_m1 <- glmer(outcome ~ assignment*visit + sex + age.c + center +
 3) Random-intercepts-and-slopes model to test whether random slopes are needed for time:
 
 ```{r, warning=FALSE}
-respire_m2 <- glmer(outcome ~ assignment*visit + sex + age.c + center + 
-                      (visit | id), family = binomial, 
-                    control = glmerControl(optimizer = "bobyqa", 
-                                           optCtrl = list(maxfun = 2e5)),
-                    data = respire)
+respire_m2 <- glmer(outcome ~ assignment*visit + age + center + 
+                      (visit | id), family = binomial, data = respire,
+                 control = glmerControl(optimizer = "bobyqa", 
+                                        optCtrl = list(maxfun = 2e5)))
 ```
 
---
-`ranova()` isn't available for `glmer` models, so we'll just use the likelihood ratio test we used before. This is appropriate because the models differ in only one random slope, not two.
+
+---
+# Testing random slopes
+
+`ranova()` isn't available for `glmer` models, so we'll just use the likelihood ratio test we used before. This is appropriate because the models differ in only one random slope, not two. We can also look at the variance associated with each random slope. 
 
 ```{r}
 performance::test_likelihoodratio(respire_m1, respire_m2) %>% print_md()
 ```
 
----
-# Model fitting 
-
 ```{r}
-performance::compare_performance(respire_m1, respire_m2, metrics = "common", verbose = FALSE) %>% 
+print(VarCorr(respire_m2), comp = "Variance")
+```
+
+
+---
+# Testing random slopes (continued)
+
+```{r, warning=FALSE, message = FALSE}
+performance::compare_performance(respire_m1, respire_m2, 
+                                 metrics = "common") %>% 
   print_md()
 ```
 
+
+--
+Overall, it appears that the simpler random-intercepts model (m1) is better fitting.
 
 ---
 # Model diagnostics 
@@ -831,9 +852,10 @@ check_model(respire_m1, check = "vif")
 
 ```{r}
 # using the ggeffects package
-respire_m1_probs <- ggeffect(respire_m1,
-                             type = "re",   # Note the "re" not "fe"
-                             terms = c("visit", "assignment"))
+respire_m1_probs <- predict_response(respire_m1,
+                                     type = "fe",
+                                     margin = "marginalmeans",
+                                     terms = c("visit", "assignment"))
 respire_m1_probs
 ```
 
@@ -872,11 +894,10 @@ For all of these reasons, it's generally better to use a model that is more info
 Instead of including `center` as a control variable, let's fit a simpler model without it, then adjust our SEs for center. 
 
 ```{r}
-respire_m1b <- glmer(outcome ~ assignment*visit + sex + age.c + 
-                      (1 | id), family = binomial, 
-                    control = glmerControl(optimizer = "bobyqa", 
-                                           optCtrl = list(maxfun = 2e5)),
-                    data = respire)
+respire_m1b <- glmer(outcome ~ assignment*visit + age + 
+                      (1 | id), family = binomial, data = respire,
+                  control = glmerControl(optimizer = "bobyqa", 
+                                         optCtrl = list(maxfun = 2e5)))
 ```
 
 
@@ -885,11 +906,14 @@ Adding cluster-robust SEs to predicted probabilities:
 
 ```{r}
 # using the ggeffects package
-respire_m1b_probs <- ggeffect(respire_m1b,
-                             type = "re",
-                             terms = c("visit", "assignment"),
-                             vcov.fun = "vcovCR", vcov.type = "CR0", 
-                             vcov.args = list(cluster = respire$center))
+respire_m1b_probs <- predict_response(respire_m1b,
+                                      type = "fe",
+                                      terms = c("visit", "assignment"),
+                                      margin = "marginalmeans",
+                                      vcov_fun = "vcovCR", 
+                                      vcov_type = "CR0", 
+                                      vcov_args = list(cluster = 
+                                                       respire$center))
 ```
 
 ---

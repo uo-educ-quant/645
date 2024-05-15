@@ -624,9 +624,10 @@ Here, though, we use probabilities of the outcome that are based on our model (i
 --
 ```{r}
 # using the ggeffects package
-mod_3_int_probs <- ggeffect(mod_3_int,
-                            type = "fe",
-                            terms = c("PhysActive", "DaysMHBad_most"))
+mod_3_int_probs <- predict_response(mod_3_int,
+                          type = "fe",
+                          terms = c("PhysActive", "DaysMHBad_most"),
+                          margin = "marginalmeans")
 ```
 
 ---
@@ -669,9 +670,10 @@ What if our interaction wasn't significant? We can get all the interpretive bene
 
 --
 ```{r}
-mod_3_probs <- ggeffect(mod_3,
-                        type = "fe",
-                        terms = c("PhysActive"))
+mod_3_probs <- predict_response(mod_3,
+                                type = "fe",
+                                terms = c("PhysActive"),
+                                margin = "marginalmeans")
 print(mod_3_probs)
 ```
 
