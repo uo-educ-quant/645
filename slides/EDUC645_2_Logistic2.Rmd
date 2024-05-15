@@ -814,6 +814,8 @@ respire_m2 <- glmer(outcome ~ assignment*visit + age + center +
 performance::test_likelihoodratio(respire_m1, respire_m2) %>% print_md()
 ```
 
+
+--
 ```{r}
 print(VarCorr(respire_m2), comp = "Variance")
 ```
@@ -863,7 +865,11 @@ respire_m1_probs
 # Interpretation
 
 ```{r, fig.retina=3}
-plot(respire_m1_probs)
+plot(respire_m1_probs) +
+  labs(x = "Timepoint", y = "Diagnosed with Respiratory Illness (%)",
+       title = "Model-Based Probabilities of Diagnosis with Respiratory Illness",
+       subtitle = "Adjusted for Patient Age and Treatment Site") +
+  scale_color_discrete(name = "Treatment Group")
 ```
 
 ---
@@ -920,9 +926,12 @@ respire_m1b_probs <- predict_response(respire_m1b,
 # Plot with cluster-robust SEs
 
 ```{r, fig.retina=3}
-plot(respire_m1b_probs)
+plot(respire_m1b_probs) +
+  labs(x = "Timepoint", y = "Diagnosed with Respiratory Illness (%)",
+       title = "Model-Based Probabilities of Diagnosis with Respiratory Illness",
+       subtitle = "Adjusted for Patient Age") +
+  scale_color_discrete(name = "Treatment Group")
 ```
 
-Results are very similar to the model that includes site as a control variable.
 
 

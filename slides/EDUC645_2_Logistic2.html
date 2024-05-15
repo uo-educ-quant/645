@@ -134,7 +134,7 @@ anova(add_health_m1_imp, add_health_m2_imp)
 
 ```
 #&gt;    test statistic df1      df2 dfcom   p.value      riv
-#&gt;  2 ~~ 1 0.7346191   1 48.03724  3375 0.3956459 1.220263
+#&gt;  2 ~~ 1   1.86276   1 156.0891  3375 0.1742707 0.394431
 ```
 
 
@@ -199,10 +199,10 @@ add_health_m1_imp %&gt;%
 
 
 
-|term        | estimate| std.error| statistic|    df | p.value | 2.5 %| 97.5 %|
-|:-----------|--------:|---------:|---------:|:------|:--------|-----:|------:|
-|(Intercept) |     4.08|      0.16|      9.03|106.03 |8.33e-15 |  3.00|   5.55|
-|gpa         |     0.61|      0.06|     -7.88| 82.70 |1.14e-11 |  0.54|   0.69|
+|term        | estimate| std.error| statistic|     df| p.value | 2.5 %| 97.5 %|
+|:-----------|--------:|---------:|---------:|------:|:--------|-----:|------:|
+|(Intercept) |     4.34|      0.16|      9.12|  90.36|1.85e-14 |  3.15|   5.98|
+|gpa         |     0.60|      0.06|     -8.64| 102.52|8.08e-14 |  0.53|   0.67|
 
 
 ---
@@ -994,6 +994,8 @@ performance::test_likelihoodratio(respire_m1, respire_m2) %&gt;% print_md()
 |respire_m2 |glmerMod |20 |       9| 0.74| 1.00|
 
 
+--
+
 ```r
 print(VarCorr(respire_m2), comp = "Variance")
 ```
@@ -1095,7 +1097,11 @@ respire_m1_probs
 
 
 ```r
-plot(respire_m1_probs)
+plot(respire_m1_probs) +
+  labs(x = "Timepoint", y = "Diagnosed with Respiratory Illness (%)",
+       title = "Model-Based Probabilities of Diagnosis with Respiratory Illness",
+       subtitle = "Adjusted for Patient Age and Treatment Site") +
+  scale_color_discrete(name = "Treatment Group")
 ```
 
 &lt;img src="EDUC645_2_Logistic2_files/figure-html/unnamed-chunk-47-1.png" width="576" style="display: block; margin: auto;" /&gt;
@@ -1157,12 +1163,15 @@ respire_m1b_probs &lt;- predict_response(respire_m1b,
 
 
 ```r
-plot(respire_m1b_probs)
+plot(respire_m1b_probs) +
+  labs(x = "Timepoint", y = "Diagnosed with Respiratory Illness (%)",
+       title = "Model-Based Probabilities of Diagnosis with Respiratory Illness",
+       subtitle = "Adjusted for Patient Age") +
+  scale_color_discrete(name = "Treatment Group")
 ```
 
 &lt;img src="EDUC645_2_Logistic2_files/figure-html/unnamed-chunk-50-1.png" width="576" style="display: block; margin: auto;" /&gt;
 
-Results are very similar to the model that includes site as a control variable.
 
 
     </textarea>
