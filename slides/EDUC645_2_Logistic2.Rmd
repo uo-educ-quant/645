@@ -774,7 +774,8 @@ For logistic regression in nested data, we'll use the `glmer` package.
 1) Null model including a random effect for participant, to calculate the ICC:
 
 ```{r}
-respire_m0 <- glmer(outcome ~ 1 + (1 | id), family = binomial, 
+respire_m0 <- glmer(outcome ~ 1 + (1 | id), # Participants = clusters
+                    family = binomial(link = "logit"), 
                     data = respire)
 performance::icc(respire_m0)
 ```
@@ -787,9 +788,10 @@ performance::icc(respire_m0)
 
 ```{r}
 respire_m1 <- glmer(outcome ~ assignment*visit + age + center + 
-                      (1 | id), family = binomial, data = respire,
-                 control = glmerControl(optimizer = "bobyqa", 
-                                        optCtrl = list(maxfun = 2e5)))
+                   (1 | id), family = binomial(link = "logit"), 
+                   data = respire, 
+                   control = glmerControl(optimizer = "bobyqa",
+                             optCtrl = list(maxfun = 2e5)))
 ```
 
 ---
@@ -799,9 +801,10 @@ respire_m1 <- glmer(outcome ~ assignment*visit + age + center +
 
 ```{r, warning=FALSE}
 respire_m2 <- glmer(outcome ~ assignment*visit + age + center + 
-                      (visit | id), family = binomial, data = respire,
-                 control = glmerControl(optimizer = "bobyqa", 
-                                        optCtrl = list(maxfun = 2e5)))
+                   (visit | id), family = binomial(link = "logit"), 
+                   data = respire, 
+                   control = glmerControl(optimizer = "bobyqa",
+                             optCtrl = list(maxfun = 2e5)))
 ```
 
 
@@ -883,7 +886,7 @@ Cluster-robust (or sandwich) standard errors are sometimes used instead of mixed
 
 
 --
-- They don't address the issue of misinterpreting the variability explained by our model, meaning they shouldn't be used unless the null ICC is very small (e.g., less than 5%).
+- They don't address the issue of misinterpreting the variability explained by our model or $R^2$ (the "pie"), meaning they shouldn't be used unless the null ICC is very small (e.g., less than 5%).
 
 
 --
@@ -901,9 +904,10 @@ Instead of including `center` as a control variable, let's fit a simpler model w
 
 ```{r}
 respire_m1b <- glmer(outcome ~ assignment*visit + age + 
-                      (1 | id), family = binomial, data = respire,
-                  control = glmerControl(optimizer = "bobyqa", 
-                                         optCtrl = list(maxfun = 2e5)))
+                    (1 | id), family = binomial(link = "logit"), 
+                    data = respire, 
+                    control = glmerControl(optimizer = "bobyqa",
+                              optCtrl = list(maxfun = 2e5)))
 ```
 
 
