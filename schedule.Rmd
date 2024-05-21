@@ -92,11 +92,9 @@ knitr::opts_chunk$set(echo = TRUE)
 
 - Methods to analyze count outcomes 
 
-- Fitting and interpreting Poisson regression models with single-level data, nested (clustered) data, and missing data
+- Fitting and interpreting regression models for count outcomes with single-level data, nested data, and missing data
 
-- Poisson regression model fit assessment and diagnostics 
-
-- Critical appraisal of published studies using course methods 
+- Model fit assessment and diagnostics 
 
 **Readings**: 
  
@@ -105,15 +103,12 @@ knitr::opts_chunk$set(echo = TRUE)
  
 **Lecture**:
 
-*Slides to be added*
-
- * [Lecture slides]()
- * [Dataset]()
+ * Lecture slides: [Analyzing Count Outcomes 1](./slides/EDUC645_3_PoissonNB1.html)
+ * Datasets: [NHANES_data1112](./data/NHANES_data1112.RData)
 
 **Assignment**:
 
- * Due June 3
- * [Assignment details]()
+ * In-class group presentation during Week 10
 
 **Unit Quiz**: Due May 27 (Canvas)
 
@@ -122,5 +117,5 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Final Project
 
  * Due June 12
- * [Instructions]()
+ * Instructions to be posted
 

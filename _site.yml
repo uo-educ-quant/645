@@ -14,14 +14,16 @@ navbar:
       href: ./slides/EDUC645_1_Intro.html
     - text: "Outcome Types and Reliability"
       href: ./slides/EDUC645_1_Outcome_Types_Reliability.html
-    - text: "Nested Data"
+    - text: "Nested Data Overview"
       href: ./slides/EDUC645_1_Nested_Data.html
-    - text: "Missing Data"
+    - text: "Missing Data Overview"
       href: ./slides/EDUC645_1_Missing_Data.html
-    - text: "Logistic Regression 1"
+    - text: "Dichotomous Outcomes 1"
       href: ./slides/EDUC645_2_Logistic1.html
-    - text: "Logistic Regression 2"
+    - text: "Dichotomous Outcomes 2"
       href: ./slides/EDUC645_2_Logistic2.html
+    - text: "Count Outcomes 1"
+      href: ./slides/EDUC645_3_PoissonNB1.html
   - text: R Project Workflow
     href: workflow.html
     
