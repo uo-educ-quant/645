@@ -1,0 +1,220 @@
+---
+title: "Week 8 Lab"
+author: "(add your name)"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+
+# Don't make a change here
+knitr::opts_chunk$set(echo = TRUE,
+                      warning = FALSE,
+                      message = FALSE,
+                      eval = TRUE)
+```
+
+*Goals:*
+
+1. Conduct a mixed-effect logistic regression in nested data: Random interecepts and slopes 
+2. Model comparison, model of best fit
+3. Diagnostics
+
+*Instruction to work on this sheet:* In each code chunk, you can find some code being taken out purposely and left with three dots instead. Your task is to first uncomment the code line, replace the three dots with the code you would write, and then run the code to proceed.
+
+*Data*
+For this lab, we will be using the prinicpal.csv dataset available [here](https://raw.githubusercontent.com/uo-educ-quant/645/master/data/principal.csv). 
+Read in the dataset in the environment and save it to the object prin.
+
+*Brief variable descriptions:*
+
+ - *schid*, identifier variable for School ID
+ 
+ - *stuid*, identifier variable for Student ID
+ 
+ - *pfemale*, an indicator variable telling if the school principal is a female or not (1 - is a female, 0 - not a female)
+ 
+ - *page*, age of the principal
+ 
+ - *sfemale*, an indicator variable telling if the student is a female or not (1 - is a female, 0 - not a female)
+ 
+ - *match*, an indicator variable telling if the student and principal self-reported sex matched or not (1 - matched, 0 - didn't match)
+ 
+ - *attention*, standardized attention score for the student
+ 
+ - *affective*, an indicator variable telling if the student considers the principal to be affective (1 - Yes, - 0 No)
+ 
+ 
+ 
+### Topic: Mixed-effects Logistic Regression in nested data
+
+### Packages and Data 
+
+```{r}
+# Load necessary packages 
+library(tidyverse)
+#install.packages("broom")
+library(broom)
+#install.packages("modelsumary")
+library(modelsummary)
+#install.packages("ggeffects")
+library(ggeffects)
+#install.packages("lme4")
+library(lme4)
+#install.packages("DHARMa")
+library(DHARMa)
+# read in dataset and select variables of interest 
+# Quotes are important around URL link for data retrieval 
+
+prin <- read.csv("https://raw.githubusercontent.com/uo-educ-quant/645/master/data/principal.csv") %>% 
+  drop_na() #this is a simplistic way of dealing with missing data, we simply drop observations with missingness on any row
+```
+
+### Guided Practice
+
+**Task 1: Prepare your dataset for analysis by selecting the relevant variables, and transforming to factor wherever needed. We're also going to be factoring school IDs to nest.**
+
+In educational research, students are typically grouped within classes and schools, creating a hierarchical data structure. This nesting results in students within the same school not being entirely independent, challenging the assumption of independence required by many statistical models. Schools vary in resources, teaching methods, demographics, and policies, all of which can affect study outcomes. Including school ID as a random effect in your statistical model helps account for these differences between schools, leading to a more accurate and reliable analysis of the data at the individual or classroom level.
+
+```{r}
+# check that variables are the correct types. 
+# Dichotomous variables should be factors, and continuous variables should be numeric (num) or integers (int).
+# factor all categorical variable
+
+
+str(prin)
+
+# convert any dichotomous variable to factor
+ prin$pfemale <- factor(prin$pfemale,
+                    levels = c(0,1),
+                    labels = c("Male", "Female"))
+ 
+  prin$sfemale <- factor(prin$sfemale,
+                    levels = c(0,1),
+                    labels = c("Male", "Female"))
+  
+ prin$affective <- factor(prin$affective,
+                             levels = c(0, 1), 
+                          labels = c("No", "Yes"))
+  # as.factor(prin$affective)
+  print(table(prin$affective))
+  prin$match <- factor(prin$match, 
+                           levels = c(0,1),
+                           labels = c("Didn't match", "Matched"))
+  
+prin$schid <- as.factor(prin$schid)
+
+str(prin)
+```
+
+### Task 1: Compare Null model with random intercepts to model 1 random intercepts 
+
+**RQ1: What is the between-school variance in the relationship between student-principal gender matching and student perceptions of principal effectiveness?**
+
+```{r}
+# let's see how many students per school we have in the sample
+table(prin$schid)
+
+# let's visualize this nested structure
+
+ggplot(prin, aes(schid))+
+  geom_bar(fill = "cornflowerblue")+
+  labs(x = "School ID",
+       y = "Number of students per school") +
+  theme_minimal()
+
+ggplot(prin, aes(x = affective, y = schid, color = affective))+
+  geom_jitter()+
+  theme_minimal()
+```
+
+
+*What are our outcome, predictor, and nested variables?*
+
+```{r}
+
+### Random Intercepts Mixed-effects Model ###
+
+# By specifying “between-school variance,” the question implicitly suggests examining how the intercepts (i.e., the baseline levels of perceived principal effectiveness) vary from one school to another.
+
+rq1_null <- glmer(outcome ~ 1 + (...|...), data =prin,
+             family = binomial(link = "logit"))
+
+
+rq1_mod1 <- glmer(outcome ~ predictor + (1|...), data =prin,
+             family = binomial(link = "logit"))
+
+# compare ICCs between null and model 1 
+
+performance::icc(rq1_null)
+performance::icc(rq1_mod1)
+# Is there reason to believe there is between school clustering and should we account for this in our model? 
+
+## A neater table        
+modelsummary(list('Null Effect Model' = rq1_null, 'Mixed-Effect Model' = rq1_mod1),
+             exponentiate = TRUE,
+             statistic = "conf.int",
+             stars = TRUE,
+             gof_omit = "AIC|BIC|Log.Lik|RMSE",
+             title = "Relationship between ....",
+             notes = "Data ....")
+```
+
+**Task 2: Random Slopes and Model Comparison**
+
+**RQ2: How does the relationship between student-principal gender matching and student perceptions of principal effectiveness vary across schools, and to what extent do schools differ in this relationship?**
+
+
+```{r}
+### Random Intercepts and Slopes Mixed-effects Model ###
+
+rq2_mod2 <- glmer(outcome ~ predictor + (1 + predictor |...), data =prin,
+             family = binomial(link = "logit"))
+
+# compare random intercepts to random intercepts and slopes model (i.e., mod1 to mod2)
+performance::compare_performance(rq1_null, rq1_mod1, rq2_mod2, metrics = "common", verbose = FALSE) %>% 
+  datasummary_df()
+
+
+performance::test_likelihoodratio(rq1_null, rq1_mod1, rq2_mod2) %>% 
+  datasummary_df()
+```
+
+*Which is the better fitting model?*
+
+
+**Task3: Diagnostics of model of best fit**
+
+```{r}
+
+respire_m1_residuals <- simulateResiduals(model_bestfit, n = 1000) 
+plot(respire_m1_residuals)
+
+#you can use check_model too but it works with more than one variables in the right side of the equation
+#performance::check_model(model_bestfit, check = "vif")
+
+```
+
+*Do we meet assumptions?*
+
+
+**Task 4: Visualize model of best fit**
+
+```{r}
+# Visualize the outcome and predictor variables in raw data
+
+respire_m1_probs <- ggeffect(model_bestfit,
+                             type = "re",   # Note the "re" not "fe", both give the same thing since we have only one predictor and no covariates
+                             terms = c("match"))
+respire_m1_probs %>%
+  plot()+
+  labs(
+    title = "Predicted probabilities",
+    x = "...",
+    y = "..."
+  )
+```
+
+*Interpretation of visualization*

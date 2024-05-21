@@ -106,6 +106,10 @@ knitr::opts_chunk$set(echo = TRUE)
  * Lecture slides: [Analyzing Count Outcomes 1](./slides/EDUC645_3_PoissonNB1.html)
  * Datasets: [NHANES_data1112](./data/NHANES_data1112.RData)
 
+**Lab Worksheets**
+
+ * [Week 8 worksheet](./labs/educ645_lab8.Rmd)
+
 **Assignment**:
 
  * In-class group presentation during Week 10
