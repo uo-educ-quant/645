@@ -104,7 +104,7 @@ knitr::opts_chunk$set(echo = TRUE)
 **Lecture**:
 
  * Lecture slides: [Analyzing Count Outcomes 1](./slides/EDUC645_3_PoissonNB1.html)
- * Datasets: [NHANES_data1112](./data/NHANES_data1112.RData)
+ * Datasets: [NHANES_data1112](./data/NHANES_data1112.RData) | [drvisits](./data/drvisits.RData)
 
 **Lab Worksheets**
 
@@ -121,5 +121,5 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Final Project
 
  * Due June 12
- * Instructions to be posted
+ * [Assignment details](./assignments/final_Sp24.html)
 

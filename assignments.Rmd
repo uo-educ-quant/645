@@ -43,9 +43,14 @@ For each of the 3 assignments and the final project, you are required to submit 
  * Due May 16
  * [Assignment details](./assignments/assignment02_Sp24.html)
 
+**Unit 3:**
 
+ * In-class group presentation during Week 10 (instructions provided via Canvas)
 
+**Final Project:**
 
+ * Due June 12
+ * [Assignment details](./assignments/final_Sp24.html)
 
 
 
