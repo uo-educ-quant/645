@@ -103,7 +103,7 @@ knitr::opts_chunk$set(echo = TRUE)
  
 **Lecture**:
 
- * Lecture slides: [Analyzing Count Outcomes 1](./slides/EDUC645_3_PoissonNB1.html)
+ * Lecture slides: [Analyzing Count Outcomes](./slides/EDUC645_3_PoissonNB.html)
  * Datasets: [NHANES_data1112](./data/NHANES_data1112.RData) | [drvisits](./data/drvisits.RData)
 
 **Lab Worksheets**

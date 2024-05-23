@@ -22,8 +22,8 @@ navbar:
       href: ./slides/EDUC645_2_Logistic1.html
     - text: "Dichotomous Outcomes 2"
       href: ./slides/EDUC645_2_Logistic2.html
-    - text: "Count Outcomes 1"
-      href: ./slides/EDUC645_3_PoissonNB1.html
+    - text: "Count Outcomes"
+      href: ./slides/EDUC645_3_PoissonNB.html
   - text: R Project Workflow
     href: workflow.html
     

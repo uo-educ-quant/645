@@ -767,7 +767,7 @@ What do you think is the solution?
 ---
 # Model fitting
 
-For logistic regression in nested data, we'll use the `glmer` package.
+For logistic regression in nested data, we'll use the `glmer` function in lme4. 
 
 
 --
@@ -780,6 +780,9 @@ respire_m0 <- glmer(outcome ~ 1 + (1 | id), # Participants = clusters
 performance::icc(respire_m0)
 ```
 
+
+-- 
+Note: Strictly speaking, it is not necessary to calculate the ICC in this situation because we do not need to use an ICC value to justify using a mixed-effects model (vs a fixed-effect model). Instead, we know that repeated observations are going to be dependent, and we're using the mixed-effects model to account for that. 
 
 ---
 # Model fitting (continued)

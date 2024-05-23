@@ -1,7 +1,7 @@
 ---
-title: "Analyzing Count Outcomes 1"
+title: "Analyzing Count Outcomes"
 subtitle: "EDUC 645 (Unit 3)"
-#author:
+#author: "TBD"
 #date: "`r format(Sys.time(), '%d %B %Y')`"
 output:
   xaringan::moon_reader:
@@ -17,10 +17,11 @@ output:
 
 ```{R, setup, include = F}
 library(pacman)
-p_load(NHANES, easystats, emmeans, DHARMa, ggeffects,
-       here, tidyverse, ggplot2, xaringan, knitr, kableExtra, foreign, broom, xaringanthemer, reshape2, lfe, arsenal, ggpubr, stargazer, fixest, gtsummary, huxtable, aod)
+p_load(easystats, emmeans, DHARMa, ggeffects, haven,
+       here, tidyverse, ggplot2, xaringan, knitr, kableExtra, foreign, broom.mixed, xaringanthemer, reshape2, DiagrammeR, lme4,
+       performance, lmerTest, gtsummary, NHANES)
 
-i_am("slides/EDUC645_3_PoissonNB1.rmd")
+i_am("slides/EDUC645_3_PoissonNB.Rmd")
 
 extra_css <- list(
   ".red"   = list(color = "red"),
@@ -60,26 +61,27 @@ NHANES_data1112 <- NHANES::NHANES %>%
   filter(SurveyYr == "2011_12", Age > 12) %>% 
   filter(if_all(everything(), ~!is.na(.))) %>% 
   select(-SurveyYr)
+
+drvisits <- haven::read_dta(here::here("data", "drvisits.dta")) %>% 
+  as_tibble() %>% 
+  rename(educ_yrs = educ,
+         income_log = loginc,
+         reform_n = reform,
+         visits = numvisit) %>% 
+  mutate(health_status = case_when(badh == 0 ~ "Good",
+                                   badh == 1 ~ "Poor"),
+         health_status = factor(health_status, levels = c("Good", "Poor")),
+         marital_status = case_when(married == 0 ~ "Married",
+                                    married == 1 ~ "Unmarried"),
+         marital_status = factor(marital_status, levels = c("Married", "Unmarried")),
+         intervention = case_when(reform_n == 0 ~ "Pre",
+                            reform_n == 1 ~ "Post"),
+         intervention = factor(intervention, levels = c("Pre", "Post")),
+         age_c = datawizard::standardize(age, center = TRUE, scale = FALSE)) %>% 
+  select(id, educ_yrs, income_log, health_status, marital_status, age, age_c, intervention, visits)
 ```
 
 
----
-# Unit Overview
-
-Week 1 (slide set #1)
-
-- Recap of count outcome concepts
-
-- Basic regression model fit, diagnostics, and interpretation for count outcomes
-
-
---
-Week 2 (slide set #2)
-
-- Analyzing counts in nested data
-
-
----
 # Recap: What makes a count outcome a count?
 
 Counts indicate how many of an outcome are present, or often, how many of an outcome are present *in a specific timeframe* (aka a *rate*).
@@ -151,7 +153,7 @@ class: middle, inverse
 
 
 --
-<span style = "color:green"> Negative binomial regression: </span>Similar to Poisson regression, but relaxes a restrictive assumption (to be discussed in a few slides).
+<span style = "color:green"> Negative binomial regression: </span>Similar to Poisson regression, but relaxes the restrictive assumption of the Poisson model that the mean of the count outcome equals the variance of the outcome.
 
 
 --
@@ -284,7 +286,7 @@ Like logistic regression, we have to exponentiate the model coefficients to inte
 --
 ```{r}
 mod_1 %>% 
-  broom::tidy(exponentiate = TRUE, conf.int = TRUE)
+  broom::tidy(exponentiate = TRUE, conf.int = TRUE) 
 ```
 
 
@@ -297,162 +299,89 @@ mod_1 %>%
 
 
 ---
-# Assignment 3
+# drvisits data
+
+Let's look at data from a study that uses a common design in the social sciences: a single-group pre-post study, where one group is exposed to an intervention and the difference in the outcome measure before and after the intervention is compared.
 
 
 --
-Assignment 3 will be a group presentation activity. You'll choose an article that used some of the methods from the course, critically evaluate it, then present a summary of the article along with your observations in class during Week 10. 
+The `drvisits` dataset includes the following variables:
 
-
---
-- **Brondolo 2015:** Perceived ethnic discrimination and cigarette smoking: Examining the moderating effects of race/ethnicity and gender in a sample
-of Black and Latino urban adults
-
-
---
-- **Caceres 2015:** Cardiovascular disease risk in sexual minority women
-(18-59 years old): Findings from the National Health and
-Nutrition Examination Survey (2001-2012)
-
-
---
-- **Poulson 2020:** Intersectional disparities among Hispanic groups in COVID‑19
-outcomes
-
-
---
-- **Tanner 2015:** Factors influencing health care access perceptions and care-
-seeking behaviors of immigrant Latino sexual minority men and transgender individuals: Baseline findings from the HOLA intervention study
-
-
---
-Detailed instructions will be sent via Canvas. Articles are now in the Files tab on Canvas.
+* 
 
 ---
-class: middle, inverse
+# Number of visits 
 
-# From here, we proceed like logistic regression...
+```{r, warning=FALSE, fig.retina=3}
+drvisits %>% 
+  ggplot(aes(visits)) +
+  geom_histogram(binwidth = 1)
+```
 
 ---
-# First we fit a null model
+# Initial model
+
+First we'll fit our initial model, which will be a Poisson model and include the number of visits as the outcome and time point of the intervention (before/after) as the IV. We'll include a random intercept for patients, because the data the observations are clustered within patients. 
+ 
+```{r}
+drvisits_m1 <- glmer(visits ~ intervention + (1 | id),
+                     family = poisson(), data = drvisits)
+```
+
+---
+# Examine overdispersion
+
+Next, we'll look at the results of the dispersion test from DHARMa to decide if we should use a negative-binomial model instead of Poisson. 
 
 ```{r}
-mod_0 <- glm.nb(DaysMHBad_count ~ 1, 
-                data = NHANES_data1112)
+drvisits_m1_residuals <- simulateResiduals(drvisits_m1 , n = 1000) 
+testDispersion(drvisits_m1_residuals, alternative = "greater", plot = F)
 ```
 
 
----
-# Adding independent variable
-
-We fit the next model (with the `Sleep_Trouble` independent variable) on an earlier slide. Unsurprisingly, it fits better than the null model:
-
 --
-```{r}
-anova(mod_0, mod_1, test ="Chisq")
-```
+This suggests we don't have concerning overdispersion in the model residuals, so we'll stick to the more parsimonious Poisson. 
 
---
-```{r}
-mod_0$aic
-mod_1$aic
-```
 
 ---
 # Adding covariates
 
-Adding `Age` as a covariate:
+In many research areas, there can often be a relatively standard set of sociodemographic characteristics that are  controlled for. We'll imagine this is the case here, and add a set of control variables next. 
 
 
 --
 ```{r}
-mod_2 <- glm.nb(DaysMHBad_count ~ Sleep_Trouble + Age, 
-                data = NHANES_data1112)
-anova(mod_1, mod_2, test ="Chisq")
+drvisits_m2 <- glmer(visits ~ intervention + educ_yrs + income_log + 
+                       age_c + health_status + (1 | id), 
+                     family = poisson(),
+                     data = drvisits,
+                     control = glmerControl(optimizer = "bobyqa",
+                               optCtrl = list(maxfun = 2e5)))
+
+anova(drvisits_m1, drvisits_m2, test ="Chisq")
 ```
 
-
---
-```{r}
-mod_1$aic
-mod_2$aic
-```
 
 ---
 # Adding covariates
 
-Adding `Sex` as a covariate:
-
-
---
-```{r}
-mod_3 <- glm.nb(DaysMHBad_count ~ Sleep_Trouble + Age + Sex, 
-                data = NHANES_data1112)
-anova(mod_2, mod_3, test ="Chisq")
-```
-
-
---
-```{r}
-mod_2$aic
-mod_3$aic
-```
-
----
-# Adding an interaction
-
-```{r}
-mod_3_int <- glm.nb(DaysMHBad_count ~ Sleep_Trouble + Age + Sex + 
-                      Sleep_Trouble:Sex, data = NHANES_data1112)
-```
-
---
-Evaluate the significance of the interaction (no need to exponentiate):
-
-```{r}
-mod_3_int %>% 
-  broom::tidy() 
+```{r, warning=FALSE, message = FALSE}
+performance::compare_performance(drvisits_m1, drvisits_m2, 
+                                 metrics = "common") %>% 
+  print_md()
 ```
 
 
 ---
 # Assumptions and diagnostics
 
-Since the interaction term was significant, we'll check fit and assumptions before proceeding to interpretation.
+Inspect residuals:
 
 ```{r}
-anova(mod_3, mod_3_int, test ="Chisq")
+drvisits_m2_residuals <- simulateResiduals(drvisits_m2 , n = 1000) 
+plot(drvisits_m2_residuals)
 ```
 
-
---
-```{r}
-mod_3$aic
-mod_3_int$aic
-```
-
-
----
-# Assumptions and diagnostics
-
-We can then use the same tools to assess model assumptions as we used in logistic regression. 
-
---
-```{r, fig.retina=3}
-mod_3_int_residuals <- simulateResiduals(mod_3_int, n = 1000) 
-plot(mod_3_int_residuals)
-```
-
-
----
-# Assumptions and diagnostics
-
-The two-sided dispersion test in the plot was significant, but remember we are mainly interested in overdispersion. So we can specify a one-sided test for overdispersion using the same function as we used several slides ago. 
-
---
-```{r}
-testDispersion(mod_3_int_residuals, alternative = "greater", plot = F)
-```
 
                                      
 ---
@@ -461,7 +390,7 @@ testDispersion(mod_3_int_residuals, alternative = "greater", plot = F)
 We can also formally test for zero inflation, again using DHARMa:
 
 ```{r}
-testZeroInflation(mod_3_int_residuals, plot = FALSE)
+testZeroInflation(drvisits_m2, plot = FALSE)
 ```
 
 
@@ -474,64 +403,95 @@ Even if the test had been significant, is our outcome one where there could be p
 Checking multicollinearity visually using the `check_model()` function from the *performance* package.
 
 ```{r, warning=FALSE, fig.retina=3}
-performance::check_model(mod_3_int, check = "vif")
+performance::check_model(drvisits_m2, check = "vif")
 ```
 
 
 ---
-# Interpreting an interaction
+# Examining moderation
 
-Finally, we can interpret the interaction using predicted *counts*, just like we used predicted probabilities in logistic regression.
+```{r}
+drvisits_m2_int <- glmer(visits ~ intervention + educ_yrs + 
+                           income_log + health_status*intervention + 
+                           (1 | id), 
+                         family = poisson(),
+                         data = drvisits,
+                         control = glmerControl(optimizer = "bobyqa",
+                                       optCtrl = list(maxfun = 2e5)))
+```
+
+---
+# Examining moderation
+
+```{r}
+drvisits_m2_int %>% 
+  broom.mixed::tidy(exponentiate = TRUE, conf.int = TRUE, 
+                    effects = "fixed")
+  print_md()
+```
 
 
 --
+Even though the interaction is nonsignificant, it might be informative to look at the predicted counts broken out by health status since it is a strong main effect. 
+
+
+---
+# Examining moderation
+
 ```{r}
 # using the ggeffects package
-mod_3_int_probs <- predict_response(mod_3_int,
+drvisits_m2_int_probs <- predict_response(drvisits_m2_int,
                                     type = "fe",
-                                    terms = c("Sleep_Trouble", "Sex"),
+                                    terms = c("health_status", "intervention"),
                                     margin = "marginalmeans")
 ```
 
+
 ---
-# Interpreting an interaction
+# Examining moderation
 
 ```{r}
-print(mod_3_int_probs)
+print(drvisits_m2_int_probs)
 ```
 
 ---
-# Interpreting an interaction
+# Examining moderation
 
 ```{r, fig.retina=3}
-plot(mod_3_int_probs)
+plot(drvisits_m2_int_probs)
 ```
 
 ---
-# Interpreting an interaction
+# Ignoring dependency
 
+What if we used a simple fixed-effect model instead of accounting for the dependency between patients' observations before and after the intervention?
 
---
-Participants with trouble sleeping would be expected to have significantly more poor mental health days each month than participants without sleeping trouble, regardless of participant sex.
+```{r, eval = F}
+drvisits_m1 <- glmer(visits ~ intervention + (1 | id),
+                     family = poisson(), data = drvisits)
+```
 
+*Versus*
 
---
-In contrast, among participants who did not report sleeping trouble, female participants would be expected to have significantly more poor mental health days each month than male participants.
-
-
---
-This suggests that other factors aside from sleep quality may contribute to the number of poor mental health days participants experience each month, particularly for female participants.
-
+```{r}
+drvisits_fixed <- glm(visits ~ intervention,
+                      family = poisson(), data = drvisits)
+```
 
 ---
-# To do's
+# Ignoring dependency
 
-### Quiz
+```{r}
+drvisits_m1 %>% 
+  broom.mixed::tidy(exponentiate = TRUE, conf.int = TRUE, effects = "fixed") %>% 
+  print_md()
+```
 
-- Quiz 3 due Monday 5/27
+*Versus*
 
-
-
-
-
+```{r}
+drvisits_fixed %>% 
+  broom::tidy(exponentiate = TRUE, conf.int = TRUE) %>% 
+  print_md()
+```
 

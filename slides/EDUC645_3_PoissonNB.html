@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Analyzing Count Outcomes</title>
+    <meta charset="utf-8" />
+    <script src="EDUC645_3_PoissonNB_files/header-attrs-2.21/header-attrs.js"></script>
+    <link href="EDUC645_3_PoissonNB_files/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="EDUC645_3_PoissonNB_files/remark-css-0.0.1/uo.css" rel="stylesheet" />
+    <link href="EDUC645_3_PoissonNB_files/remark-css-0.0.1/ki-fonts.css" rel="stylesheet" />
+    <link rel="stylesheet" href="my_custom.css" type="text/css" />
+    <link rel="stylesheet" href="xaringanthemer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Analyzing Count Outcomes
+]
+.subtitle[
+## EDUC 645 (Unit 3)
+]
+
+---
+
+
+
+
+
+# Recap: What makes a count outcome a count?
+
+Counts indicate how many of an outcome are present, or often, how many of an outcome are present *in a specific timeframe* (aka a *rate*).
+
+
+--
+In addition, a distribution of counts is:
+
+
+--
+- Usually *skewed*, meaning that some values are much more common than others - often a lot, or none at all (zero).
+
+
+--
+- Often *overdispersed*, which means the counts vary more than would be expected.
+
+
+--
+Counts/rates require analyses that account for these properties. These methods are similar to those used for dichotomous outcomes (remember that another way of thinking of counts is that they measure a series of dichotomous outcomes).
+
+
+---
+# Normally distributed data
+
+We previously looked at a more normally distributed variable from NHANES: `SleepHrsNight`, the self-reported number of hours of sleep a participant usually gets.
+
+
+--
+
+```r
+NHANES_data1112 %&gt;% 
+  ggplot(aes(SleepHrsNight)) +
+  geom_histogram(binwidth = 0.5)
+```
+
+&lt;img src="EDUC645_3_PoissonNB_files/figure-html/unnamed-chunk-1-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+
+---
+# Count data
+
+`DaysMHBad_count`, the number of days per month an NHANES participant reports experiencing poor mental health.
+
+
+--
+
+```r
+NHANES_data1112 %&gt;% 
+  ggplot(aes(DaysMHBad_count)) +
+  geom_histogram(binwidth = 1)
+```
+
+&lt;img src="EDUC645_3_PoissonNB_files/figure-html/unnamed-chunk-2-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+
+---
+class: middle, inverse
+
+# Analyzing count data
+
+---
+# Options for analysing count data
+
+
+--
+&lt;span style = "color:green"&gt; Linear regression: &lt;/span&gt;Count outcome variables are sometimes log-transformed and analyzed using OLS regression. 
+
+
+--
+- Many issues in addition to violating model assumptions, including biased estimates and loss of data because it is necessary to take the log of zero (which is undefined).
+
+
+--
+&lt;span style = "color:green"&gt; Poisson regression: &lt;/span&gt;Often used for modeling count data. 
+
+
+--
+&lt;span style = "color:green"&gt; Negative binomial regression: &lt;/span&gt;Similar to Poisson regression, but relaxes the restrictive assumption of the Poisson model that the mean of the count outcome equals the variance of the outcome.
+
+
+--
+&lt;span style = "color:green"&gt; Zero-inflated regression model: &lt;/span&gt;Used to account for excess zeros produced by a different process from "true" zeros. 
+
+
+---
+# Assessing variability
+
+We can get a preliminary sense of whether overdispersion is present by comparing the mean and variance of the `DaysMHBad_count` variable we looked at earlier. Here we'll limit the data to participants 16 or older because the independent variable we'll look at shortly was not measured in participants under 16.
+
+
+--
+
+```r
+NHANES_data1112 %&gt;% 
+  filter(Age &gt;= 16) %&gt;% 
+  summarize(mean = mean(DaysMHBad_count),
+            variance = var(DaysMHBad_count))
+```
+
+```
+#&gt; # A tibble: 1 × 2
+#&gt;    mean variance
+#&gt;   &lt;dbl&gt;    &lt;dbl&gt;
+#&gt; 1  3.88     59.5
+```
+
+
+--
+The variance of the counts far exceeds the mean, suggesting overdispersion. We'll formally assess overdispersion of model *residuals* once we've fitted our models. 
+
+
+--
+This said, these values are a good indication that we should go with negative binomial regression, but we'll compare it against a Poisson regression model to confirm. 
+
+
+---
+# Fitting a model
+
+Here, we'll look at whether there is a relationship between participants' self-reported sleep quality (`Sleep_Trouble`) and the number of days per month they have poor mental health (`DaysMHBad_count`). To fit a negative binomial model we'll use the `glm.nb` function from the MASS package (included with R).
+
+--
+
+```r
+library(MASS)
+mod_1 &lt;- glm.nb(DaysMHBad_count ~ Sleep_Trouble, 
+                data = NHANES_data1112)
+```
+
+
+--
+Fitting a comparable Poisson model for a comparison of fit. 
+
+
+```r
+mod_1b &lt;- glm(DaysMHBad_count ~ Sleep_Trouble, family = poisson(),
+              data = NHANES_data1112)
+```
+
+---
+# Fitting a model
+
+--
+.pull-left[
+**Deviance:**
+
+
+```r
+mod_1b$deviance # Poisson
+```
+
+```
+#&gt; [1] 33116.23
+```
+
+```r
+mod_1$deviance # Neg Binom
+```
+
+```
+#&gt; [1] 2652.866
+```
+]
+
+
+--
+.pull-right[
+**AIC:**
+
+
+```r
+mod_1b$aic # Poisson
+```
+
+```
+#&gt; [1] 38025.25
+```
+
+```r
+mod_1$aic # Neg Binom
+```
+
+```
+#&gt; [1] 13187.78
+```
+]
+
+
+--
+And most critically, we can see that the Poisson gave us much smaller standard errors, which would produce artificially narrow confidence intervals. 
+
+
+```r
+summary(mod_1b)$coefficients[2, "Std. Error"] # Poisson
+```
+
+```
+#&gt; [1] 0.01774997
+```
+
+```r
+summary(mod_1)$coefficients[2, "Std. Error"] # Neg Binom
+```
+
+```
+#&gt; [1] 0.09383608
+```
+
+
+---
+# Fitting a model
+
+We can also look at whether the negative binomial model better accounts for overdispersion. We'll use the DHARMa package again. 
+
+
+--
+
+```r
+mod_1_residuals &lt;- simulateResiduals(mod_1)
+testDispersion(mod_1_residuals, 
+               alternative = "greater", plot = F)
+```
+
+```
+#&gt; 
+#&gt; 	DHARMa nonparametric dispersion test via sd of residuals fitted vs.
+#&gt; 	simulated
+#&gt; 
+#&gt; data:  simulationOutput
+#&gt; dispersion = 0.58444, p-value = 1
+#&gt; alternative hypothesis: greater
+```
+
+
+--
+Compared with the Poisson:
+
+
+
+
+--
+.pull-left[
+
+```r
+mod_1b_residuals_p$statistic
+```
+
+```
+#&gt; dispersion 
+#&gt;   14.74392
+```
+]
+
+
+--
+.pull-right[
+
+```r
+mod_1b_residuals_p$p.value
+```
+
+```
+#&gt; [1] 0
+```
+]
+
+---
+# Basic interpretaton 
+
+Like logistic regression, we have to exponentiate the model coefficients to interpret the results. With counts, the exponentiated coefficient is a **rate ratio**.
+
+
+--
+
+```r
+mod_1 %&gt;% 
+  broom::tidy(exponentiate = TRUE, conf.int = TRUE) 
+```
+
+```
+#&gt; # A tibble: 2 × 7
+#&gt;   term             estimate std.error statistic   p.value conf.low conf.high
+#&gt;   &lt;chr&gt;               &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+#&gt; 1 (Intercept)          3.00    0.0492     22.3  3.28e-110     2.72      3.30
+#&gt; 2 Sleep_TroubleYes     2.10    0.0938      7.91 2.64e- 15     1.75      2.53
+```
+
+
+--
+- Compared with participants who do not have trouble sleeping, participants who have trouble sleeping on average experience 2.13 times as many days per month with poor mental health (95% CI [1.78, 2.57]). 
+
+
+--
+- On average, participants who have trouble sleeping experience 113% more poor mental health days each month (95% CI [1.78, 2.57]) than participants who do not have trouble sleeping.
+
+
+---
+# drvisits data
+
+Let's look at data from a study that uses a common design in the social sciences: a single-group pre-post study, where one group is exposed to an intervention and the difference in the outcome measure before and after the intervention is compared.
+
+
+--
+The `drvisits` dataset includes the following variables:
+
+* 
+
+---
+# Number of visits 
+
+
+```r
+drvisits %&gt;% 
+  ggplot(aes(visits)) +
+  geom_histogram(binwidth = 1)
+```
+
+&lt;img src="EDUC645_3_PoissonNB_files/figure-html/unnamed-chunk-14-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+---
+# Initial model
+
+First we'll fit our initial model, which will be a Poisson model and include the number of visits as the outcome and time point of the intervention (before/after) as the IV. We'll include a random intercept for patients, because the data the observations are clustered within patients. 
+ 
+
+```r
+drvisits_m1 &lt;- glmer(visits ~ intervention + (1 | id),
+                     family = poisson(), data = drvisits)
+```
+
+---
+# Examine overdispersion
+
+Next, we'll look at the results of the dispersion test from DHARMa to decide if we should use a negative-binomial model instead of Poisson. 
+
+
+```r
+drvisits_m1_residuals &lt;- simulateResiduals(drvisits_m1 , n = 1000) 
+testDispersion(drvisits_m1_residuals, alternative = "greater", plot = F)
+```
+
+```
+#&gt; 
+#&gt; 	DHARMa nonparametric dispersion test via sd of residuals fitted vs.
+#&gt; 	simulated
+#&gt; 
+#&gt; data:  simulationOutput
+#&gt; dispersion = 1.1013, p-value = 0.232
+#&gt; alternative hypothesis: greater
+```
+
+
+--
+This suggests we don't have concerning overdispersion in the model residuals, so we'll stick to the more parsimonious Poisson. 
+
+
+---
+# Adding covariates
+
+In many research areas, there can often be a relatively standard set of sociodemographic characteristics that are  controlled for. We'll imagine this is the case here, and add a set of control variables next. 
+
+
+--
+
+```r
+drvisits_m2 &lt;- glmer(visits ~ intervention + educ_yrs + income_log + 
+                       age_c + health_status + (1 | id), 
+                     family = poisson(),
+                     data = drvisits,
+                     control = glmerControl(optimizer = "bobyqa",
+                               optCtrl = list(maxfun = 2e5)))
+
+anova(drvisits_m1, drvisits_m2, test ="Chisq")
+```
+
+```
+#&gt; Data: drvisits
+#&gt; Models:
+#&gt; drvisits_m1: visits ~ intervention + (1 | id)
+#&gt; drvisits_m2: visits ~ intervention + educ_yrs + income_log + age_c + health_status + (1 | id)
+#&gt;             npar    AIC    BIC  logLik deviance  Chisq Df Pr(&gt;Chisq)    
+#&gt; drvisits_m1    3 9536.2 9553.4 -4765.1   9530.2                         
+#&gt; drvisits_m2    7 9307.6 9347.5 -4646.8   9293.6 236.67  4  &lt; 2.2e-16 ***
+#&gt; ---
+#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+
+
+---
+# Adding covariates
+
+
+```r
+performance::compare_performance(drvisits_m1, drvisits_m2, 
+                                 metrics = "common") %&gt;% 
+  print_md()
+```
+
+
+
+Table: Comparison of Model Performance Indices
+
+|Name        |    Model |  AIC (weights) |  BIC (weights) | R2 (cond.) | R2 (marg.) |  ICC | RMSE |
+|:-----------|:--------:|:--------------:|:--------------:|:----------:|:----------:|:----:|:----:|
+|drvisits_m1 | glmerMod | 9536.2 (&lt;.001) | 9553.4 (&lt;.001) |       0.67 |   1.85e-04 | 0.67 | 1.60 |
+|drvisits_m2 | glmerMod | 9307.6 (&gt;.999) | 9347.5 (&gt;.999) |       0.65 |       0.07 | 0.62 | 1.62 |
+
+
+---
+# Assumptions and diagnostics
+
+Inspect residuals:
+
+
+```r
+drvisits_m2_residuals &lt;- simulateResiduals(drvisits_m2 , n = 1000) 
+plot(drvisits_m2_residuals)
+```
+
+&lt;img src="EDUC645_3_PoissonNB_files/figure-html/unnamed-chunk-19-1.png" style="display: block; margin: auto;" /&gt;
+
+
+                                     
+---
+# Assumptions and diagnostics
+
+We can also formally test for zero inflation, again using DHARMa:
+
+
+```r
+testZeroInflation(drvisits_m2, plot = FALSE)
+```
+
+```
+#&gt; 
+#&gt; 	DHARMa zero-inflation test via comparison to expected zeros with
+#&gt; 	simulation under H0 = fitted model
+#&gt; 
+#&gt; data:  simulationOutput
+#&gt; ratioObsSim = 1.1448, p-value &lt; 2.2e-16
+#&gt; alternative hypothesis: two.sided
+```
+
+
+--
+Even if the test had been significant, is our outcome one where there could be plausible mechanisms for excess zeros?
+
+---
+# Assumptions and diagnostics
+
+Checking multicollinearity visually using the `check_model()` function from the *performance* package.
+
+
+```r
+performance::check_model(drvisits_m2, check = "vif")
+```
+
+&lt;img src="EDUC645_3_PoissonNB_files/figure-html/unnamed-chunk-21-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+
+---
+# Examining moderation
+
+
+```r
+drvisits_m2_int &lt;- glmer(visits ~ intervention + educ_yrs + 
+                           income_log + health_status*intervention + 
+                           (1 | id), 
+                         family = poisson(),
+                         data = drvisits,
+                         control = glmerControl(optimizer = "bobyqa",
+                                       optCtrl = list(maxfun = 2e5)))
+```
+
+---
+# Examining moderation
+
+
+```r
+drvisits_m2_int %&gt;% 
+  broom.mixed::tidy(exponentiate = TRUE, conf.int = TRUE, effects = "fixed")
+```
+
+```
+#&gt; # A tibble: 6 × 8
+#&gt;   effect term           estimate std.error statistic  p.value conf.low conf.high
+#&gt;   &lt;chr&gt;  &lt;chr&gt;             &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+#&gt; 1 fixed  (Intercept)       0.590    0.299     -1.04  2.98e- 1    0.219      1.59
+#&gt; 2 fixed  interventionP…    0.940    0.0345    -1.67  9.40e- 2    0.875      1.01
+#&gt; 3 fixed  educ_yrs          1.00     0.0124     0.136 8.92e- 1    0.978      1.03
+#&gt; 4 fixed  income_log        1.12     0.0755     1.75  8.01e- 2    0.986      1.28
+#&gt; 5 fixed  health_status…    2.40     0.178     11.8   2.37e-32    2.08       2.78
+#&gt; 6 fixed  interventionP…    1.13     0.102      1.36  1.74e- 1    0.947      1.35
+```
+
+
+--
+Even though the interaction is nonsignificant, it might be informative to look at the predicted counts broken out by health status since it is a strong main effect. 
+
+
+---
+# Examining moderation
+
+
+```r
+# using the ggeffects package
+drvisits_m2_int_probs &lt;- predict_response(drvisits_m2_int,
+                                    type = "fe",
+                                    terms = c("health_status", "intervention"),
+                                    margin = "marginalmeans")
+```
+
+
+---
+# Examining moderation
+
+
+```r
+print(drvisits_m2_int_probs)
+```
+
+```
+#&gt; # Predicted counts of number of doctor visits in the last 3 months before interview
+#&gt; 
+#&gt; intervention: Pre
+#&gt; 
+#&gt; health_status | Predicted |     95% CI
+#&gt; --------------------------------------
+#&gt; Good          |      1.49 | 1.38, 1.60
+#&gt; Poor          |      3.58 | 3.12, 4.12
+#&gt; 
+#&gt; intervention: Post
+#&gt; 
+#&gt; health_status | Predicted |     95% CI
+#&gt; --------------------------------------
+#&gt; Good          |      1.40 | 1.30, 1.51
+#&gt; Poor          |      3.81 | 3.30, 4.40
+#&gt; 
+#&gt; Adjusted for:
+#&gt; *   educ_yrs = 11.51
+#&gt; * income_log =  7.71
+```
+
+---
+# Examining moderation
+
+
+```r
+plot(drvisits_m2_int_probs)
+```
+
+&lt;img src="EDUC645_3_PoissonNB_files/figure-html/unnamed-chunk-26-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+---
+# Ignoring dependency
+
+What if we used a simple fixed-effect model instead of accounting for the dependency between patients' observations before and after the intervention?
+
+
+```r
+drvisits_m1 &lt;- glmer(visits ~ intervention + (1 | id),
+                     family = poisson(), data = drvisits)
+```
+
+*Versus*
+
+
+```r
+drvisits_fixed &lt;- glm(visits ~ intervention,
+                      family = poisson(), data = drvisits)
+```
+
+---
+# Ignoring dependency
+
+
+```r
+drvisits_m1 %&gt;% 
+  broom.mixed::tidy(exponentiate = TRUE, conf.int = TRUE, effects = "fixed")
+```
+
+```
+#&gt; # A tibble: 2 × 8
+#&gt;   effect term           estimate std.error statistic  p.value conf.low conf.high
+#&gt;   &lt;chr&gt;  &lt;chr&gt;             &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+#&gt; 1 fixed  (Intercept)       1.61     0.0607     12.6  3.17e-36    1.49       1.73
+#&gt; 2 fixed  interventionP…    0.967    0.0310     -1.04 2.99e- 1    0.908      1.03
+```
+
+*Versus*
+
+
+```r
+drvisits_fixed %&gt;% 
+  broom::tidy(exponentiate = TRUE, conf.int = TRUE) 
+```
+
+```
+#&gt; # A tibble: 2 × 7
+#&gt;   term             estimate std.error statistic  p.value conf.low conf.high
+#&gt;   &lt;chr&gt;               &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+#&gt; 1 (Intercept)         2.83     0.0179     58.1  0           2.73      2.93 
+#&gt; 2 interventionPost    0.831    0.0264     -7.00 2.65e-12    0.789     0.875
+```
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
