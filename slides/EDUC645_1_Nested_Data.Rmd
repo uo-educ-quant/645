@@ -1,6 +1,6 @@
 ---
 title: "Nested Data"
-subtitle: "EDUC 645 - Unit 1"
+subtitle: "EDUC 645 (Unit 1)"
 #author: "TBD"
 #date: "`r format(Sys.time(), '%d %B %Y')`"
 output:

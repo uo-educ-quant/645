@@ -1,6 +1,6 @@
 ---
 title: "Missing Data"
-subtitle: "EDUC 645 - Unit 1"
+subtitle: "EDUC 645 (Unit 1)"
 #author: "TBD"
 #date: "`r format(Sys.time(), '%d %B %Y')`"
 output:
@@ -11,8 +11,7 @@ output:
       highlightStyle: github
       highlightLines: true
       countIncrementalSlides: false
-editor_options: 
-  
+  editor_options: 
   chunk_output_type: console
 ---
 
