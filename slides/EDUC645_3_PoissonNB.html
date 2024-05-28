@@ -302,16 +302,16 @@ Like logistic regression, we have to exponentiate the model coefficients to inte
 
 ```r
 mod_1 %&gt;% 
-  broom::tidy(exponentiate = TRUE, conf.int = TRUE) 
+  broom::tidy(exponentiate = TRUE, conf.int = TRUE) %&gt;% 
+  print_md()
 ```
 
-```
-#&gt; # A tibble: 2 × 7
-#&gt;   term             estimate std.error statistic   p.value conf.low conf.high
-#&gt;   &lt;chr&gt;               &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
-#&gt; 1 (Intercept)          3.00    0.0492     22.3  3.28e-110     2.72      3.30
-#&gt; 2 Sleep_TroubleYes     2.10    0.0938      7.91 2.64e- 15     1.75      2.53
-```
+
+
+|term             | estimate| std.error| statistic|  p.value | conf.low| conf.high|
+|:----------------|--------:|---------:|---------:|:---------|--------:|---------:|
+|(Intercept)      |     3.00|      0.05|     22.31|3.28e-110 |     2.72|      3.30|
+|Sleep_TroubleYes |     2.10|      0.09|      7.91| 2.64e-15 |     1.75|      2.53|
 
 
 --
@@ -325,13 +325,21 @@ mod_1 %&gt;%
 ---
 # drvisits data
 
-Let's look at data from a study that uses a common design in the social sciences: a single-group pre-post study, where one group is exposed to an intervention and the difference in the outcome measure before and after the intervention is compared.
+Let's look at data from a study that uses a common design in the social sciences: a *single-group pre-post* study, where one group is exposed to an intervention and the difference in the outcome measure before and after the intervention is compared.
 
 
 --
-The `drvisits` dataset includes the following variables:
+The `drvisits` dataset is from a pre-post study of a policy intervention intended to reduce the number of doctor visits patients required. The dataset is limited to female participants and includes the following variables:
 
-* 
+* `id`: Patient ID
+* `age`: Patient age in years
+* `age_c`: Patient age in years (centered)
+* `educ_yrs`: Number of years of education
+* `marital_status`: Married or unmarried
+* `income_log`: Annual income (logarithm)
+* `health_status`: Self-reported overall health (Good or Poor)
+* `intervention`: Timing of observation relative to intervention (Pre or Post)
+* `visits`: Number of doctor visits during the 3 months preceding assessment
 
 ---
 # Number of visits 
@@ -506,20 +514,21 @@ drvisits_m2_int &lt;- glmer(visits ~ intervention + educ_yrs +
 
 ```r
 drvisits_m2_int %&gt;% 
-  broom.mixed::tidy(exponentiate = TRUE, conf.int = TRUE, effects = "fixed")
+  broom.mixed::tidy(exponentiate = TRUE, conf.int = TRUE, 
+                    effects = "fixed") %&gt;% 
+  print_md()
 ```
 
-```
-#&gt; # A tibble: 6 × 8
-#&gt;   effect term           estimate std.error statistic  p.value conf.low conf.high
-#&gt;   &lt;chr&gt;  &lt;chr&gt;             &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
-#&gt; 1 fixed  (Intercept)       0.590    0.299     -1.04  2.98e- 1    0.219      1.59
-#&gt; 2 fixed  interventionP…    0.940    0.0345    -1.67  9.40e- 2    0.875      1.01
-#&gt; 3 fixed  educ_yrs          1.00     0.0124     0.136 8.92e- 1    0.978      1.03
-#&gt; 4 fixed  income_log        1.12     0.0755     1.75  8.01e- 2    0.986      1.28
-#&gt; 5 fixed  health_status…    2.40     0.178     11.8   2.37e-32    2.08       2.78
-#&gt; 6 fixed  interventionP…    1.13     0.102      1.36  1.74e- 1    0.947      1.35
-```
+
+
+|effect |                               term| estimate| std.error| statistic|  p.value| conf.low| conf.high|
+|:------|----------------------------------:|--------:|---------:|---------:|--------:|--------:|---------:|
+|fixed  |                        (Intercept)|     0.59|      0.30|     -1.04|     0.30|     0.22|      1.59|
+|fixed  |                   interventionPost|     0.94|      0.03|     -1.67|     0.09|     0.88|      1.01|
+|fixed  |                           educ_yrs|     1.00|      0.01|      0.14|     0.89|     0.98|      1.03|
+|fixed  |                         income_log|     1.12|      0.08|      1.75|     0.08|     0.99|      1.28|
+|fixed  |                  health_statusPoor|     2.40|      0.18|     11.84| 2.37e-32|     2.08|      2.78|
+|fixed  | interventionPost:health_statusPoor|     1.13|      0.10|      1.36|     0.17|     0.95|      1.35|
 
 
 --
@@ -604,32 +613,32 @@ drvisits_fixed &lt;- glm(visits ~ intervention,
 
 ```r
 drvisits_m1 %&gt;% 
-  broom.mixed::tidy(exponentiate = TRUE, conf.int = TRUE, effects = "fixed")
+  broom.mixed::tidy(exponentiate = TRUE, conf.int = TRUE, effects = "fixed") %&gt;% 
+  print_md()
 ```
 
-```
-#&gt; # A tibble: 2 × 8
-#&gt;   effect term           estimate std.error statistic  p.value conf.low conf.high
-#&gt;   &lt;chr&gt;  &lt;chr&gt;             &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
-#&gt; 1 fixed  (Intercept)       1.61     0.0607     12.6  3.17e-36    1.49       1.73
-#&gt; 2 fixed  interventionP…    0.967    0.0310     -1.04 2.99e- 1    0.908      1.03
-```
+
+
+|effect |             term| estimate| std.error| statistic| p.value | conf.low| conf.high|
+|:------|----------------:|--------:|---------:|---------:|:--------|--------:|---------:|
+|fixed  |      (Intercept)|     1.61|      0.06|     12.57|3.17e-36 |     1.49|      1.73|
+|fixed  | interventionPost|     0.97|      0.03|     -1.04|    0.30 |     0.91|      1.03|
 
 *Versus*
 
 
 ```r
 drvisits_fixed %&gt;% 
-  broom::tidy(exponentiate = TRUE, conf.int = TRUE) 
+  broom::tidy(exponentiate = TRUE, conf.int = TRUE) %&gt;% 
+  print_md()
 ```
 
-```
-#&gt; # A tibble: 2 × 7
-#&gt;   term             estimate std.error statistic  p.value conf.low conf.high
-#&gt;   &lt;chr&gt;               &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
-#&gt; 1 (Intercept)         2.83     0.0179     58.1  0           2.73      2.93 
-#&gt; 2 interventionPost    0.831    0.0264     -7.00 2.65e-12    0.789     0.875
-```
+
+
+|term             | estimate| std.error| statistic|  p.value| conf.low| conf.high|
+|:----------------|--------:|---------:|---------:|--------:|--------:|---------:|
+|(Intercept)      |     2.83|      0.02|     58.07|     0.00|     2.73|      2.93|
+|interventionPost |     0.83|      0.03|     -7.00| 2.65e-12|     0.79|      0.88|
 
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>

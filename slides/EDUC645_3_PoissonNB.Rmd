@@ -286,7 +286,8 @@ Like logistic regression, we have to exponentiate the model coefficients to inte
 --
 ```{r}
 mod_1 %>% 
-  broom::tidy(exponentiate = TRUE, conf.int = TRUE) 
+  broom::tidy(exponentiate = TRUE, conf.int = TRUE) %>% 
+  print_md()
 ```
 
 
@@ -301,13 +302,21 @@ mod_1 %>%
 ---
 # drvisits data
 
-Let's look at data from a study that uses a common design in the social sciences: a single-group pre-post study, where one group is exposed to an intervention and the difference in the outcome measure before and after the intervention is compared.
+Let's look at data from a study that uses a common design in the social sciences: a *single-group pre-post* study, where one group is exposed to an intervention and the difference in the outcome measure before and after the intervention is compared.
 
 
 --
-The `drvisits` dataset includes the following variables:
+The `drvisits` dataset is from a pre-post study of a policy intervention intended to reduce the number of doctor visits patients required. The dataset is limited to female participants and includes the following variables:
 
-* 
+* `id`: Patient ID
+* `age`: Patient age in years
+* `age_c`: Patient age in years (centered)
+* `educ_yrs`: Number of years of education
+* `marital_status`: Married or unmarried
+* `income_log`: Annual income (logarithm)
+* `health_status`: Self-reported overall health (Good or Poor)
+* `intervention`: Timing of observation relative to intervention (Pre or Post)
+* `visits`: Number of doctor visits during the 3 months preceding assessment
 
 ---
 # Number of visits 
@@ -426,7 +435,7 @@ drvisits_m2_int <- glmer(visits ~ intervention + educ_yrs +
 ```{r}
 drvisits_m2_int %>% 
   broom.mixed::tidy(exponentiate = TRUE, conf.int = TRUE, 
-                    effects = "fixed")
+                    effects = "fixed") %>% 
   print_md()
 ```
 
