@@ -278,7 +278,7 @@ mod_1b_residuals_p$p.value
 ]
 
 ---
-# Basic interpretaton 
+# Basic interpretation 
 
 Like logistic regression, we have to exponentiate the model coefficients to interpret the results. With counts, the exponentiated coefficient is a **rate ratio**.
 
