@@ -123,15 +123,15 @@ We can get a preliminary sense of whether overdispersion is present by comparing
 NHANES_data1112 %&gt;% 
   filter(Age &gt;= 16) %&gt;% 
   summarize(mean = mean(DaysMHBad_count),
-            variance = var(DaysMHBad_count))
+            variance = var(DaysMHBad_count)) %&gt;% 
+  print_md()
 ```
 
-```
-#&gt; # A tibble: 1 × 2
-#&gt;    mean variance
-#&gt;   &lt;dbl&gt;    &lt;dbl&gt;
-#&gt; 1  3.88     59.5
-```
+
+
+|mean | variance|
+|:----|--------:|
+|3.88 |    59.50|
 
 
 --
@@ -145,14 +145,13 @@ This said, these values are a good indication that we should go with negative bi
 ---
 # Fitting a model
 
-Here, we'll look at whether there is a relationship between participants' self-reported sleep quality (`Sleep_Trouble`) and the number of days per month they have poor mental health (`DaysMHBad_count`). To fit a negative binomial model we'll use the `glm.nb` function from the MASS package (included with R).
+Here, we'll look at whether there is a relationship between participants' self-reported sleep quality (`Sleep_Trouble`) and the number of days per month they have poor mental health (`DaysMHBad_count`). To fit a negative binomial model we'll use the `glm.nb` function from the MASS package.
 
 --
 
 ```r
-library(MASS)
-mod_1 &lt;- glm.nb(DaysMHBad_count ~ Sleep_Trouble, 
-                data = NHANES_data1112)
+mod_1 &lt;- MASS::glm.nb(DaysMHBad_count ~ Sleep_Trouble,
+                       data = NHANES_data1112)
 ```
 
 
@@ -292,6 +291,8 @@ mod_1b_residuals_p$p.value
 ```
 ]
 
+
+
 ---
 # Basic interpretation 
 
@@ -302,17 +303,14 @@ Like logistic regression, we have to exponentiate the model coefficients to inte
 
 ```r
 mod_1 %&gt;% 
-  broom::tidy(exponentiate = TRUE, conf.int = TRUE) %&gt;% 
-  print_md()
+  broom::tidy(exponentiate = TRUE, conf.int = TRUE) 
 ```
-
 
 
 |term             | estimate| std.error| statistic|  p.value | conf.low| conf.high|
 |:----------------|--------:|---------:|---------:|:---------|--------:|---------:|
 |(Intercept)      |     3.00|      0.05|     22.31|3.28e-110 |     2.72|      3.30|
 |Sleep_TroubleYes |     2.10|      0.09|      7.91| 2.64e-15 |     1.75|      2.53|
-
 
 --
 - Compared with participants who do not have trouble sleeping, participants who have trouble sleeping on average experience 2.13 times as many days per month with poor mental health (95% CI [1.78, 2.57]). 
@@ -351,7 +349,7 @@ drvisits %&gt;%
   geom_histogram(binwidth = 1)
 ```
 
-&lt;img src="EDUC645_3_PoissonNB_files/figure-html/unnamed-chunk-14-1.png" width="576" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC645_3_PoissonNB_files/figure-html/unnamed-chunk-16-1.png" width="576" style="display: block; margin: auto;" /&gt;
 
 ---
 # Initial model
@@ -393,7 +391,7 @@ This suggests we don't have concerning overdispersion in the model residuals, so
 ---
 # Adding covariates
 
-In many research areas, there can often be a relatively standard set of sociodemographic characteristics that are  controlled for. We'll imagine this is the case here, and add a set of control variables next. 
+In many research areas, there can often be a relatively standard set of sociodemographic characteristics that are controlled for. We'll imagine this is the case here, and add a set of control variables next. 
 
 
 --
@@ -405,22 +403,20 @@ drvisits_m2 &lt;- glmer(visits ~ intervention + educ_yrs + income_log +
                      data = drvisits,
                      control = glmerControl(optimizer = "bobyqa",
                                optCtrl = list(maxfun = 2e5)))
-
-anova(drvisits_m1, drvisits_m2, test ="Chisq")
 ```
 
-```
-#&gt; Data: drvisits
-#&gt; Models:
-#&gt; drvisits_m1: visits ~ intervention + (1 | id)
-#&gt; drvisits_m2: visits ~ intervention + educ_yrs + income_log + age_c + health_status + (1 | id)
-#&gt;             npar    AIC    BIC  logLik deviance  Chisq Df Pr(&gt;Chisq)    
-#&gt; drvisits_m1    3 9536.2 9553.4 -4765.1   9530.2                         
-#&gt; drvisits_m2    7 9307.6 9347.5 -4646.8   9293.6 236.67  4  &lt; 2.2e-16 ***
-#&gt; ---
-#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+--
+
+```r
+performance::test_likelihoodratio(drvisits_m1, drvisits_m2)
 ```
 
+
+|Name        |   Model | df| df_diff|   Chi2|        p|
+|:-----------|:--------|--:|-------:|------:|--------:|
+|drvisits_m1 |glmerMod |  3|        |       |         |
+|drvisits_m2 |glmerMod |  7|       4| 236.67| 4.83e-50|
 
 ---
 # Adding covariates
@@ -428,8 +424,7 @@ anova(drvisits_m1, drvisits_m2, test ="Chisq")
 
 ```r
 performance::compare_performance(drvisits_m1, drvisits_m2, 
-                                 metrics = "common") %&gt;% 
-  print_md()
+                                 metrics = c("common") 
 ```
 
 
@@ -440,7 +435,6 @@ Table: Comparison of Model Performance Indices
 |:-----------|:--------:|:--------------:|:--------------:|:----------:|:----------:|:----:|:----:|
 |drvisits_m1 | glmerMod | 9536.2 (&lt;.001) | 9553.4 (&lt;.001) |       0.67 |   1.85e-04 | 0.67 | 1.60 |
 |drvisits_m2 | glmerMod | 9307.6 (&gt;.999) | 9347.5 (&gt;.999) |       0.65 |       0.07 | 0.62 | 1.62 |
-
 
 ---
 # Assumptions and diagnostics
@@ -453,7 +447,7 @@ drvisits_m2_residuals &lt;- simulateResiduals(drvisits_m2 , n = 1000)
 plot(drvisits_m2_residuals)
 ```
 
-&lt;img src="EDUC645_3_PoissonNB_files/figure-html/unnamed-chunk-19-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC645_3_PoissonNB_files/figure-html/unnamed-chunk-24-1.png" style="display: block; margin: auto;" /&gt;
 
 
                                      
@@ -479,7 +473,7 @@ testZeroInflation(drvisits_m2, plot = FALSE)
 
 
 --
-Even if the test had been significant, is our outcome one where there could be plausible mechanisms for excess zeros?
+It looks like we have significant zero inflation, so we could consider a zero-inflated Poisson (see last slide).
 
 ---
 # Assumptions and diagnostics
@@ -491,7 +485,7 @@ Checking multicollinearity visually using the `check_model()` function from the 
 performance::check_model(drvisits_m2, check = "vif")
 ```
 
-&lt;img src="EDUC645_3_PoissonNB_files/figure-html/unnamed-chunk-21-1.png" width="576" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC645_3_PoissonNB_files/figure-html/unnamed-chunk-26-1.png" width="576" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -515,21 +509,18 @@ drvisits_m2_int &lt;- glmer(visits ~ intervention + educ_yrs +
 ```r
 drvisits_m2_int %&gt;% 
   broom.mixed::tidy(exponentiate = TRUE, conf.int = TRUE, 
-                    effects = "fixed") %&gt;% 
-  print_md()
+                    effects = "fixed")
 ```
 
 
-
-|effect |                               term| estimate| std.error| statistic|  p.value| conf.low| conf.high|
-|:------|----------------------------------:|--------:|---------:|---------:|--------:|--------:|---------:|
-|fixed  |                        (Intercept)|     0.59|      0.30|     -1.04|     0.30|     0.22|      1.59|
-|fixed  |                   interventionPost|     0.94|      0.03|     -1.67|     0.09|     0.88|      1.01|
-|fixed  |                           educ_yrs|     1.00|      0.01|      0.14|     0.89|     0.98|      1.03|
-|fixed  |                         income_log|     1.12|      0.08|      1.75|     0.08|     0.99|      1.28|
-|fixed  |                  health_statusPoor|     2.40|      0.18|     11.84| 2.37e-32|     2.08|      2.78|
-|fixed  | interventionPost:health_statusPoor|     1.13|      0.10|      1.36|     0.17|     0.95|      1.35|
-
+|term                               | estimate| std.error| statistic|  p.value| conf.low| conf.high|
+|:----------------------------------|--------:|---------:|---------:|--------:|--------:|---------:|
+|(Intercept)                        |     0.59|      0.30|     -1.04|     0.30|     0.22|      1.59|
+|interventionPost                   |     0.94|      0.03|     -1.67|     0.09|     0.88|      1.01|
+|educ_yrs                           |     1.00|      0.01|      0.14|     0.89|     0.98|      1.03|
+|income_log                         |     1.12|      0.08|      1.75|     0.08|     0.99|      1.28|
+|health_statusPoor                  |     2.40|      0.18|     11.84| 2.37e-32|     2.08|      2.78|
+|interventionPost:health_statusPoor |     1.13|      0.10|      1.36|     0.17|     0.95|      1.35|
 
 --
 Even though the interaction is nonsignificant, it might be informative to look at the predicted counts broken out by health status since it is a strong main effect. 
@@ -543,7 +534,8 @@ Even though the interaction is nonsignificant, it might be informative to look a
 # using the ggeffects package
 drvisits_m2_int_probs &lt;- predict_response(drvisits_m2_int,
                                     type = "fe",
-                                    terms = c("health_status", "intervention"),
+                                    terms = c("health_status", 
+                                              "intervention"),
                                     margin = "marginalmeans")
 ```
 
@@ -586,7 +578,7 @@ print(drvisits_m2_int_probs)
 plot(drvisits_m2_int_probs)
 ```
 
-&lt;img src="EDUC645_3_PoissonNB_files/figure-html/unnamed-chunk-26-1.png" width="576" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC645_3_PoissonNB_files/figure-html/unnamed-chunk-32-1.png" width="576" style="display: block; margin: auto;" /&gt;
 
 ---
 # Ignoring dependency
@@ -594,12 +586,16 @@ plot(drvisits_m2_int_probs)
 What if we used a simple fixed-effect model instead of accounting for the dependency between patients' observations before and after the intervention?
 
 
+--
+In other words: 
+
+
 ```r
 drvisits_m1 &lt;- glmer(visits ~ intervention + (1 | id),
                      family = poisson(), data = drvisits)
 ```
 
-*Versus*
+**.blue[*Versus*]**
 
 
 ```r
@@ -613,26 +609,22 @@ drvisits_fixed &lt;- glm(visits ~ intervention,
 
 ```r
 drvisits_m1 %&gt;% 
-  broom.mixed::tidy(exponentiate = TRUE, conf.int = TRUE, effects = "fixed") %&gt;% 
-  print_md()
+  broom.mixed::tidy(exponentiate = TRUE, conf.int = TRUE, effects = "fixed")
 ```
 
 
+|term             | estimate| std.error| statistic| p.value | conf.low| conf.high|
+|:----------------|--------:|---------:|---------:|:--------|--------:|---------:|
+|(Intercept)      |     1.61|      0.06|     12.57|3.17e-36 |     1.49|      1.73|
+|interventionPost |     0.97|      0.03|     -1.04|    0.30 |     0.91|      1.03|
 
-|effect |             term| estimate| std.error| statistic| p.value | conf.low| conf.high|
-|:------|----------------:|--------:|---------:|---------:|:--------|--------:|---------:|
-|fixed  |      (Intercept)|     1.61|      0.06|     12.57|3.17e-36 |     1.49|      1.73|
-|fixed  | interventionPost|     0.97|      0.03|     -1.04|    0.30 |     0.91|      1.03|
-
-*Versus*
+**.blue[*Versus*]**
 
 
 ```r
 drvisits_fixed %&gt;% 
-  broom::tidy(exponentiate = TRUE, conf.int = TRUE) %&gt;% 
-  print_md()
+  broom::tidy(exponentiate = TRUE, conf.int = TRUE) 
 ```
-
 
 
 |term             | estimate| std.error| statistic|  p.value| conf.low| conf.high|
@@ -640,6 +632,94 @@ drvisits_fixed %&gt;%
 |(Intercept)      |     2.83|      0.02|     58.07|     0.00|     2.73|      2.93|
 |interventionPost |     0.83|      0.03|     -7.00| 2.65e-12|     0.79|      0.88|
 
+---
+# Zero-inflated Poisson
+
+Because the zero inflation test was significant, we could fit a zero-inflated (ZI) Poisson model then compare fit. 
+
+
+--
+We'll use the `mixed_model` function from the `GLMMadaptive` package for this model, and we'll first refit our model with demographic covariates in this package for better comparability. 
+
+
+
+```r
+drvisits_m2a &lt;- mixed_model(visits ~ intervention + educ_yrs + 
+                             income_log + age_c + health_status,
+                            random = ~ 1 | id, 
+                            family = poisson(),
+                            data = drvisits)
+```
+
+
+--
+Note: If we had earlier found that we had important overdispersion and that a negative binomial model was better fitting, we'd use the same syntax as above but with *family* as `negative.binomial()` for the ZI models.
+
+---
+# Zero-inflated Poisson
+
+Next, we fit a ZI model where every observation has an equal likelihood of being a "true zero" or an "excess zero" (ie, a zero caused by a different mechanism). 
+
+
+```r
+drvisits_m2b &lt;- mixed_model(visits ~ intervention + educ_yrs + 
+                             income_log + age_c + health_status,
+                            random = ~ 1 | id, 
+                            family = zi.poisson(),
+                            zi_fixed = ~ 1,
+                            data = drvisits)
+```
+
+
+---
+# Zero-inflated Poisson
+
+Finally, let's fit a model that specifies some mechanism of excess zeros based on existing theory/evidence. A theoretical justification might be something like this: 
+
+
+--
+- The intervention is intended to reduce the number of doctor's visits patients need; this implies the intervention is intended to improve health, which in turn means patients need less health care. In this scenario, then, the "true" zero mechanism is being well (so health care is unneeded).
+
+
+--
+- What might be an alternative zero mechanism? Perhaps patients with low income are unwell and *need* to see a doctor, but can't afford it. 
+
+
+--
+
+```r
+drvisits_m2c &lt;- mixed_model(visits ~ intervention + educ_yrs + 
+                             income_log + age_c + health_status,
+                            random = ~ 1 | id, 
+                            family = zi.poisson(),
+                            zi_fixed = ~ income_log,
+                            data = drvisits)
+```
+
+
+---
+# Zero-inflated Poisson
+
+We can then compare model fit:
+
+
+|Name         |    AIC |   Chi2|        p|
+|:------------|:-------|------:|--------:|
+|drvisits_m2a |9307.63 |       |         |
+|drvisits_m2b |9151.03 | 158.60| 2.29e-36|
+|drvisits_m2c |9151.63 |   1.40|     0.24|
+
+
+--
+This suggests we should go with a ZI model over a standard Poisson, but also that we should stick with the simpler ZI model without a specific zero mechanism specified. 
+
+
+--
+The DHARMa author gives good advice for this scenario, which also applies to model selection more generally:
+
+
+--
+- **.blue[Zero-inflation tests are often not a reliable guide to decide whether to add a ZI term or not. In general, model structures should be decided on a priori, and if that is not possible, via model selection techniques (AIC, BIC, etc). A zero-inflation test should only be run after that decision, and to validate the decision that was taken.]**
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

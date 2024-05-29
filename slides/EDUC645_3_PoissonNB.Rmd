@@ -18,7 +18,7 @@ output:
 ```{R, setup, include = F}
 library(pacman)
 p_load(easystats, emmeans, DHARMa, ggeffects, haven,
-       here, tidyverse, ggplot2, xaringan, knitr, kableExtra, foreign, broom.mixed, xaringanthemer, reshape2, DiagrammeR, lme4,
+       here, tidyverse, ggplot2, xaringan, knitr, kableExtra, foreign, broom.mixed, xaringanthemer, reshape2, DiagrammeR, lme4, GLMMadaptive,
        performance, lmerTest, gtsummary, NHANES)
 
 i_am("slides/EDUC645_3_PoissonNB.Rmd")
@@ -42,7 +42,8 @@ opts_chunk$set(
   fig.height = 5,
   fig.width = 8,
   warning = F,
-  message = F
+  message = F,
+  cache = F
 )
 
 NHANES_data1112 <- NHANES::NHANES %>% 
@@ -171,7 +172,8 @@ We can get a preliminary sense of whether overdispersion is present by comparing
 NHANES_data1112 %>% 
   filter(Age >= 16) %>% 
   summarize(mean = mean(DaysMHBad_count),
-            variance = var(DaysMHBad_count))
+            variance = var(DaysMHBad_count)) %>% 
+  print_md()
 ```
 
 
@@ -186,13 +188,12 @@ This said, these values are a good indication that we should go with negative bi
 ---
 # Fitting a model
 
-Here, we'll look at whether there is a relationship between participants' self-reported sleep quality (`Sleep_Trouble`) and the number of days per month they have poor mental health (`DaysMHBad_count`). To fit a negative binomial model we'll use the `glm.nb` function from the MASS package (included with R).
+Here, we'll look at whether there is a relationship between participants' self-reported sleep quality (`Sleep_Trouble`) and the number of days per month they have poor mental health (`DaysMHBad_count`). To fit a negative binomial model we'll use the `glm.nb` function from the MASS package.
 
 --
 ```{r}
-library(MASS)
-mod_1 <- glm.nb(DaysMHBad_count ~ Sleep_Trouble, 
-                data = NHANES_data1112)
+mod_1 <- MASS::glm.nb(DaysMHBad_count ~ Sleep_Trouble,
+                       data = NHANES_data1112)
 ```
 
 
@@ -277,6 +278,10 @@ mod_1b_residuals_p$p.value
 ```
 ]
 
+```{r, echo=FALSE}
+
+```
+
 ---
 # Basic interpretation 
 
@@ -284,12 +289,16 @@ Like logistic regression, we have to exponentiate the model coefficients to inte
 
 
 --
-```{r}
+```{r, echo = TRUE, eval=FALSE}
+mod_1 %>% 
+  broom::tidy(exponentiate = TRUE, conf.int = TRUE) 
+```
+
+```{r, echo=FALSE}
 mod_1 %>% 
   broom::tidy(exponentiate = TRUE, conf.int = TRUE) %>% 
   print_md()
 ```
-
 
 --
 - Compared with participants who do not have trouble sleeping, participants who have trouble sleeping on average experience 2.13 times as many days per month with poor mental health (95% CI [1.78, 2.57]). 
@@ -355,7 +364,7 @@ This suggests we don't have concerning overdispersion in the model residuals, so
 ---
 # Adding covariates
 
-In many research areas, there can often be a relatively standard set of sociodemographic characteristics that are  controlled for. We'll imagine this is the case here, and add a set of control variables next. 
+In many research areas, there can often be a relatively standard set of sociodemographic characteristics that are controlled for. We'll imagine this is the case here, and add a set of control variables next. 
 
 
 --
@@ -366,20 +375,32 @@ drvisits_m2 <- glmer(visits ~ intervention + educ_yrs + income_log +
                      data = drvisits,
                      control = glmerControl(optimizer = "bobyqa",
                                optCtrl = list(maxfun = 2e5)))
-
-anova(drvisits_m1, drvisits_m2, test ="Chisq")
 ```
 
+
+--
+```{r, echo = TRUE, eval=FALSE}
+performance::test_likelihoodratio(drvisits_m1, drvisits_m2)
+```
+
+```{r, echo = FALSE}
+performance::test_likelihoodratio(drvisits_m1, drvisits_m2) %>% print_md()
+```
 
 ---
 # Adding covariates
 
-```{r, warning=FALSE, message = FALSE}
+```{r, warning=FALSE, message = FALSE, echo = TRUE, eval=FALSE}
+performance::compare_performance(drvisits_m1, drvisits_m2, 
+                                 metrics = c("common") 
+```
+
+
+```{r, warning=FALSE, message = FALSE, echo = FALSE}
 performance::compare_performance(drvisits_m1, drvisits_m2, 
                                  metrics = "common") %>% 
   print_md()
 ```
-
 
 ---
 # Assumptions and diagnostics
@@ -404,7 +425,7 @@ testZeroInflation(drvisits_m2, plot = FALSE)
 
 
 --
-Even if the test had been significant, is our outcome one where there could be plausible mechanisms for excess zeros?
+It looks like we have significant zero inflation, so we could consider a zero-inflated Poisson (see last slide).
 
 ---
 # Assumptions and diagnostics
@@ -432,13 +453,19 @@ drvisits_m2_int <- glmer(visits ~ intervention + educ_yrs +
 ---
 # Examining moderation
 
-```{r}
+```{r, echo=TRUE, eval=FALSE}
+drvisits_m2_int %>% 
+  broom.mixed::tidy(exponentiate = TRUE, conf.int = TRUE, 
+                    effects = "fixed")
+```
+
+```{r, echo=FALSE}
 drvisits_m2_int %>% 
   broom.mixed::tidy(exponentiate = TRUE, conf.int = TRUE, 
                     effects = "fixed") %>% 
+  select(-effect) %>% 
   print_md()
 ```
-
 
 --
 Even though the interaction is nonsignificant, it might be informative to look at the predicted counts broken out by health status since it is a strong main effect. 
@@ -451,7 +478,8 @@ Even though the interaction is nonsignificant, it might be informative to look a
 # using the ggeffects package
 drvisits_m2_int_probs <- predict_response(drvisits_m2_int,
                                     type = "fe",
-                                    terms = c("health_status", "intervention"),
+                                    terms = c("health_status", 
+                                              "intervention"),
                                     margin = "marginalmeans")
 ```
 
@@ -475,12 +503,16 @@ plot(drvisits_m2_int_probs)
 
 What if we used a simple fixed-effect model instead of accounting for the dependency between patients' observations before and after the intervention?
 
+
+--
+In other words: 
+
 ```{r, eval = F}
 drvisits_m1 <- glmer(visits ~ intervention + (1 | id),
                      family = poisson(), data = drvisits)
 ```
 
-*Versus*
+**.blue[*Versus*]**
 
 ```{r}
 drvisits_fixed <- glm(visits ~ intervention,
@@ -490,17 +522,115 @@ drvisits_fixed <- glm(visits ~ intervention,
 ---
 # Ignoring dependency
 
-```{r}
+```{r, echo = TRUE, eval=FALSE}
+drvisits_m1 %>% 
+  broom.mixed::tidy(exponentiate = TRUE, conf.int = TRUE, effects = "fixed")
+```
+
+```{r, echo = FALSE}
 drvisits_m1 %>% 
   broom.mixed::tidy(exponentiate = TRUE, conf.int = TRUE, effects = "fixed") %>% 
+  select(-effect) %>% 
   print_md()
 ```
 
-*Versus*
+**.blue[*Versus*]**
 
-```{r}
+```{r, echo = TRUE, eval=FALSE}
+drvisits_fixed %>% 
+  broom::tidy(exponentiate = TRUE, conf.int = TRUE) 
+```
+
+```{r, echo = FALSE}
 drvisits_fixed %>% 
   broom::tidy(exponentiate = TRUE, conf.int = TRUE) %>% 
   print_md()
 ```
 
+---
+# Zero-inflated Poisson
+
+Because the zero inflation test was significant, we could fit a zero-inflated (ZI) Poisson model then compare fit. 
+
+
+--
+We'll use the `mixed_model` function from the `GLMMadaptive` package for this model, and we'll first refit our model with demographic covariates in this package for better comparability. 
+
+
+```{r}
+drvisits_m2a <- mixed_model(visits ~ intervention + educ_yrs + 
+                             income_log + age_c + health_status,
+                            random = ~ 1 | id, 
+                            family = poisson(),
+                            data = drvisits)
+```
+
+
+--
+Note: If we had earlier found that we had important overdispersion and that a negative binomial model was better fitting, we'd use the same syntax as above but with *family* as `negative.binomial()` for the ZI models.
+
+---
+# Zero-inflated Poisson
+
+Next, we fit a ZI model where every observation has an equal likelihood of being a "true zero" or an "excess zero" (ie, a zero caused by a different mechanism). 
+
+```{r}
+drvisits_m2b <- mixed_model(visits ~ intervention + educ_yrs + 
+                             income_log + age_c + health_status,
+                            random = ~ 1 | id, 
+                            family = zi.poisson(),
+                            zi_fixed = ~ 1,
+                            data = drvisits)
+```
+
+
+---
+# Zero-inflated Poisson
+
+Finally, let's fit a model that specifies some mechanism of excess zeros based on existing theory/evidence. A theoretical justification might be something like this: 
+
+
+--
+- The intervention is intended to reduce the number of doctor's visits patients need; this implies the intervention is intended to improve health, which in turn means patients need less health care. In this scenario, then, the "true" zero mechanism is being well (so health care is unneeded).
+
+
+--
+- What might be an alternative zero mechanism? Perhaps patients with low income are unwell and *need* to see a doctor, but can't afford it. 
+
+
+--
+```{r}
+drvisits_m2c <- mixed_model(visits ~ intervention + educ_yrs + 
+                             income_log + age_c + health_status,
+                            random = ~ 1 | id, 
+                            family = zi.poisson(),
+                            zi_fixed = ~ income_log,
+                            data = drvisits)
+```
+
+
+---
+# Zero-inflated Poisson
+
+We can then compare model fit:
+
+```{r, echo=FALSE}
+p <- performance::test_likelihoodratio(drvisits_m2a, drvisits_m2b, drvisits_m2c) %>% select(-df)
+a <- AIC(drvisits_m2a, drvisits_m2b, drvisits_m2c) %>% select(-df)
+pa <- p %>% bind_cols(a)
+pa %>% 
+  select(Name, AIC, Chi2, p) %>% 
+  print_md()
+```
+
+
+--
+This suggests we should go with a ZI model over a standard Poisson, but also that we should stick with the simpler ZI model without a specific zero mechanism specified. 
+
+
+--
+The DHARMa author gives good advice for this scenario, which also applies to model selection more generally:
+
+
+--
+- **.blue[Zero-inflation tests are often not a reliable guide to decide whether to add a ZI term or not. In general, model structures should be decided on a priori, and if that is not possible, via model selection techniques (AIC, BIC, etc). A zero-inflation test should only be run after that decision, and to validate the decision that was taken.]**
