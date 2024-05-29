@@ -557,6 +557,7 @@ Because the zero inflation test was significant, we could fit a zero-inflated (Z
 We'll use the `mixed_model` function from the `GLMMadaptive` package for this model, and we'll first refit our model with demographic covariates in this package for better comparability. 
 
 
+--
 ```{r}
 drvisits_m2a <- mixed_model(visits ~ intervention + educ_yrs + 
                              income_log + age_c + health_status,
@@ -565,8 +566,6 @@ drvisits_m2a <- mixed_model(visits ~ intervention + educ_yrs +
                             data = drvisits)
 ```
 
-
---
 Note: If we had earlier found that we had important overdispersion and that a negative binomial model was better fitting, we'd use the same syntax as above but with *family* as `negative.binomial()` for the ZI models.
 
 ---
