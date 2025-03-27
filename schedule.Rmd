@@ -29,9 +29,9 @@ knitr::opts_chunk$set(echo = TRUE)
 
 **Readings**:
 
- * Complete prior to April 4 meeting: Dunn et al, 2014 
- * Complete prior to April 9 meeting: BMLR Ch. 8.1-8.5 (pp. 211-231) 
- * Complete prior to April 16 meeting: Little et al, 2014 
+ * Complete prior to April 3 meeting: Dunn et al, 2014 
+ * Complete prior to April 8 meeting: BMLR Ch. 8.1-8.5 (pp. 211-231) 
+ * Complete prior to April 15 meeting: Little et al, 2014 
 
 **Lecture**:
 
@@ -44,10 +44,10 @@ knitr::opts_chunk$set(echo = TRUE)
 
 **Assignment**:
 
- * Due April 25
- * [Assignment details](./assignments/assignment01_Sp24.html)
+ * Due April 24
+ * [Assignment details](./assignments/assignment01_Sp25.html)
  
-**Unit Quiz**: Due April 15 (Canvas)
+**Unit Quiz**: Due April 14 (Canvas)
 
 ---
 
@@ -63,10 +63,10 @@ knitr::opts_chunk$set(echo = TRUE)
 
 **Readings**: 
 
- * Complete prior to April 23 meeting: BMLR Ch. 2 (pp. 39-68) 
- * Complete prior to April 30 meeting: BMLR Ch. 6 (pp. 151-180) 
- * Complete prior to May 7 meeting: BMLR Ch. 8.6-8.11 (pp. 234-251); Recommended: BMLR Ch. 11 (pp. 373-398) 
- * Complete prior to May 14 meeting: BMLR Ch. 9.1-9.7 (pp. 263-306) 
+ * Complete prior to April 22 meeting: BMLR Ch. 2 (pp. 39-68) 
+ * Complete prior to April 29 meeting: BMLR Ch. 6 (pp. 151-180) 
+ * Complete prior to May 6 meeting: BMLR Ch. 8.6-8.11 (pp. 234-251); Recommended: BMLR Ch. 11 (pp. 373-398) 
+ * Complete prior to May 13 meeting: BMLR Ch. 9.1-9.7 (pp. 263-306) 
  
 **Lecture**:
 
@@ -79,10 +79,10 @@ knitr::opts_chunk$set(echo = TRUE)
 
 **Assignment**
 
- * Due May 16
- * [Assignment details](./assignments/assignment02_Sp24.html)
+ * Due May 15
+ * Assignment details to be added
  
-**Unit Quiz**: Due May 6 (Canvas)
+**Unit Quiz**: Due May 5 (Canvas)
 
 ---
 
@@ -98,8 +98,8 @@ knitr::opts_chunk$set(echo = TRUE)
 
 **Readings**: 
  
- * Complete prior to May 21 meeting: BMLR Ch. 4.1-4.4 (pp. 93-112) 
- * Complete prior to May 28 meeting: BMLR Ch. 4.5-4.10 (pp. 113-132), Ch. 5 (pp. 145-148) 
+ * Complete prior to May 20 meeting: BMLR Ch. 4.1-4.4 (pp. 93-112) 
+ * Complete prior to May 27 meeting: BMLR Ch. 4.5-4.10 (pp. 113-132), Ch. 5 (pp. 145-148) 
  
 **Lecture**:
 
@@ -114,12 +114,12 @@ knitr::opts_chunk$set(echo = TRUE)
 
  * In-class group presentation during Week 10
 
-**Unit Quiz**: Due May 27 (Canvas)
+**Unit Quiz**: Due May 26 (Canvas)
 
 ---
 
 ## Final Project
 
- * Due June 12
- * [Assignment details](./assignments/final_Sp24.html)
+ * Due June 11
+ * Assignment details to be added
 

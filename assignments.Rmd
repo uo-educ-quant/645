@@ -35,13 +35,13 @@ For each of the 3 assignments and the final project, you are required to submit 
 
 **Unit 1:**
 
- * Due April 25
- * [Assignment details](./assignments/assignment01_Sp24.html)
+ * Due April 24
+ * [Assignment details](./assignments/assignment01_Sp25.html)
 
 **Unit 2:**
 
- * Due May 16
- * [Assignment details](./assignments/assignment02_Sp24.html)
+ * Due May 15
+ * Assignment details to be posted
 
 **Unit 3:**
 
@@ -49,8 +49,8 @@ For each of the 3 assignments and the final project, you are required to submit 
 
 **Final Project:**
 
- * Due June 12
- * [Assignment details](./assignments/final_Sp24.html)
+ * Due June 11
+ * Assignment details to be posted
 
 
 

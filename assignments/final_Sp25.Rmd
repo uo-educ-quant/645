@@ -1,0 +1,100 @@
+---
+title: "EDUC 645 Final Assignment"
+output: html_document
+---
+
+#### Submission Deadline
+
+June 11 (11:59 PM)
+
+#### Submission Format
+
+You are required to submit the following files:  
+
+ * .doc, .html, or .pdf file with your typed responses and any tables and figures you produce. 
+ * If you used R to create tables and/or figures in the above doc/html/pdf file, you must also submit the .Rmd or .R file you used to render the tables and figures. 
+
+#### Necessary Packages
+
+ * lme4
+ * lmerTest
+ * DHARMa
+ * performance
+ * ggeffects
+ * mice
+ * mitml
+ * VIM
+ 
+## Instructions
+
+The final assignment has **2 components**. Each component uses a different dataset. Label each section of your submitted materials as "Component 1" or as "Component 2".
+
+### Component 1 (80%)
+
+Download the first dataset [here](https://uo-educ-quant.github.io/645/data/school.RData). These data include results of a language competency test delivered to incoming freshman (9th graders; n = 1,394) at 105 US high schools. The dataset also contains results of a verbal reasoning assessment provided to each student and demographic information. The following variables are included:
+
+ * `school`: School id.
+ * `student`: Student id.
+ * `sex`: Assigned sex of student (1 = `Female`, 0 = `Male`).
+ * `ses`: Socioeconomic status of student's family. Categorized as "above average SES" or "below average SES", with the average being the average SES of students in each school.
+ * `ability_verb`: Verbal reasoning ability of each student (assessed using the Wechsler Intelligence Scale for verbal intelligence). Categorized as "above average" or "below average", with the average being the average verbal reasoning ability of students in each school.
+ * `lang_score`: Language competency task score for each student (possible range: 0-60).
+
+
+#### Requirements
+
+The goal of this component is to examine whether there is a relationship between student socioeconomic status (SES; independent variable) and language competency (dependent variable) - and if so, whether the relationship is consistent with prior research. There is also interest in whether the relationship is moderated by students' verbal reasoning ability (i.e., does the influence of SES on language competency differ for students with greater or lesser verbal reasoning).
+
+1. Research significance (10%) 
+    + Identify relevant studies and/or literature reviews (e.g., https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5901657/#R2), and provide a 2-3 paragraph summary of existing evidence on the relationship between SES and language competency/performance. Discuss potential mechanisms by which SES may influence language ability. 
+    + After reviewing the available evidence, restate the research question in your own words. 
+
+2. Analytic sample summary statistics (10%)
+    + Load the dataset and perform basic data management. Check for missing data on variables of interest.
+    + Produce a summary statistics table (Table 1).
+    + Write a paragraph describing the sample, key variables, and the summary statistics.
+ 
+3. Methods and analysis (40%)
+    + Model the relationship between student SES and language competency. *Be sure to load `lmertest` before fitting any models.*
+      + Calculate the ICC to determine the amount of variability in language competency across schools. 
+      + Fit and compare random-intercepts and random-intercepts-and-slopes models with student SES and verbal reasoning ability included as fixed-effect covariates, then with their slopes allowed to vary by school, respectively. Examine whether the added random slopes are important (i.e., significant) to retain.
+      + Check for critical assumptions and outliers of the best-fitting model. 
+      + Using the retained model, specify an interaction to examine whether verbal reasoning ability moderates the relationship between SES and language competency. 
+    + Write a paragraph describing your model selection process and diagnostics results.
+    + Produce a results table (Table 2) that includes the model results and model fit statistics. 
+    + If the interaction is significant, include a plot (Figure 1) of predicted values to facilitate interpretation. Include descriptive axis labels.
+    + Write a paragraph stating the results of your final model.
+
+4. Discussion and conclusions (20%)
+    + Write 2-3 paragraphs summarizing your results, describing whether (and to what extent) the results address your research question, and relating your findings back to the broader evidence base. If the interaction with verbal reasoning ability is significant, be sure to discuss potential implications of a moderating relationship. 
+    + Describe potential limitations of your data and methods.
+
+### Component 2 (20%)
+
+Download the second dataset [here](https://uo-educ-quant.github.io/645/data/add_health_miss.RData). This dataset (n = 3,378) is drawn from the first wave of the National Longitudinal Study of Adolescent to Adult Health ([Add Health](https://addhealth.cpc.unc.edu/data/#public-use)) data. Add Health is a longitudinal study of a nationally representative sample of over 20,000 adolescents who were aged from 12-20 during the first wave (1995) and aged from 18-26 and from 24-32 when the third (2001) and fourth (2008) waves took place. Variables in our dataset include:
+
+ * `id`: Participant ID.
+ * `sex`: Assigned sex of participant (`Female` or `Male`).
+ * `age`: Participant's age in wave 1.
+ * `race_eth`: Self-identified race as Hispanic or Latino (`Latinx`), White, Black or African American (`Black`), American Indian or Native American (`Native American`), and Asian or Pacific Islander (`Asian`).
+ * `gpa`: Participant GPA.
+ * `ever_susp_exp`: Whether the participant ever received an out of school suspension or was expelled (`Yes` or `No`).
+ * `ever_smoke`: Dummy variable coded one for participants who ever smoked (DO NOT RECODE).
+
+#### Requirements
+
+The goal of this component is to demonstrate skills in addressing missing data and conducting logistic regression using multiply imputed datasets. 
+
+1. Missing data assessment and imputation (10%)
+    + After loading the dataset, inspect missingness patterns. Write a brief paragraph summarizing your observations. 
+    + Impute missing data using `mice` and the `cart` imputation method. Examine density plots of imputations, and write a brief paragraph summarizing your observations about the imputations.
+    + Include all plots in submission.
+ 
+2. Modeling (10%)
+    + Using the appropriate functions from `mice`, fit a fixed-effect logistic regression model (i.e., using `glm()`) to examine the relationship between being suspended or expelled and initiating tobacco smoking during adolescence (dependent variable).
+    + Fit a second model that includes `sex` and `gpa` as covariates, given the possibility that students' sex and academic performance may independently influence the likelihood that they start smoking. 
+      + Compare models using the `anova()` function and select the better fitting model. 
+      + Extract an imputed dataset and inspect residuals of selected model.
+    + Produce a table that includes the results of the selected model. 
+    + Write a brief paragraph describing your model selection process and diagnostics results.
+    + Write 1-2 paragraphs stating the results and discussing their relationship with findings from other studies you identify that have examined the relationship between being suspended or expelled and initiating tobacco use during adolescence (e.g., https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3158957/).

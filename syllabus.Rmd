@@ -18,7 +18,7 @@ library(tidyverse)
 The University of Oregon is located on Kalapuya Ilihi, the traditional indigenous homeland of the Kalapuya people. Today, descendants are citizens of the Confederated Tribes of the Grand Ronde Community of Oregon and the Confederated Tribes of Siletz Indians of Oregon, and they continue to make important contributions in their communities, at UO, and across the land we now refer to as Oregon. 
 
 # I. General Course Information
-**EDUC 645 (EDUC 610L): Applied Statistics in Education and Human Services III (3 credits) - Spring 2024 (31569)**
+**EDUC 645 (EDUC 610L): Applied Statistics in Education and Human Services III (3 credits) - Spring 2025 (31742)**
 
 *Meeting Time and Location*
 
@@ -33,10 +33,6 @@ HEDCO 142
 *GTFs*:
 
 * Havisha (Havi) Khurana (she/her/hers); Email: havishak@uoregon.edu (preferred); Office hours: Monday 2-3pm and Wednesday 12-1pm (Zoom; sign-up: https://calendly.com/havishak/15mins)
-
-* Brittany Spinner (she/her/hers); Email: bspinner@uoregon.edu (preferred); Office hour: by appointment  
-
-* Errol Kaylor (he/him/his); Email: errolk@uoregon.edu (preferred); Office hour: Thursday 1-2pm (Cafe Verso, Knight Library)
 
 # II. Course Overview
 This course is the third in a sequence intended to provide a toolkit of statistical concepts, methods, and their implementation to producers of applied research in education, human services, and other social sciences. The course is organized around the principle that research design and analysis depends on researchers’ substantive questions and the data they have available to address these questions. In this intermediate level course, students will learn about and practice using analytic models and strategies that are suitable for examining data that have (a) a dichotomous outcome variable, (b) a count outcome variable, (c) a nested structure, and/or (d) missing values. Students will also learn (e) when and how to estimate internal consistency reliability. The course seeks to blend a conceptual, mathematical, and applied understanding of introductory statistical concepts. Students will employ these statistical tools in a variety of applications, with a particular emphasis on strategies to generate research products relevant to culturally and linguistically diverse communities. At the core of our pedagogical approach is the belief that students learn statistical analysis by doing statistical analysis. 
