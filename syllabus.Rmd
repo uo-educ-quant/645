@@ -105,12 +105,13 @@ The due dates for course assignments and the final are posted [here](./assignmen
 Final grades will be based on the following components:
 
 - Quizzes: 15% (3 quizzes at 5% each)
-- Assignments: 60% (3 assignments at 20% each)
+- Assignments: 45% (3 assignments at 15% each)
 - Final Project: 25%
+- Participation/Attendance: 15%
 
 | Grade | Percentage   | Grade | Percentage   |
 |-------|--------------|-------|--------------|
-| A+    | >_ 98%       | C+    | 77% to < 80% |
+| A+    | >= 98%       | C+    | 77% to < 80% |
 | A     | 94% to < 98% | C     | 73% to < 77% |
 | A-    | 90% to < 94% | C-    | 70% to < 73% |
 | B+    | 87% to < 90% | D     | 60% to < 70% |
@@ -125,6 +126,10 @@ The goal of the assignments is to practice the concepts and vocabulary we have b
 
 ## Final
 The final assignment involves a more extended application of methods covered in this course. Instructions for the final assignment will be provided during Week 9 and listed [here](./assignments.html).
+
+## Participation/Attendance
+
+Graduate students are expected to regularly attend and participate in class meetings (see Attendance and Absence Guidelines, below). Unexcused absences (absences for which the instructor has not been notified ahead of time) adversely impact participation. Students with one (1) unexcused absence will be penalized 5% from their final course grade. Students with two (2) or more unexcused absences will be penalized the full 15% of the *Participation/Attendance* component of their final grade. 
 
 # VI. Statement of How Requirements Differ for Undergraduate and Graduate Students 
 
