@@ -63,63 +63,7 @@ opts_chunk$set(
 - Research/practice interests
 
 
-- What you would like to get out of this course
-
----
-# EDUC quant sequence
-
-
---
-- Goal: Develop the foundational quantitative skills necessary for applied data analysis
-
- + Not all the skills you'll need are covered, particularly for those interested in analysis-heavy positions or becoming an applied quantitative doctoral-level researcher
-
-
---
-- Goal: Understand the (in)appropriate application of those skills
-
- + Understand the capabilities, limitations, and misuses of common quantitative methods, and be able to evaluate the credibility of published research that uses these methods
-
-
---
-- Courses in the EDUC methods sequence share the following principles:
-
- + Analysis follows research design, which emerges from substantive questions
- + Students learn statistical analysis by doing statistical analysis
- + Create an inclusive, supportive environment in which we learn from each other
- + Balance support and academic stretch across a variety of levels of prior experience and comfort with quantitative analysis
-
-
----
-# EDUC 645 assumptions
-
-The assumption is that you're beginning this course with the ability to:
-
-
---
-- Create an RStudio project, read in a dataset in csv format, filter rows, select columns, understand structure of data, recode variables, assess missingness, and calculate summary statistics for continuous and categorical variables in the R programming language
-
-
---
-- Create simple visualizations describing categorical and continuous variables, and their relationships with each other in R
-
-
---
-- State a quantitative research question and its corresponding null hypothesis
-
-
---
-- Articulate the conceptual basis for a null-hypothesis significance test
-
-
---
-- Conduct a one-sample $t$-test and fit a simple (bivariate) linear regression model
-
-
-
---
-See [EDUC 641 data management guide](https://daviddliebowitz.github.io/EDUC641_22F/data_management.html) for data management pointers
-
+- What you would like to get out of the course
 
 ---
 # Goals of EDUC 645
@@ -212,7 +156,7 @@ Finally, at the end of the course, we'll spend some time critically appraising p
 ---
 # Course structure
 
-1. Two (2) weekly 1.5-hour lectures will introduce concepts in interactive lectures, discussion and activities. Readings are intended to supplement material from lectures.
+1. Two (2) weekly 1.5-hour lectures will introduce concepts in interactive lectures, discussion and activities. Readings are intended to supplement lectures.
 
 2. Two (2) **.blue[optional, ungraded]** weekly labs for support with R programming and assignments. Each lab will cover identical material.
 
