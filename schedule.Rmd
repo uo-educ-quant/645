@@ -40,7 +40,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 **Lab Worksheets**
 
- * [Week 1 worksheet](./labs/educ645_lab1.Rmd) | [Week 2 worksheet](./labs/educ645_lab2.Rmd) | [Week 3 worksheet](./labs/educ645_lab3.Rmd)
+ * [Week 1 worksheet](./labs/s25_lab1.Rmd) | [Week 2 worksheet]() | [Week 3 worksheet]()
 
 **Assignment**:
 
@@ -75,7 +75,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 **Lab Worksheets**
 
- * [Week 5 worksheet](./labs/educ645_lab5.Rmd) | [Week 6 worksheet](./labs/educ645_lab6.Rmd) 
+ * [Week 5 worksheet]() | [Week 6 worksheet]() 
 
 **Assignment**
 
@@ -108,7 +108,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 **Lab Worksheets**
 
- * [Week 8 worksheet](./labs/educ645_lab8.Rmd)
+ * [Week 8 worksheet]()
 
 **Assignment**:
 

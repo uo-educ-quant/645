@@ -23,9 +23,9 @@ This course is the third in a sequence intended to provide a toolkit of statisti
 *EDUC 643 (or a similar intermediate statistics course) is a pre-requisite as is a basic familiarity with a statistical programming language (preferably R).*  
 
 # Meeting Time and Location
-Tuesdays and Thursdays, 5:00pm–6:20pm
+Tuesdays and Thursdays, 5:00pm–6:20pm (HEDCO 142)
 
-HEDCO 142
+* Lab: Mondays, 1:00-1:50pm and Tuesdays, 6:30-7:20pm (ED 115)
 
 # Instructor 
 
@@ -33,6 +33,6 @@ HEDCO 142
 
 # GTFs
 
-* Havisha (Havi) Khurana (she/her/hers); Email: havishak@uoregon.edu (preferred); Office hours: Monday 2-3pm and Wednesday 12-1pm (Zoom; sign-up: https://calendly.com/havishak/15mins)
+* Havisha (Havi) Khurana (she/her/hers); Email: havishak@uoregon.edu (preferred); Office hours: TBD
 
 * Brittany Spinner (she/her/hers); Email: bspinner@uoregon.edu (preferred); Office hour: by appointment

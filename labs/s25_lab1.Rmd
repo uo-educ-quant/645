@@ -1,0 +1,228 @@
+---
+title: "Week 1 Lab"
+author: "(add your name)"
+date: "4/4/2023"
+output:
+  word_document: default
+  html_document:
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+# Don't make a change here
+# This sets knitting parameters, telling R to not print warnings and messages in the final output. 
+# Setting `echo=T` prints the code in the output
+knitr::opts_chunk$set(echo = TRUE,
+                      warning = FALSE,
+                      message = FALSE)
+```
+
+Instruction to work on this week's lab: In each code chunk, you can find some code being taken out purposely and left with three dots instead. You have to replace the three dots with the code and then run the chunk.
+
+## Topic: Reviewing Multiple Regression using W25 Data
+
+### Data
+
+```{r}
+# loading libraries
+# tidyverse is used for data cleaning and plotting
+# modelsummary for making tables
+library(tidyverse)
+library(modelsummary)
+```
+
+```{r}
+# reading data using the online link
+seda <- read.csv("https://daviddliebowitz.github.io/EDUC643_23W/data/seda.csv") %>%
+  # `select` retains the columns included in the command
+  select(sedalea, math, totenrl, perfl, locale)
+
+# data management: noticing the variable locale is coded as chr but should be changed to factor
+# check the column type
+str(seda)
+
+# change locale to factor, i.e., categorical 
+seda$locale <- factor(seda$locale)
+
+# check the column type again
+str(seda)
+```
+
+The dataset we'll be using in this lab is drawn from the Stanford Education Data Archive (SEDA) version 4.1. This is the same dataset you used for your final project. Take a look at this link here to remind yourself of the included variables [here](https://daviddliebowitz.github.io/EDUC643_23W/assignments/assignment_6.html).
+
+Brief variable descriptions we use here:
+
+-   sedalea, NCES district ID
+
+-   math, standardized math achievement score
+
+-   perfl, district-level proportion of students eligible for free- or reduced-price school lunch
+
+-   locale, Census-based location of schools attended by majority/plurality of students (Urban, Suburb, Town, Rural)
+
+-   totenrl - total district enrollment grades 3-8
+
+**Table 1. Analytic sample summary statistics**
+
+```{r}
+# create a dataset for showing descriptive statistics where we can change the column names
+
+desc_seda <- seda %>%
+  # removing indetifier as we don't want the summary statistics
+  select(-sedalea) %>%
+  # renaming variable so they appear in the table
+  # syntax: new name = old name
+  rename(
+    "Math Score" = math,
+    "Total Enrollment" = totenrl,
+    "Per. Eligible for Free-or-reduced Lunch" = perfl,
+    "Locale" = locale
+  )
+
+# `datasummary_skim` makes a summary table for the data with standard statistics
+datasummary_skim(data = desc_seda)
+
+# If you want to change which statistics appear, you can mention in fun_numeric
+datasummary_skim(data = desc_seda,
+                 # list statistics, check help-page on how to specify
+                 fun_numeric = list(Mean = Mean, SD = SD),
+                 # digits after decimal
+                 fmt = 2,
+                 # title for the table
+                 title = "Summary Statistics of Key Variables",
+                 # note
+                 note = "Source: Stanford Education Data Archive (SEDA) version 4.1. Data on 12339 school districts.")
+```
+
+1.  Write a short paragraph describing the sample, key variables, and the summary statistics displayed in Table 1.
+
+### Research question
+
+2.  What is the relationship between percentage of FL students (perfl) and math achievement in US school districts?
+
+*Answer here*
+
+*Outcome variable: ....*
+
+*Predictor variable: ....*
+
+*Write the null hypothesis: ...*
+
+```{r}
+## Make a plot, remember to put the predictor on the x-axis and outcome variable on the y-axis
+
+ggplot(seda,
+       aes(x = ..., y = ...)) +
+  geom_point()+
+  geom_smooth(method = 'lm') +
+  labs(x = "...",
+       y = "...",
+       title = "Relationship between Percentage of of students eligible for free lunch and math achievement scores") +
+  theme_minimal(base_size = 14)
+```
+
+3.  Describe the relationship between percentage of FL students (perfl) and math achievement using the 5 characteristics of bivariate relationships?
+
+*Answer here*
+
+4.  Run and interpret a simple OLS regression to test you hypothesis. This the base model, and we'll not add any controls yet.
+
+$Math = \beta_0 + \beta_1*PerFl + \epsilon$
+
+a.  Which parameter (beta) is of direct interest for our research question?
+
+*Answer here*
+
+```{r}
+m1 <- lm(math ~ perfl, seda)
+modelsummary(m1)
+```
+
+b.  What is the intercept? What does it mean?
+
+*Answer here*
+
+c.  What is the slope?
+
+*Answer here*
+
+d.  What proportion of variance is explained by our model?
+
+*Answer here*
+
+e.  Did we reject the null hypothesis?
+
+*Answer here*
+
+5.  Next, we want to re-estimate the relationship but after controlling for locale and totenrl.
+
+$Math = \beta_0 + \beta_1*PerFl + + \beta_2*Locale + \beta_3*TotEnrl + \epsilon$
+
+a.  Which parameter (beta) is of direct interest for our research question?
+
+*Answer here*
+
+b.  Write the null-hypothesis.
+
+*Answer here*
+
+```{r}
+m2 <- lm(math ~ perfl + ... + ..., seda)
+modelsummary(m2)
+```
+
+b.  What is the value of parameter of interest? What does it mean?
+
+*Answer here*
+
+c.  What proportion of variance is explained by the new model? Is it better than the base model?
+
+*Answer here*
+
+d.  Did we reject the null hypothesis?
+
+*Answer here*
+
+
+### Bonus - Let's revise interactions
+
+6.  We want to see if the relationship between math achievement test and percentage of students eligible for free lunch differs by locale, after adjusting for school total enrollment.
+
+The model is:
+
+$Math = \beta_0 + \beta_1*PerFl + + \beta_2*Locale + \beta_3*Locale*PerFl + beta_4*TotEnrl + \epsilon$
+
+a.  Which parameter (beta) is of direct interest for our research question?
+
+*Answer here*
+
+b.  Write the null hypothesis.
+
+*Answer here*
+
+c.  What is the reference category? Is it a sensible choice? If not, change the reference level.
+
+```{r}
+levels(seda$locale)
+table(seda$locale)
+seda$locale <- relevel(seda$locale, ref = "...")
+```
+
+*Answer here*
+
+d.  Run the model. Did we reject the null?
+
+```{r}
+m3 <- lm(math ~ perfl + locale + perfl:locale + totenrl, seda)
+anova(m3)
+```
+
+*Answer here*
+
+e.  Qualitatively describe how the relationship between perfl and math scores differ by locale.
+
+```{r}
+modelsummary(m3)
+```
+
+*Answer here*
