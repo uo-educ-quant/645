@@ -98,7 +98,7 @@ datasummary_skim(prin)
 
 # create a copy of the dataframe where we retain the variables we want to show in the summary
 
-desc_df <- df %>%
+desc_df <- prin %>%
     # select keeps the variable of interest
     select(page, attention, match, sfemale, pfemale, affective)
 
@@ -146,7 +146,7 @@ affective_count <- ggplot(data = prin, aes(x = affective))+ # we specify which v
          title = "...")
 
 affective_prop <- ggplot(prin, aes(x = affective))+
-    geom_bar(aes(y = after_stat(prop)))+ # this means calculate proportion before plotting it.
+    geom_bar(aes(y = after_stat(count/sum(count))))+ # this means calculate proportion before plotting it.
     labs(x = "...",
          y = "...",
          title = "...")
@@ -173,21 +173,24 @@ table(prin$affective, prin$sfemale,
 # To present a table in proportions
 # Using dnn labels the table
 round(prop.table(table(prin$affective, prin$sfemale,
-      dnn = c("Affective", "Female"))),2)
+      dnn = c("Affective", "Female")),2),2)
 ```
 
 **Visualizing dichotmous outcome and predictor**
 
 ```{r}
 # Can show counts - okay representation
-ggplot(prin, aes(x = affective, fill = sfemale))+
+# Can show counts - okay representation
+# With binary outcomes and predictors, the predictor goes on x axis and outcomes goes on fill
+ggplot(prin, aes(x = sfemale, fill = affective))+
     geom_bar(position = "dodge")+
     labs(x = "...",
          y = "...",
          title = "...")
 
+
 # Can show proportions, which is way better
-ggplot(prin, aes(x = affective, fill = sfemale))+
+ggplot(prin, aes(x = sfemale, fill = affective))+
     geom_bar(position = "fill")+
     labs(x = "...",
          y = "...",
