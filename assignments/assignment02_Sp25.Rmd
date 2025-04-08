@@ -21,7 +21,7 @@ Available evidence suggests that regular exercise can help to improve depression
 
 The National Health and Nutrition Examination Survey (NHANES) is an annual household survey and health examination of about 5,000 participants across the US. NHANES uses a sophisticated methodology to produce a sample that provides information about the full US population, including historically underrepresented populations like racial and ethnic minorities. 
 
-Download the assignment dataset [here](https://uo-educ-quant.github.io/645/data/NHANES_data_Assign1.RData). These data are from the 2009-10 NHANES survey. For our purposes, we will use a reduced version of the dataset (N = 4,136) that can be treated like a simple random sample of the US population. The following variables are of interest:
+Download the assignment dataset [here](https://uo-educ-quant.github.io/645/data/NHANES_data_Assign.RData). These data are from the 2009-10 NHANES survey. For our purposes, we will use a reduced version of the dataset (N = 4,136) that can be treated like a simple random sample of the US population. The following variables are of interest:
 
  * `Age`: Age in years at screening of study participant.
  * `Sex`: Female or Male (self-reported).
