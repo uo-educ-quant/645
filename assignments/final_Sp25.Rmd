@@ -60,6 +60,7 @@ The goal of this component is to examine whether there is a relationship between
       + Fit and compare random-intercepts and random-intercepts-and-slopes models with student SES and verbal reasoning ability included as fixed-effect covariates, then with their slopes allowed to vary by school, respectively. Examine whether the added random slopes are important (i.e., significant) to retain.
       + Check for critical assumptions and outliers of the best-fitting model. 
       + Using the retained model, specify an interaction to examine whether verbal reasoning ability moderates the relationship between SES and language competency. 
+      * *Note:* You may receive a singularity warning *boundary (singular) fit: see help('isSingular')* when fitting the random-intercepts-and-slopes model. This is a common issue when fitting more complex mixed models. For our purposes you can disregard the warning and continue with the model fitting/comparison steps. It is not necessary to make adjustments to the control specification of the lmer function, though that can be one strategy in practice to try to resolve this issue. 
     + Write a paragraph describing your model selection process and diagnostics results.
     + Produce a results table (Table 2) that includes the model results and model fit statistics. 
     + If the interaction is significant, include a plot (Figure 1) of predicted values to facilitate interpretation. Include descriptive axis labels.

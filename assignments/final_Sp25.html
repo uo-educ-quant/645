@@ -456,6 +456,14 @@ model.</li>
 <li>Using the retained model, specify an interaction to examine whether
 verbal reasoning ability moderates the relationship between SES and
 language competency.</li>
+<li><em>Note:</em> You may receive a singularity warning <em>boundary
+(singular) fit: see help(‘isSingular’)</em> when fitting the
+random-intercepts-and-slopes model. This is a common issue when fitting
+more complex mixed models. For our purposes you can disregard the
+warning and continue with the model fitting/comparison steps. It is not
+necessary to make adjustments to the control specification of the lmer
+function, though that can be one strategy in practice to try to resolve
+this issue.</li>
 </ul></li>
 <li>Write a paragraph describing your model selection process and
 diagnostics results.</li>
