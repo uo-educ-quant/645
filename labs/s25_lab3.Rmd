@@ -1,0 +1,185 @@
+---
+title: "Week 3 Lab"
+author: "(add your name)"
+date: `r sys.Date()`
+output:
+  html_document:
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+# Don't make a change here
+knitr::opts_chunk$set(echo = TRUE,
+                      warning = FALSE,
+                      message = FALSE)
+```
+
+## Topic: Missing Data
+
+Instruction to work on this sheet: To evaluate the level of missingness in the `galo_miss` dataset run the code from steps 1-4, then answer subsequent exercise question. The dataset is available on the class website and can be accessed here: <https://uo-educ-quant.github.io/645/data/galo.csv>
+
+GALO is a 1959 dataset that includes 1,382 sixth grade students in Groningen, Netherlands. The codebook is as follow -
+
+-   schid: School identification code
+-   female: an indicator for whether a student is female or now (0: male, 1: female)
+-   score: raw score on IQ test (original range 53 to 143)
+-   advice: schools advice to students (ordered categorical - coded 0 to 6; one of the 7 groups: No further education; Manual, including housekeeping; Agricultural; Extended primary education; General; Secondary school for girls; Pre-University.)
+-   medu: mother education (coded 1 to 9 representing some ordered groups)
+-   fedu: mother education (coded 1 to 9 representing some ordered groups)
+-   focc: father's occupation (coded 1 to 6; one of the 6 groups: Lower white collar; Middle white collar; Professional, Managers; Shopkeepers; Schooled labor; Unskilled labor)
+
+We might ask: What is the relationship between a teacher's recommendation on secondary school choice and student's IQ score? We are considering the advice variable as continuous for now where higher value for advice is congruent to more education. 
+
+
+### Data
+
+```{r}
+#load libraries
+# for data wrangling, plotting, and tables
+library(tidyverse)
+library(modelsummary)
+
+## install some new packages if you already don't have these
+
+# install.packages("missMethods")
+# install.packages("mice")
+# for evaluating missingness
+library(missMethods)
+# for imputting missing data
+library(mice)
+```
+
+```{r}
+#load data from url
+#.RData is read using the load function
+load(url("https://uo-educ-quant.github.io/645/data/galo_miss.RData"))
+
+# The data is called galo_miss and shoud have popped up in the environment
+head(galo_miss)
+```
+
+### 1. Evaluate levels of missingness
+
+```{r}
+# two-ways
+datasummary_skim(galo_miss,
+                      fun_numeric = list(
+                         `N` = N,
+                         `Missing Pct.` = PercentMissing))
+
+# Or use the count_NA function from the missMethods package
+missMethods::count_NA(galo_miss)
+```
+
+**1.Q. Check variables for missingness and describe in 1-2 sentences.**
+
+*Answer Here*
+
+## 2. Inspect missing patterns
+
+```{r}
+# Using the mice package
+galo_miss %>% 
+  select(advice, medu, fedu, focc) %>% 
+  md.pattern(rotate.names = TRUE)
+```
+
+**2.Q. Inspect missingness patterns. Fill this table as a start.**
+
+a. In how many observations is -
+
+-   0 variables missing:
+
+-   3 variables missing:
+
+-   advice missing:
+
+-   focc missing:
+
+b. What's the top three common patterns of missingness?
+
+c. What is your hunch on the type of missingness for the top three patterns. Is is a) completely at random; b) at random; c) or not random?
+
+## 3. Multiple-Imputation
+
+Impute missing data using mice package and the cart imputation method.
+
+*"cart" refers to imputation using Classification and Regression Trees (CART). This method imputes missing values by building decision trees that predict the missing values based on observed values of other variables. There are several other methods for imputation.*
+
+```{r}
+#let's re-factor some variables
+galo_miss$female <- factor(galo_miss$female,
+                         labels = c("Male", "Female"))
+
+
+# the first argument is the dataset,
+# method tells which method of imputation to use: pmm or cart are common
+# m tells how many imputed dataset to create: atleast 20 is good
+# maxit is the number of iterations: at least 10 is good
+# printFlag prevents the update from printing in the console
+galo_multi_cart <- mice(data = ..., 
+                        method = "cart", 
+                        m = ..., 
+                        maxit = ...,
+                        printFlag = F)
+```
+
+## 4. Check imputation quality
+
+```{r}
+# the densityplot function from the mice package plots the density of the variable in the original and imputed datasets.
+densityplot(galo_multi_cart)
+```
+
+**4.Q. The blue line shows the density plot of the variable in the observed data, and the red lines show the density plot of variables in each of the imputed dataset. How well was the data imputed, aka, does the distributions match well? **
+
+*Answer Here*
+
+## 5. Compare model estimates
+
+```{r}
+#bivariate model
+#by default it applies listwise deletion
+#formula for the lm function is: outcome ~ predictor
+
+lm_unconditional_listwise <- lm(advice ~ score, galo_miss)
+
+#multivariate model with listwise deletion
+lm_covariate_listwise <- lm(advice ~ score + female + medu + fedu + focc, galo_miss)
+
+#bivariate model with multiply imputed dataset
+#we regress on each of the imputed dataset and then pool estimates
+mice_unconditional_listwise <- with(galo_multi_cart, 
+                                    lm(... ~ ...)) %>%
+  pool()
+
+#multivariate model with multiply imputed dataset
+mice_covariate_listwise <- with(galo_multi_cart, 
+                                lm(... ~ ... + 
+                              female + medu + fedu + focc)) %>%
+  pool()
+
+# Table
+modelsummary(
+    # in list we can specify all the model results we want to show
+    list("Bivariate listwise" = lm_unconditional_listwise,
+    "Multivariate listwise" = lm_covariate_listwise,
+    "Bivariate MICE" = mice_unconditional_listwise,
+    "Multivariate MICE" = mice_covariate_listwise),
+    # if estimates should have star based on p-values
+    stars = TRUE,
+    title = "...",
+    notes = "...",
+    # which goodness of fit statistics should be omitted
+    gof_omit = "R2 Adj.|AIC|BIC|Log.Lik.|RMSE",
+    # rename coefficients in the table
+    coef_rename = c("score" = "IQ score") #can rename other things here too
+    # if you want to export it, add the filepath to the output argument
+    # output = "tables/regression_estimates_comparison.docx"
+             )
+
+```
+
+**5.Q. How does inference change across different methods?**
+
+

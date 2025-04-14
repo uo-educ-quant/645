@@ -40,7 +40,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 **Lab Worksheets**
 
- * [Week 1 worksheet](./labs/s25_lab1.Rmd) | [Week 2 worksheet](./labs/s25_lab2.Rmd) | [Week 3 worksheet]()
+ * [Week 1 worksheet](./labs/s25_lab1.Rmd) | [Week 2 worksheet](./labs/s25_lab2.Rmd) | [Week 3 worksheet](./labs/s25_lab3.Rmd)
 
 **Assignment**:
 
