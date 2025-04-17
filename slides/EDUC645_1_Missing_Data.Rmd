@@ -467,5 +467,5 @@ Final note: `mice` and its add-on packages have functions for imputing nested (m
 # To Dos
 
 ### Assignments
-- Assignment 1 due by 11:59 PM on Thursday 4/25
+- Assignment 1 due by 11:59 PM on Thursday 4/24
  
