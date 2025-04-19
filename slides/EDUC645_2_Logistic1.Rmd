@@ -71,36 +71,26 @@ NHANES_data0910 <- NHANES::NHANES %>%
 
 ```
 
-# Midway Student Experience Survey 
-
-Survey is now open and will close at 06:00 PM on Fri, Apr 26, 2024 PDT. 
-
-Access the survey via the UO Course Surveys tab on Canvas, or by logging into DuckWeb and clicking the link (not tab) titled Course Surveys on the Main Menu page. Then click "Open the Course Surveys site" and choose your course.  
-
----
 # Unit Overview
 
-Week 1 (slide set #1)
+Week 4 (slide set #1)
 
 - Recap of dichotomous outcome concepts
 
 - Basic logistic regression model fit and interpretation
 
 
---
-Week 2 (slide set #1)
+Week 5 (slide set #1)
 
 - Assessing logistic regression model fit and diagnostics
 
 
---
-Week 3 (slide set #2)
+Week 6 (slide set #2)
 
 - Conducting logistic regression in nested (clustered) data
 
 
---
-Week 4 (slide set #2)
+Week 7 (slide set #2)
 
 - Conducting logistic regression in longitudinal and missing data
 
