@@ -254,19 +254,13 @@ str(galo_miss$Sex) # or levels(galo_miss$Sex)
 
 
 --
-The first level of the factor will be the first level encountered in the dataset, but we may want a different order.
+**Important:** Even though the first level of the original sex variable was male (0), by default R will make the first level encountered in the dataset the first level of the factor. So, if the first observation is female, then the first level of the factor will be female. If we want to preserve (or alter) the factor ordering, we need to specify the factor levels explicitly: 
 
 
 --
 ```{r}
 galo_miss <- galo_miss %>% 
   mutate(Sex = factor(Sex, levels = c("Male", "Female")))
-```
-
-
---
-```{r}
-str(galo_miss$Sex)
 ```
 
 
