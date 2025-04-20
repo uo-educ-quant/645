@@ -410,57 +410,10 @@ coef(m2)$grade # Specify the grouping variable
 What do you notice is different for each grade?
 
 
-
----
-# ICC and variability explained
-
-In practice, before fitting a mixed-effects model, we'd fit the equivalent of the null model we're used to and use it to calculate the ICC. 
-
-
---
-
-```r
-m0 &lt;- lmer(achievement ~ 1 + (1 | grade), data = seda)
-performance::icc(m0)
-```
-
-```
-#&gt; # Intraclass Correlation Coefficient
-#&gt; 
-#&gt;     Adjusted ICC: 0.645
-#&gt;   Unadjusted ICC: 0.645
-```
-
-
---
-There's a relationship between the ICC and variability explained, or `\(R^2\)`:
-
-
---
-.pull-left[
-
-```r
-performance::r2_nakagawa(m0)
-```
-
-```
-#&gt; # R2 for Mixed Models
-#&gt; 
-#&gt;   Conditional R2: 0.645
-#&gt;      Marginal R2: 0.000
-```
-]
-
-
---
-.pull-right[
-In essence, the mixed-effect model is resetting our baseline of "explainable" variation from all of the variation in achievement (100%) to only the portion that is not attributable to differences in achievement by grade (100% - 65% = **35%**). 
-]
-
 ---
 # Adding random slopes
 
-So far we've considered one intercept and slope for all grades or examining individual intercepts for each grade.
+Thus far, we've considered one intercept and slope for all grades, then examined individual intercepts for each grade.
 
 
 --
@@ -489,13 +442,13 @@ coef(m3)$grade
 .small[Note that we can look at slopes for each grade with only one intercept across grades (random-slopes model), but in practice we wouldn't typically test this model. If the random-intercepts model is better fitting than the fixed-effect model, the next logical step in model fitting is to add random slopes to the random-intercepts model (i.e., the random-slopes-and-intercepts model).]
 
 ---
-# Fixed effect vs random effects
+# Fixed effect vs random slopes and intercepts
 
-&lt;img src="EDUC645_1_Nested_Data_files/figure-html/unnamed-chunk-14-1.png" width="576" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC645_1_Nested_Data_files/figure-html/unnamed-chunk-12-1.png" width="576" style="display: block; margin: auto;" /&gt;
 
 
 ---
-# Bringing it together
+# Back to averages
 
 --
 .pull-left[
@@ -550,6 +503,54 @@ In other words, the fixed-effect results are the average of the intercepts and s
 --
 So, back to averages: Does the average of the slope and the intercept give a good enough representation of the slopes and intercepts across grades? If not, which one do you think we need to examine by grade? *We'll explore how to answer this question next unit.*
 
+
+---
+# ICC and variability explained
+
+In practice, before fitting a mixed-effects model, we'd fit the equivalent of the null model we're used to and use it to calculate the ICC. 
+
+
+--
+
+```r
+m0 &lt;- lmer(achievement ~ 1 + (1 | grade), data = seda)
+performance::icc(m0)
+```
+
+```
+#&gt; # Intraclass Correlation Coefficient
+#&gt; 
+#&gt;     Adjusted ICC: 0.645
+#&gt;   Unadjusted ICC: 0.645
+```
+
+
+--
+There's a relationship between the ICC and variability explained, or `\(R^2\)`:
+
+
+--
+.pull-left[
+
+```r
+performance::r2_nakagawa(m0)
+```
+
+```
+#&gt; # R2 for Mixed Models
+#&gt; 
+#&gt;   Conditional R2: 0.645
+#&gt;      Marginal R2: 0.000
+```
+]
+
+
+--
+.pull-right[
+In essence, the mixed-effect model is resetting our baseline of "explainable" variation from all of the variation in achievement (100%) to only the portion that is not attributable to differences in achievement by grade (100% - 65% = **35%**). 
+]
+
+
 ---
 # Back to variability explained
 
@@ -557,7 +558,7 @@ So, back to averages: Does the average of the slope and the intercept give a goo
 --
 .pull-left[
 
-&lt;span style = "color:green"&gt; Our understanding from the fixed-effect model: &lt;/span&gt;All variation in math achievement could be explained, but %ELL explained very little of it (marginal `\(R^2\)` from previous slide, or `\(R^2\)` from simple linear regression). We might have concluded that %ELL was not an important predictor of math achievement. 
+&lt;span style = "color:green"&gt; Our understanding from the fixed-effect model: &lt;/span&gt;All variation in math achievement could be explained, but %ELL explained very little of it (0.07 or 7%). We might have concluded that %ELL was not an important predictor of math achievement. 
 ]
 
 
@@ -568,7 +569,7 @@ So, back to averages: Does the average of the slope and the intercept give a goo
 
 --
 .pull-left[
-&lt;span style = "color:green"&gt; Our understanding from the random-intercepts model: &lt;/span&gt;Only one-third of variation in math achievement could be explained after accounting for differences in achievement by grade (65%). %ELL and grade differences explain 72% of variability in math achievement (conditional `\(R^2\)`). This could lead to a very different conclusion compared with the fixed-effect model. 
+&lt;span style = "color:green"&gt; Our understanding from the random-intercepts model: &lt;/span&gt;%ELL and grade differences *together* explain 72% of variability in math achievement (0.65 + 0.07). The proportion of *explainable* variability (35%) explained by %ELL is closer to 20% (0.07/0.35 rather than 0.07/1.0). So, %ELL is a more important predictor than it appeared in the fixed-effect model. 
 ]
 
 
@@ -587,7 +588,6 @@ So, back to averages: Does the average of the slope and the intercept give a goo
 ### Quiz
 
 - Unit 1 quiz available Friday 4/12 and due by 11:59 PM on Monday 4/15.
-
 
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
