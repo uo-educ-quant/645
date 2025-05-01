@@ -247,7 +247,6 @@ It is important to exhaust the administrative remedies available to you includin
 # XXIII. Grievance Policy 
 
 A student or group of students of the College of Education may appeal decisions or actions pertaining to admissions, programs, evaluation of performance and program retention and completion. Students who decide to file a grievance should follow University student grievance procedures (https://policies.uoregon.edu/grievance-procedures) and/or consult with the College Associate Dean for Academic Affairs (Sylvia Thompson, (541) 346-2483  sthomps5@uoregon.edu). 
-
 # XXIV. Course Incomplete Policy 
 
 Students are expected to be familiar with university policy regarding grades of “incomplete” and the timeline for completion. For details on the policy and procedures regarding incompletes, Please see: https://education.uoregon.edu/academics/incompletes-courses 
@@ -258,4 +257,8 @@ Any student who has experienced sexual assault, relationship violence, sex or ge
 
 Students experiencing any other form of prohibited discrimination or harassment can find information at https://respect.uoregon.edu/ or https://aaeo.uoregon.edu/ or contact the non-confidential AAEO office at 541-346-3123 or the Dean of Students Office at 541-346-3216 for help. As UO policy has different reporting requirements based on the nature of the reported harassment or discrimination, additional information about reporting requirements for discrimination or harassment unrelated to sexual assault, relationship violence, sex or gender based bullying, stalking, and/or sexual harassment is available at http://aaeo.uoregon.edu/content/discrimination-harassment  
 
-Specific details about confidentiality of information and reporting obligations of employees can be found at https://titleix.uoregon.edu.  
+Specific details about confidentiality of information and reporting obligations of employees can be found at https://titleix.uoregon.edu. 
+
+# XXVI. Use of Generative AI (GenAI)
+
+Students may not use GenAI tools (including but not limited to ChatGPT) in this course to produce course materials or assignments in whole or in part. All work you submit for this course toward completion of course requirements must be your (or your and your group members') own original work done specifically for this course. In accordance with UO policy, if I believe you have handed in work created all or in part by GenAI, I will submit a report of suspected academic misconduct to the Office of Student Conduct and Community Standards for that office to make a determination of responsibility. 
