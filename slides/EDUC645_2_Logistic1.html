@@ -1266,7 +1266,7 @@ Or, we can add a linear regression line that will give us an overall sense of li
 
 ### Quiz
 
-- Unit 2 quiz available Friday 5/3 and due by 11:59 PM on Monday 5/6.
+- Unit 2 quiz available Friday 5/2 and due by 11:59 PM on Monday 5/5.
 
 
 ---
@@ -1308,9 +1308,9 @@ Using "levels ="
 ```r
 NHANES_data0910_levels &lt;- NHANES_data0910 %&gt;% 
   mutate(Education_level = factor(Education_level, 
-                                  levels = c("8th Grade", "9 - 11th Grade", 
-                                             "High School", "Some College", 
-                                             "College Grad")))
+                    levels = c("8th Grade", "9 - 11th Grade", 
+                               "High School", "Some College", 
+                               "College Grad")))
 ```
 
 
@@ -1320,9 +1320,9 @@ Using "labels ="
 ```r
 NHANES_data0910_labels &lt;- NHANES_data0910 %&gt;% 
   mutate(Education_level = factor(Education_level, 
-                                  labels = c("8th Grade", "9 - 11th Grade", 
-                                             "High School", "Some College", 
-                                             "College Grad")))
+                    labels = c("8th Grade", "9 - 11th Grade", 
+                               "High School", "Some College", 
+                               "College Grad")))
 ```
 
 
@@ -1333,7 +1333,7 @@ NHANES_data0910_labels &lt;- NHANES_data0910 %&gt;%
 --
 
 ```r
-# Raw data
+# Original data
 str(NHANES_data0910$Education_level)
 ```
 
@@ -1410,8 +1410,6 @@ densityplot(NHANES_data0910_imp)
 ```
 
 &lt;img src="EDUC645_2_Logistic1_files/figure-html/unnamed-chunk-45-1.png" width="576" style="display: block; margin: auto;" /&gt;
-
-
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
