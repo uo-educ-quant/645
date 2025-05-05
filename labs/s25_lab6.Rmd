@@ -1,0 +1,222 @@
+---
+title: "Week 6 Lab"
+author: "(add your name)"
+date: "`r Sys.time()`"
+output:
+  html_document:
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+
+# Don't make a change here
+knitr::opts_chunk$set(echo = TRUE,
+                      warning = FALSE,
+                      message = FALSE,
+                      eval = FALSE)
+```
+
+*Goals:*
+
+1. Conduct a logistic regression with interactions.
+2. Visualize the interaction effect.
+3. Compare and interpret model fits.
+
+*Instruction to work on this sheet:* In each code chunk, you can find some code being taken out purposely and left with three dots instead. Your task is to first uncomment the code line, replace the three dots with the code you would write, and then run the code to proceed.
+
+*Data*
+For this lab, we will be using the prinicpal.csv dataset available [here](https://raw.githubusercontent.com/uo-educ-quant/645/master/data/principal.csv). 
+Read in the dataset in the environment and save it to the object prin.
+
+*Brief variable descriptions:*
+
+ - *schid*, identifier variable for School ID
+ 
+ - *stuid*, identifier variable for Student ID
+ 
+ - *pfemale*, an indicator variable telling if the school principal is a female or not (1 - is a female, 0 - not a female)
+ 
+ - *page*, age of the principal
+ 
+ - *sfemale*, an indicator variable telling if the student is a female or not (1 - is a female, 0 - not a female)
+ 
+ - *match*, an indicator variable telling if the student and principal self-reported sex matched or not (1 - matched, 0 - didn't match)
+ 
+ - *attention*, standardized attention score for the student
+ 
+ - *affective*, an indicator variable telling if the student considers the principal to be affective (1 - Yes, - 0 No)
+ 
+ 
+ 
+### Topic: Interaction Effects in Logistic Regression and Comparing Models
+
+### Packages and Data 
+
+```{r}
+# Load necessary packages 
+library(tidyverse)
+#install.packages("broom")
+library(broom)
+#install.packages("modelsumary")
+library(modelsummary)
+#install.packages("ggeffects")
+library(ggeffects)
+
+# read in dataset and select variables of interest 
+# Quotes are important around URL link for data retrieval 
+
+prin <- read.csv("https://raw.githubusercontent.com/uo-educ-quant/645/master/data/principal.csv") %>% 
+  drop_na() #this is a simplistic way of dealing with missing data, we simply drop observations with missingness on any row
+```
+
+**Task 1: Prepare your dataset for analysis by selecting the relevant variables, and transforming to factor wherever needed.**
+
+```{r}
+# check that variables are the correct types. 
+# Dichotomous variables should be factors, and continuous variables should be numeric (num) or integers (int).
+# factor all categorical variable
+
+# convert any dichotomous variable to factor
+prin$pfemale <- factor(prin$pfemale,
+                    levels = c(0,1),
+                    labels = c("Male", "Female"))
+ 
+prin$sfemale <- factor(prin$sfemale,
+                    levels = c(0,1),
+                    labels = c("Male", "Female"))
+  
+prin$affective <- factor(prin$affective, 
+                           levels = c(0,1),
+                           labels = c("Not Affective", "Affective"))
+ 
+prin$match <- factor(prin$match, 
+                           levels = c(0,1),
+                           labels = c("Different", "Same"))
+```
+
+**Task 2: Visualize the variables and run the analysis**
+
+**RQ1: What is the relationship between student-principal gender matching and student perception of principal affectiveness? Is the relationship different by student gender?**
+
+**Q1** *What is the main effect RQ and the interaction effect RQ here? Identify the predictor, outcome, and moderation variables.*
+
+*Answer here:*
+
+```{r}
+# Some raw data visualization
+# The outcome variable
+ggplot(prin, aes(x = ...)) + #replace the dots with the outcome variable
+    # geom_bar to make bar chart,
+    # fill adds color inside the bar
+    # width set the width of the bar
+    geom_bar(fill = "cornflowerblue", width = 0.5)+
+    # a theme that changes background and other things
+    theme_minimal() +
+    # add descriptive labels for each axis
+    labs(x = "Student-Principal Gender Match",
+         y = "Number of students")
+
+# The outcome and predictor variables
+ggplot(prin, aes(x = ..., fill = ...)) + #replace the x with predictor variable and fill with outcome variable
+    geom_bar(position = "dodge")+
+    theme_minimal() +
+    labs(x = "...",
+         y = "...",
+         fill = "...")
+
+ggplot(prin, aes(x = ..., fill = ...)) + #replace the x with predictor variable and fill with outcome variable
+    geom_bar()+
+    theme_minimal() +
+  facet_wrap(~...)+ #replace with the moderator variable
+    labs(x = "Principal Age",
+         y = "Distribution",
+         fill = "Student perception")
+    
+```
+
+
+```{r}
+# family refers to the type of distribution, where we have specified binomial, and the link asks for the link function that we want to use, which is the logit for a logistic regression.
+
+# run a bivariate regression model with match as the main predictor
+rq1_mod1 <- glm(affective ~ ..., data =prin,
+             family = binomial(link = "logit"))
+
+# run an interaction model
+rq1_mod2 <- glm(affective ~ ...*..., data =prin,
+             family = binomial(link = "logit"))
+
+
+## A neater table        
+modelsummary(list('Main Effect Model' = rq1_mod1,
+                  'Interaction Effect Model' = rq1_mod2),
+             exponentiate = TRUE,
+             statistic = "conf.int",
+             stars = TRUE,
+             coef_omit = "(Intercept)",
+             coef_rename = c('page' = 'Principal Age'),
+             gof_omit = "AIC|BIC|Log.Lik|RMSE",
+             title = "Relationship between ....",
+             notes = "Data ....")
+```
+
+**Q2a** *What is estimate of the main effect? Is it significant?*
+
+**Q2b** *What is estimate of the interaction effect? Is it significant?*
+
+**Task 3: Visualize Model results**
+
+```{r}
+# Visualize main effect model
+
+rq_mod1_probs <- ggeffect(rq1_mod1, # ggeffects function from ggeffects package, requires model
+                        type = "fe", #fe for fixed effect, or the estimate in probability terms
+                        terms = c("match"))  # in terms, list the variables whose marginal effect you want to visualize
+
+print(rq_mod1_probs)
+plot(rq_mod1_probs)
+```
+
+
+```{r}
+rq_mod2_probs  <- ggeffect(rq1_mod2,
+                           type = "fe",
+                           terms = c("sfemale", "match"),
+                           margin = "marginalmeans")
+plot(rq_mod2_probs)
+```
+
+**Q3** *Interpret the visualized result of the logistic regression model (in probability units).*
+
+**Task4: Model Comparison**
+
+Is the interaction model better than the bivariate model?
+
+**Inspect model deviance**
+
+```{r}
+
+#First, compare the base model (no interaction) with the null model
+anova(rq1_mod1,test="Chisq")
+
+#Next, compare our base model with our interaction model
+anova(rq1_mod1,rq1_mod2,test="Chisq")
+
+```
+
+**Q4** *What is the deviance of the two models? What does the p-value tell us? Is Model 1 better than null model, based on the p-value? Is Model 2 better than Model 1 based on the p-value?*
+
+**Inspect Model AIC**
+
+```{r}
+# mod_0 is a model without any predictor.
+mod_0 <- glm(affective ~ 1,
+             data = prin,
+             family = binomial(link = "logit"))
+
+mod_0$aic
+rq1_mod1$aic
+rq1_mod1$aic
+```
+
+**Q5** *What is the AIC of each of the model? Is a small or large AIC preferred? What is the conclusion from the AIC test?*

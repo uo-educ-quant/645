@@ -75,7 +75,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 **Lab Worksheets**
 
- * [Week 5 worksheet](./labs/s25_lab5.Rmd) | [Week 6 worksheet]() 
+ * [Week 5 worksheet](./labs/s25_lab5.Rmd) | [Week 6 worksheet](./labs/s25_lab6.Rmd) 
 
 **Assignment**
 
