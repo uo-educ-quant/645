@@ -54,7 +54,7 @@ First, let's make `ever_smoke` a factor:
 
 
 ```r
-add_health_miss &lt;- add_health_final_miss %&gt;% 
+add_health_miss &lt;- add_health_miss %&gt;% 
   mutate(ever_smoke_f = case_when(ever_smoke == 0 ~ "No",
                                   ever_smoke == 1 ~ "Yes"),
          ever_smoke_f = factor(ever_smoke_f, levels = c("No", "Yes"))) %&gt;% 
@@ -71,10 +71,10 @@ missMethods::count_NA(add_health_miss)
 ```
 
 ```
-#&gt;            id           sex           age      race_eth           gpa 
-#&gt;             0             0             0             0          1013 
-#&gt; ever_susp_exp  ever_smoke_f 
-#&gt;             0          1351
+#&gt;          ...1            id           sex           age      race_eth 
+#&gt;             0             0             0             0             0 
+#&gt;           gpa ever_susp_exp  ever_smoke_f 
+#&gt;          1013             0          1351
 ```
 
 
@@ -134,7 +134,7 @@ anova(add_health_m1_imp, add_health_m2_imp)
 
 ```
 #&gt;    test statistic df1      df2 dfcom   p.value       riv
-#&gt;  2 ~~ 1  1.737155   1 149.6821  3375 0.1895132 0.4074848
+#&gt;  2 ~~ 1 0.4321339   1 262.5598  3375 0.5115196 0.2684768
 ```
 
 
@@ -199,10 +199,10 @@ add_health_m1_imp %&gt;%
 
 
 
-|term        | estimate| std.error| statistic|    df | p.value | 2.5 %| 97.5 %|
-|:-----------|--------:|---------:|---------:|:------|:--------|-----:|------:|
-|(Intercept) |     4.12|      0.15|      9.14|109.33 |3.76e-15 |  3.03|   5.60|
-|gpa         |     0.61|      0.06|     -8.21| 94.59 |1.13e-12 |  0.54|   0.68|
+|term        | estimate| std.error| statistic|   df | p.value | 2.5 %| 97.5 %|
+|:-----------|--------:|---------:|---------:|:-----|:--------|-----:|------:|
+|(Intercept) |     4.03|      0.17|      8.40|71.95 |2.72e-12 |  2.90|   5.61|
+|gpa         |     0.61|      0.07|     -7.68|68.78 |7.70e-11 |  0.53|   0.69|
 
 
 ---
@@ -211,29 +211,7 @@ class: middle, inverse
 # Logistic regression in nested data 
 
 ---
-# Going back to the ICC
-
-Remember the ICC gives us an estimate of how much of the variability in our outcome is simply because of differences in the outcome between groups (grades, classrooms, intervention sites). 
-
-
---
-The closer the ICC is to 1, the greater the proportion of variability in the outcome that is due to group differences. The ICC is one tool we can use to gauge whether clustering is important enough to warrant multilevel modeling.
-
-
---
-Recall the SEDA dataset, which includes math achievement scores for Oregon elementary students by grade level.
-
-
---
-- The ICC for the math achievement outcome was 0.645, which told us that 64.5% of the variation in the math achievement outcome is attributable to differences in achievement between grades. 
-
-
---
-- Because the ICC is telling us that more than two-thirds of the variability in the outcome is because of grade (and has nothing to do with ELL proportion), we know that our findings could mask important differences in grade-level achievement.
-
-
----
-# Simple linear regression
+# Simple linear regression 
 
 
 ```r
@@ -253,46 +231,6 @@ This is called a &lt;span style = "color:green"&gt; fixed-effect model. &lt;/spa
 
 --
 Another way of saying this is each grade's slope and intercept are set - "fixed" - to be the average slope and intercept across grades.
-
-
----
-# Simple linear regression
-
-When thinking about whether a fixed-effect approach makes sense, we can apply the same reasoning we use when thinking about any average. 
-
-
---
-Any mean is a single value (say, 31.5) that represents a set of values:
-
-
---
-- If that set is close to the average (say, 29 and 34), then the single value of 31.5 is probably a good representation of the underlying values (i.e., it's not very different from 29 or 34). 
-
-
---
-- But the same mean of 31.5 could represent the values of 0 and 63.
-
-
---
-0-63 is the range of the Beck Depression Index (BDI): Does a mean of 31.5 convey that one person has no depression symptoms (0) and a second person has severe depression (63)?
-
-
----
-# Mixed-effects model
-
-Instead of the simple linear regression (fixed-effect model), we can fit a mixed-effects model that allows intercepts, or both intercepts and slopes, to vary across grades. 
-
-
---
-In other words, this approach allows us to examine the underlying values of the intercepts and/or slopes that are contributing to the fixed-effect model estimates (the average of each grade's intercept and slope). 
-
-
---
-- Another term for this is *disaggregating*, in the same sense as we used when talking about aggregation bias. We're potentially reducing our risk of aggregation bias by disaggregating results by grade. 
-
-
---
-For now, let's look at what happens if we let the intercept (the average math achievement level at 0% ELL) vary by grade. This is called a &lt;span style = "color:green"&gt; random-intercepts model &lt;/span&gt; because the intercept is allowed to vary for each grade. 
 
 
 ---
@@ -336,10 +274,6 @@ coef(m2)$grade # Specify the grouping variable
 ```
 
 
---
-What do you notice is different for each grade?
-
-
 ---
 # Adding random slopes
 
@@ -368,54 +302,10 @@ coef(m3)$grade
 ```
 
 
---
-.small[Note that we can look at slopes for each grade with only one intercept across grades (random-slopes model), but in practice we wouldn't typically test this model. If the random-intercepts model is better fitting than the fixed-effect model, the next logical step in model fitting is to add random slopes to the random-intercepts model (i.e., the random-slopes-and-intercepts model).]
-
 ---
 # Fixed effect vs random effects
 
 &lt;img src="EDUC645_2_Logistic2_files/figure-html/unnamed-chunk-16-1.png" width="576" style="display: block; margin: auto;" /&gt;
-
-
----
-# Bringing it together
-
---
-.pull-left[
-The &lt;span style = "color:green"&gt; random-slopes-and-intercepts model &lt;/span&gt; gives us the slope and intercept for each cluster (grade):
-
-
-```r
-coef(m3)$grade
-```
-
-```
-#&gt;         (Intercept) percent_ell
-#&gt; Grade 3    2.826638   -6.120839
-#&gt; Grade 4    3.904292   -6.343056
-#&gt; Grade 5    5.075495   -6.584562
-#&gt; Grade 6    6.212885   -6.819096
-```
-]
-
---
-.pull-right[
-The &lt;span style = "color:green"&gt; fixed-effect model &lt;/span&gt; gives us the average (or aggregation) of the different intercepts and slopes across grades:
- 
-
-```r
-coef(m1)
-```
-
-```
-#&gt; (Intercept) percent_ell 
-#&gt;    4.504827   -6.466889
-```
-]
-
-
---
-So, back to averages: Does the average of the slope and the intercept give a good enough representation of the slopes and intercepts across grades? If not, which one do you think we need to examine by grade?
 
 
 ---
@@ -597,7 +487,7 @@ pop_m2 &lt;- lmer(popular ~ extrav + sex + (1 + extrav + sex | class),
 ---
 # Initial look at the data
 
-&lt;img src="EDUC645_2_Logistic2_files/figure-html/unnamed-chunk-26-1.png" width="576" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC645_2_Logistic2_files/figure-html/unnamed-chunk-24-1.png" width="576" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -755,7 +645,7 @@ check_model(pop_m3_int_fin, check = c("linearity", "outliers",
                                       "vif", "qq"))
 ```
 
-&lt;img src="EDUC645_2_Logistic2_files/figure-html/unnamed-chunk-33-1.png" width="576" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC645_2_Logistic2_files/figure-html/unnamed-chunk-31-1.png" width="576" style="display: block; margin: auto;" /&gt;
 
 ---
 # Interpreting the interaction
@@ -787,7 +677,7 @@ pop_m3_int_pred
 ```
 
 ```
-#&gt; # Predicted values of popularity sociometric score
+#&gt; # Predicted values of popular
 #&gt; 
 #&gt; texp: 2
 #&gt; 
@@ -831,7 +721,7 @@ pop_m3_int_pred
 plot(pop_m3_int_pred, ci = FALSE)
 ```
 
-&lt;img src="EDUC645_2_Logistic2_files/figure-html/unnamed-chunk-36-1.png" width="576" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC645_2_Logistic2_files/figure-html/unnamed-chunk-34-1.png" width="576" style="display: block; margin: auto;" /&gt;
 
 ---
 class: middle, inverse
@@ -1047,7 +937,7 @@ respire_m1_residuals &lt;- simulateResiduals(respire_m1, n = 1000)
 plot(respire_m1_residuals)
 ```
 
-&lt;img src="EDUC645_2_Logistic2_files/figure-html/unnamed-chunk-44-1.png" width="576" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC645_2_Logistic2_files/figure-html/unnamed-chunk-42-1.png" width="576" style="display: block; margin: auto;" /&gt;
 
 ---
 # Model diagnostics 
@@ -1057,7 +947,7 @@ plot(respire_m1_residuals)
 check_model(respire_m1, check = "vif")
 ```
 
-&lt;img src="EDUC645_2_Logistic2_files/figure-html/unnamed-chunk-45-1.png" width="576" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC645_2_Logistic2_files/figure-html/unnamed-chunk-43-1.png" width="576" style="display: block; margin: auto;" /&gt;
 
 ---
 # Interpretation
@@ -1110,7 +1000,7 @@ plot(respire_m1_probs) +
   scale_color_discrete(name = "Treatment Group")
 ```
 
-&lt;img src="EDUC645_2_Logistic2_files/figure-html/unnamed-chunk-47-1.png" width="576" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC645_2_Logistic2_files/figure-html/unnamed-chunk-45-1.png" width="576" style="display: block; margin: auto;" /&gt;
 
 ---
 # A note on cluster-robust SEs
@@ -1177,7 +1067,7 @@ plot(respire_m1b_probs) +
   scale_color_discrete(name = "Treatment Group")
 ```
 
-&lt;img src="EDUC645_2_Logistic2_files/figure-html/unnamed-chunk-50-1.png" width="576" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC645_2_Logistic2_files/figure-html/unnamed-chunk-48-1.png" width="576" style="display: block; margin: auto;" /&gt;
 
 
 
