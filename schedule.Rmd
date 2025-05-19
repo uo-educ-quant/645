@@ -108,7 +108,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 **Lab Worksheets**
 
- * [Week 8 worksheet]()
+ * [Week 8 worksheet](./labs/s25_lab8.Rmd)
 
 **Assignment**:
 
