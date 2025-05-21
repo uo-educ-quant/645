@@ -112,7 +112,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 **Assignment**:
 
- * In-class group presentation during Week 10
+ * In-class group presentation during Week 10 (see Canvas assignment page for instructions)
 
 **Unit Quiz**: Due May 26 (Canvas)
 
@@ -121,5 +121,5 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Final Project
 
  * Due June 11
- * Assignment details to be added
+ * [Assignment details](./assignments/final_Sp25.html)
 
